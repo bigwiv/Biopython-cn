@@ -1,63 +1,32 @@
 ﻿第6章 多序列比对
 ==============================================
 
-多序列比对（Multiple Sequence Alignment, MSA）是指对多个序列进行对位排
-列。 这通常需要保证序列间的等同位点处在同一列上，并通过引进小横线（-）
-以保证最终的序列具有相同的长度。这种序列排列可以视作是由字符组成的矩
-阵。在Biopython中，多序列排列中每一个序列是以 ``SeqRecord`` 对象来表示
-的。
+多序列比对（Multiple Sequence Alignment, MSA）是指对多个序列进行对位排列。 这通常需要保证序列间的等同位点处在同一列上，并通过引进小横线（-）以保证最终的序列具有相同的长度。这种序列排列可以视作是由字符组成的矩阵。在Biopython中，多序列排列中每一个序列是以 ``SeqRecord`` 对象来表示的。
 
-这里我们介绍一种新的对象 -- ``MultipleSeqAlignment`` 来表示这样一类数
-据，我们还将介绍 ``Bio.AlignIO`` 模块来读写不同格式的多序列比对数据
-（ ``Bio.AlignIO`` 在设计上与之前介绍的 ``Bio.SeqIO`` 模块是类似的）。
-Biopython中， ``Bio.SeqIO`` 和 ``Bio.AlignIO`` 都能读写各种格式的多序
-列排列数据。在实际处理中，使用哪一个模块取决于用户需要对数据进行何种操
-作。
+这里我们介绍一种新的对象 -- ``MultipleSeqAlignment`` 来表示这样一类数据，我们还将介绍 ``Bio.AlignIO`` 模块来读写不同格式的多序列比对数据（ ``Bio.AlignIO`` 在设计上与之前介绍的 ``Bio.SeqIO`` 模块是类似的）。Biopython中， ``Bio.SeqIO`` 和 ``Bio.AlignIO`` 都能读写各种格式的多序列排列数据。在实际处理中，使用哪一个模块取决于用户需要对数据进行何种操作。
 
-本章的第一不分是关于各种常用多序列排列程序（ClustalW and MUSCLE）的
-Biopython命令行封装。
+本章的第一部分是关于各种常用多序列排列程序（ClustalW and MUSCLE）的Biopython命令行封装。
 
 6.1 读取多序列排列数据
 -------------------------------------------
 
-在Biopython中，有两种方法读取多序列排列数据， ``Bio.AlignIO.read()``
-和 ``Bio.AlignIO.parse()`` 。这两种方法跟 ``Bio.SeqIO`` 处理一个和多个
-数据的设计方式是一样的。 ``Bio.AlignIO.read()`` 只能读取一个多序列排列
-而 ``Bio.AlignIO.parse()`` 可以依次读取多个序列排列数据。
+在Biopython中，有两种方法读取多序列排列数据， ``Bio.AlignIO.read()`` 和 ``Bio.AlignIO.parse()`` 。这两种方法跟 ``Bio.SeqIO`` 处理一个和多个数据的设计方式是一样的。 ``Bio.AlignIO.read()`` 只能读取一个多序列排列而 ``Bio.AlignIO.parse()`` 可以依次读取多个序列排列数据。 
 
-使用 ``Bio.AlignIO.parse()`` 将会返回一个 ``MultipleSeqAlignment`` 的
-*迭代器（iterator）* 。迭代器往往在循环中使用。在实际数据分析过程中会
-时常处理包含有多个序列排列的文件。例如PHYLIP中的 ``seqboot`` ，
-EMBOSS工具箱中的 ``water`` 和 ``needle``, 以及Bill Pearson的FASTA程
-序。
+使用 ``Bio.AlignIO.parse()`` 将会返回一个 ``MultipleSeqAlignment`` 的 *迭代器（iterator）* 。迭代器往往在循环中使用。在实际数据分析过程中会时常处理包含有多个序列排列的文件。例如PHYLIP中的 ``seqboot`` ，EMBOSS工具箱中的 ``water`` 和 ``needle``, 以及Bill Pearson的FASTA程序。
 
-然而在大多数情况下，你所遇到的文件仅仅包括一个多序列排列。这时，你应
-该使用 ``Bio.AlignIO.read()`` ，这将返回一个 ``MultipleSeqAlignment``
-对象。
+然而在大多数情况下，你所遇到的文件仅仅包括一个多序列排列。这时，你应该使用 ``Bio.AlignIO.read()`` ，这将返回一个 ``MultipleSeqAlignment`` 对象。
 
 这两个函数都接受两个必须参数。
 
-#. 第一个参数为包含有多序列排列数据的 *句柄handle* 。在实际操作中，这
-   往往是一个具有可读权限的句柄对象（详细信息请见
-   `22.1 <#sec:appendix-handles>`__ ）或者一个储存数据的文件名。
+#. 第一个参数为包含有多序列排列数据的 *句柄handle* 。在实际操作中，这往往是一个具有可读权限的句柄对象（详细信息请见 `22.1 <#sec:appendix-handles>`__ ）或者一个储存数据的文件名。
 
-#. 第二个参数为文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，
-   Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块
-   支持的多序列排列数据格式可以在 
-   ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
-   中找到。
+#. 第二个参数为文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块支持的多序列排列数据格式可以在 ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__ 中找到。
 
-``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在
-`6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定
-的多序列排列格式，或者包含有多个序列排列。
+``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 `6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定的多序列排列格式，或者包含有多个序列排列。
 
-另一个可选参数 ``alphabet`` 允许用户指定序列排列文件的字符
-（alphabet），它可以用来说明序列排列的类型（DNA，RNA或蛋白质）。因为
-大多数序列排列格式并不区别序列的类型，因此指定这一参数可能会对后期的分析
-产生帮助。 ``Bio.AlignIO`` 默认将使用一般字符（generic alphabet），这将
-不区分各种序列排列类型。
+另一个可选参数 ``alphabet`` 允许用户指定序列排列文件的字符（alphabet），它可以用来说明序列排列的类型（DNA，RNA或蛋白质）。因为大多数序列排列格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 ``Bio.AlignIO`` 默认将使用一般字符（generic alphabet），这将不区分各种序列排列类型。
 
-6.1.1 Single Alignments
+6.1.1 单一的序列排列
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 例如，请见以下PFAM（或者Stockholm）格式的蛋白序列排列文件。
