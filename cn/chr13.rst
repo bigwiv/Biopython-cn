@@ -1,26 +1,20 @@
-Chapter 13  Phylogenetics with Bio.Phylo
+Chapter 13  Bio.Phylo系统发育分析
 ========================================
+Biopython1.54开始引入了Bio.Phylo模块，与SeqIO和AlignIO类似，它的目的是提供
+一个通用的独立于源数据格式的方法来使用系统进化树，同时提供一致的API来进行
+I/O操作。
 
-The Bio.Phylo module was introduced in Biopython 1.54. Following the
-lead of SeqIO and AlignIO, it aims to provide a common way to work with
-phylogenetic trees independently of the source data format, as well as a
-consistent API for I/O operations.
-
-Bio.Phylo is described in an open-access journal article
-[`9 <#talevich2012>`__, Talevich *et al.*, 2012], which you might also
-find helpful.
+Bio.Phylo在一篇开放获取的期刊文章中有介绍
+[`9 <#talevich2012>`__, Talevich *et al.*, 2012], 这可能对您也有所帮助。
 
 
-13.1  Demo: What’s in a Tree?
+13.1  示例: 树中有什么？ 
 -----------------------------
 
-To get acquainted with the module, let’s start with a tree that we’ve
-already constructed, and inspect it a few different ways. Then we’ll
-colorize the branches, to use a special phyloXML feature, and finally
-save it.
+为了熟悉这个模块，让我们首先从一个已经创建好的树开始，从几个不同的角度来审视
+它。接着我们将给树的分支上颜色，并使用一个特殊的phyloXML特性，最终保存树。
 
-In a terminal, create a simple Newick file using your favorite text
-editor:
+在终端中使用你喜欢的编辑器创建一个简单的Newick文件：
 
 .. code:: verbatim
 
@@ -28,30 +22,26 @@ editor:
     > (((A,B),(C,D)),(E,F,G));
     > EOF
 
-This tree has no branch lengths, only a topology and labelled terminals.
-(If you have a real tree file available, you can follow this demo using
-that instead.)
+这棵树没有分支长度，只有一个拓扑结构和标记的端点。（如果你有一个真正的树文件，
+你也可以使用它来替代进行示例操作。）
 
-Launch the Python interpreter of your choice:
+选择启动你的Python解释器：
 
 .. code:: verbatim
 
     % ipython -pylab
 
-For interactive work, launching the IPython interpreter with the
-``-pylab`` flag enables **matplotlib** integration, so graphics will pop
-up automatically. We’ll use that during this demo.
+对于交互式操作，使用参数``-pylab``启动IPython解释器能启用**matplotlib**整合
+功能，这样图像就能自动弹出来。我们将在这个示例中使用该功能。
 
-Now, within Python, read the tree file, giving the file name and the
-name of the format.
+现在，在Python终端中，读取树文件，给定文件名和格式名。
 
 .. code:: verbatim
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("simple.dnd", "newick")
 
-Printing the tree object as a string gives us a look at the entire
-object hierarchy.
+以字符串打印该树对象我们将得到整个对象的层次结构概况。
 
 .. code:: verbatim
 
