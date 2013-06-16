@@ -18,11 +18,11 @@
 
 这两个函数都接受两个必须参数。
 
-#. 第一个参数为包含有多序列排列数据的 *句柄handle* 。在实际操作中，这往往是一个具有可读权限的句柄对象（详细信息请见 `22.1 <#sec:appendix-handles>`__ ）或者一个储存数据的文件名。
+#. 第一个参数为包含有多序列排列数据的 *句柄（handle）* 。在实际操作中，这往往是一个具有可读权限的句柄对象（详细信息请见 `22.1 <#sec:appendix-handles>`__ ）或者一个储存数据的文件名。
 
 #. 第二个参数为文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块支持的多序列排列数据格式可以在 ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__ 中找到。
 
-``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 `6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定的多序列排列格式，或者包含有多个序列排列。
+``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 `6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定的多序列排列格式，或者包含有多个序列的排列。
 
 另一个可选参数 ``alphabet`` 允许用户指定序列排列文件的字符（alphabet），它可以用来说明序列排列的类型（DNA，RNA或蛋白质）。因为大多数序列排列格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 ``Bio.AlignIO`` 默认将使用一般字符（generic alphabet），这将不区分各种序列排列类型。
 
@@ -61,19 +61,14 @@
     #=GC seq_cons                 AEssss...AptAhDSLpspAT-hIu.sWshVsslVsAsluIKLFKKFsSKA
     //
 
-
-This is the seed alignment for the Phage\_Coat\_Gp8 (PF05371) PFAM
-entry, downloaded from a now out of date release of PFAM from
-```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__. We can
-load this file as follows (assuming it has been saved to disk as
-“PF05371\_seed.sth” in the current working directory):
+这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ ```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__ ）。但这不影响我的例子。假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下。
 
 .. code:: verbatim
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
 
-This code will print out a summary of the alignment:
+这段代码将在屏幕上打印出该序列排列的概要信息：
 
 .. code:: verbatim
 
@@ -87,9 +82,7 @@ This code will print out a summary of the alignment:
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73
 
-You’ll notice in the above output the sequences have been truncated. We
-could instead write our own code to format this as we please by
-iterating over the rows as ``SeqRecord`` objects:
+你会注意到，以上输出截短了中间一部分序列的内容。你也可以很容易地通过控制多序列排列中每一个序列（为 ``SeqRecord`` 对象）来输出你所喜欢的格式。例如：
 
 .. code:: verbatim
 
