@@ -3,7 +3,7 @@ Biopython-cn
 
 Biopython 中文翻译
 
-翻译格式采用rst，文档统一字符编码格式为utf-8。  
+翻译格式采用rst，文档统一采用utf-8编码。  
 
 Biopython文档的版本基于Last Update – 5 February 2013 (Biopython 1.61)  
 
