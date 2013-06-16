@@ -1,13 +1,13 @@
-Chapter?18??Cookbook ®C Cool things to do with it
+Chapter 18  Cookbook ‚Äì Cool things to do with it
 ================================================
 
-Biopython now has two collections of °∞cookbook°± examples ®C this chapter
+Biopython now has two collections of ‚Äúcookbook‚Äù examples ‚Äì this chapter
 (which has been included in this tutorial for many years and has
 gradually grown), and
 ```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__
 which is a user contributed collection on our wiki.
 
-We°Øre trying to encourage Biopython users to contribute their own
+We‚Äôre trying to encourage Biopython users to contribute their own
 examples to the wiki. In addition to helping the community, one direct
 benefit of sharing an example like this is that you could also get some
 feedback on the code from other Biopython users and developers - which
@@ -16,22 +16,22 @@ could help you improve all your Python code.
 In the long term, we may end up moving all of the examples in this
 chapter to the wiki, or elsewhere within the tutorial.
 
-18.1??Working with sequence files
+18.1  Working with sequence files
 ---------------------------------
 
 This section shows some more examples of sequence input/output, using
 the ``Bio.SeqIO`` module described in
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__.
+Chapter \ `5 <#chapter:Bio.SeqIO>`__.
 
-18.1.1??Filtering a sequence file
+18.1.1  Filtering a sequence file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Often you°Øll have a large file with many sequences in it (e.g. FASTA
+Often you‚Äôll have a large file with many sequences in it (e.g. FASTA
 file or genes, or a FASTQ or SFF file of reads), a separate shorter list
 of the IDs for a subset of sequences of interest, and want to make a new
 sequence file for this subset.
 
-Let°Øs say the list of IDs is in a simple text file, as the first word on
+Let‚Äôs say the list of IDs is in a simple text file, as the first word on
 each line. This could be a tabular file where the first column is the
 ID. Try something like this:
 
@@ -52,17 +52,17 @@ ID. Try something like this:
 Note that we use a Python ``set`` rather than a ``list``, this makes
 testing membership faster.
 
-18.1.2??Producing randomised genomes
+18.1.2  Producing randomised genomes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let°Øs suppose you are looking at genome sequence, hunting for some
-sequence feature ®C maybe extreme local GC% bias, or possible restriction
-digest sites. Once you°Øve got your Python code working on the real
+Let‚Äôs suppose you are looking at genome sequence, hunting for some
+sequence feature ‚Äì maybe extreme local GC% bias, or possible restriction
+digest sites. Once you‚Äôve got your Python code working on the real
 genome it may be sensible to try running the same search on randomised
 versions of the same genome for statistical analysis (after all, any
-°∞features°± you°Øve found could just be there just by chance).
+‚Äúfeatures‚Äù you‚Äôve found could just be there just by chance).
 
-For this discussion, we°Øll use the GenBank file for the pPCP1 plasmid
+For this discussion, we‚Äôll use the GenBank file for the pPCP1 plasmid
 from *Yersinia pestis biovar Microtus*. The file is included with the
 Biopython unit tests under the GenBank folder, or you can get it from
 our website,
@@ -77,7 +77,7 @@ This file contains one and only one record, so we can read it in as a
 
 So, how can we generate a shuffled versions of the original sequence? I
 would use the built in Python ``random`` module for this, in particular
-the function ``random.shuffle`` ®C but this works on a Python list. Our
+the function ``random.shuffle`` ‚Äì but this works on a Python list. Our
 sequence is a ``Seq`` object, so in order to shuffle it we need to turn
 it into a list:
 
@@ -90,8 +90,8 @@ it into a list:
 Now, in order to use ``Bio.SeqIO`` to output the shuffled sequence, we
 need to construct a new ``SeqRecord`` with a new ``Seq`` object using
 this shuffled list. In order to do this, we need to turn the list of
-nucleotides (single letter strings) into a long string ®C the standard
-Python way to do this is with the string object°Øs join method.
+nucleotides (single letter strings) into a long string ‚Äì the standard
+Python way to do this is with the string object‚Äôs join method.
 
 .. code:: verbatim
 
@@ -100,13 +100,13 @@ Python way to do this is with the string object°Øs join method.
     >>> shuffled_rec = SeqRecord(Seq("".join(nuc_list), original_rec.seq.alphabet),
     ...                          id="Shuffled", description="Based on %s" % original_rec.id)
 
-Let°Øs put all these pieces together to make a complete Python script
+Let‚Äôs put all these pieces together to make a complete Python script
 which generates a single FASTA file containing 30 randomly shuffled
 versions of the original sequence.
 
 This first version just uses a big for loop and writes out the records
-one by one (using the ``SeqRecord``\ °Øs format method described in
-Section?\ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
+one by one (using the ``SeqRecord``\ ‚Äôs format method described in
+Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
 
 .. code:: verbatim
 
@@ -150,20 +150,20 @@ the record and a generator expression instead of the for loop:
     SeqIO.write(shuffled_recs, handle, "fasta")
     handle.close()
 
-18.1.3??Translating a FASTA file of CDS entries
+18.1.3  Translating a FASTA file of CDS entries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose you°Øve got an input file of CDS entries for some organism, and
+Suppose you‚Äôve got an input file of CDS entries for some organism, and
 you want to generate a new FASTA file containing their protein
 sequences. i.e. Take each nucleotide sequence from the original file,
-and translate it. Back in Section?\ `3.9 <#sec:translation>`__ we saw
-how to use the ``Seq`` object°Øs ``translate method``, and the optional
+and translate it. Back in Section \ `3.9 <#sec:translation>`__ we saw
+how to use the ``Seq`` object‚Äôs ``translate method``, and the optional
 ``cds`` argument which enables correct translation of alternative start
 codons.
 
 We can combine this with ``Bio.SeqIO`` as shown in the reverse
 complement example in
-Section?\ `5.5.3 <#sec:SeqIO-reverse-complement>`__. The key point is
+Section \ `5.5.3 <#sec:SeqIO-reverse-complement>`__. The key point is
 that for each nucleotide ``SeqRecord``, we need to create a protein
 ``SeqRecord`` - and take care of naming it.
 
@@ -195,12 +195,12 @@ way to do this is with a generator expression:
 This should work on any FASTA file of complete coding sequences. If you
 are working on partial coding sequences, you may prefer to use
 ``nuc_record.seq.translate(to_stop=True)`` in the example above, as this
-wouldn°Øt check for a valid start codon etc.
+wouldn‚Äôt check for a valid start codon etc.
 
-18.1.4??Making the sequences in a FASTA file upper case
+18.1.4  Making the sequences in a FASTA file upper case
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Often you°Øll get data from collaborators as FASTA files, and sometimes
+Often you‚Äôll get data from collaborators as FASTA files, and sometimes
 the sequences can be in a mixture of upper and lower case. In some cases
 this is deliberate (e.g. lower case for poor quality regions), but
 usually it is not important. You may want to edit the file to make
@@ -216,7 +216,7 @@ Biopython 1.55):
     print "Converted %i records to upper case" % count
 
 How does this work? The first line is just importing the ``Bio.SeqIO``
-module. The second line is the interesting bit ®C this is a Python
+module. The second line is the interesting bit ‚Äì this is a Python
 generator expression which gives an upper case version of each record
 parsed from the input file (``mixed.fas``). In the third line we give
 this generator expression to the ``Bio.SeqIO.write()`` function and it
@@ -227,7 +227,7 @@ comprehension) is this means only one record is kept in memory at a
 time. This can be really important if you are dealing with large files
 with millions of entries.
 
-18.1.5??Sorting a sequence file
+18.1.5  Sorting a sequence file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Suppose you wanted to sort a sequence file by length (e.g. a set of
@@ -256,8 +256,8 @@ argument:
     records.sort(cmp=lambda x,y: cmp(len(y),len(x)))
     SeqIO.write(records, "sorted_orchids.fasta", "fasta")
 
-Now that°Øs pretty straight forward - but what happens if you have a very
-large file and you can°Øt load it all into memory like this? For example,
+Now that‚Äôs pretty straight forward - but what happens if you have a very
+large file and you can‚Äôt load it all into memory like this? For example,
 you might have some next-generation sequencing reads to sort by length.
 This can be solved using the ``Bio.SeqIO.index()`` function.
 
@@ -282,10 +282,10 @@ allows us to retrieve the records one by one, and we pass them to
 
 These examples all use ``Bio.SeqIO`` to parse the records into
 ``SeqRecord`` objects which are output using ``Bio.SeqIO.write()``. What
-if you want to sort a file format which ``Bio.SeqIO.write()`` doesn°Øt
+if you want to sort a file format which ``Bio.SeqIO.write()`` doesn‚Äôt
 support, like the plain text SwissProt format? Here is an alternative
 solution using the ``get_raw()`` method added to ``Bio.SeqIO.index()``
-in Biopython 1.54 (see Section?\ `5.4.2.2 <#sec:seqio-index-getraw>`__).
+in Biopython 1.54 (see Section \ `5.4.2.2 <#sec:seqio-index-getraw>`__).
 
 .. code:: verbatim
 
@@ -301,10 +301,10 @@ in Biopython 1.54 (see Section?\ `5.4.2.2 <#sec:seqio-index-getraw>`__).
         handle.write(record_index.get_raw(id))
     handle.close()
 
-As a bonus, because it doesn°Øt parse the data into ``SeqRecord`` objects
+As a bonus, because it doesn‚Äôt parse the data into ``SeqRecord`` objects
 a second time it should be faster.
 
-18.1.6??Simple quality filtering for FASTQ files
+18.1.6  Simple quality filtering for FASTQ files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The FASTQ file format was introduced at Sanger and is now widely used
@@ -324,7 +324,7 @@ is read in a file of FASTQ data, and filter it to pick out only those
 records whose PHRED quality scores are all above some threshold (here
 20).
 
-For this example we°Øll use some real data downloaded from the ENA
+For this example we‚Äôll use some real data downloaded from the ENA
 sequence read archive,
 ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__
 (2MB) which unzips to a 19MB file ``SRR020192.fastq``. This is some
@@ -333,7 +333,7 @@ lions (see
 ```http://www.ebi.ac.uk/ena/data/view/SRS004476`` <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__
 for details).
 
-First, let°Øs count the reads:
+First, let‚Äôs count the reads:
 
 .. code:: verbatim
 
@@ -343,7 +343,7 @@ First, let°Øs count the reads:
         count += 1
     print "%i reads" % count
 
-Now let°Øs do a simple filtering for a minimum PHRED quality of 20:
+Now let‚Äôs do a simple filtering for a minimum PHRED quality of 20:
 
 .. code:: verbatim
 
@@ -363,19 +363,19 @@ loading them all into memory at once. This example uses a generator
 expression, which means only one ``SeqRecord`` is created at a time -
 avoiding any memory limitations.
 
-18.1.7??Trimming off primer sequences
+18.1.7  Trimming off primer sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For this example we°Øre going to pretend that ``GATGACGGTGT`` is a 5°Ø
+For this example we‚Äôre going to pretend that ``GATGACGGTGT`` is a 5‚Äô
 primer sequence we want to look for in some FASTQ formatted read data.
-As in the example above, we°Øll use the ``SRR020192.fastq`` file
+As in the example above, we‚Äôll use the ``SRR020192.fastq`` file
 downloaded from the ENA
 (```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
 The same approach would work with any other supported file format (e.g.
 FASTA files).
 
 This code uses ``Bio.SeqIO`` with a generator expression (to avoid
-loading all the sequences into memory at once), and the ``Seq`` object°Øs
+loading all the sequences into memory at once), and the ``Seq`` object‚Äôs
 ``startswith`` method to see if the read starts with the primer
 sequence:
 
@@ -392,9 +392,9 @@ That should find 13819 reads from ``SRR014849.fastq`` and save them to a
 new FASTQ file, ``with_primer.fastq``.
 
 Now suppose that instead you wanted to make a FASTQ file containing
-these reads but with the primer sequence removed? That°Øs just a small
+these reads but with the primer sequence removed? That‚Äôs just a small
 change as we can slice the ``SeqRecord`` (see
-Section?\ `4.6 <#sec:SeqRecord-slicing>`__) to remove the first eleven
+Section \ `4.6 <#sec:SeqRecord-slicing>`__) to remove the first eleven
 letters (the length of our primer):
 
 .. code:: verbatim
@@ -430,7 +430,7 @@ clearest to define our own trim function:
     print "Saved %i reads" % count
 
 This takes longer, as this time the output file contains all 41892
-reads. Again, we°Øre used a generator expression to avoid any memory
+reads. Again, we‚Äôre used a generator expression to avoid any memory
 problems. You could alternatively use a generator function rather than a
 generator expression.
 
@@ -456,10 +456,10 @@ generator expression.
     print "Saved %i reads" % count
 
 This form is more flexible if you want to do something more complicated
-where only some of the records are retained ®C as shown in the next
+where only some of the records are retained ‚Äì as shown in the next
 example.
 
-18.1.8??Trimming off adaptor sequences
+18.1.8  Trimming off adaptor sequences
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is essentially a simple extension to the previous example. We are
@@ -504,7 +504,7 @@ the trimmed records, so we can output them as a FASTQ file too.
 Compared to the output of the previous example where we only looked for
 a primer/adaptor at the start of each read, you may find some of the
 trimmed reads are quite short after trimming (e.g. if the adaptor was
-found in the middle rather than near the start). So, let°Øs add a minimum
+found in the middle rather than near the start). So, let‚Äôs add a minimum
 length requirement as well:
 
 .. code:: verbatim
@@ -541,11 +541,11 @@ instead. This code also could be extended to do a fuzzy match instead of
 an exact match (maybe using a pairwise alignment, or taking into account
 the read quality scores), but that will be much slower.
 
-18.1.9??Converting FASTQ files
+18.1.9  Converting FASTQ files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Back in Section?\ `5.5.2 <#sec:SeqIO-conversion>`__ we showed how to use
-``Bio.SeqIO`` to convert between two file formats. Here we°Øll go into a
+Back in Section \ `5.5.2 <#sec:SeqIO-conversion>`__ we showed how to use
+``Bio.SeqIO`` to convert between two file formats. Here we‚Äôll go into a
 little more detail regarding FASTQ files which are used in second
 generation DNA sequencing. Please refer to Cock *et al.* (2009)
 [`7 <#cock2010>`__\ ] for a longer description. FASTQ files store both
@@ -557,7 +557,7 @@ the probability of a sequencing error (here denoted by *P*\ :sub:`*e*`)
 at a given base using a simple base ten log transformation:
 
 +--------------------------------------------------------------------------+
-| *Q*\ :sub:`PHRED`?=???10?°¡?log:sub:`10`?(?*P*\ :sub:`*e*`?) ????(18.1)   |
+| *Q*\ :sub:`PHRED` = ‚àí 10 √ó log:sub:`10` ( *P*\ :sub:`*e*` )     (18.1)   |
 +--------------------------------------------------------------------------+
 
 This means a wrong read (*P*\ :sub:`*e*` = 1) gets a PHRED quality of 0,
@@ -587,28 +587,28 @@ to distinguish...
 The Solexa quality scores are defined using a different log
 transformation:
 
-*Q*\ :sub:`Solexa`?=???10?°¡?log:sub:`10`?
+*Q*\ :sub:`Solexa` = ‚àí 10 √ó log:sub:`10` 
 
-| ?
-|  ?
-|  ?
-|  ?
+| ‚éõ
+|  ‚éú
+|  ‚éú
+|  ‚éù
 
 +-----------------------+
 | *P*\ :sub:`*e*`       |
 +-----------------------+
 +-----------------------+
-| 1?\ *P*\ :sub:`*e*`   |
+| 1‚àí\ *P*\ :sub:`*e*`   |
 +-----------------------+
 
-?
+ 
 
-| ?
-|  ?
-|  ?
-|  ?
+| ‚éû
+|  ‚éü
+|  ‚éü
+|  ‚é†
 
-????(18.2)
+    (18.2)
 
 Given Solexa/Illumina have now moved to using PHRED scores in version
 1.3 of their pipeline, the Solexa quality scores will gradually fall out
@@ -656,7 +656,7 @@ For more details, see the built in help (also
     >>> help(QualityIO)
     ...
 
-18.1.10??Converting FASTA and QUAL files into FASTQ files
+18.1.10  Converting FASTA and QUAL files into FASTQ files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FASTQ files hold *both* sequences and their quality strings. FASTA files
@@ -708,20 +708,20 @@ convert a pair of FASTA and QUAL files into a single FASTQ files:
     handle.close()
     print "Converted %i records" % count
 
-18.1.11??Indexing a FASTQ file
+18.1.11  Indexing a FASTQ file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FASTQ files are often very large, with millions of reads in them. Due to
-the sheer amount of data, you can°Øt load all the records into memory at
+the sheer amount of data, you can‚Äôt load all the records into memory at
 once. This is why the examples above (filtering and trimming) iterate
 over the file looking at just one ``SeqRecord`` at a time.
 
-However, sometimes you can°Øt use a big loop or an iterator - you may
+However, sometimes you can‚Äôt use a big loop or an iterator - you may
 need random access to the reads. Here the ``Bio.SeqIO.index()`` function
 may prove very helpful, as it allows you to access any read in the FASTQ
-file by its name (see Section?\ `5.4.2 <#sec:SeqIO-index>`__).
+file by its name (see Section \ `5.4.2 <#sec:SeqIO-index>`__).
 
-Again we°Øll use the ``SRR020192.fastq`` file from the ENA
+Again we‚Äôll use the ``SRR020192.fastq`` file from the ENA
 (```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__),
 although this is actually quite a small FASTQ file with less than 50,000
 reads:
@@ -740,11 +740,11 @@ reads:
 When testing this on a FASTQ file with seven million reads, indexing
 took about a minute, but record access was almost instant.
 
-The example in Section?\ `18.1.5 <#sec:SeqIO-sort>`__ show how you can
-use the ``Bio.SeqIO.index()`` function to sort a large FASTA file ®C this
+The example in Section \ `18.1.5 <#sec:SeqIO-sort>`__ show how you can
+use the ``Bio.SeqIO.index()`` function to sort a large FASTA file ‚Äì this
 could also be used on FASTQ files.
 
-18.1.12??Converting SFF files
+18.1.12  Converting SFF files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you work with 454 (Roche) sequence data, you will probably have
@@ -755,7 +755,7 @@ original flow information.
 A common task is to convert from SFF to a pair of FASTA and QUAL files,
 or to a single FASTQ file. These operations are trivial using the
 ``Bio.SeqIO.convert()`` function (see
-Section?\ `5.5.2 <#sec:SeqIO-conversion>`__):
+Section \ `5.5.2 <#sec:SeqIO-conversion>`__):
 
 .. code:: verbatim
 
@@ -783,8 +783,8 @@ recorded within the SFF file) use this:
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff-trim", "trimmed.fastq", "fastq")
     10
 
-If you run Linux, you could ask Roche for a copy of their °∞off
-instrument°± tools (often referred to as the Newbler tools). This offers
+If you run Linux, you could ask Roche for a copy of their ‚Äúoff
+instrument‚Äù tools (often referred to as the Newbler tools). This offers
 an alternative way to do SFF to FASTA or QUAL conversion at the command
 line (but currently FASTQ output is not supported), e.g.
 
@@ -807,26 +807,26 @@ help:
     >>> help(SffIO)
     ...
 
-18.1.13??Identifying open reading frames
+18.1.13  Identifying open reading frames
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A very simplistic first step at identifying possible genes is to look
 for open reading frames (ORFs). By this we mean look in all six frames
-for long regions without stop codons ®C an ORF is just a region of
+for long regions without stop codons ‚Äì an ORF is just a region of
 nucleotides with no in frame stop codons.
 
 Of course, to find a gene you would also need to worry about locating a
-start codon, possible promoters ®C and in Eukaryotes there are introns to
+start codon, possible promoters ‚Äì and in Eukaryotes there are introns to
 worry about too. However, this approach is still useful in viruses and
 Prokaryotes.
 
-To show how you might approach this with Biopython, we°Øll need a
-sequence to search, and as an example we°Øll again use the bacterial
-plasmid ®C although this time we°Øll start with a plain FASTA file with no
+To show how you might approach this with Biopython, we‚Äôll need a
+sequence to search, and as an example we‚Äôll again use the bacterial
+plasmid ‚Äì although this time we‚Äôll start with a plain FASTA file with no
 pre-marked genes:
 ```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
-This is a bacterial sequence, so we°Øll want to use NCBI codon table 11
-(see Section?\ `3.9 <#sec:translation>`__ about translation).
+This is a bacterial sequence, so we‚Äôll want to use NCBI codon table 11
+(see Section \ `3.9 <#sec:translation>`__ about translation).
 
 .. code:: verbatim
 
@@ -835,7 +835,7 @@ This is a bacterial sequence, so we°Øll want to use NCBI codon table 11
     >>> table = 11
     >>> min_pro_len = 100
 
-Here is a neat trick using the ``Seq`` object°Øs ``split`` method to get
+Here is a neat trick using the ``Seq`` object‚Äôs ``split`` method to get
 a list of all the possible ORF translations in the six reading frames:
 
 .. code:: verbatim
@@ -862,13 +862,13 @@ a list of all the possible ORF translations in the six reading frames:
     LSHTVTDFTDQMAQVGLCQCVNVFLDEVTG...KAA - length 107, strand -1, frame 2
     RALTGLSAPGIRSQTSCDRLRELRYVPVSL...PLQ - length 119, strand -1, frame 2
 
-Note that here we are counting the frames from the 5°Ø end (start) of
-*each* strand. It is sometimes easier to always count from the 5°Ø end
+Note that here we are counting the frames from the 5‚Äô end (start) of
+*each* strand. It is sometimes easier to always count from the 5‚Äô end
 (start) of the *forward* strand.
 
 You could easily edit the above loop based code to build up a list of
 the candidate proteins, or convert this to a list comprehension. Now,
-one thing this code doesn°Øt do is keep track of where the proteins are.
+one thing this code doesn‚Äôt do is keep track of where the proteins are.
 
 You could tackle this in several ways. For example, the following code
 tracks the locations in terms of the protein counting, and converts back
@@ -936,7 +936,7 @@ If you comment out the sort statement, then the protein sequences will
 be shown in the same order as before, so you can check this is doing the
 same thing. Here we have sorted them by location to make it easier to
 compare to the actual annotation in the GenBank file (as visualised in
-Section?\ `17.1.9 <#sec:gd_nice_example>`__).
+Section \ `17.1.9 <#sec:gd_nice_example>`__).
 
 If however all you want to find are the locations of the open reading
 frames, then it is a waste of time to translate every possible codon,
@@ -948,23 +948,23 @@ here (see the Python module ``re``). These are an extremely powerful
 supported in lots of programming languages and also command line tools
 like ``grep`` as well). You can find whole books about this topic!
 
-18.2??Sequence parsing plus simple plots
+18.2  Sequence parsing plus simple plots
 ----------------------------------------
 
 This section shows some more examples of sequence parsing, using the
-``Bio.SeqIO`` module described in Chapter?\ `5 <#chapter:Bio.SeqIO>`__,
-plus the Python library matplotlib°Øs ``pylab`` plotting interface (see
+``Bio.SeqIO`` module described in Chapter \ `5 <#chapter:Bio.SeqIO>`__,
+plus the Python library matplotlib‚Äôs ``pylab`` plotting interface (see
 `the matplotlib website for a
 tutorial <http://matplotlib.sourceforge.net/>`__). Note that to follow
 these examples you will need matplotlib installed - but without it you
 can still try the data parsing bits.
 
-18.2.1??Histogram of sequence lengths
+18.2.1  Histogram of sequence lengths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are lots of times when you might want to visualise the
-distribution of sequence lengths in a dataset ®C for example the range of
-contig sizes in a genome assembly project. In this example we°Øll reuse
+distribution of sequence lengths in a dataset ‚Äì for example the range of
+contig sizes in a genome assembly project. In this example we‚Äôll reuse
 our orchid FASTA file
 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 which has only 94 sequences.
@@ -1010,13 +1010,13 @@ shorter sequences.
 you can also use ``pylab.savefig(...)`` to save the figure to a file
 (e.g. as a PNG or PDF).
 
-18.2.2??Plot of sequence GC%
+18.2.2  Plot of sequence GC%
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Another easily calculated quantity of a nucleotide sequence is the GC%.
 You might want to look at the GC% of all the genes in a bacterial genome
 for example, and investigate any outliers which could have been recently
-acquired by horizontal gene transfer. Again, for this example we°Øll
+acquired by horizontal gene transfer. Again, for this example we‚Äôll
 reuse our orchid FASTA file
 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
 
@@ -1032,7 +1032,7 @@ a for loop, but I prefer this:
     gc_values = sorted(GC(rec.seq) for rec in SeqIO.parse("ls_orchid.fasta", "fasta"))
 
 Having read in each sequence and calculated the GC%, we then sorted them
-into ascending order. Now we°Øll take this list of floating point values
+into ascending order. Now we‚Äôll take this list of floating point values
 and plot them with matplotlib:
 
 .. code:: verbatim
@@ -1050,19 +1050,19 @@ graph:
 
 |image27|
 
-If you tried this on the full set of genes from one organism, you°Ød
+If you tried this on the full set of genes from one organism, you‚Äôd
 probably get a much smoother plot than this.
 
-18.2.3??Nucleotide dot plots
+18.2.3  Nucleotide dot plots
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A dot plot is a way of visually comparing two nucleotide sequences for
 similarity to each other. A sliding window is used to compare short
 sub-sequences to each other, often with a mis-match threshold. Here for
-simplicity we°Øll only look for perfect matches (shown in black in the
+simplicity we‚Äôll only look for perfect matches (shown in black in the
 plot below).
 
-To start off, we°Øll need two sequences. For the sake of argument, we°Øll
+To start off, we‚Äôll need two sequences. For the sake of argument, we‚Äôll
 just take the first two from our orchid FASTA file
 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
@@ -1075,7 +1075,7 @@ just take the first two from our orchid FASTA file
     rec_two = record_iterator.next()
     handle.close()
 
-We°Øre going to show two approaches. Firstly, a simple naive
+We‚Äôre going to show two approaches. Firstly, a simple naive
 implementation which compares all the window sized sub-sequences to each
 other to compiles a similarity matrix. You could construct a matrix or
 array object, but here we just use a list of lists of booleans created
@@ -1091,7 +1091,7 @@ with a nested list comprehension:
            for i in range(len(seq_two)-window)]
 
 Note that we have *not* checked for reverse complement matches here. Now
-we°Øll use the matplotlib°Øs ``pylab.imshow()`` function to display this
+we‚Äôll use the matplotlib‚Äôs ``pylab.imshow()`` function to display this
 data, first requesting the gray color scheme so this is done in black
 and white:
 
@@ -1117,11 +1117,11 @@ interesting events.
 The above code works fine on small examples, but there are two problems
 applying this to larger sequences, which we will address below. First
 off all, this brute force approach to the all against all comparisons is
-very slow. Instead, we°Øll compile dictionaries mapping the window sized
+very slow. Instead, we‚Äôll compile dictionaries mapping the window sized
 sub-sequences to their locations, and then take the set intersection to
 find those sub-sequences found in both sequences. This uses more memory,
 but is *much* faster. Secondly, the ``pylab.imshow()`` function is
-limited in the size of matrix it can display. As an alternative, we°Øll
+limited in the size of matrix it can display. As an alternative, we‚Äôll
 use the ``pylab.scatter()`` function.
 
 We start by creating dictionaries mapping the window-sized sub-sequences
@@ -1179,11 +1179,11 @@ That should pop up a new window containing a graph like this:
 |image29|
 
 Personally I find this second plot much easier to read! Again note that
-we have *not* checked for reverse complement matches here ®C you could
+we have *not* checked for reverse complement matches here ‚Äì you could
 extend this example to do this, and perhaps plot the forward matches in
 one color and the reverse matches in another.
 
-18.2.4??Plotting the quality scores of sequencing read data
+18.2.4  Plotting the quality scores of sequencing read data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are working with second generation sequencing data, you may want
@@ -1194,7 +1194,7 @@ downloaded from the ENA sequence read archive FTP site
 (```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__
 and
 ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__),
-and are from *E. coli* ®C see
+and are from *E. coli* ‚Äì see
 ```http://www.ebi.ac.uk/ena/data/view/SRR001666`` <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__
 for details. In the following code the ``pylab.subplot(...)`` function
 is used in order to show the forward and reverse qualities on two
@@ -1230,25 +1230,25 @@ the result:
 
 |image30|
 
-18.3??Dealing with alignments
+18.3  Dealing with alignments
 -----------------------------
 
 This section can been seen as a follow on to
-Chapter?\ `6 <#chapter:Bio.AlignIO>`__.
+Chapter \ `6 <#chapter:Bio.AlignIO>`__.
 
-18.3.1??Calculating summary information
+18.3.1  Calculating summary information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once you have an alignment, you are very likely going to want to find
 out information about it. Instead of trying to have all of the functions
 that can generate information about an alignment in the alignment object
-itself, we°Øve tried to separate out the functionality into separate
+itself, we‚Äôve tried to separate out the functionality into separate
 classes, which act on the alignment.
 
 Getting ready to calculate summary information about an object is quick
-to do. Let°Øs say we°Øve got an alignment object called ``alignment``, for
+to do. Let‚Äôs say we‚Äôve got an alignment object called ``alignment``, for
 example read in using ``Bio.AlignIO.read(...)`` as described in
-Chapter?\ `6 <#chapter:Bio.AlignIO>`__. All we need to do to get an
+Chapter \ `6 <#chapter:Bio.AlignIO>`__. All we need to do to get an
 object that will calculate summary information is:
 
 .. code:: verbatim
@@ -1259,22 +1259,22 @@ object that will calculate summary information is:
 The ``summary_align`` object is very useful, and will do the following
 neat things for you:
 
-#. Calculate a quick consensus sequence ®C see
-   section?\ `18.3.2 <#sec:consensus>`__
-#. Get a position specific score matrix for the alignment ®C see
-   section?\ `18.3.3 <#sec:pssm>`__
-#. Calculate the information content for the alignment ®C see
-   section?\ `18.3.4 <#sec:getting_info_content>`__
-#. Generate information on substitutions in the alignment ®C
-   section?\ `18.4 <#sec:sub_matrix>`__ details using this to generate a
+#. Calculate a quick consensus sequence ‚Äì see
+   section \ `18.3.2 <#sec:consensus>`__
+#. Get a position specific score matrix for the alignment ‚Äì see
+   section \ `18.3.3 <#sec:pssm>`__
+#. Calculate the information content for the alignment ‚Äì see
+   section \ `18.3.4 <#sec:getting_info_content>`__
+#. Generate information on substitutions in the alignment ‚Äì
+   section \ `18.4 <#sec:sub_matrix>`__ details using this to generate a
    substitution matrix.
 
-18.3.2??Calculating a quick consensus sequence
+18.3.2  Calculating a quick consensus sequence
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``SummaryInfo`` object, described in
-section?\ `18.3.1 <#sec:summary_info>`__, provides functionality to
-calculate a quick consensus of an alignment. Assuming we°Øve got a
+section \ `18.3.1 <#sec:summary_info>`__, provides functionality to
+calculate a quick consensus of an alignment. Assuming we‚Äôve got a
 ``SummaryInfo`` object called ``summary_align`` we can calculate a
 consensus by doing:
 
@@ -1285,7 +1285,7 @@ consensus by doing:
 As the name suggests, this is a really simple consensus calculator, and
 will just add up all of the residues at each point in the consensus, and
 if the most common value is higher than some threshold value will add
-the common residue to the consensus. If it doesn°Øt reach the threshold,
+the common residue to the consensus. If it doesn‚Äôt reach the threshold,
 it adds an ambiguity character to the consensus. The returned consensus
 object is Seq object whose alphabet is inferred from the alphabets of
 the sequences making up the consensus. So doing a ``print consensus``
@@ -1304,13 +1304,13 @@ parameters:
     to be at a position before it is added. The default is 0.7 (meaning
     70%).
 **the ambiguous character**
-    This is the ambiguity character to use. The default is °ØN°Ø.
+    This is the ambiguity character to use. The default is ‚ÄôN‚Äô.
 **the consensus alphabet**
     This is the alphabet to use for the consensus sequence. If an
     alphabet is not specified than we will try to guess the alphabet
     based on the alphabets of the sequences in the alignment.
 
-18.3.3??Position Specific Score Matrices
+18.3.3  Position Specific Score Matrices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Position specific score matrices (PSSMs) summarize the alignment
@@ -1339,7 +1339,7 @@ the PSSM is:
         T 0 0 2 0
         C 0 0 0 3
 
-Let°Øs assume we°Øve got an alignment object called ``c_align``. To get a
+Let‚Äôs assume we‚Äôve got an alignment object called ``c_align``. To get a
 PSSM with the consensus sequence along the side we first get a summary
 object and calculate the consensus sequence:
 
@@ -1391,7 +1391,7 @@ showed above, we simply need to do a ``print my_pssm``, which gives:
 
 You can access any element of the PSSM by subscripting like
 ``your_pssm[sequence_number][residue_count_name]``. For instance, to get
-the counts for the °ØA°Ø residue in the second element of the above PSSM
+the counts for the ‚ÄôA‚Äô residue in the second element of the above PSSM
 you would do:
 
 .. code:: verbatim
@@ -1402,7 +1402,7 @@ you would do:
 The structure of the PSSM class hopefully makes it easy both to access
 elements and to pretty print the matrix.
 
-18.3.4??Information Content
+18.3.4  Information Content
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A potentially useful measure of evolutionary conservation is the
@@ -1416,22 +1416,22 @@ consesus sequence, or a portion of a consensus sequence. We calculate
 information content at a particular column in a multiple sequence
 alignment using the following formula:
 
-*IC*\ :sub:`*j*`?=?
+*IC*\ :sub:`*j*` = 
 
 +-------------------+
 | *N*\ :sub:`*a*`   |
 +-------------------+
-| °∆                 |
+| ‚àë                 |
 +-------------------+
 | *i*\ =1           |
 +-------------------+
 
-?*P*\ :sub:`*ij*`?*log*
+ *P*\ :sub:`*ij*` *log*
 
-| ?
-|  ?
-|  ?
-|  ?
+| ‚éõ
+|  ‚éú
+|  ‚éú
+|  ‚éù
 
 +--------------------+
 | *P*\ :sub:`*ij*`   |
@@ -1440,21 +1440,21 @@ alignment using the following formula:
 | *Q*\ :sub:`*i*`    |
 +--------------------+
 
-| ?
-|  ?
-|  ?
-|  ?
+| ‚éû
+|  ‚éü
+|  ‚éü
+|  ‚é†
 
 where:
 
--  *IC*\ :sub:`*j*` ®C The information content for the *j*-th column in
+-  *IC*\ :sub:`*j*` ‚Äì The information content for the *j*-th column in
    an alignment.
--  *N*\ :sub:`*a*` ®C The number of letters in the alphabet.
--  *P*\ :sub:`*ij*` ®C The frequency of a particular letter *i* in the
-   *j*-th column (i.?e.?if G occurred 3 out of 6 times in an aligment
+-  *N*\ :sub:`*a*` ‚Äì The number of letters in the alphabet.
+-  *P*\ :sub:`*ij*` ‚Äì The frequency of a particular letter *i* in the
+   *j*-th column (i. e. if G occurred 3 out of 6 times in an aligment
    column, this would be 0.5)
--  *Q*\ :sub:`*i*` ®C The expected frequency of a letter *i*. This is an
-   optional argument, usage of which is left at the user°Øs discretion.
+-  *Q*\ :sub:`*i*` ‚Äì The expected frequency of a letter *i*. This is an
+   optional argument, usage of which is left at the user‚Äôs discretion.
    By default, it is automatically assigned to 0.05 = 1/20 for a protein
    alphabet, and 0.25 = 1/4 for a nucleic acid alphabet. This is for
    geting the information content without any assumption of prior
@@ -1462,13 +1462,13 @@ where:
    alphabet, you should supply the values for *Q*\ :sub:`*i*`.
 
 Well, now that we have an idea what information content is being
-calculated in Biopython, let°Øs look at how to get it for a particular
+calculated in Biopython, let‚Äôs look at how to get it for a particular
 region of the alignment.
 
 First, we need to use our alignment to get an alignment summary object,
-which we°Øll assume is called ``summary_align`` (see
-section?\ `18.3.1 <#sec:summary_info>`__) for instructions on how to get
-this. Once we°Øve got this object, calculating the information content
+which we‚Äôll assume is called ``summary_align`` (see
+section \ `18.3.1 <#sec:summary_info>`__) for instructions on how to get
+this. Once we‚Äôve got this object, calculating the information content
 for a region is as easy as:
 
 .. code:: verbatim
@@ -1479,9 +1479,9 @@ for a region is as easy as:
 Wow, that was much easier then the formula above made it look! The
 variable ``info_content`` now contains a float value specifying the
 information content over the specified region (from 5 to 30 of the
-alignment). We specifically ignore the ambiguity residue °ØN°Ø when
+alignment). We specifically ignore the ambiguity residue ‚ÄôN‚Äô when
 calculating the information content, since this value is not included in
-our alphabet (so we shouldn°Øt be interested in looking at it!).
+our alphabet (so we shouldn‚Äôt be interested in looking at it!).
 
 As mentioned above, we can also calculate relative information content
 by supplying the expected frequencies:
@@ -1496,7 +1496,7 @@ by supplying the expected frequencies:
 
 The expected should not be passed as a raw dictionary, but instead by
 passed as a ``SubsMat.FreqTable`` object (see
-section?\ `20.2.2 <#sec:freq_table>`__ for more information about
+section \ `20.2.2 <#sec:freq_table>`__ for more information about
 FreqTables). The FreqTable object provides a standard for associating
 the dictionary with an Alphabet, similar to how the Biopython Seq class
 works.
@@ -1512,7 +1512,7 @@ need to do:
     e_freq_table = FreqTable.FreqTable(expect_freq, FreqTable.FREQ,
                                        IUPAC.unambiguous_dna)
 
-Now that we°Øve got that, calculating the relative information content
+Now that we‚Äôve got that, calculating the relative information content
 for our region of the alignment is as simple as:
 
 .. code:: verbatim
@@ -1536,33 +1536,33 @@ as the base you want:
 Well, now you are ready to calculate information content. If you want to
 try applying this to some real life problems, it would probably be best
 to dig into the literature on information content to get an idea of how
-it is used. Hopefully your digging won°Øt reveal any mistakes made in
+it is used. Hopefully your digging won‚Äôt reveal any mistakes made in
 coding this function!
 
-18.4??Substitution Matrices
+18.4  Substitution Matrices
 ---------------------------
 
 Substitution matrices are an extremely important part of everyday
 bioinformatics work. They provide the scoring terms for classifying how
 likely two different residues are to substitute for each other. This is
-essential in doing sequence comparisons. The book °∞Biological Sequence
-Analysis°± by Durbin et al. provides a really nice introduction to
+essential in doing sequence comparisons. The book ‚ÄúBiological Sequence
+Analysis‚Äù by Durbin et al. provides a really nice introduction to
 Substitution Matrices and their uses. Some famous substitution matrices
 are the PAM and BLOSUM series of matrices.
 
 Biopython provides a ton of common substitution matrices, and also
 provides functionality for creating your own substitution matrices.
 
-18.4.1??Using common substitution matrices
+18.4.1  Using common substitution matrices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-18.4.2??Creating your own substitution matrix from an alignment
+18.4.2  Creating your own substitution matrix from an alignment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A very cool thing that you can do easily with the substitution matrix
 classes is to create your own substitution matrix from an alignment. In
 practice, this is normally done with protein alignments. In this
-example, we°Øll first get a Biopython alignment object and then get a
+example, we‚Äôll first get a Biopython alignment object and then get a
 summary object to calculate info about the alignment. The file
 containing `protein.aln <examples/protein.aln>`__ (also available online
 `here <http://biopython.org/DIST/docs/tutorial/examples/protein.aln>`__)
@@ -1579,16 +1579,16 @@ contains the Clustalw alignment output.
     >>> c_align = AlignIO.read(filename, "clustal", alphabet=alpha)
     >>> summary_align = AlignInfo.SummaryInfo(c_align)
 
-Sections?\ `6.4.1 <#sec:align_clustal>`__
-and?\ `18.3.1 <#sec:summary_info>`__ contain more information on doing
+Sections \ `6.4.1 <#sec:align_clustal>`__
+and \ `18.3.1 <#sec:summary_info>`__ contain more information on doing
 this.
 
-Now that we°Øve got our ``summary_align`` object, we want to use it to
+Now that we‚Äôve got our ``summary_align`` object, we want to use it to
 find out the number of times different residues substitute for each
-other. To make the example more readable, we°Øll focus on only amino
+other. To make the example more readable, we‚Äôll focus on only amino
 acids with polar charged side chains. Luckily, this can be done easily
 when generating a replacement dictionary, by passing in all of the
-characters that should be ignored. Thus we°Øll create a dictionary of
+characters that should be ignored. Thus we‚Äôll create a dictionary of
 replacements for only charged polar amino acids using:
 
 .. code:: verbatim
@@ -1622,7 +1622,7 @@ dictionary information to create an Accepted Replacement Matrix (ARM):
     >>> my_arm = SubsMat.SeqMat(replace_info)
 
 With this accepted replacement matrix, we can go right ahead and create
-our log odds matrix (i.?e.?a standard type Substitution Matrix):
+our log odds matrix (i. e. a standard type Substitution Matrix):
 
 .. code:: verbatim
 
@@ -1631,7 +1631,7 @@ our log odds matrix (i.?e.?a standard type Substitution Matrix):
 The log odds matrix you create is customizable with the following
 optional arguments:
 
--  ``exp_freq_table`` ®C You can pass a table of expected frequencies for
+-  ``exp_freq_table`` ‚Äì You can pass a table of expected frequencies for
    each alphabet. If supplied, this will be used instead of the passed
    accepted replacement matrix when calculate expected replacments.
 -  ``logbase`` - The base of the logarithm taken to create the log odd
@@ -1640,9 +1640,9 @@ optional arguments:
    defaults to 10, which normally makes the matrix numbers easy to work
    with.
 -  ``round_digit`` - The digit to round to in the matrix. This defaults
-   to 0 (i.?e.?no digits).
+   to 0 (i. e. no digits).
 
-Once you°Øve got your log odds matrix, you can display it prettily using
+Once you‚Äôve got your log odds matrix, you can display it prettily using
 the function ``print_mat``. Doing this on our created matrix gives:
 
 .. code:: verbatim
@@ -1655,9 +1655,9 @@ the function ``print_mat``. Doing this on our created matrix gives:
     R  -4  -8  -4  -2   2
        D   E   H   K   R
 
-Very nice. Now we°Øve got our very own substitution matrix to play with!
+Very nice. Now we‚Äôve got our very own substitution matrix to play with!
 
-18.5??BioSQL ®C storing sequences in a relational database
+18.5  BioSQL ‚Äì storing sequences in a relational database
 ---------------------------------------------------------
 
 `BioSQL <http://www.biosql.org/>`__ is a joint effort between the
@@ -1667,8 +1667,8 @@ you could load a GenBank file into the database with BioPerl, then using
 Biopython extract this from the database as a record object with
 features - and get more or less the same thing as if you had loaded the
 GenBank file directly as a SeqRecord using ``Bio.SeqIO``
-(Chapter?`5 <#chapter:Bio.SeqIO>`__).
+(Chapter `5 <#chapter:Bio.SeqIO>`__).
 
-Biopython°Øs BioSQL module is currently documented at
+Biopython‚Äôs BioSQL module is currently documented at
 ```http://biopython.org/wiki/BioSQL`` <http://biopython.org/wiki/BioSQL>`__
 which is part of our wiki pages.

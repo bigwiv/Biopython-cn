@@ -1,4 +1,4 @@
-Chapter?13??Phylogenetics with Bio.Phylo
+Chapter 13  Phylogenetics with Bio.Phylo
 ========================================
 
 The Bio.Phylo module was introduced in Biopython 1.54. Following the
@@ -10,11 +10,12 @@ Bio.Phylo is described in an open-access journal article
 [`9 <#talevich2012>`__, Talevich *et al.*, 2012], which you might also
 find helpful.
 
-13.1??Demo: What°Øs in a Tree?
+
+13.1  Demo: What‚Äôs in a Tree?
 -----------------------------
 
-To get acquainted with the module, let°Øs start with a tree that we°Øve
-already constructed, and inspect it a few different ways. Then we°Øll
+To get acquainted with the module, let‚Äôs start with a tree that we‚Äôve
+already constructed, and inspect it a few different ways. Then we‚Äôll
 colorize the branches, to use a special phyloXML feature, and finally
 save it.
 
@@ -39,7 +40,7 @@ Launch the Python interpreter of your choice:
 
 For interactive work, launching the IPython interpreter with the
 ``-pylab`` flag enables **matplotlib** integration, so graphics will pop
-up automatically. We°Øll use that during this demo.
+up automatically. We‚Äôll use that during this demo.
 
 Now, within Python, read the tree file, giving the file name and the
 name of the format.
@@ -71,12 +72,12 @@ object hierarchy.
                 Clade(branch_length=1.0, name="G")
 
 The ``Tree`` object contains global information about the tree, such as
-whether it°Øs rooted or unrooted. It has one root clade, and under that,
-it°Øs nested lists of clades all the way down to the tips.
+whether it‚Äôs rooted or unrooted. It has one root clade, and under that,
+it‚Äôs nested lists of clades all the way down to the tips.
 
 The function ``draw_ascii`` creates a simple ASCII-art (plain text)
 dendrogram. This is a convenient visualization for interactive
-exploration, in case better graphical tools aren°Øt available.
+exploration, in case better graphical tools aren‚Äôt available.
 
 .. code:: verbatim
 
@@ -106,13 +107,13 @@ graphic using the ``draw`` function (see Fig.
 
 |image5|
 
-13.1.1??Coloring branches within a tree
+13.1.1  Coloring branches within a tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The functions ``draw`` and ``draw_graphviz`` support the display of
 different colors and branch widths in a tree. As of Biopython 1.59, the
 ``color`` and ``width`` attributes are available on the basic Clade
-object and there°Øs nothing extra required to use them. Both attributes
+object and there‚Äôs nothing extra required to use them. Both attributes
 refer to the branch leading the given clade, and apply recursively, so
 all descendent branches will also inherit the assigned width and color
 values during display.
@@ -136,13 +137,13 @@ import:
     >>> from Bio.Phylo.PhyloXML import Phylogeny
     >>> tree = Phylogeny.from_tree(tree)
 
-Note that the file formats Newick and Nexus don°Øt support branch colors
+Note that the file formats Newick and Nexus don‚Äôt support branch colors
 or widths, so if you use these attributes in Bio.Phylo, you will only be
 able to save the values in PhyloXML format. (You can still save a tree
 as Newick or Nexus, but the color and width values will be skipped in
 the output file.)
 
-Now we can begin assigning colors. First, we°Øll color the root clade
+Now we can begin assigning colors. First, we‚Äôll color the root clade
 gray. We can do that by assigning the 24-bit color value as an RGB
 triple, an HTML-style hex string, or the name of one of the predefined
 colors.
@@ -168,9 +169,9 @@ clade, so when we colorize the root here, it turns the whole tree gray.
 We can override that by assigning a different color lower down on the
 tree.
 
-Let°Øs target the most recent common ancestor (MRCA) of the nodes named
-°∞E°± and °∞F°±. The ``common_ancestor`` method returns a reference to that
-clade in the original tree, so when we color that clade °∞salmon°±, the
+Let‚Äôs target the most recent common ancestor (MRCA) of the nodes named
+‚ÄúE‚Äù and ‚ÄúF‚Äù. The ``common_ancestor`` method returns a reference to that
+clade in the original tree, so when we color that clade ‚Äúsalmon‚Äù, the
 color will show up in the original tree.
 
 .. code:: verbatim
@@ -195,14 +196,14 @@ Finally, show our work (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
 
 |image6|
 
-Note that a clade°Øs color includes the branch leading to that clade, as
+Note that a clade‚Äôs color includes the branch leading to that clade, as
 well as its descendents. The common ancestor of E and F turns out to be
 just under the root, and with this coloring we can see exactly where the
 root of the tree is.
 
-My, we°Øve accomplished a lot! Let°Øs take a break here and save our work.
-Call the ``write`` function with a file name or handle °™ here we use
-standard output, to see what would be written °™ and the format
+My, we‚Äôve accomplished a lot! Let‚Äôs take a break here and save our work.
+Call the ``write`` function with a file name or handle ‚Äî here we use
+standard output, to see what would be written ‚Äî and the format
 ``phyloxml``. PhyloXML saves the colors we assigned, so you can open
 this phyloXML file in another tree viewer like Archaeopteryx, and the
 colors will show up there, too.
@@ -235,7 +236,7 @@ page on Biopython.org:
 
 ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
 
-13.2??I/O functions
+13.2  I/O functions
 -------------------
 
 Like SeqIO and AlignIO, Phylo handles file input and output through four
@@ -297,7 +298,7 @@ To use strings as input or output instead of actual files, use
     >>> handle = StringIO("(((A,B),(C,D)),(E,F,G));")
     >>> tree = Phylo.read(handle, "newick")
 
-13.3??View and export trees
+13.3  View and export trees
 ---------------------------
 
 The simplest way to get an overview of a ``Tree`` object is to ``print``
@@ -316,7 +317,7 @@ it:
             Clade(branch_length='0.4', name='C')
 
 This is essentially an outline of the object hierarchy Biopython uses to
-represent a tree. But more likely, you°Ød want to see a drawing of the
+represent a tree. But more likely, you‚Äôd want to see a drawing of the
 tree. There are three functions to do this.
 
 As we saw in the demo, ``draw_ascii`` prints an ascii-art drawing of the
@@ -349,8 +350,8 @@ accepts to customize the output.
 ``draw_graphviz`` draws an unrooted cladogram, but requires that you
 have Graphviz, PyDot or PyGraphviz, NetworkX, and matplotlib (or pylab)
 installed. Using the same example as above, and the ``dot`` program
-included with Graphviz, let°Øs draw a rooted tree (see
-Fig.?`13.3 <#fig:phylo-dot>`__):
+included with Graphviz, let‚Äôs draw a rooted tree (see
+Fig. `13.3 <#fig:phylo-dot>`__):
 
 .. code:: verbatim
 
@@ -373,8 +374,8 @@ of those accepted by the NetworkX functions ``networkx.draw`` and
 ``networkx.draw_graphviz``.
 
 The display is also affected by the ``rooted`` attribute of the given
-tree object. Rooted trees are shown with a °∞head°± on each branch
-indicating direction (see Fig.?`13.3 <#fig:phylo-rooted>`__):
+tree object. Rooted trees are shown with a ‚Äúhead‚Äù on each branch
+indicating direction (see Fig. `13.3 <#fig:phylo-rooted>`__):
 
 .. code:: verbatim
 
@@ -384,11 +385,11 @@ indicating direction (see Fig.?`13.3 <#fig:phylo-rooted>`__):
 
 |image9|
 
-The °∞prog°± argument specifies the Graphviz engine used for layout. The
+The ‚Äúprog‚Äù argument specifies the Graphviz engine used for layout. The
 default, ``twopi``, behaves well for any size tree, reliably avoiding
 crossed branches. The ``neato`` program may draw more attractive
 moderately-sized trees, but sometimes will cross branches (see
-Fig.?`13.3 <#fig:phylo-color>`__). The ``dot`` program may be useful
+Fig. `13.3 <#fig:phylo-color>`__). The ``dot`` program may be useful
 with small trees, but tends to do surprising things with the layout of
 larger trees.
 
@@ -419,7 +420,7 @@ See the Phylo page on the Biopython wiki
 for descriptions and examples of the more advanced functionality in
 ``draw_ascii``, ``draw_graphviz`` and ``to_networkx``.
 
-13.4??Using Tree and Clade objects
+13.4  Using Tree and Clade objects
 ----------------------------------
 
 The ``Tree`` objects produced by ``parse`` and ``read`` are containers
@@ -440,30 +441,30 @@ means that almost all of the methods supported by ``tree`` are also
 available on ``tree.root`` and any clade below it. (``Clade`` also has a
 ``root`` property, which returns the clade object itself.)
 
-13.4.1??Search and traversal methods
+13.4.1  Search and traversal methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For convenience, we provide a couple of simplified methods that return
 all external or internal nodes directly as a list:
 
  **``get_terminals``**
-    makes a list of all of this tree°Øs terminal (leaf) nodes.
+    makes a list of all of this tree‚Äôs terminal (leaf) nodes.
 **``get_nonterminals``**
-    makes a list of all of this tree°Øs nonterminal (internal) nodes.
+    makes a list of all of this tree‚Äôs nonterminal (internal) nodes.
 
 These both wrap a method with full control over tree traversal,
 ``find_clades``. Two more traversal methods, ``find_elements`` and
 ``find_any``, rely on the same core functionality and accept the same
-arguments, which we°Øll call a °∞target specification°± for lack of a
+arguments, which we‚Äôll call a ‚Äútarget specification‚Äù for lack of a
 better description. These specify which objects in the tree will be
 matched and returned during iteration. The first argument can be any of
 the following types:
 
 -  A **TreeElement instance**, which tree elements will match by
-   identity °™ so searching with a Clade instance as the target will find
+   identity ‚Äî so searching with a Clade instance as the target will find
    that clade in the tree;
--  A **string**, which matches tree elements°Ø string representation °™ in
-   particular, a clade°Øs ``name`` *(added in Biopython 1.56)*;
+-  A **string**, which matches tree elements‚Äô string representation ‚Äî in
+   particular, a clade‚Äôs ``name`` *(added in Biopython 1.56)*;
 -  A **class** or **type**, where every tree element of the same type
    (or sub-type) will be matched;
 -  A **dictionary** where keys are tree element attributes and values
@@ -479,20 +480,20 @@ the following types:
       (which must match the whole string in the corresponding element
       attribute, not just a prefix). A given string without special
       regex characters will match string attributes exactly, so if you
-      don°Øt use regexes, don°Øt worry about it. For example, in a tree
+      don‚Äôt use regexes, don‚Äôt worry about it. For example, in a tree
       with clade names Foo1, Foo2 and Foo3,
       ``tree.find_clades({"name": "Foo1"})`` matches Foo1,
       ``{"name": "Foo.*"}`` matches all three clades, and
-      ``{"name": "Foo"}`` doesn°Øt match anything.
+      ``{"name": "Foo"}`` doesn‚Äôt match anything.
 
    Since floating-point arithmetic can produce some strange behavior, we
-   don°Øt support matching ``float``\ s directly. Instead, use the
+   don‚Äôt support matching ``float``\ s directly. Instead, use the
    boolean ``True`` to match every element with a nonzero value in the
    specified attribute, then filter on that attribute manually with an
    inequality (or exact number, if you like living dangerously).
 
    If the dictionary contains multiple entries, a matching element must
-   match each of the given attribute values °™ think °∞and°±, not °∞or°±.
+   match each of the given attribute values ‚Äî think ‚Äúand‚Äù, not ‚Äúor‚Äù.
 
 -  A **function** taking a single argument (it will be applied to each
    element in the tree), returning True or False. For convenience,
@@ -503,13 +504,13 @@ the following types:
 After the target, there are two optional keyword arguments:
 
  **terminal**
-    °™ A boolean value to select for or against terminal clades (a.k.a.
+    ‚Äî A boolean value to select for or against terminal clades (a.k.a.
     leaf nodes): True searches for only terminal clades, False for
     non-terminal (internal) clades, and the default, None, searches both
     terminal and non-terminal clades, as well as any tree elements
     lacking the ``is_terminal`` method.
 **order**
-    °™ Tree traversal order: ``"preorder"`` (default) is depth-first
+    ‚Äî Tree traversal order: ``"preorder"`` (default) is depth-first
     search, ``"postorder"`` is DFS with child nodes preceding parents,
     and ``"level"`` is breadth-first search.
 
@@ -526,7 +527,7 @@ dictionary as the target specification:
 (In Biopython 1.56 or later, this can be even shorter:
 ``tree.find_clades("Foo1")``)
 
-Now that we°Øve mastered target specifications, here are the methods used
+Now that we‚Äôve mastered target specifications, here are the methods used
 to traverse a tree:
 
  **``find_clades``**
@@ -540,7 +541,7 @@ to traverse a tree:
 
 **``find_elements``**
     Find all tree elements matching the given attributes, and return the
-    matching elements themselves. Simple Newick trees don°Øt have complex
+    matching elements themselves. Simple Newick trees don‚Äôt have complex
     sub-elements, so this behaves the same as ``find_clades`` on them.
     PhyloXML trees often do have complex objects attached to clades, so
     this method is useful for extracting those.
@@ -559,7 +560,7 @@ Two more methods help navigating between nodes in the tree:
     List of all clade object between two targets in this tree. Excluding
     start, including finish.
 
-13.4.2??Information methods
+13.4.2  Information methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods provide information about the whole tree (or any clade).
@@ -586,7 +587,7 @@ These methods provide information about the whole tree (or any clade).
     one target is specified, the other is the root of this tree.
 **``total_branch_length``**
     Calculate the sum of all the branch lengths in this tree. This is
-    usually just called the °∞length°± of the tree in phylogenetics, but
+    usually just called the ‚Äúlength‚Äù of the tree in phylogenetics, but
     we use a more explicit name to avoid confusion with Python
     terminology.
 
@@ -598,25 +599,25 @@ The rest of these methods are boolean checks:
     have 3 descendents and still be considered part of a bifurcating
     tree.
 **``is_monophyletic``**
-    Test if all of the given targets comprise a complete subclade °™
+    Test if all of the given targets comprise a complete subclade ‚Äî
     i.e., there exists a clade such that its terminals are the same set
     as the given targets. The targets should be terminals of the tree.
     For convenience, this method returns the common ancestor (MCRA) of
     the targets if they are monophyletic (instead of the value
     ``True``), and ``False`` otherwise.
 **``is_parent_of``**
-    True if target is a descendent of this tree °™ not required to be a
+    True if target is a descendent of this tree ‚Äî not required to be a
     direct descendent. To check direct descendents of a clade, simply
     use list membership testing: ``if subclade in clade: ...``
 **``is_preterminal``**
     True if all direct descendents are terminal; False if any direct
     descendent is not terminal.
 
-13.4.3??Modification methods
+13.4.3  Modification methods
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods modify the tree in-place. If you want to keep the original
-tree intact, make a complete copy of the tree first, using Python°Øs
+tree intact, make a complete copy of the tree first, using Python‚Äôs
 ``copy`` module:
 
 .. code:: verbatim
@@ -664,15 +665,15 @@ tree intact, make a complete copy of the tree first, using Python°Øs
 **``split``**
     Generate *n* (default 2) new descendants. In a species tree, this is
     a speciation event. New clades have the given ``branch_length`` and
-    the same name as this clade°Øs root plus an integer suffix (counting
-    from 0) °™ for example, splitting a clade named °∞A°± produces the
-    sub-clades °∞A0°± and °∞A1°±.
+    the same name as this clade‚Äôs root plus an integer suffix (counting
+    from 0) ‚Äî for example, splitting a clade named ‚ÄúA‚Äù produces the
+    sub-clades ‚ÄúA0‚Äù and ‚ÄúA1‚Äù.
 
 See the Phylo page on the Biopython wiki
 (```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
 for more examples of using the available methods.
 
-13.4.4??Features of PhyloXML trees
+13.4.4  Features of PhyloXML trees
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The phyloXML file format includes fields for annotating trees with
@@ -683,10 +684,10 @@ See the PhyloXML page on the Biopython wiki
 for descriptions and examples of using the additional annotation
 features provided by PhyloXML.
 
-13.5??Running external applications
+13.5  Running external applications
 -----------------------------------
 
-While Bio.Phylo doesn°Øt infer trees from alignments itself, there are
+While Bio.Phylo doesn‚Äôt infer trees from alignments itself, there are
 third-party programs available that do. These are supported through the
 module ``Bio.Phylo.Applications``, using the same general framework as
 ``Bio.Emboss.Applications``, ``Bio.Align.Applications`` and others.
@@ -694,7 +695,7 @@ module ``Bio.Phylo.Applications``, using the same general framework as
 Biopython 1.58 introduced a wrapper for PhyML
 (```http://www.atgc-montpellier.fr/phyml/`` <http://www.atgc-montpellier.fr/phyml/>`__).
 The program accepts an input alignment in ``phylip-relaxed`` format
-(that°Øs Phylip format, but without the 10-character limit on taxon
+(that‚Äôs Phylip format, but without the 10-character limit on taxon
 names) and a variety of options. A quick example:
 
 .. code:: verbatim
@@ -705,8 +706,8 @@ names) and a variety of options. A quick example:
     >>> out_log, err_log = cmd()
 
 This generates a tree file and a stats file with the names
-[*input?filename*\ ]\ ``_phyml_tree.txt`` and
-[*input?filename*\ ]\ ``_phyml_stats.txt``. The tree file is in Newick
+[*input filename*\ ]\ ``_phyml_tree.txt`` and
+[*input filename*\ ]\ ``_phyml_stats.txt``. The tree file is in Newick
 format:
 
 .. code:: verbatim
@@ -721,17 +722,17 @@ was added in Biopython 1.60.
 Note that some popular Phylip programs, including ``dnaml`` and
 ``protml``, are already available through the EMBOSS wrappers in
 ``Bio.Emboss.Applications`` if you have the Phylip extensions to EMBOSS
-installed on your system. See Section?\ `6.4 <#sec:alignment-tools>`__
+installed on your system. See Section \ `6.4 <#sec:alignment-tools>`__
 for some examples and clues on how to use programs like these.
 
-13.6??PAML integration
+13.6  PAML integration
 ----------------------
 
 Biopython 1.58 brought support for PAML
 (```http://abacus.gene.ucl.ac.uk/software/paml.html`` <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
 a suite of programs for phylogenetic analysis by maximum likelihood.
 Currently the programs codeml, baseml and yn00 are implemented. Due to
-PAML°Øs usage of control files rather than command line arguments to
+PAML‚Äôs usage of control files rather than command line arguments to
 control runtime options, usage of this wrapper strays from the format of
 other application wrappers in Biopython.
 
@@ -768,7 +769,7 @@ Here is an example of typical usage of codeml:
     >>> m0_params = m0.get("parameters")
     >>> print m0_params.get("omega")
 
-Existing output files may be parsed as well using a module°Øs ``read()``
+Existing output files may be parsed as well using a module‚Äôs ``read()``
 function:
 
 .. code:: verbatim
@@ -780,7 +781,7 @@ Detailed documentation for this new module currently lives on the
 Biopython wiki:
 ```http://biopython.org/wiki/PAML`` <http://biopython.org/wiki/PAML>`__
 
-13.7??Future plans
+13.7  Future plans
 ------------------
 
 Bio.Phylo is under active development. Here are some features we might
@@ -789,7 +790,7 @@ add in future releases:
  **New methods**
     Generally useful functions for operating on Tree or Clade objects
     appear on the Biopython wiki first, so that casual users can test
-    them and decide if they°Øre useful before we add them to Bio.Phylo:
+    them and decide if they‚Äôre useful before we add them to Bio.Phylo:
 
     ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
 
@@ -802,10 +803,10 @@ add in future releases:
     new classes used by Bio.Phylo.
 
     Currently, Bio.Nexus contains some useful features that have not yet
-    been ported to Bio.Phylo classes °™ notably, calculating a consensus
+    been ported to Bio.Phylo classes ‚Äî notably, calculating a consensus
     tree. If you find some functionality lacking in Bio.Phylo, try
-    poking throught Bio.Nexus to see if it°Øs there instead.
+    poking throught Bio.Nexus to see if it‚Äôs there instead.
 
-We°Øre open to any suggestions for improving the functionality and
+We‚Äôre open to any suggestions for improving the functionality and
 usability of this module; just let us know on the mailing list or our
 bug database.

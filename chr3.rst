@@ -1,12 +1,12 @@
-Chapter?3??Sequence objects
+Chapter 3  Sequence objects
 ===========================
 
 Biological sequences are arguably the central object in Bioinformatics,
-and in this chapter we°Øll introduce the Biopython mechanism for dealing
-with sequences, the ``Seq`` object. Chapter?\ `4 <#chapter:SeqRecord>`__
+and in this chapter we‚Äôll introduce the Biopython mechanism for dealing
+with sequences, the ``Seq`` object. Chapter \ `4 <#chapter:SeqRecord>`__
 will introduce the related ``SeqRecord`` object, which combines the
 sequence information with any annotation, used again in
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__ for Sequence Input/Output.
+Chapter \ `5 <#chapter:Bio.SeqIO>`__ for Sequence Input/Output.
 
 Sequences are essentially strings of letters like ``AGTACACTGGT``, which
 seems very natural since this is the most common way that sequences are
@@ -19,18 +19,18 @@ Python strings. First of all, they have different methods. Although the
 there are also additional biologically relevant methods like
 ``reverse_complement()``. Secondly, the ``Seq`` object has an important
 attribute, ``alphabet``, which is an object describing what the
-individual characters making up the sequence string °∞mean°±, and how they
+individual characters making up the sequence string ‚Äúmean‚Äù, and how they
 should be interpreted. For example, is ``AGTACACTGGT`` a DNA sequence,
 or just a protein sequence that happens to be rich in Alanines,
 Glycines, Cysteines and Threonines?
 
-3.1??Sequences and Alphabets
+3.1  Sequences and Alphabets
 ----------------------------
 
 The alphabet object is perhaps the important thing that makes the
 ``Seq`` object more than just a string. The currently available
 alphabets for Biopython are defined in the ``Bio.Alphabet`` module.
-We°Øll use the IUPAC alphabets
+We‚Äôll use the IUPAC alphabets
 (```http://www.chem.qmw.ac.uk/iupac/`` <http://www.chem.qmw.ac.uk/iupac/>`__)
 here to deal with some of our favorite objects: DNA, RNA and Proteins.
 
@@ -38,11 +38,11 @@ here to deal with some of our favorite objects: DNA, RNA and Proteins.
 RNA, but additionally provides the ability to extend and customize the
 basic definitions. For instance, for proteins, there is a basic
 IUPACProtein class, but there is an additional ExtendedIUPACProtein
-class providing for the additional elements °∞U°± (or °∞Sec°± for
-selenocysteine) and °∞O°± (or °∞Pyl°± for pyrrolysine), plus the ambiguous
-symbols °∞B°± (or °∞Asx°± for asparagine or aspartic acid), °∞Z°± (or °∞Glx°±
-for glutamine or glutamic acid), °∞J°± (or °∞Xle°± for leucine isoleucine)
-and °∞X°± (or °∞Xxx°± for an unknown amino acid). For DNA you°Øve got choices
+class providing for the additional elements ‚ÄúU‚Äù (or ‚ÄúSec‚Äù for
+selenocysteine) and ‚ÄúO‚Äù (or ‚ÄúPyl‚Äù for pyrrolysine), plus the ambiguous
+symbols ‚ÄúB‚Äù (or ‚ÄúAsx‚Äù for asparagine or aspartic acid), ‚ÄúZ‚Äù (or ‚ÄúGlx‚Äù
+for glutamine or glutamic acid), ‚ÄúJ‚Äù (or ‚ÄúXle‚Äù for leucine isoleucine)
+and ‚ÄúX‚Äù (or ‚ÄúXxx‚Äù for an unknown amino acid). For DNA you‚Äôve got choices
 of IUPACUnambiguousDNA, which provides for just the basic letters,
 IUPACAmbiguousDNA (which provides for ambiguity letters for every
 possible situation) and ExtendedIUPACDNA, which allows letters for
@@ -54,7 +54,7 @@ gives an idea of the type of information the Seq object contains.
 Secondly, this provides a means of constraining the information, as a
 means of type checking.
 
-Now that we know what we are dealing with, let°Øs look at how to utilize
+Now that we know what we are dealing with, let‚Äôs look at how to utilize
 this class to do interesting work. You can create an ambiguous sequence
 with the default generic alphabet like this:
 
@@ -93,7 +93,7 @@ Unless of course, this really is an amino acid sequence:
     >>> my_prot.alphabet
     IUPACProtein()
 
-3.2??Sequences act like strings
+3.2  Sequences act like strings
 -------------------------------
 
 In many ways, we can deal with Seq objects as if they were normal Python
@@ -172,15 +172,15 @@ cope with mixed case sequences and the ambiguous nucleotide S which
 means G or C.
 
 Also note that just like a normal Python string, the ``Seq`` object is
-in some ways °∞read-only°±. If you need to edit your sequence, for example
+in some ways ‚Äúread-only‚Äù. If you need to edit your sequence, for example
 simulating a point mutation, look at the
-Section?\ `3.12 <#sec:mutable-seq>`__ below which talks about the
+Section \ `3.12 <#sec:mutable-seq>`__ below which talks about the
 ``MutableSeq`` object.
 
-3.3??Slicing a sequence
+3.3  Slicing a sequence
 -----------------------
 
-A more complicated example, let°Øs get a slice of the sequence:
+A more complicated example, let‚Äôs get a slice of the sequence:
 
 .. code:: verbatim
 
@@ -193,7 +193,7 @@ A more complicated example, let°Øs get a slice of the sequence:
 Two things are interesting to note. First, this follows the normal
 conventions for Python strings. So the first element of the sequence is
 0 (which is normal for computer science, but not so normal for biology).
-When you do a slice the first item is included (i.e.?4 in this case) and
+When you do a slice the first item is included (i.e. 4 in this case) and
 the last is excluded (12 in this case), which is the way things work in
 Python, but of course not necessarily the way everyone in the world
 would expect. The main goal is to stay consistent with what Python does.
@@ -225,7 +225,7 @@ object too:
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
 
-3.4??Turning Seq objects into strings
+3.4  Turning Seq objects into strings
 -------------------------------------
 
 If you really do just need a plain string, for example to write to a
@@ -237,7 +237,7 @@ file, or insert into a database, then this is very easy to get:
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
 
 Since calling ``str()`` on a ``Seq`` object returns the full sequence as
-a string, you often don°Øt actually have to do this conversion
+a string, you often don‚Äôt actually have to do this conversion
 explicitly. Python does this automatically with a print statement:
 
 .. code:: verbatim
@@ -258,11 +258,11 @@ when using the Python string formatting or interpolation operator
     <BLANKLINE>
 
 This line of code constructs a simple FASTA format record (without
-worrying about line wrapping). Section?\ `4.5 <#sec:SeqRecord-format>`__
+worrying about line wrapping). Section \ `4.5 <#sec:SeqRecord-format>`__
 describes a neat way to get a FASTA formatted string from a
 ``SeqRecord`` object, while the more general topic of reading and
 writing FASTA format sequence files is covered in
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__.
+Chapter \ `5 <#chapter:Bio.SeqIO>`__.
 
 *NOTE:* If you are using Biopython 1.44 or older, using ``str(my_seq)``
 will give just a truncated representation. Instead use
@@ -274,11 +274,11 @@ releases for backwards compatibility):
     >>> my_seq.tostring()
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
 
-3.5??Concatenating or adding sequences
+3.5  Concatenating or adding sequences
 --------------------------------------
 
 Naturally, you can in principle add any two Seq objects together - just
-like you can with Python strings to concatenate them. However, you can°Øt
+like you can with Python strings to concatenate them. However, you can‚Äôt
 add sequences with incompatible alphabets, such as a protein sequence
 and a DNA sequence:
 
@@ -293,7 +293,7 @@ and a DNA sequence:
     ...
     TypeError: Incompatible alphabets IUPACProtein() and IUPACUnambiguousDNA()
 
-If you *really* wanted to do this, you°Ød have to first give both
+If you *really* wanted to do this, you‚Äôd have to first give both
 sequences generic alphabets:
 
 .. code:: verbatim
@@ -322,7 +322,7 @@ sequence:
     >>> nuc_seq + dna_seq
     Seq('GATCGATGCACGT', NucleotideAlphabet())
 
-3.6??Changing case
+3.6  Changing case
 ------------------
 
 Python strings have very useful ``upper`` and ``lower`` methods for
@@ -363,7 +363,7 @@ sequences only, thus:
     >>> dna_seq.lower()
     Seq('acgt', DNAAlphabet())
 
-3.7??Nucleotide sequences and (reverse) complements
+3.7  Nucleotide sequences and (reverse) complements
 ---------------------------------------------------
 
 For nucleotide sequences, you can easily obtain the complement or
@@ -403,11 +403,11 @@ like take the (reverse)complement of a protein sequence:
     ...
     ValueError: Proteins do not have complements!
 
-The example in Section?\ `5.5.3 <#sec:SeqIO-reverse-complement>`__
-combines the ``Seq`` object°Øs reverse complement method with
+The example in Section \ `5.5.3 <#sec:SeqIO-reverse-complement>`__
+combines the ``Seq`` object‚Äôs reverse complement method with
 ``Bio.SeqIO`` for sequence input/output.
 
-3.8??Transcription
+3.8  Transcription
 ------------------
 
 Before talking about transcription, I want to try and clarify the strand
@@ -415,43 +415,43 @@ issue. Consider the following (made up) stretch of double stranded DNA
 which encodes a short peptide:
 
 +------+------------------------------------------------------+------+
-| ?    |
+|      |
 +------+------------------------------------------------------+------+
-|      | DNA coding strand (aka Crick strand, strand +1)      | ?    |
+|      | DNA coding strand (aka Crick strand, strand +1)      |      |
 +------+------------------------------------------------------+------+
-| 5°Ø   | ``ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG``          | 3°Ø   |
+| 5‚Äô   | ``ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG``          | 3‚Äô   |
 +------+------------------------------------------------------+------+
-|      | ``|||||||||||||||||||||||||||||||||||||||``          | ?    |
+|      | ``|||||||||||||||||||||||||||||||||||||||``          |      |
 +------+------------------------------------------------------+------+
-| 3°Ø   | ``TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC``          | 5°Ø   |
+| 3‚Äô   | ``TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC``          | 5‚Äô   |
 +------+------------------------------------------------------+------+
-|      | DNA template strand (aka Watson strand, strand ?1)   | ?    |
+|      | DNA template strand (aka Watson strand, strand ‚àí1)   |      |
 +------+------------------------------------------------------+------+
-| ?    |
+|      |
 +------+------------------------------------------------------+------+
-|      | \|                                                   | ?    |
+|      | \|                                                   |      |
 +------+------------------------------------------------------+------+
-|      | Transcription                                        | ?    |
+|      | Transcription                                        |      |
 +------+------------------------------------------------------+------+
-|      | °˝                                                    | ?    |
+|      | ‚Üì                                                    |      |
 +------+------------------------------------------------------+------+
-| ?    |
+|      |
 +------+------------------------------------------------------+------+
-| 5°Ø   | ``AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG``          | 3°Ø   |
+| 5‚Äô   | ``AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG``          | 3‚Äô   |
 +------+------------------------------------------------------+------+
-|      | Single stranded messenger RNA                        | ?    |
+|      | Single stranded messenger RNA                        |      |
 +------+------------------------------------------------------+------+
-| ?    |
+|      |
 +------+------------------------------------------------------+------+
 
 The actual biological transcription process works from the template
-strand, doing a reverse complement (TCAG °˙ CUGA) to give the mRNA.
+strand, doing a reverse complement (TCAG ‚Üí CUGA) to give the mRNA.
 However, in Biopython and bioinformatics in general, we typically work
 directly with the coding strand because this means we can get the mRNA
-sequence just by switching T °˙ U.
+sequence just by switching T ‚Üí U.
 
-Now let°Øs actually get down to doing a transcription in Biopython.
-First, let°Øs create ``Seq`` objects for the coding and template DNA
+Now let‚Äôs actually get down to doing a transcription in Biopython.
+First, let‚Äôs create ``Seq`` objects for the coding and template DNA
 strands:
 
 .. code:: verbatim
@@ -466,11 +466,11 @@ strands:
     Seq('CTATCGGGCACCCTTTCAGCGGCCCATTACAATGGCCAT', IUPACUnambiguousDNA())
 
 These should match the figure above - remember by convention nucleotide
-sequences are normally read from the 5°Ø to 3°Ø direction, while in the
+sequences are normally read from the 5‚Äô to 3‚Äô direction, while in the
 figure the template strand is shown reversed.
 
-Now let°Øs transcribe the coding strand into the corresponding mRNA,
-using the ``Seq`` object°Øs built in ``transcribe`` method:
+Now let‚Äôs transcribe the coding strand into the corresponding mRNA,
+using the ``Seq`` object‚Äôs built in ``transcribe`` method:
 
 .. code:: verbatim
 
@@ -480,7 +480,7 @@ using the ``Seq`` object°Øs built in ``transcribe`` method:
     >>> messenger_rna
     Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
 
-As you can see, all this does is switch T °˙ U, and adjust the alphabet.
+As you can see, all this does is switch T ‚Üí U, and adjust the alphabet.
 
 If you do want to do a true biological transcription starting with the
 template strand, then this becomes a two-step process:
@@ -492,7 +492,7 @@ template strand, then this becomes a two-step process:
 
 The ``Seq`` object also includes a back-transcription method for going
 from the mRNA to the coding strand of the DNA. Again, this is a simple U
-°˙ T substitution and associated change of alphabet:
+‚Üí T substitution and associated change of alphabet:
 
 .. code:: verbatim
 
@@ -504,17 +504,17 @@ from the mRNA to the coding strand of the DNA. Again, this is a simple U
     >>> messenger_rna.back_transcribe()
     Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
 
-*Note:* The ``Seq`` object°Øs ``transcribe`` and ``back_transcribe``
+*Note:* The ``Seq`` object‚Äôs ``transcribe`` and ``back_transcribe``
 methods were added in Biopython 1.49. For older releases you would have
-to use the ``Bio.Seq`` module°Øs functions instead, see
-Section?\ `3.14 <#sec:seq-module-functions>`__.
+to use the ``Bio.Seq`` module‚Äôs functions instead, see
+Section \ `3.14 <#sec:seq-module-functions>`__.
 
-3.9??Translation
+3.9  Translation
 ----------------
 
 Sticking with the same example discussed in the transcription section
-above, now let°Øs translate this mRNA into the corresponding protein
-sequence - again taking advantage of one of the ``Seq`` object°Øs
+above, now let‚Äôs translate this mRNA into the corresponding protein
+sequence - again taking advantage of one of the ``Seq`` object‚Äôs
 biological methods:
 
 .. code:: verbatim
@@ -583,7 +583,7 @@ Notice that when you use the ``to_stop`` argument, the stop codon itself
 is not translated - and the stop symbol is not included at the end of
 your protein sequence.
 
-You can even specify the stop symbol if you don°Øt like the default
+You can even specify the stop symbol if you don‚Äôt like the default
 asterisk:
 
 .. code:: verbatim
@@ -592,13 +592,13 @@ asterisk:
     Seq('MAIVMGRWKGAR@', HasStopCodon(IUPACProtein(), '@'))
 
 Now, suppose you have a complete coding sequence CDS, which is to say a
-nucleotide sequence (e.g. mRNA ®C after any splicing) which is a whole
+nucleotide sequence (e.g. mRNA ‚Äì after any splicing) which is a whole
 number of codons (i.e. the length is a multiple of three), commences
 with a start codon, ends with a stop codon, and has no internal in-frame
 stop codons. In general, given a complete CDS, the default translate
 method will do what you want (perhaps with the ``to_stop`` option).
 However, what if your sequence uses a non-standard start codon? This
-happens a lot in bacteria ®C for example the gene yaaX in ``E. coli``
+happens a lot in bacteria ‚Äì for example the gene yaaX in ``E. coli``
 K12:
 
 .. code:: verbatim
@@ -631,25 +631,25 @@ sequence is a complete CDS:
 
 In addition to telling Biopython to translate an alternative start codon
 as methionine, using this option also makes sure your sequence really is
-a valid CDS (you°Øll get an exception if not).
+a valid CDS (you‚Äôll get an exception if not).
 
-The example in Section?\ `18.1.3 <#sec:SeqIO-translate>`__ combines the
-``Seq`` object°Øs translate method with ``Bio.SeqIO`` for sequence
+The example in Section \ `18.1.3 <#sec:SeqIO-translate>`__ combines the
+``Seq`` object‚Äôs translate method with ``Bio.SeqIO`` for sequence
 input/output.
 
-3.10??Translation Tables
+3.10  Translation Tables
 ------------------------
 
 In the previous sections we talked about the ``Seq`` object translation
 method (and mentioned the equivalent function in the ``Bio.Seq`` module
-®C see Section?\ `3.14 <#sec:seq-module-functions>`__). Internally these
+‚Äì see Section \ `3.14 <#sec:seq-module-functions>`__). Internally these
 use codon table objects derived from the NCBI information at
 ```ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt`` <ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt>`__,
 also shown on
 ```http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi`` <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__
 in a much more readable layout.
 
-As before, let°Øs just focus on two choices: the Standard translation
+As before, let‚Äôs just focus on two choices: the Standard translation
 table, and the translation table for Vertebrate Mitochondrial DNA.
 
 .. code:: verbatim
@@ -727,7 +727,7 @@ and:
     G | GTG V(s)| GCG A   | GAG E   | GGG G   | G
     --+---------+---------+---------+---------+--
 
-You may find these following properties useful ®C for example if you are
+You may find these following properties useful ‚Äì for example if you are
 trying to do your own gene finding:
 
 .. code:: verbatim
@@ -739,13 +739,13 @@ trying to do your own gene finding:
     >>> mito_table.forward_table["ACG"]
     'T'
 
-3.11??Comparing Seq objects
+3.11  Comparing Seq objects
 ---------------------------
 
 Sequence comparison is actually a very complicated topic, and there is
 no easy way to decide if two sequences are equal. The basic problem is
 the meaning of the letters in a sequence are context dependent - the
-letter °∞A°± could be part of a DNA, RNA or protein sequence. Biopython
+letter ‚ÄúA‚Äù could be part of a DNA, RNA or protein sequence. Biopython
 uses alphabet objects as part of each ``Seq`` object to try and capture
 this information - so comparing two ``Seq`` objects means considering
 both the sequence strings *and* the alphabets.
@@ -756,14 +756,14 @@ For example, you might argue that the two DNA ``Seq`` objects
 do have different alphabets. Depending on the context this could be
 important.
 
-This gets worse ®C suppose you think
+This gets worse ‚Äì suppose you think
 ``Seq("ACGT", IUPAC.unambiguous_dna)`` and ``Seq("ACGT")`` (i.e. the
 default generic alphabet) should be equal. Then, logically,
 ``Seq("ACGT", IUPAC.protein)`` and ``Seq("ACGT")`` should also be equal.
 Now, in logic if *A*\ =\ *B* and *B*\ =\ *C*, by transitivity we expect
-*A*\ =\ *C*. So for logical consistency we°Ød require
+*A*\ =\ *C*. So for logical consistency we‚Äôd require
 ``Seq("ACGT", IUPAC.unambiguous_dna)`` and
-``Seq("ACGT", IUPAC.protein)`` to be equal ®C which most people would
+``Seq("ACGT", IUPAC.protein)`` to be equal ‚Äì which most people would
 agree is just not right. This transitivity problem would also have
 implications for using ``Seq`` objects as Python dictionary keys.
 
@@ -775,7 +775,7 @@ implications for using ``Seq`` objects as Python dictionary keys.
     >>> seq2 = Seq("ACGT", IUPAC.unambiguous_dna)
 
 So, what does Biopython do? Well, the equality test is the default for
-Python objects ®C it tests to see if they are the same object in memory.
+Python objects ‚Äì it tests to see if they are the same object in memory.
 This is a very strict test:
 
 .. code:: verbatim
@@ -798,7 +798,7 @@ Python ``id`` function,
 Now, in every day use, your sequences will probably all have the same
 alphabet, or at least all be the same type of sequence (all DNA, all
 RNA, or all protein). What you probably want is to just compare the
-sequences as strings ®C so do this explicitly:
+sequences as strings ‚Äì so do this explicitly:
 
 .. code:: verbatim
 
@@ -809,12 +809,12 @@ sequences as strings ®C so do this explicitly:
 
 As an extension to this, while you can use a Python dictionary with
 ``Seq`` objects as keys, it is generally more useful to use the sequence
-a string for the key. See also Section?\ `3.4 <#sec:seq-to-string>`__.
+a string for the key. See also Section \ `3.4 <#sec:seq-to-string>`__.
 
-3.12??MutableSeq objects
+3.12  MutableSeq objects
 ------------------------
 
-Just like the normal Python string, the ``Seq`` object is °∞read only°±,
+Just like the normal Python string, the ``Seq`` object is ‚Äúread only‚Äù,
 or in Python terminology, immutable. Apart from wanting the ``Seq``
 object to act like a string, this is also a useful default since in many
 biological applications you want to ensure you are not changing your
@@ -869,15 +869,15 @@ Either way will give you a sequence object which can be changed:
     >>> mutable_seq
     MutableSeq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG', IUPACUnambiguousDNA())
 
-Do note that unlike the ``Seq`` object, the ``MutableSeq`` object°Øs
+Do note that unlike the ``Seq`` object, the ``MutableSeq`` object‚Äôs
 methods like ``reverse_complement()`` and ``reverse()`` act in-situ!
 
 An important technical difference between mutable and immutable objects
-in Python means that you can°Øt use a ``MutableSeq`` object as a
+in Python means that you can‚Äôt use a ``MutableSeq`` object as a
 dictionary key, but you can use a Python string or a ``Seq`` object in
 this way.
 
-Once you have finished editing your a ``MutableSeq`` object, it°Øs easy
+Once you have finished editing your a ``MutableSeq`` object, it‚Äôs easy
 to get back to a read-only ``Seq`` object should you need to:
 
 .. code:: verbatim
@@ -887,17 +887,17 @@ to get back to a read-only ``Seq`` object should you need to:
     Seq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG', IUPACUnambiguousDNA())
 
 You can also get a string from a ``MutableSeq`` object just like from a
-``Seq`` object (Section?`3.4 <#sec:seq-to-string>`__).
+``Seq`` object (Section `3.4 <#sec:seq-to-string>`__).
 
-3.13??UnknownSeq objects
+3.13  UnknownSeq objects
 ------------------------
 
 The ``UnknownSeq`` object is a subclass of the basic ``Seq`` object and
 its purpose is to represent a sequence where we know the length, but not
 the actual letters making it up. You could of course use a normal
 ``Seq`` object in this situation, but it wastes rather a lot of memory
-to hold a string of a million °∞N°± characters when you could just store a
-single letter °∞N°± and the desired length as an integer.
+to hold a string of a million ‚ÄúN‚Äù characters when you could just store a
+single letter ‚ÄúN‚Äù and the desired length as an integer.
 
 .. code:: verbatim
 
@@ -911,7 +911,7 @@ single letter °∞N°± and the desired length as an integer.
     20
 
 You can of course specify an alphabet, meaning for nucleotide sequences
-the letter defaults to °∞N°± and for proteins °∞X°±, rather than just °∞?°±.
+the letter defaults to ‚ÄúN‚Äù and for proteins ‚ÄúX‚Äù, rather than just ‚Äú?‚Äù.
 
 .. code:: verbatim
 
@@ -948,17 +948,17 @@ expect:
 You may be able to find a use for the ``UnknownSeq`` object in your own
 code, but it is more likely that you will first come across them in a
 ``SeqRecord`` object created by ``Bio.SeqIO`` (see
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__). Some sequence file formats don°Øt
+Chapter \ `5 <#chapter:Bio.SeqIO>`__). Some sequence file formats don‚Äôt
 always include the actual sequence, for example GenBank and EMBL files
 may include a list of features but for the sequence just present the
 contig information. Alternatively, the QUAL files used in sequencing
-work hold quality scores but they *never* contain a sequence ®C instead
+work hold quality scores but they *never* contain a sequence ‚Äì instead
 there is a partner FASTA file which *does* have the sequence.
 
-3.14??Working with directly strings
+3.14  Working with directly strings
 -----------------------------------
 
-To close this chapter, for those you who *really* don°Øt want to use the
+To close this chapter, for those you who *really* don‚Äôt want to use the
 sequence objects (or who prefer a functional programming style to an
 object orientated one), there are module level functions in ``Bio.Seq``
 will accept plain Python strings, ``Seq`` objects (including

@@ -1,7 +1,7 @@
-Chapter?20??Advanced
+Chapter 20  Advanced
 ====================
 
-20.1??Parser Design
+20.1  Parser Design
 -------------------
 
 Many of the older Biopython parsers were built around an event-oriented
@@ -31,10 +31,10 @@ wrap another Biopython parser - for example, the ``Bio.SwissProt``
 parser produces SwissProt format specific record objects, which get
 converted into ``SeqRecord`` objects.
 
-20.2??Substitution Matrices
+20.2  Substitution Matrices
 ---------------------------
 
-20.2.1??SubsMat
+20.2.1  SubsMat
 ~~~~~~~~~~~~~~~
 
 This module provides a class and a few routines for generating
@@ -54,7 +54,7 @@ letters, and n is a value.
 #. Attributes
 
    #. ``self.alphabet``: a class as defined in Bio.Alphabet
-   #. ``self.ab_list``: a list of the alphabet¡¯s letters, sorted. Needed
+   #. ``self.ab_list``: a list of the alphabetâ€™s letters, sorted. Needed
       mainly for internal purposes
 
 #. Methods
@@ -78,14 +78,14 @@ letters, and n is a value.
           entropy(self,obs_freq_mat)
 
       #. ``obs_freq_mat``: an observed frequency matrix. Returns the
-         matrix¡¯s entropy, based on the frequency in ``obs_freq_mat``.
+         matrixâ€™s entropy, based on the frequency in ``obs_freq_mat``.
          The matrix instance should be LO or SUBS.
 
    #. .. code:: verbatim
 
           sum(self)
 
-      Calculates the sum of values for each letter in the matrix¡¯s
+      Calculates the sum of values for each letter in the matrixâ€™s
       alphabet, and returns it as a dictionary of the form
       ``{i1: s1, i2: s2,...,in:sn}``, where:
 
@@ -118,7 +118,7 @@ letters, and n is a value.
    The following section is laid out in the order by which most people
    wish to generate a log-odds matrix. Of course, interim matrices can
    be generated and investigated. Most people just want a log-odds
-   matrix, that¡¯s all.
+   matrix, thatâ€™s all.
 
    #. Generating an Accepted Replacement Matrix
 
@@ -133,7 +133,7 @@ letters, and n is a value.
 
           ('A','C'): 10, ('C','A'): 12
 
-      as order doesn¡¯t matter, user can already provide only one entry:
+      as order doesnâ€™t matter, user can already provide only one entry:
 
       .. code:: verbatim
 
@@ -143,7 +143,7 @@ letters, and n is a value.
       method of counting: 10, 12) or half (the latter method, 22)
       matrices. A full protein alphabet matrix would be of the size
       20x20 = 400. A half matrix of that alphabet would be 20x20/2 +
-      20/2 = 210. That is because same-letter entries don¡¯t change. (The
+      20/2 = 210. That is because same-letter entries donâ€™t change. (The
       matrix diagonal). Given an alphabet size of N:
 
       #. Full matrix size:N\*N
@@ -151,8 +151,8 @@ letters, and n is a value.
 
       The SeqMat constructor automatically generates a half-matrix, if a
       full matrix is passed. If a half matrix is passed, letters in the
-      key should be provided in alphabetical order: (¡¯A¡¯,¡¯C¡¯) and not
-      (¡¯C¡¯,A¡¯).
+      key should be provided in alphabetical order: (â€™Aâ€™,â€™Câ€™) and not
+      (â€™Câ€™,Aâ€™).
 
       At this point, if all you wish to do is generate a log-odds
       matrix, please go to the section titled Example of Use. The
@@ -180,11 +180,11 @@ letters, and n is a value.
           EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
 
       #. ``exp_freq_table``: should be a FreqTable instance. See
-         section?\ `20.2.2 <#sec:freq_table>`__ for detailed information
+         section \ `20.2.2 <#sec:freq_table>`__ for detailed information
          on FreqTable. Briefly, the expected frequency table has the
          frequencies of appearance for each member of the alphabet. It
          is implemented as a dictionary with the alphabet letters as
-         keys, and each letter¡¯s frequency as a value. Values sum to 1.
+         keys, and each letterâ€™s frequency as a value. Values sum to 1.
 
       The expected frequency table can (and generally should) be
       generated from the observed frequency matrix. So in most cases you
@@ -241,7 +241,7 @@ letters, and n is a value.
    #. ``round_digit``: number after decimal digit to which result should
       be rounded. Default zero.
 
-20.2.2??FreqTable
+20.2.2  FreqTable
 ~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
@@ -259,7 +259,7 @@ letters, and n is a value.
    #. ``read_count(f)``: read a count file from stream f. Then convert
       to frequencies
    #. ``read_freq(f)``: read a frequency data file from stream f. Of
-      course, we then don¡¯t have the counts, but it is usually the
+      course, we then donâ€™t have the counts, but it is usually the
       letter frquencies which are interesting.
 
 #. Example of use: The expected count of the residues in the database is
@@ -291,7 +291,7 @@ letters, and n is a value.
        {'A': 35, 'B': 65, 'C': 100}
 
    Which means that an expected data count would give a 0.5 frequency
-   for ¡¯C¡¯, a 0.325 probability of ¡¯B¡¯ and a 0.175 probability of ¡¯A¡¯
+   for â€™Câ€™, a 0.325 probability of â€™Bâ€™ and a 0.175 probability of â€™Aâ€™
    out of 200 total, sum of A, B and C)
 
    A frequency dictionary for the same data would be:

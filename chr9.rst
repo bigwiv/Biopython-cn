@@ -1,18 +1,18 @@
-Chapter?9??Accessing NCBI°Øs Entrez databases
+Ôªøhapter 9  Accessing NCBI‚Äôs Entrez databases
 ============================================
 
 Entrez
 (```http://www.ncbi.nlm.nih.gov/Entrez`` <http://www.ncbi.nlm.nih.gov/Entrez>`__)
-is a data retrieval system that provides users access to NCBI°Øs
+is a data retrieval system that provides users access to NCBI‚Äôs
 databases such as PubMed, GenBank, GEO, and many others. You can access
 Entrez from a web browser to manually enter queries, or you can use
-Biopython°Øs ``Bio.Entrez`` module for programmatic access to Entrez. The
+Biopython‚Äôs ``Bio.Entrez`` module for programmatic access to Entrez. The
 latter allows you for example to search PubMed or download GenBank
 records from within a Python script.
 
 The ``Bio.Entrez`` module makes use of the Entrez Programming Utilities
 (also known as EUtils), consisting of eight tools that are described in
-detail on NCBI°Øs page at
+detail on NCBI‚Äôs page at
 ```http://www.ncbi.nlm.nih.gov/entrez/utils/`` <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
 Each of these tools corresponds to one Python function in the
 ``Bio.Entrez`` module, as described in the sections below. This module
@@ -22,11 +22,11 @@ more than one request is made every three seconds, as required by NCBI.
 The output returned by the Entrez Programming Utilities is typically in
 XML format. To parse such output, you have several options:
 
-#. Use ``Bio.Entrez``\ °Øs parser to parse the XML output into a Python
+#. Use ``Bio.Entrez``\ ‚Äôs parser to parse the XML output into a Python
    object;
-#. Use the DOM (Document Object Model) parser in Python°Øs standard
+#. Use the DOM (Document Object Model) parser in Python‚Äôs standard
    library;
-#. Use the SAX (Simple API for XML) parser in Python°Øs standard library;
+#. Use the SAX (Simple API for XML) parser in Python‚Äôs standard library;
 #. Read the XML output as raw text, and parse it by string searching and
    manipulation.
 
@@ -49,26 +49,26 @@ However, the parser is much faster if the DTD file is available locally.
 For this purpose, please download the DTD file from the URL in the
 warning message and place it in the directory
 ``...site-packages/Bio/Entrez/DTDs``, containing the other DTD files. If
-you don°Øt have write access to this directory, you can also place the
+you don‚Äôt have write access to this directory, you can also place the
 DTD file in ``~/.biopython/Bio/Entrez/DTDs``, where ``~`` represents
 your home directory. Since this directory is read before the directory
 ``...site-packages/Bio/Entrez/DTDs``, you can also put newer versions of
 DTD files there if the ones in ``...site-packages/Bio/Entrez/DTDs``
 become outdated. Alternatively, if you installed Biopython from source,
-you can add the DTD file to the source code°Øs ``Bio/Entrez/DTDs``
+you can add the DTD file to the source code‚Äôs ``Bio/Entrez/DTDs``
 directory, and reinstall Biopython. This will install the new DTD file
 in the correct location together with the other DTD files.
 
 The Entrez Programming Utilities can also generate output in other
 formats, such as the Fasta or GenBank file formats for sequence
 databases, or the MedLine format for the literature database, discussed
-in Section?\ `9.12 <#sec:entrez-specialized-parsers>`__.
+in Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
 
-9.1??Entrez Guidelines
+9.1  Entrez Guidelines
 ----------------------
 
-Before using Biopython to access the NCBI°Øs online resources (via
-``Bio.Entrez`` or some of the other modules), please read the `NCBI°Øs
+Before using Biopython to access the NCBI‚Äôs online resources (via
+``Bio.Entrez`` or some of the other modules), please read the `NCBI‚Äôs
 Entrez User
 Requirements <http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
 If the NCBI finds you are abusing their systems, they can and will ban
@@ -98,7 +98,7 @@ To paraphrase:
    ``Bio.Entrez`` will then use this email address with each call to
    Entrez. The ``example.com`` address is a reserved domain name
    specifically for documentation (RFC 2606). Please DO NOT use a random
-   email ®C it°Øs better not to give an email at all. The email parameter
+   email ‚Äì it‚Äôs better not to give an email at all. The email parameter
    will be mandatory from June 1, 2010. In case of excessive usage, NCBI
    will attempt to contact a user at the e-mail address provided prior
    to blocking access to the E-utilities.
@@ -118,20 +118,20 @@ To paraphrase:
 
 -  For large queries, the NCBI also recommend using their session
    history feature (the WebEnv session cookie string, see
-   Section?\ `9.15 <#sec:entrez-webenv>`__). This is only slightly more
+   Section \ `9.15 <#sec:entrez-webenv>`__). This is only slightly more
    complicated.
 
 In conclusion, be sensible with your usage levels. If you plan to
 download lots of data, consider other options. For example, if you want
 easy access to all the human genes, consider fetching each chromosome by
 FTP as a GenBank file, and importing these into your own BioSQL database
-(see Section?\ `18.5 <#sec:BioSQL>`__).
+(see Section \ `18.5 <#sec:BioSQL>`__).
 
-9.2??EInfo: Obtaining information about the Entrez databases
+9.2  EInfo: Obtaining information about the Entrez databases
 ------------------------------------------------------------
 
 EInfo provides field index term counts, last update, and available links
-for each of NCBI°Øs databases. In addition, you can use EInfo to obtain a
+for each of NCBI‚Äôs databases. In addition, you can use EInfo to obtain a
 list of all database names accessible through the Entrez utilities:
 
 .. code:: verbatim
@@ -192,7 +192,7 @@ The variable ``result`` now contains a list of databases in XML format:
     </eInfoResult>
 
 Since this is a fairly simple XML file, we could extract the information
-it contains simply by string searching. Using ``Bio.Entrez``\ °Øs parser
+it contains simply by string searching. Using ``Bio.Entrez``\ ‚Äôs parser
 instead, we can directly parse this XML file into a Python object:
 
 .. code:: verbatim
@@ -255,17 +255,17 @@ use with ESearch:
     AFFL, Affiliation, Author's institutional affiliation and address
     ...
 
-That°Øs a long list, but indirectly this tells you that for the PubMed
+That‚Äôs a long list, but indirectly this tells you that for the PubMed
 database, you can do things like ``Jones[AUTH]`` to search the author
 field, or ``Sanger[AFFL]`` to restrict to authors at the Sanger Centre.
 This can be very handy - especially if you are not so familiar with a
 particular database.
 
-9.3??ESearch: Searching the Entrez databases
+9.3  ESearch: Searching the Entrez databases
 --------------------------------------------
 
 To search any of these databases, we use ``Bio.Entrez.esearch()``. For
-example, let°Øs search in PubMed for publications related to Biopython:
+example, let‚Äôs search in PubMed for publications related to Biopython:
 
 .. code:: verbatim
 
@@ -280,9 +280,9 @@ In this output, you see seven PubMed IDs (including 19304878 which is
 the PMID for the Biopython application note), which can be retrieved by
 EFetch (see section `9.6 <#sec:efetch>`__).
 
-You can also use ESearch to search GenBank. Here we°Øll do a quick search
+You can also use ESearch to search GenBank. Here we‚Äôll do a quick search
 for the *matK* gene in *Cypripedioideae* orchids (see
-Section?\ `9.2 <#sec:entrez-einfo>`__ about EInfo for one way to find
+Section \ `9.2 <#sec:entrez-einfo>`__ about EInfo for one way to find
 out which fields you can search in each Entrez database):
 
 .. code:: verbatim
@@ -294,19 +294,19 @@ out which fields you can search in each Entrez database):
     >>> record["IdList"]
     ['126789333', '37222967', '37222966', '37222965', ..., '61585492']
 
-Each of the IDs (126789333, 37222967, 37222966, °≠) is a GenBank
-identifier. See section?\ `9.6 <#sec:efetch>`__ for information on how
+Each of the IDs (126789333, 37222967, 37222966, ‚Ä¶) is a GenBank
+identifier. See section \ `9.6 <#sec:efetch>`__ for information on how
 to actually download these GenBank records.
 
 Note that instead of a species name like ``Cypripedioideae[Orgn]``, you
 can restrict the search using an NCBI taxon identifier, here this would
-be ``txid158330[Orgn]``. This isn°Øt currently documented on the ESearch
+be ``txid158330[Orgn]``. This isn‚Äôt currently documented on the ESearch
 help page - the NCBI explained this in reply to an email query. You can
 often deduce the search term formatting by playing with the Entrez web
 interface. For example, including ``complete[prop]`` in a genome search
 restricts to just completed genomes.
 
-As a final example, let°Øs get a list of computational journal titles:
+As a final example, let‚Äôs get a list of computational journal titles:
 
 .. code:: verbatim
 
@@ -322,11 +322,11 @@ As a final example, let°Øs get a list of computational journal titles:
 Again, we could use EFetch to obtain more information for each of these
 journal IDs.
 
-ESearch has many useful options °™ see the `ESearch help
+ESearch has many useful options ‚Äî see the `ESearch help
 page <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
 for more information.
 
-9.4??EPost: Uploading a list of identifiers
+9.4  EPost: Uploading a list of identifiers
 -------------------------------------------
 
 EPost uploads a list of UIs for use in subsequent search strategies; see
@@ -337,18 +337,18 @@ for more information. It is available from Biopython through the
 
 To give an example of when this is useful, suppose you have a long list
 of IDs you want to download using EFetch (maybe sequences, maybe
-citations ®C anything). When you make a request with EFetch your list of
+citations ‚Äì anything). When you make a request with EFetch your list of
 IDs, the database etc, are all turned into a long URL sent to the
 server. If your list of IDs is long, this URL gets long, and long URLs
-can break (e.g. some proxies don°Øt cope well).
+can break (e.g. some proxies don‚Äôt cope well).
 
 Instead, you can break this up into two steps, first uploading the list
-of IDs using EPost (this uses an °∞HTML post°± internally, rather than an
-°∞HTML get°±, getting round the long URL problem). With the history
+of IDs using EPost (this uses an ‚ÄúHTML post‚Äù internally, rather than an
+‚ÄúHTML get‚Äù, getting round the long URL problem). With the history
 support, you can then refer to this long list of IDs, and download the
 associated data with EFetch.
 
-Let°Øs look at a simple example to see how EPost works ®C uploading some
+Let‚Äôs look at a simple example to see how EPost works ‚Äì uploading some
 PubMed identifiers:
 
 .. code:: verbatim
@@ -378,10 +378,10 @@ these values for use with another Entrez call such as EFetch:
     >>> webenv = search_results["WebEnv"]
     >>> query_key = search_results["QueryKey"] 
 
-Section?\ `9.15 <#sec:entrez-webenv>`__ shows how to use the history
+Section \ `9.15 <#sec:entrez-webenv>`__ shows how to use the history
 feature.
 
-9.5??ESummary: Retrieving summaries from primary IDs
+9.5  ESummary: Retrieving summaries from primary IDs
 ----------------------------------------------------
 
 ESummary retrieves document summaries from a list of primary IDs (see
@@ -404,7 +404,7 @@ example find out more about the journal with ID 30367:
     >>> record[0]["Publisher"]
     'Pergamon,'
 
-9.6??EFetch: Downloading full records from Entrez
+9.6  EFetch: Downloading full records from Entrez
 -------------------------------------------------
 
 EFetch is what you use when you want to retrieve a full record from
@@ -426,8 +426,8 @@ and
 
 One common usage is downloading sequences in the FASTA or
 GenBank/GenPept plain text formats (which can then be parsed with
-``Bio.SeqIO``, see Sections?\ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-and?\ `9.6 <#sec:efetch>`__). From the *Cypripedioideae* example above,
+``Bio.SeqIO``, see Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+and \ `9.6 <#sec:efetch>`__). From the *Cypripedioideae* example above,
 we can download GenBank record 186972394 using ``Bio.Entrez.efetch``:
 
 .. code:: verbatim
@@ -510,21 +510,21 @@ we can download GenBank record 186972394 using ``Bio.Entrez.efetch``:
 The arguments ``rettype="gb"`` and ``retmode="text"`` let us download
 this record in the GenBank format.
 
-Note that until Easter 2009, the Entrez EFetch API let you use °∞genbank°±
+Note that until Easter 2009, the Entrez EFetch API let you use ‚Äúgenbank‚Äù
 as the return type, however the NCBI now insist on using the official
-return types of °∞gb°± or °∞gbwithparts°± (or °∞gp°± for proteins) as
+return types of ‚Äúgb‚Äù or ‚Äúgbwithparts‚Äù (or ‚Äúgp‚Äù for proteins) as
 described on online. Also not that until Feb 2012, the Entrez EFetch API
 would default to returning plain text files, but now defaults to XML.
 
 Alternatively, you could for example use ``rettype="fasta"`` to get the
 Fasta-format; see the `EFetch Sequences Help
 page <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__
-for other options. Remember ®C the available formats depend on which
+for other options. Remember ‚Äì the available formats depend on which
 database you are downloading from - see the main `EFetch Help
 page <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
 If you fetch the record in one of the formats accepted by ``Bio.SeqIO``
-(see Chapter?\ `5 <#chapter:Bio.SeqIO>`__), you could directly parse it
+(see Chapter \ `5 <#chapter:Bio.SeqIO>`__), you could directly parse it
 into a ``SeqRecord``:
 
 .. code:: verbatim
@@ -544,7 +544,7 @@ into a ``SeqRecord``:
 Note that a more typical use would be to save the sequence data to a
 local file, and *then* parse it with ``Bio.SeqIO``. This can save you
 having to re-download the same file repeatedly while working on your
-script, and places less load on the NCBI°Øs servers. For example:
+script, and places less load on the NCBI‚Äôs servers. For example:
 
 .. code:: verbatim
 
@@ -582,13 +582,13 @@ To get the output in XML format, which you can parse using the
 
 So, that dealt with sequences. For examples of parsing file formats
 specific to the other databases (e.g. the ``MEDLINE`` format used in
-PubMed), see Section?\ `9.12 <#sec:entrez-specialized-parsers>`__.
+PubMed), see Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
 
 If you want to perform a search with ``Bio.Entrez.esearch()``, and then
 download the records with ``Bio.Entrez.efetch()``, you should use the
-WebEnv history feature ®C see Section?\ `9.15 <#sec:entrez-webenv>`__.
+WebEnv history feature ‚Äì see Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.7??ELink: Searching for related items in NCBI Entrez
+9.7  ELink: Searching for related items in NCBI Entrez
 ------------------------------------------------------
 
 ELink, available from Biopython as ``Bio.Entrez.elink()``, can be used
@@ -596,7 +596,7 @@ to find related items in the NCBI Entrez databases. For example, you can
 us this to find nucleotide entries for an entry in the gene database,
 and other cool stuff.
 
-Let°Øs use ELink to find articles related to the Biopython application
+Let‚Äôs use ELink to find articles related to the Biopython application
 note published in *Bioinformatics* in 2009. The PubMed ID of this
 article is 19304878:
 
@@ -639,7 +639,7 @@ categories):
     pubmed pubmed_pubmed_reviews_five 5
 
 The actual search results are stored as under the ``"Link"`` key. In
-total, 110 items were found under standard search. Let°Øs now at the
+total, 110 items were found under standard search. Let‚Äôs now at the
 first search result:
 
 .. code:: verbatim
@@ -647,8 +647,8 @@ first search result:
     >>> record[0]["LinkSetDb"][0]["Link"][0]
     {u'Id': '19304878'}
 
-This is the article we searched for, which doesn°Øt help us much, so
-let°Øs look at the second search result:
+This is the article we searched for, which doesn‚Äôt help us much, so
+let‚Äôs look at the second search result:
 
 .. code:: verbatim
 
@@ -671,9 +671,9 @@ We can use a loop to print out all PubMed IDs:
     ......
 
 Now that was nice, but personally I am often more interested to find out
-if a paper has been cited. Well, ELink can do that too ®C at least for
+if a paper has been cited. Well, ELink can do that too ‚Äì at least for
 journals in Pubmed Central (see
-Section?\ `9.15.3 <#sec:elink-citations>`__).
+Section \ `9.15.3 <#sec:elink-citations>`__).
 
 For help on ELink, see the `ELink help
 page <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__.
@@ -681,7 +681,7 @@ There is an entire sub-page just for the `link
 names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__,
 describing how different databases can be cross referenced.
 
-9.8??EGQuery: Global Query - counts for search terms
+9.8  EGQuery: Global Query - counts for search terms
 ----------------------------------------------------
 
 EGQuery provides counts for a search term in each of the Entrez
@@ -691,7 +691,7 @@ actually performing lots of separate searches with ESearch (see the
 example in `9.14.2 <#subsec:entrez_example_genbank>`__ below).
 
 In this example, we use ``Bio.Entrez.egquery()`` to obtain the counts
-for °∞Biopython°±:
+for ‚ÄúBiopython‚Äù:
 
 .. code:: verbatim
 
@@ -710,7 +710,7 @@ See the `EGQuery help
 page <http://www.ncbi.nlm.nih.gov/entrez/query/static/egquery_help.html>`__
 for more information.
 
-9.9??ESpell: Obtaining spelling suggestions
+9.9  ESpell: Obtaining spelling suggestions
 -------------------------------------------
 
 ESpell retrieves spelling suggestions. In this example, we use
@@ -732,7 +732,7 @@ page <http://www.ncbi.nlm.nih.gov/entrez/query/static/espell_help.html>`__
 for more information. The main use of this is for GUI tools to provide
 automatic suggestions for search terms.
 
-9.10??Parsing huge Entrez XML files
+9.10  Parsing huge Entrez XML files
 -----------------------------------
 
 The ``Entrez.read`` function reads the entire XML file returned by
@@ -744,12 +744,12 @@ reflects a Python list object (in other words, if ``Entrez.read`` on a
 computer with infinite memory resources would return a Python list).
 
 For example, you can download the entire Entrez Gene database for a
-given organism as a file from NCBI°Øs ftp site. These files can be very
+given organism as a file from NCBI‚Äôs ftp site. These files can be very
 large. As an example, on September 4, 2009, the file
 ``Homo_sapiens.ags.gz``, containing the Entrez Gene database for human,
 had a size of 116576 kB. This file, which is in the ``ASN`` format, can
-be converted into an XML file using NCBI°Øs ``gene2xml`` program (see
-NCBI°Øs ftp site for more information):
+be converted into an XML file using NCBI‚Äôs ``gene2xml`` program (see
+NCBI‚Äôs ftp site for more information):
 
 .. code:: verbatim
 
@@ -798,7 +798,7 @@ This will print:
     17 AAVS1
     ...
 
-9.11??Handling errors
+9.11  Handling errors
 ---------------------
 
 Three things can go wrong when parsing an XML file:
@@ -824,7 +824,7 @@ if it were an XML file:
         raise NotXMLError(e)
     Bio.Entrez.Parser.NotXMLError: Failed to parse the XML data (syntax error: line 1, column 0). Please make sure that the input data are in XML format.
 
-Here, the parser didn°Øt find the ``<?xml ...`` tag with which an XML
+Here, the parser didn‚Äôt find the ``<?xml ...`` tag with which an XML
 file is supposed to start, and therefore decides (correctly) that the
 file is not an XML file.
 
@@ -935,7 +935,7 @@ raising a ValidationError. This is done by calling ``Entrez.read`` or
 Of course, the information contained in the XML tags that are not in the
 DTD are not present in the record returned by ``Entrez.read``.
 
-9.12??Specialized parsers
+9.12  Specialized parsers
 -------------------------
 
 The ``Bio.Entrez.read()`` function can parse most (if not all) XML
@@ -951,16 +951,16 @@ webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
 One obvious case is you may prefer to download sequences in the FASTA or
 GenBank/GenPept plain text formats (which can then be parsed with
-``Bio.SeqIO``, see Sections?\ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-and?\ `9.6 <#sec:efetch>`__). For the literature databases, Biopython
+``Bio.SeqIO``, see Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+and \ `9.6 <#sec:efetch>`__). For the literature databases, Biopython
 contains a parser for the ``MEDLINE`` format used in PubMed.
 
-9.12.1??Parsing Medline records
+9.12.1  Parsing Medline records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can find the Medline parser in ``Bio.Medline``. Suppose we want to
 parse the file ``pubmed_result1.txt``, containing one Medline record.
-You can find this file in Biopython°Øs ``Tests\Medline`` directory. The
+You can find this file in Biopython‚Äôs ``Tests\Medline`` directory. The
 file looks like this:
 
 .. code:: verbatim
@@ -1032,7 +1032,7 @@ To parse a file containing multiple Medline records, you can use the
     PDB file parser and structure class implemented in Python.
 
 Instead of parsing Medline records stored in files, you can also parse
-Medline records downloaded by ``Bio.Entrez.efetch``. For example, let°Øs
+Medline records downloaded by ``Bio.Entrez.efetch``. For example, let‚Äôs
 look at all Medline records in PubMed related to Biopython:
 
 .. code:: verbatim
@@ -1091,9 +1091,9 @@ For comparison, here we show an example using the XML format:
 Note that in both of these examples, for simplicity we have naively
 combined ESearch and EFetch. In this situation, the NCBI would expect
 you to use their history feature, as illustrated in
-Section?\ `9.15 <#sec:entrez-webenv>`__.
+Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.12.2??Parsing GEO records
+9.12.2  Parsing GEO records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GEO (`Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__) is
@@ -1112,7 +1112,7 @@ The following code fragment shows how to parse the example GEO file
     >>> for record in records:
     ...     print record
 
-You can search the °∞gds°± database (GEO datasets) with ESearch:
+You can search the ‚Äúgds‚Äù database (GEO datasets) with ESearch:
 
 .. code:: verbatim
 
@@ -1125,9 +1125,9 @@ You can search the °∞gds°± database (GEO datasets) with ESearch:
     >>> record["IdList"]
     ['200000016', '100000028']
 
-From the Entrez website, UID °∞200000016°± is GDS16 while the other hit
-°∞100000028°± is for the associated platform, GPL28. Unfortunately, at the
-time of writing the NCBI don°Øt seem to support downloading GEO files
+From the Entrez website, UID ‚Äú200000016‚Äù is GDS16 while the other hit
+‚Äú100000028‚Äù is for the associated platform, GPL28. Unfortunately, at the
+time of writing the NCBI don‚Äôt seem to support downloading GEO files
 using Entrez (not as XML, nor in the *Simple Omnibus Format in Text*
 (SOFT) format).
 
@@ -1138,7 +1138,7 @@ instead. In this case you might want
 ```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
 (a compressed file, see the Python module gzip).
 
-9.12.3??Parsing UniGene records
+9.12.3  Parsing UniGene records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 UniGene is an NCBI database of the transcriptome, with each UniGene
@@ -1236,10 +1236,10 @@ To parse a file containing more than one UniGene record, use the
     >>> for record in records:
     ...     print record.ID
 
-9.13??Using a proxy
+9.13  Using a proxy
 -------------------
 
-Normally you won°Øt have to worry about using a proxy, but if this is an
+Normally you won‚Äôt have to worry about using a proxy, but if this is an
 issue on your network here is how to deal with it. Internally,
 ``Bio.Entrez`` uses the standard Python library ``urllib`` for accessing
 the NCBI servers. This will check an environment variable called
@@ -1260,21 +1260,21 @@ See the `urllib
 documentation <http://www.python.org/doc/lib/module-urllib.html>`__ for
 more details.
 
-9.14??Examples
+9.14  Examples
 --------------
 
-9.14.1??PubMed and Medline
+9.14.1  PubMed and Medline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are in the medical field or interested in human issues (and many
 times even if you are not!), PubMed
 (```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 is an excellent source of all kinds of goodies. So like other things,
-we°Ød like to be able to grab information from it and use it in Python
+we‚Äôd like to be able to grab information from it and use it in Python
 scripts.
 
 In this example, we will query PubMed for all articles having to do with
-orchids (see section?\ `2.3 <#sec:orchids>`__ for our motivation). We
+orchids (see section \ `2.3 <#sec:orchids>`__ for our motivation). We
 first check how many of such articles there are:
 
 .. code:: verbatim
@@ -1307,8 +1307,8 @@ related to orchids:
     '18594007', '18591784', '18589523', '18579475', '18575811', '18575690',
     ...
 
-Now that we°Øve got them, we obviously want to get the corresponding
-Medline records and extract the information from them. Here, we°Øll
+Now that we‚Äôve got them, we obviously want to get the corresponding
+Medline records and extract the information from them. Here, we‚Äôll
 download the Medline records in the Medline flat-file format, and use
 the ``Bio.Medline`` module to parse them:
 
@@ -1319,9 +1319,9 @@ the ``Bio.Medline`` module to parse them:
                                retmode="text")
     >>> records = Medline.parse(handle)
 
-NOTE - We°Øve just done a separate search and fetch here, the NCBI much
+NOTE - We‚Äôve just done a separate search and fetch here, the NCBI much
 prefer you to take advantage of their history support in this situation.
-See Section?\ `9.15 <#sec:entrez-webenv>`__.
+See Section \ `9.15 <#sec:entrez-webenv>`__.
 
 Keep in mind that ``records`` is an iterator, so you can iterate through
 the records only once. If you want to save the records, you can convert
@@ -1331,7 +1331,7 @@ them to a list:
 
     >>> records = list(records)
 
-Let°Øs now iterate over the records to print out some information about
+Let‚Äôs now iterate over the records to print out some information about
 each record:
 
 .. code:: verbatim
@@ -1372,15 +1372,15 @@ following:
 Hopefully this section gave you an idea of the power and flexibility of
 the Entrez and Medline interfaces and how they can be used together.
 
-9.14.2??Searching, downloading, and parsing Entrez Nucleotide records
+9.14.2  Searching, downloading, and parsing Entrez Nucleotide records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here we°Øll show a simple example of performing a remote Entrez query. In
-section?\ `2.3 <#sec:orchids>`__ of the parsing examples, we talked
-about using NCBI°Øs Entrez website to search the NCBI nucleotide
+Here we‚Äôll show a simple example of performing a remote Entrez query. In
+section \ `2.3 <#sec:orchids>`__ of the parsing examples, we talked
+about using NCBI‚Äôs Entrez website to search the NCBI nucleotide
 databases for info on Cypripedioideae, our friends the lady slipper
-orchids. Now, we°Øll look at how to automate that process using a Python
-script. In this example, we°Øll just show how to connect, get the
+orchids. Now, we‚Äôll look at how to automate that process using a Python
+script. In this example, we‚Äôll just show how to connect, get the
 results, and parse them, with the Entrez module doing all of the work.
 
 First, we use EGQuery to find out the number of results we will get
@@ -1411,7 +1411,7 @@ really want to download all of them, which is our next step:
     >>> record = Entrez.read(handle)
 
 Here, ``record`` is a Python dictionary containing the search results
-and some auxiliary information. Just for information, let°Øs look at what
+and some auxiliary information. Just for information, let‚Äôs look at what
 is stored in this dictionary:
 
 .. code:: verbatim
@@ -1419,7 +1419,7 @@ is stored in this dictionary:
     >>> print record.keys()
     [u'Count', u'RetMax', u'IdList', u'TranslationSet', u'RetStart', u'QueryTranslation']
 
-First, let°Øs check how many results were found:
+First, let‚Äôs check how many results were found:
 
 .. code:: verbatim
 
@@ -1434,7 +1434,7 @@ which is the number we expected. The 814 results are stored in
     >>> print len(record["IdList"])
     814
 
-Let°Øs look at the first five results:
+Let‚Äôs look at the first five results:
 
 .. code:: verbatim
 
@@ -1442,10 +1442,10 @@ Let°Øs look at the first five results:
     ['187237168', '187372713', '187372690', '187372688', '187372686']
 
 We can download these records using ``efetch``. While you could download
-these records one by one, to reduce the load on NCBI°Øs servers, it is
+these records one by one, to reduce the load on NCBI‚Äôs servers, it is
 better to fetch a bunch of records at the same time, shown below.
 However, in this situation you should ideally be using the history
-feature described later in Section?\ `9.15 <#sec:entrez-webenv>`__.
+feature described later in Section \ `9.15 <#sec:entrez-webenv>`__.
 
 .. code:: verbatim
 
@@ -1482,10 +1482,10 @@ Each of these records corresponds to one GenBank record.
     >>> print records[0]["GBSeq_organism"]
     Cypripedium calceolus
 
-You could use this to quickly set up searches ®C but for heavy usage, see
-Section?\ `9.15 <#sec:entrez-webenv>`__.
+You could use this to quickly set up searches ‚Äì but for heavy usage, see
+Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.14.3??Searching, downloading, and parsing GenBank records
+9.14.3  Searching, downloading, and parsing GenBank records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The GenBank record format is a very popular method of holding
@@ -1494,14 +1494,14 @@ sequence information. The format is a good way to get information from
 the NCBI databases at
 ```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
 
-In this example we°Øll show how to query the NCBI databases,to retrieve
+In this example we‚Äôll show how to query the NCBI databases,to retrieve
 the records from the query, and then parse them using ``Bio.SeqIO`` -
-something touched on in Section?\ `5.3.1 <#sec:SeqIO_GenBank_Online>`__.
+something touched on in Section \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__.
 For simplicity, this example *does not* take advantage of the WebEnv
-history feature ®C see Section?\ `9.15 <#sec:entrez-webenv>`__ for this.
+history feature ‚Äì see Section \ `9.15 <#sec:entrez-webenv>`__ for this.
 
 First, we want to make a query and find out the ids of the records to
-retrieve. Here we°Øll do a quick search for one of our favorite
+retrieve. Here we‚Äôll do a quick search for one of our favorite
 organisms, *Opuntia* (prickly-pear cacti). We can do quick search and
 get back the GIs (GenBank identifiers) for all of the corresponding
 records. First we check how many records there are:
@@ -1563,7 +1563,7 @@ handle and print out the result:
 In this case, we are just getting the raw records. To get the records in
 a more Python-friendly form, we can use ``Bio.SeqIO`` to parse the
 GenBank data into ``SeqRecord`` objects, including ``SeqFeature``
-objects (see Chapter?\ `5 <#chapter:Bio.SeqIO>`__):
+objects (see Chapter \ `5 <#chapter:Bio.SeqIO>`__):
 
 .. code:: verbatim
 
@@ -1590,22 +1590,22 @@ interested in:
     AF191658, length 896, with 3 features
 
 Using these automated query retrieval functionality is a big plus over
-doing things by hand. Although the module should obey the NCBI°Øs max
+doing things by hand. Although the module should obey the NCBI‚Äôs max
 three queries per second rule, the NCBI have other recommendations like
-avoiding peak hours. See Section?\ `9.1 <#sec:entrez-guidelines>`__. In
+avoiding peak hours. See Section \ `9.1 <#sec:entrez-guidelines>`__. In
 particular, please note that for simplicity, this example does not use
 the WebEnv history feature. You should use this for any non-trivial
-search and download work, see Section?\ `9.15 <#sec:entrez-webenv>`__.
+search and download work, see Section \ `9.15 <#sec:entrez-webenv>`__.
 
 Finally, if plan to repeat your analysis, rather than downloading the
 files from the NCBI and parsing them immediately (as shown in this
 example), you should just download the records *once* and save them to
 your hard disk, and then parse the local file.
 
-9.14.4??Finding the lineage of an organism
+9.14.4  Finding the lineage of an organism
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Staying with a plant example, let°Øs now find the lineage of the
+Staying with a plant example, let‚Äôs now find the lineage of the
 Cypripedioideae orchid family. First, we search the Taxonomy database
 for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:
 
@@ -1648,9 +1648,9 @@ We can get the lineage directly from this record:
 
 The record data contains much more than just the information shown here
 - for example look under ``"LineageEx"`` instead of ``"Lineage"`` and
-you°Øll get the NCBI taxon identifiers of the lineage entries too.
+you‚Äôll get the NCBI taxon identifiers of the lineage entries too.
 
-9.15??Using the history and WebEnv
+9.15  Using the history and WebEnv
 ----------------------------------
 
 Often you will want to make a series of linked queries. Most typically,
@@ -1664,12 +1664,12 @@ EFetch. You use EPost to upload a list of identifiers, which starts a
 new history session. You then download the records with EFetch by
 referring to the session (instead of the identifiers).
 
-9.15.1??Searching for and downloading sequences using the history
+9.15.1  Searching for and downloading sequences using the history
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Suppose we want to search and download all the *Opuntia* rpl16
 nucleotide sequences, and store them in a FASTA file. As shown in
-Section?\ `9.14.3 <#sec:entrez-search-fetch-genbank>`__, we can naively
+Section \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__, we can naively
 combine ``Bio.Entrez.esearch()`` to get a list of GI numbers, and then
 call ``Bio.Entrez.efetch()`` to download them all.
 
@@ -1735,7 +1735,7 @@ For illustrative purposes, this example downloaded the FASTA records in
 batches of three. Unless you are downloading genomes or chromosomes, you
 would normally pick a larger batch size.
 
-9.15.2??Searching for and downloading abstracts using the history
+9.15.2  Searching for and downloading abstracts using the history
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here is another history example, searching for papers published in the
@@ -1770,16 +1770,16 @@ MedLine format:
 
 At the time of writing, this gave 28 matches - but because this is a
 date dependent search, this will of course vary. As described in
-Section?\ `9.12.1 <#subsec:entrez-and-medline>`__ above, you can then
+Section \ `9.12.1 <#subsec:entrez-and-medline>`__ above, you can then
 use ``Bio.Medline`` to parse the saved records.
 
-9.15.3??Searching for citations
+9.15.3  Searching for citations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Back in Section?\ `9.7 <#sec:elink>`__ we mentioned ELink can be used to
+Back in Section \ `9.7 <#sec:elink>`__ we mentioned ELink can be used to
 search for citations of a given paper. Unfortunately this only covers
 journals indexed for PubMed Central (doing it for all the journals in
-PubMed would mean a lot more work for the NIH). Let°Øs try this for the
+PubMed would mean a lot more work for the NIH). Let‚Äôs try this for the
 Biopython PDB parser paper, PubMed ID 14630660:
 
 .. code:: verbatim
@@ -1793,16 +1793,16 @@ Biopython PDB parser paper, PubMed ID 14630660:
     >>> pmc_ids
     ['2744707', '2705363', '2682512', ..., '1190160']
 
-Great - eleven articles. But why hasn°Øt the Biopython application note
+Great - eleven articles. But why hasn‚Äôt the Biopython application note
 been found (PubMed ID 19304878)? Well, as you might have guessed from
 the variable names, there are not actually PubMed IDs, but PubMed
 Central IDs. Our application note is the third citing paper in that
 list, PMCID 2682512.
 
-So, what if (like me) you°Ød rather get back a list of PubMed IDs? Well
+So, what if (like me) you‚Äôd rather get back a list of PubMed IDs? Well
 we can call ELink again to translate them. This becomes a two step
 process, so by now you should expect to use the history feature to
-accomplish it (Section?`9.15 <#sec:entrez-webenv>`__).
+accomplish it (Section `9.15 <#sec:entrez-webenv>`__).
 
 But first, taking the more straightforward approach of making a second
 (separate) call to ELink:
@@ -1818,7 +1818,7 @@ But first, taking the more straightforward approach of making a second
 This time you can immediately spot the Biopython application note as the
 third hit (PubMed ID 19304878).
 
-Now, let°Øs do that all again but with the history °≠ *TODO*.
+Now, let‚Äôs do that all again but with the history ‚Ä¶ *TODO*.
 
-And finally, don°Øt forget to include your *own* email address in the
+And finally, don‚Äôt forget to include your *own* email address in the
 Entrez calls.

@@ -1,4 +1,4 @@
-Chapter?2??Quick Start ®C What can you do with Biopython?
+ÔªøChapter 2  Quick Start ‚Äì What can you do with Biopython?
 ========================================================
 
 This section is designed to get you started quickly with Biopython, and
@@ -14,49 +14,49 @@ Since much biological work on the computer involves connecting with
 databases on the internet, some of the examples will also require a
 working internet connection in order to run.
 
-Now that that is all out of the way, let°Øs get into what we can do with
+Now that that is all out of the way, let‚Äôs get into what we can do with
 Biopython.
 
-2.1??General overview of what Biopython provides
+2.1  General overview of what Biopython provides
 ------------------------------------------------
 
 As mentioned in the introduction, Biopython is a set of libraries to
-provide the ability to deal with °∞things°± of interest to biologists
+provide the ability to deal with ‚Äúthings‚Äù of interest to biologists
 working on the computer. In general this means that you will need to
 have at least some programming experience (in Python, of course!) or at
-least an interest in learning to program. Biopython°Øs job is to make
+least an interest in learning to program. Biopython‚Äôs job is to make
 your job easier as a programmer by supplying reusable libraries so that
 you can focus on answering your specific question of interest, instead
 of focusing on the internals of parsing a particular file format (of
-course, if you want to help by writing a parser that doesn°Øt exist and
-contributing it to Biopython, please go ahead!). So Biopython°Øs job is
+course, if you want to help by writing a parser that doesn‚Äôt exist and
+contributing it to Biopython, please go ahead!). So Biopython‚Äôs job is
 to make you happy!
 
 One thing to note about Biopython is that it often provides multiple
-ways of °∞doing the same thing.°± Things have improved in recent releases,
+ways of ‚Äúdoing the same thing.‚Äù Things have improved in recent releases,
 but this can still be frustrating as in Python there should ideally be
 one right way to do something. However, this can also be a real benefit
 because it gives you lots of flexibility and control over the libraries.
 The tutorial helps to show you the common or easy ways to do things so
 that you can just make things work. To learn more about the alternative
-possibilities, look in the Cookbook (Chapter?`18 <#chapter:cookbook>`__,
+possibilities, look in the Cookbook (Chapter `18 <#chapter:cookbook>`__,
 this has some cools tricks and tips), the Advanced section
-(Chapter?`20 <#chapter:advanced>`__), the built in °∞docstrings°± (via the
+(Chapter `20 <#chapter:advanced>`__), the built in ‚Äúdocstrings‚Äù (via the
 Python help command, or the `API
 documentation <http://biopython.org/DIST/docs/api/>`__) or ultimately
 the code itself.
 
-2.2??Working with sequences
+2.2  Working with sequences
 ---------------------------
 
 Disputably (of course!), the central object in bioinformatics is the
-sequence. Thus, we°Øll start with a quick introduction to the Biopython
-mechanisms for dealing with sequences, the ``Seq`` object, which we°Øll
-discuss in more detail in Chapter?\ `3 <#chapter:Bio.Seq>`__.
+sequence. Thus, we‚Äôll start with a quick introduction to the Biopython
+mechanisms for dealing with sequences, the ``Seq`` object, which we‚Äôll
+discuss in more detail in Chapter \ `3 <#chapter:Bio.Seq>`__.
 
 Most of the time when we think about sequences we have in my mind a
-string of letters like °Æ\ ``AGTACACTGGT``\ °Ø. You can create such
-``Seq`` object with this sequence as follows - the °∞\ ``>>>``\ °±
+string of letters like ‚Äò\ ``AGTACACTGGT``\ ‚Äô. You can create such
+``Seq`` object with this sequence as follows - the ‚Äú\ ``>>>``\ ‚Äù
 represents the Python prompt followed by what you would type in:
 
 .. code:: verbatim
@@ -73,11 +73,11 @@ represents the Python prompt followed by what you would type in:
 What we have here is a sequence object with a *generic* alphabet -
 reflecting the fact we have *not* specified if this is a DNA or protein
 sequence (okay, a protein with a lot of Alanines, Glycines, Cysteines
-and Threonines!). We°Øll talk more about alphabets in
-Chapter?\ `3 <#chapter:Bio.Seq>`__.
+and Threonines!). We‚Äôll talk more about alphabets in
+Chapter \ `3 <#chapter:Bio.Seq>`__.
 
 In addition to having an alphabet, the ``Seq`` object differs from the
-Python string in the methods it supports. You can°Øt do this with a plain
+Python string in the methods it supports. You can‚Äôt do this with a plain
 string:
 
 .. code:: verbatim
@@ -94,24 +94,24 @@ This holds a sequence (as a ``Seq`` object) with additional annotation
 including an identifier, name and description. The ``Bio.SeqIO`` module
 for reading and writing sequence file formats works with ``SeqRecord``
 objects, which will be introduced below and covered in more detail by
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__.
+Chapter \ `5 <#chapter:Bio.SeqIO>`__.
 
 This covers the basic features and uses of the Biopython sequence class.
-Now that you°Øve got some idea of what it is like to interact with the
-Biopython libraries, it°Øs time to delve into the fun, fun world of
+Now that you‚Äôve got some idea of what it is like to interact with the
+Biopython libraries, it‚Äôs time to delve into the fun, fun world of
 dealing with biological file formats!
 
-2.3??A usage example
+2.3  A usage example
 --------------------
 
 Before we jump right into parsers and everything else to do with
-Biopython, let°Øs set up an example to motivate everything we do and make
-life more interesting. After all, if there wasn°Øt any biology in this
+Biopython, let‚Äôs set up an example to motivate everything we do and make
+life more interesting. After all, if there wasn‚Äôt any biology in this
 tutorial, why would you want you read it?
 
-Since I love plants, I think we°Øre just going to have to have a plant
+Since I love plants, I think we‚Äôre just going to have to have a plant
 based example (sorry to all the fans of other organisms out there!).
-Having just completed a recent trip to our local greenhouse, we°Øve
+Having just completed a recent trip to our local greenhouse, we‚Äôve
 suddenly developed an incredible obsession with Lady Slipper Orchids (if
 you wonder why, have a look at some `Lady Slipper Orchids photos on
 Flickr <http://www.flickr.com/search/?q=lady+slipper+orchid&s=int&z=t>`__,
@@ -120,7 +120,7 @@ Search <http://images.google.com/images?q=lady%20slipper%20orchid>`__).
 
 Of course, orchids are not only beautiful to look at, they are also
 extremely interesting for people studying evolution and systematics. So
-let°Øs suppose we°Øre thinking about writing a funding proposal to do a
+let‚Äôs suppose we‚Äôre thinking about writing a funding proposal to do a
 molecular study of Lady Slipper evolution, and would like to see what
 kind of research has already been done and how we can add to that.
 
@@ -130,16 +130,16 @@ and are made up of 5 genera: *Cypripedium*, *Paphiopedilum*,
 *Phragmipedium*, *Selenipedium* and *Mexipedium*.
 
 That gives us enough to get started delving for more information. So,
-let°Øs look at how the Biopython tools can help us. We°Øll start with
-sequence parsing in Section?\ `2.4 <#sec:sequence-parsing>`__, but the
-orchids will be back later on as well - for example we°Øll search PubMed
+let‚Äôs look at how the Biopython tools can help us. We‚Äôll start with
+sequence parsing in Section \ `2.4 <#sec:sequence-parsing>`__, but the
+orchids will be back later on as well - for example we‚Äôll search PubMed
 for papers about orchids and extract sequence data from GenBank in
-Chapter?\ `9 <#chapter:entrez>`__, extract data from Swiss-Prot from
-certain orchid proteins in Chapter?\ `10 <#chapter:swiss_prot>`__, and
+Chapter \ `9 <#chapter:entrez>`__, extract data from Swiss-Prot from
+certain orchid proteins in Chapter \ `10 <#chapter:swiss_prot>`__, and
 work with ClustalW multiple sequence alignments of orchid proteins in
-Section?\ `6.4.1 <#sec:align_clustal>`__.
+Section \ `6.4.1 <#sec:align_clustal>`__.
 
-2.4??Parsing sequence file formats
+2.4  Parsing sequence file formats
 ----------------------------------
 
 A large part of much bioinformatics work involves dealing with the many
@@ -151,10 +151,10 @@ files can be frustrated by the fact that the formats can change quite
 regularly, and that formats may contain small subtleties which can break
 even the most well designed parsers.
 
-We are now going to briefly introduce the ``Bio.SeqIO`` module ®C you can
-find out more in Chapter?\ `5 <#chapter:Bio.SeqIO>`__. We°Øll start with
+We are now going to briefly introduce the ``Bio.SeqIO`` module ‚Äì you can
+find out more in Chapter \ `5 <#chapter:Bio.SeqIO>`__. We‚Äôll start with
 an online search for our friends, the lady slipper orchids. To keep this
-introduction simple, we°Øre just using the NCBI website by hand. Let°Øs
+introduction simple, we‚Äôre just using the NCBI website by hand. Let‚Äôs
 just take a look through the nucleotide databases at NCBI, using an
 Entrez online search
 (```http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide`` <http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide>`__)
@@ -170,19 +170,19 @@ and
 also included with the Biopython source code under
 ``docs/tutorial/examples/``).
 
-If you run the search today, you°Øll get hundreds of results! When
+If you run the search today, you‚Äôll get hundreds of results! When
 following the tutorial, if you want to see the same list of genes, just
 download the two files above or copy them from ``docs/examples/`` in the
 Biopython source code. In
-Section?\ `2.5 <#sec:connecting-with-biological-databases>`__ we will
+Section \ `2.5 <#sec:connecting-with-biological-databases>`__ we will
 look at how to do a search like this from within Python.
 
-2.4.1??Simple FASTA parsing example
+2.4.1  Simple FASTA parsing example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you open the lady slipper orchids FASTA file
 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
-in your favourite text editor, you°Øll see that the file starts like
+in your favourite text editor, you‚Äôll see that the file starts like
 this:
 
 .. code:: verbatim
@@ -192,7 +192,7 @@ this:
     AATCCGGAGGACCGGTGTACTCAGCTCACCGGGGGCATTGCTCCCGTGGTGACCCTGATTTGTTGTTGGG
     ...
 
-It contains 94 records, each has a line starting with °∞\ ``>``\ °±
+It contains 94 records, each has a line starting with ‚Äú\ ``>``\ ‚Äù
 (greater-than symbol) followed by the sequence on one or more lines. Now
 try this in Python:
 
@@ -220,10 +220,10 @@ Notice that the FASTA format does not specify the alphabet, so
 ``Bio.SeqIO`` has defaulted to the rather generic
 ``SingleLetterAlphabet()`` rather than something DNA specific.
 
-2.4.2??Simple GenBank parsing example
+2.4.2  Simple GenBank parsing example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now let°Øs load the GenBank file
+Now let‚Äôs load the GenBank file
 ```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
 instead - notice that the code to do this is almost identical to the
 snippet used above for the FASTA file - the only difference is we change
@@ -250,16 +250,16 @@ This should give:
     592
 
 This time ``Bio.SeqIO`` has been able to choose a sensible alphabet,
-IUPAC Ambiguous DNA. You°Øll also notice that a shorter string has been
+IUPAC Ambiguous DNA. You‚Äôll also notice that a shorter string has been
 used as the ``seq_record.id`` in this case.
 
-2.4.3??I love parsing ®C please don°Øt stop talking about it!
+2.4.3  I love parsing ‚Äì please don‚Äôt stop talking about it!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Biopython has a lot of parsers, and each has its own little special
 niches based on the sequence format it is parsing and all of that.
-Chapter?\ `5 <#chapter:Bio.SeqIO>`__ covers ``Bio.SeqIO`` in more
-detail, while Chapter?\ `6 <#chapter:Bio.AlignIO>`__ introduces
+Chapter \ `5 <#chapter:Bio.SeqIO>`__ covers ``Bio.SeqIO`` in more
+detail, while Chapter \ `6 <#chapter:Bio.AlignIO>`__ introduces
 ``Bio.AlignIO`` for sequence alignments.
 
 While the most popular file formats have parsers integrated into
@@ -275,12 +275,12 @@ additional examples.
 
 The next place to look for information about specific parsers and how to
 do cool things with them is in the Cookbook
-(Chapter?`18 <#chapter:cookbook>`__ of this Tutorial). If you don°Øt find
+(Chapter `18 <#chapter:cookbook>`__ of this Tutorial). If you don‚Äôt find
 the information you are looking for, please consider helping out your
 poor overworked documentors and submitting a cookbook entry about it!
 (once you figure out how to do it, that is!)
 
-2.5??Connecting with biological databases
+2.5  Connecting with biological databases
 -----------------------------------------
 
 One of the very common things that you need to do in bioinformatics is
@@ -291,11 +291,11 @@ making some on-line databases available from Python scripts. Currently,
 Biopython has code to extract information from the following databases:
 
 -  `Entrez <http://www.ncbi.nlm.nih.gov/Entrez/>`__ (and
-   `PubMed <http://www.ncbi.nlm.nih.gov/PubMed/>`__) from the NCBI ®C See
-   Chapter?\ `9 <#chapter:entrez>`__.
--  `ExPASy <http://www.expasy.org/>`__ ®C See
-   Chapter?\ `10 <#chapter:swiss_prot>`__.
--  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__ ®C See the
+   `PubMed <http://www.ncbi.nlm.nih.gov/PubMed/>`__) from the NCBI ‚Äì See
+   Chapter \ `9 <#chapter:entrez>`__.
+-  `ExPASy <http://www.expasy.org/>`__ ‚Äì See
+   Chapter \ `10 <#chapter:swiss_prot>`__.
+-  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__ ‚Äì See the
    ``Bio.SCOP.search()`` function.
 
 The code in these modules basically makes it easy to write Python code
@@ -304,10 +304,10 @@ results in an easy to deal with format. In some cases, the results can
 be tightly integrated with the Biopython parsers to make it even easier
 to extract information.
 
-2.6??What to do next
+2.6  What to do next
 --------------------
 
-Now that you°Øve made it this far, you hopefully have a good
+Now that you‚Äôve made it this far, you hopefully have a good
 understanding of the basics of Biopython and are ready to start using it
 for doing useful work. The best thing to do now is finish reading this
 tutorial, and then if you want start snooping around in the source code,
@@ -315,10 +315,10 @@ and looking at the automatically generated documentation.
 
 Once you get a picture of what you want to do, and what libraries in
 Biopython will do it, you should take a peak at the Cookbook
-(Chapter?`18 <#chapter:cookbook>`__), which may have example code to do
+(Chapter `18 <#chapter:cookbook>`__), which may have example code to do
 something similar to what you want to do.
 
-If you know what you want to do, but can°Øt figure out how to do it,
+If you know what you want to do, but can‚Äôt figure out how to do it,
 please feel free to post questions to the main Biopython list (see
 ```http://biopython.org/wiki/Mailing_lists`` <http://biopython.org/wiki/Mailing_lists>`__).
 This will not only help us answer your question, it will also allow us

@@ -1,4 +1,4 @@
-Chapter?12??Bio.PopGen: Population genetics
+ÔªøChapter 12  Bio.PopGen: Population genetics
 ===========================================
 
 Bio.PopGen is a Biopython module supporting population genetics,
@@ -12,7 +12,7 @@ on the API, especially if you are using a development version. APIs that
 are made available on our official public releases should be much more
 stable.
 
-12.1??GenePop
+12.1  GenePop
 -------------
 
 GenePop
@@ -20,7 +20,7 @@ GenePop
 is a popular population genetics software package supporting
 Hardy-Weinberg tests, linkage desiquilibrium, population diferentiation,
 basic statistics, *F*\ :sub:`*st*` and migration estimates, among
-others. GenePop does not supply sequence based statistics as it doesn°Øt
+others. GenePop does not supply sequence based statistics as it doesn‚Äôt
 handle sequence data. The GenePop file format is supported by a wide
 range of other population genetic software applications, thus making it
 a relevant format in the population genetics field.
@@ -42,7 +42,7 @@ This will read a file called example.gen and parse it. If you do print
 rec, the record will be output again, in GenePop format.
 
 The most important information in rec will be the loci names and
-population information (but there is more ®C use help(GenePop.Record) to
+population information (but there is more ‚Äì use help(GenePop.Record) to
 check the API documentation). Loci names can be found on rec.loci\_list.
 Population information can be found on rec.populations. Populations is a
 list with one element per population. Each element is itself a list of
@@ -110,11 +110,11 @@ available, here is an example:
 
 GenePop does not support population names, a limitation which can be
 cumbersome at times. Functionality to enable population names is
-currently being planned for Biopython. These extensions won°Øt break
+currently being planned for Biopython. These extensions won‚Äôt break
 compatibility in any way with the standard format. In the medium term,
 we would also like to support the GenePop web service.
 
-12.2??Coalescent simulation
+12.2  Coalescent simulation
 ---------------------------
 
 A coalescent simulation is a backward model of population genetics with
@@ -136,8 +136,8 @@ existing one, SIMCOAL2
 SIMCOAL2 allows for, among others, population structure, multiple
 demographic events, simulation of multiple types of loci (SNPs,
 sequences, STRs/microsatellites and RFLPs) with recombination, diploidy
-multiple chromosomes or ascertainment bias. Notably SIMCOAL2 doesn°Øt
-support any selection model. We recommend reading SIMCOAL2°Øs
+multiple chromosomes or ascertainment bias. Notably SIMCOAL2 doesn‚Äôt
+support any selection model. We recommend reading SIMCOAL2‚Äôs
 documentation, available in the link above.
 
 The input for SIMCOAL2 is a file specifying the desired demography and
@@ -151,12 +151,12 @@ be compared to those confidence intervals.
 Biopython coalescent code allows to create demographic scenarios and
 genomes and to run SIMCOAL2.
 
-12.2.1??Creating scenarios
+12.2.1  Creating scenarios
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Creating a scenario involves both creating a demography and a chromosome
 structure. In many cases (e.g. when doing Approximate Bayesian
-Computations ®C ABC) it is important to test many parameter variations
+Computations ‚Äì ABC) it is important to test many parameter variations
 (e.g. vary the effective population size, *N*\ :sub:`*e*`, between 10,
 50, 500 and 1000 individuals). The code provided allows for the
 simulation of scenarios with different demographic parameters very
@@ -164,7 +164,7 @@ easily.
 
 Below we see how we can create scenarios and then how simulate them.
 
-12.2.1.1??Demography
+12.2.1.1  Demography
 ^^^^^^^^^^^^^^^^^^^^
 
 A few predefined demographies are built-in, all have two shared
@@ -217,11 +217,11 @@ directory called simple\_100\_300.par this file can be given as input to
 SIMCOAL2 to simulate the demography (below we will see how Biopython can
 take care of calling SIMCOAL2).
 
-This code consists of a single function call, let°Øs discuss it parameter
+This code consists of a single function call, let‚Äôs discuss it parameter
 by parameter.
 
 The first parameter is the template id (from the list above). We are
-using the id °Øsimple°Ø which is the template for a single population of
+using the id ‚Äôsimple‚Äô which is the template for a single population of
 constant size along time.
 
 The second parameter is the chromosome structure. Please ignore it for
@@ -231,7 +231,7 @@ The third parameter is a list of all required parameters (recall that
 the simple model only needs sample\_size and pop\_size) and possible
 values (in this case each parameter only has a possible value).
 
-Now, let°Øs consider an example where we want to generate several island
+Now, let‚Äôs consider an example where we want to generate several island
 models, and we are interested in varying the number of demes: 10, 50 and
 100 with a migration rate of 1%. Sample size and deme size will be the
 same as before. Here is the code:
@@ -257,7 +257,7 @@ the Bio/PopGen/SimCoal/data directory on Biopython source tree).
 Furthermore it is possible for the user to create new templates. That
 functionality will be discussed in a future version of this document.
 
-12.2.1.2??Chromosome structure
+12.2.1.2  Chromosome structure
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We strongly recommend reading SIMCOAL2 documentation to understand the
@@ -284,14 +284,14 @@ repeated (as there might be interest in repeating the same chromosome
 many times). The second element is a list of the actual components of
 the chromosome. Each element is again a pair, the first member is the
 locus type and the second element the parameters for that locus type.
-Confused? Before showing more examples let°Øs review the example above:
+Confused? Before showing more examples let‚Äôs review the example above:
 We have a list with one element (thus one chromosome), the chromosome is
 a single instance (therefore not to be repeated), it is composed of 24
 SNPs, with a recombination rate of 0.0005 between each consecutive SNP,
 the minimum frequency of the minor allele is 0.0 (i.e, it can be absent
 from a certain population).
 
-Let°Øs see a more complicated example:
+Let‚Äôs see a more complicated example:
 
 .. code:: verbatim
 
@@ -319,10 +319,10 @@ following, this recombination rate here is irrelevant), with a mutation
 rate of 0.001, geometric parameter of 0.0 and a range constraint of 0.0
 (for information about this parameters please consult the SIMCOAL2
 documentation, you can use them to simulate various mutation models,
-including the typical ®C for microsatellites ®C stepwise mutation model
+including the typical ‚Äì for microsatellites ‚Äì stepwise mutation model
 among others).
 
-12.2.2??Running SIMCOAL2
+12.2.2  Running SIMCOAL2
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 We now discuss how to run SIMCOAL2 from inside Biopython. It is required
@@ -370,26 +370,26 @@ explained above, that the input file name is simple\_100\_30.par for the
 simulation parameter file created. We then specify that we want to run
 50 independent simulations, by default Biopython requests a simulation
 of diploid data, but a third parameter can be added to simulate haploid
-data (adding as a parameter the string °Ø0°Ø). SIMCOAL2 will now run
+data (adding as a parameter the string ‚Äô0‚Äô). SIMCOAL2 will now run
 (please note that this can take quite a lot of time) and will create a
 directory with the simulation results. The results can now be analysed
 (typically studying the data with Arlequin3). In the future Biopython
 might support reading the Arlequin3 format and thus allowing for the
 analysis of SIMCOAL2 data inside Biopython.
 
-12.3??Other applications
+12.3  Other applications
 ------------------------
 
 Here we discuss interfaces and utilities to deal with population
-genetics°Ø applications which arguably have a smaller user base.
+genetics‚Äô applications which arguably have a smaller user base.
 
-12.3.1??FDist: Detecting selection and molecular adaptation
+12.3.1  FDist: Detecting selection and molecular adaptation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FDist is a selection detection application suite based on computing
-(i.e. simulating) a °∞neutral°± confidence interval based on
+(i.e. simulating) a ‚Äúneutral‚Äù confidence interval based on
 *F*\ :sub:`*st*` and heterozygosity. Markers (which can be SNPs,
-microsatellites, AFLPs among others) which lie outside the °∞neutral°±
+microsatellites, AFLPs among others) which lie outside the ‚Äúneutral‚Äù
 interval are to be considered as possible candidates for being under
 selection.
 
@@ -404,13 +404,13 @@ The typical usage pattern for FDist is as follows:
 #. Import a dataset from an external format into FDist format.
 #. Compute average *F*\ :sub:`*st*`. This is done by datacal inside
    FDist.
-#. Simulate °∞neutral°± markers based on the average *F*\ :sub:`*st*` and
+#. Simulate ‚Äúneutral‚Äù markers based on the average *F*\ :sub:`*st*` and
    expected number of total populations. This is the core operation,
    done by fdist inside FDist.
 #. Calculate the confidence interval, based on the desired confidence
    boundaries (typically 95% or 99%). This is done by cplot and is
    mainly used to plot the interval.
-#. Assess each marker status against the simulation °∞neutral°± confidence
+#. Assess each marker status against the simulation ‚Äúneutral‚Äù confidence
    interval. Done by pv. This is used to detect the outlier status of
    each marker against the simulation.
 
@@ -464,7 +464,7 @@ applications.
 On the second line we call the datacal application which computes the
 average *F*\ :sub:`*st*` and the sample size. It is worth noting that
 the *F*\ :sub:`*st*` computed by datacal is a *variation* of Weir and
-Cockerham°Øs ¶».
+Cockerham‚Äôs Œ∏.
 
 We can now call the main fdist application in order to simulate neutral
 markers.
@@ -476,7 +476,7 @@ markers.
 
  **npops**
     Number of populations existing in nature. This is really a
-    °∞guestimate°±. Has to be lower than 100.
+    ‚Äúguestimate‚Äù. Has to be lower than 100.
 **nsamples**
     Number of populations sampled, has to be lower than npops.
 **fst**
@@ -536,33 +536,33 @@ individual real marker. A list, in the same order than the loci\_list
 that is on the FDist record (which is in the same order that the GenePop
 record) is returned. Each element in the list is a quadruple, the
 fundamental member of each quadruple is the last element (regarding the
-other elements, please refer to the pv documentation ®C for the sake of
+other elements, please refer to the pv documentation ‚Äì for the sake of
 simplicity we will not discuss them here) which returns the probability
 of the simulated *F*\ :sub:`*st*` being lower than the marker
 *F*\ :sub:`*st*`. Higher values would indicate a stronger candidate for
 positive selection, lower values a candidate for balancing selection,
-and intermediate values a possible neutral marker. What is °∞higher°±,
-°∞lower°± or °∞intermediate°± is really a subjective issue, but taking a
-°∞confidence interval°± approach and considering a 95% confidence
-interval, °∞higher°± would be between 0.95 and 1.0, °∞lower°± between 0.0
-and 0.05 and °∞intermediate°± between 0.05 and 0.95.
+and intermediate values a possible neutral marker. What is ‚Äúhigher‚Äù,
+‚Äúlower‚Äù or ‚Äúintermediate‚Äù is really a subjective issue, but taking a
+‚Äúconfidence interval‚Äù approach and considering a 95% confidence
+interval, ‚Äúhigher‚Äù would be between 0.95 and 1.0, ‚Äúlower‚Äù between 0.0
+and 0.05 and ‚Äúintermediate‚Äù between 0.05 and 0.95.
 
-12.3.1.1??Approximating the desired average *F*\ :sub:`*st*`
+12.3.1.1  Approximating the desired average *F*\ :sub:`*st*`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Fdist tries to approximate the desired average *F*\ :sub:`*st*` by doing
 a coalescent simulation using migration rates based on the formula
 
-*N*\ :sub:`*m*`?=?
+*N*\ :sub:`*m*` = 
 
 +--------------------------+
-| 1???\ *F*\ :sub:`*st*`   |
+| 1 ‚àí \ *F*\ :sub:`*st*`   |
 +--------------------------+
 +--------------------------+
 | 4\ *F*\ :sub:`*st*`      |
 +--------------------------+
 
-?
+ 
 
 This formula assumes a few premises like an infinite number of
 populations.
@@ -587,15 +587,15 @@ The only new optional parameter, when comparing with run\_fdist, is
 limit which is the desired maximum error. run\_fdist can (and probably
 should) be safely replaced with run\_fdist\_force\_fst.
 
-12.3.1.2??Final notes
+12.3.1.2  Final notes
 ^^^^^^^^^^^^^^^^^^^^^
 
 The process to determine the average *F*\ :sub:`*st*` can be more
 sophisticated than the one presented here. For more information we refer
-you to the FDist README file. Biopython°Øs code can be used to implement
+you to the FDist README file. Biopython‚Äôs code can be used to implement
 more sophisticated approaches.
 
-12.4??Future Developments
+12.4  Future Developments
 -------------------------
 
 The most desired future developments would be the ones you add yourself

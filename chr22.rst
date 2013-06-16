@@ -1,19 +1,19 @@
-Chapter?22??Appendix: Useful stuff about Python
+Chapter 22  Appendix: Useful stuff about Python
 ===============================================
 
-If you haven°Øt spent a lot of time programming in Python, many questions
+If you haven‚Äôt spent a lot of time programming in Python, many questions
 and problems that come up in using Biopython are often related to Python
 itself. This section tries to present some ideas and code that come up
 often (at least for us!) while using the Biopython libraries. If you
 have any suggestions for useful pointers that could go here, please
 contribute!
 
-22.1??What the heck is a handle?
+22.1  What the heck is a handle?
 --------------------------------
 
 Handles are mentioned quite frequently throughout this documentation,
 and are also fairly confusing (at least to me!). Basically, you can
-think of a handle as being a °∞wrapper°± around text information.
+think of a handle as being a ‚Äúwrapper‚Äù around text information.
 
 Handles provide (at least) two benefits over plain text information:
 
@@ -27,11 +27,11 @@ Handles provide (at least) two benefits over plain text information:
    files which would use up all of your memory if you had to load them
    all.
 
-Handles can deal with text information that is being read (e.?g.?reading
-from a file) or written (e.?g.?writing information to a file). In the
-case of a °∞read°± handle, commonly used functions are ``read()``, which
+Handles can deal with text information that is being read (e. g. reading
+from a file) or written (e. g. writing information to a file). In the
+case of a ‚Äúread‚Äù handle, commonly used functions are ``read()``, which
 reads the entire text information from the handle, and ``readline()``,
-which reads information one line at a time. For °∞write°± handles, the
+which reads information one line at a time. For ‚Äúwrite‚Äù handles, the
 function ``write()`` is regularly used.
 
 The most common usage for handles is reading information from a file,
@@ -79,10 +79,10 @@ compressed FASTA file you want to parse:
         print record.id, len(record)
     handle.close()
 
-See Section?\ `5.2 <#sec:SeqIO_compressed>`__ for more examples like
+See Section \ `5.2 <#sec:SeqIO_compressed>`__ for more examples like
 this, including reading bzip2 compressed files.
 
-22.1.1??Creating a handle from a string
+22.1.1  Creating a handle from a string
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One useful thing is to be able to turn information contained in a string

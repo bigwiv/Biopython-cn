@@ -1,18 +1,24 @@
-16.1??The Logistic Regression Model
+Chapter 16  Supervised learning methods
+=======================================
+
+Note the supervised learning methods described in this chapter all
+require Numerical Python (numpy) to be installed.
+
+16.1  The Logistic Regression Model
 -----------------------------------
 
-16.1.1??Background and Purpose
+16.1.1  Background and Purpose
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Logistic regression is a supervised learning approach that attempts to
 distinguish *K* classes from each other using a weighted sum of some
 predictor variables *x*\ :sub:`*i*`. The logistic regression model is
-used to calculate the weights ¦Â\ :sub:`*i*` of the predictor variables.
+used to calculate the weights Î²\ :sub:`*i*` of the predictor variables.
 In Biopython, the logistic regression model is currently implemented for
 two classes only (*K* = 2); the number of predictor variables has no
 predefined limit.
 
-As an example, let¡¯s try to predict the operon structure in bacteria. An
+As an example, letâ€™s try to predict the operon structure in bacteria. An
 operon is a set of adjacent genes on the same strand of DNA that are
 transcribed into a single mRNA molecule. Translation of the single mRNA
 molecule then yields the individual proteins. For *Bacillus subtilis*,
@@ -52,11 +58,11 @@ In a logistic regression model, we use a weighted sum of these two
 predictors to calculate a joint score *S*:
 
 +-----------------------------------------------------------------------------------+
-| *S*?=?¦Â:sub:`0`?+?¦Â:sub:`1`?*x*\ :sub:`1`?+?¦Â:sub:`2`?*x*\ :sub:`2`. ????(16.1)   |
+| *S* = Î²:sub:`0` + Î²:sub:`1` *x*\ :sub:`1` + Î²:sub:`2` *x*\ :sub:`2`.     (16.1)   |
 +-----------------------------------------------------------------------------------+
 
 The logistic regression model gives us appropriate values for the
-parameters ¦Â\ :sub:`0`, ¦Â\ :sub:`1`, ¦Â\ :sub:`2` using two sets of
+parameters Î²\ :sub:`0`, Î²\ :sub:`1`, Î²\ :sub:`2` using two sets of
 example genes:
 
 -  OP: Adjacent genes, on the same strand of DNA, known to belong to the
@@ -68,49 +74,49 @@ In the logistic regression model, the probability of belonging to a
 class depends on the score via the logistic function. For the two
 classes OP and NOP, we can write this as
 
-?????
+     
 
-Pr(\ *OP*\ \|\ *x*\ :sub:`1`,?\ *x*\ :sub:`2`)
+Pr(\ *OP*\ \|\ *x*\ :sub:`1`, \ *x*\ :sub:`2`)
 
-?=
+ =
 
-?
+ 
 
 +--------------------------------------------------------------------------+
-| exp(¦Â\ :sub:`0`?+?¦Â:sub:`1`?*x*\ :sub:`1`?+?¦Â:sub:`2`?*x*\ :sub:`2`)     |
+| exp(Î²\ :sub:`0` + Î²:sub:`1` *x*\ :sub:`1` + Î²:sub:`2` *x*\ :sub:`2`)     |
 +--------------------------------------------------------------------------+
 +--------------------------------------------------------------------------+
-| 1+exp(¦Â\ :sub:`0`?+?¦Â:sub:`1`?*x*\ :sub:`1`?+?¦Â:sub:`2`?*x*\ :sub:`2`)   |
+| 1+exp(Î²\ :sub:`0` + Î²:sub:`1` *x*\ :sub:`1` + Î²:sub:`2` *x*\ :sub:`2`)   |
 +--------------------------------------------------------------------------+
 
-???
+   
 
-????(16.2)
+    (16.2)
 
-Pr(\ *NOP*\ \|\ *x*\ :sub:`1`,?\ *x*\ :sub:`2`)
+Pr(\ *NOP*\ \|\ *x*\ :sub:`1`, \ *x*\ :sub:`2`)
 
-?=
+ =
 
-?
+ 
 
 +--------------------------------------------------------------------------+
 | 1                                                                        |
 +--------------------------------------------------------------------------+
 +--------------------------------------------------------------------------+
-| 1+exp(¦Â\ :sub:`0`?+?¦Â:sub:`1`?*x*\ :sub:`1`?+?¦Â:sub:`2`?*x*\ :sub:`2`)   |
+| 1+exp(Î²\ :sub:`0` + Î²:sub:`1` *x*\ :sub:`1` + Î²:sub:`2` *x*\ :sub:`2`)   |
 +--------------------------------------------------------------------------+
 
-???
+   
 
-????(16.3)
+    (16.3)
 
 Using a set of gene pairs for which it is known whether they belong to
 the same operon (class OP) or to different operons (class NOP), we can
-calculate the weights ¦Â\ :sub:`0`, ¦Â\ :sub:`1`, ¦Â\ :sub:`2` by
+calculate the weights Î²\ :sub:`0`, Î²\ :sub:`1`, Î²\ :sub:`2` by
 maximizing the log-likelihood corresponding to the probability functions
 (`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__).
 
-16.1.2??Training the logistic regression model
+16.1.2  Training the logistic regression model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     --------------
@@ -122,45 +128,45 @@ maximizing the log-likelihood corresponding to the probability functions
     +---------------------+--------------------------------------+-----------------------------------------+---------+
     | Gene pair           | Intergene distance (*x*\ :sub:`1`)   | Gene expression score (*x*\ :sub:`2`)   | Class   |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *cotJA* ¡ª *cotJB*   | -53                                  | -200.78                                 | OP      |
+    | *cotJA* â€” *cotJB*   | -53                                  | -200.78                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yesK* ¡ª *yesL*     | 117                                  | -267.14                                 | OP      |
+    | *yesK* â€” *yesL*     | 117                                  | -267.14                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *lplA* ¡ª *lplB*     | 57                                   | -163.47                                 | OP      |
+    | *lplA* â€” *lplB*     | 57                                   | -163.47                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *lplB* ¡ª *lplC*     | 16                                   | -190.30                                 | OP      |
+    | *lplB* â€” *lplC*     | 16                                   | -190.30                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *lplC* ¡ª *lplD*     | 11                                   | -220.94                                 | OP      |
+    | *lplC* â€” *lplD*     | 11                                   | -220.94                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *lplD* ¡ª *yetF*     | 85                                   | -193.94                                 | OP      |
+    | *lplD* â€” *yetF*     | 85                                   | -193.94                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yfmT* ¡ª *yfmS*     | 16                                   | -182.71                                 | OP      |
+    | *yfmT* â€” *yfmS*     | 16                                   | -182.71                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yfmF* ¡ª *yfmE*     | 15                                   | -180.41                                 | OP      |
+    | *yfmF* â€” *yfmE*     | 15                                   | -180.41                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *citS* ¡ª *citT*     | -26                                  | -181.73                                 | OP      |
+    | *citS* â€” *citT*     | -26                                  | -181.73                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *citM* ¡ª *yflN*     | 58                                   | -259.87                                 | OP      |
+    | *citM* â€” *yflN*     | 58                                   | -259.87                                 | OP      |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yfiI* ¡ª *yfiJ*     | 126                                  | -414.53                                 | NOP     |
+    | *yfiI* â€” *yfiJ*     | 126                                  | -414.53                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *lipB* ¡ª *yfiQ*     | 191                                  | -249.57                                 | NOP     |
+    | *lipB* â€” *yfiQ*     | 191                                  | -249.57                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yfiU* ¡ª *yfiV*     | 113                                  | -265.28                                 | NOP     |
+    | *yfiU* â€” *yfiV*     | 113                                  | -265.28                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yfhH* ¡ª *yfhI*     | 145                                  | -312.99                                 | NOP     |
+    | *yfhH* â€” *yfhI*     | 145                                  | -312.99                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *cotY* ¡ª *cotX*     | 154                                  | -213.83                                 | NOP     |
+    | *cotY* â€” *cotX*     | 154                                  | -213.83                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *yjoB* ¡ª *rapA*     | 147                                  | -380.85                                 | NOP     |
+    | *yjoB* â€” *rapA*     | 147                                  | -380.85                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
-    | *ptsI* ¡ª *splA*     | 93                                   | -291.13                                 | NOP     |
+    | *ptsI* â€” *splA*     | 93                                   | -291.13                                 | NOP     |
     +---------------------+--------------------------------------+-----------------------------------------+---------+
 
     --------------
 
 Table `16.1 <#table:training>`__ lists some of the *Bacillus subtilis*
-gene pairs for which the operon structure is known. Let¡¯s calculate the
+gene pairs for which the operon structure is known. Letâ€™s calculate the
 logistic regression model from these data:
 
 .. code:: verbatim
@@ -206,19 +212,19 @@ Here, ``xs`` and ``ys`` are the training data: ``xs`` contains the
 predictor variables for each gene pair, and ``ys`` specifies if the gene
 pair belongs to the same operon (``1``, class OP) or different operons
 (``0``, class NOP). The resulting logistic regression model is stored in
-``model``, which contains the weights ¦Â\ :sub:`0`, ¦Â\ :sub:`1`, and
-¦Â\ :sub:`2`:
+``model``, which contains the weights Î²\ :sub:`0`, Î²\ :sub:`1`, and
+Î²\ :sub:`2`:
 
 .. code:: verbatim
 
     >>> model.beta
     [8.9830290157144681, -0.035968960444850887, 0.02181395662983519]
 
-Note that ¦Â\ :sub:`1` is negative, as gene pairs with a shorter
+Note that Î²\ :sub:`1` is negative, as gene pairs with a shorter
 intergene distance have a higher probability of belonging to the same
-operon (class OP). On the other hand, ¦Â\ :sub:`2` is positive, as gene
+operon (class OP). On the other hand, Î²\ :sub:`2` is positive, as gene
 pairs belonging to the same operon typically have a higher similarity
-score of their gene expression profiles. The parameter ¦Â\ :sub:`0` is
+score of their gene expression profiles. The parameter Î²\ :sub:`0` is
 positive due to the higher prevalence of operon gene pairs than
 non-operon gene pairs in the training data.
 
@@ -289,14 +295,14 @@ particular, to avoid memory problems for very large problems, it may be
 necessary to use single-precision floats (Float8, Float16, etc.) rather
 than double, which is used by default.
 
-16.1.3??Using the logistic regression model for classification
+16.1.3  Using the logistic regression model for classification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Classification is performed by calling the ``classify`` function. Given
 a logistic regression model and the values for *x*\ :sub:`1` and
 *x*\ :sub:`2` (e.g. for a gene pair of unknown operon structure), the
 ``classify`` function returns ``1`` or ``0``, corresponding to class OP
-and class NOP, respectively. For example, let¡¯s consider the gene pairs
+and class NOP, respectively. For example, letâ€™s consider the gene pairs
 *yxcE*, *yxcD* and *yxiB*, *yxiA*:
 
     --------------
@@ -308,9 +314,9 @@ and class NOP, respectively. For example, let¡¯s consider the gene pairs
     +-------------------+------------------------------------+---------------------------------------+
     | Gene pair         | Intergene distance *x*\ :sub:`1`   | Gene expression score *x*\ :sub:`2`   |
     +-------------------+------------------------------------+---------------------------------------+
-    | *yxcE* ¡ª *yxcD*   | 6                                  | -173.143442352                        |
+    | *yxcE* â€” *yxcD*   | 6                                  | -173.143442352                        |
     +-------------------+------------------------------------+---------------------------------------+
-    | *yxiB* ¡ª *yxiA*   | 309                                | -271.005880394                        |
+    | *yxiB* â€” *yxiA*   | 309                                | -271.005880394                        |
     +-------------------+------------------------------------+---------------------------------------+
 
     --------------
@@ -404,14 +410,14 @@ The leave-one-out analysis shows that the prediction of the logistic
 regression model is incorrect for only two of the gene pairs, which
 corresponds to a prediction accuracy of 88%.
 
-16.1.4??Logistic Regression, Linear Discriminant Analysis, and Support Vector Machines
+16.1.4  Logistic Regression, Linear Discriminant Analysis, and Support Vector Machines
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The logistic regression model is similar to linear discriminant
 analysis. In linear discriminant analysis, the class probabilities also
 follow equations (`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__). However,
-instead of estimating the coefficients ¦Â directly, we first fit a normal
-distribution to the predictor variables *x*. The coefficients ¦Â are then
+instead of estimating the coefficients Î² directly, we first fit a normal
+distribution to the predictor variables *x*. The coefficients Î² are then
 calculated from the means and covariances of the normal distribution. If
 the distribution of *x* is indeed normal, then we expect linear
 discriminant analysis to perform better than the logistic regression
@@ -420,7 +426,7 @@ to deviations from normality.
 
 Another similar approach is a support vector machine with a linear
 kernel. Such an SVM also uses a linear combination of the predictors,
-but estimates the coefficients ¦Â from the predictor variables *x* near
+but estimates the coefficients Î² from the predictor variables *x* near
 the boundary region between the classes. If the logistic regression
 model (equations (`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__)) is a good
 description for *x* away from the boundary region, we expect the
@@ -432,10 +438,10 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: *The Elements of
 Statistical Learning. Data Mining, Inference, and Prediction*. Springer
 Series in Statistics, 2001. Chapter 4.4.
 
-16.2??*k*-Nearest Neighbors
+16.2  *k*-Nearest Neighbors
 ---------------------------
 
-16.2.1??Background and purpose
+16.2.1  Background and purpose
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The *k*-nearest neighbors method is a supervised learning approach that
@@ -448,7 +454,7 @@ In Biopython, the *k*-nearest neighbors method is available in
 Biopython, we will use the same operon data set as in section
 `16.1 <#sec:LogisticRegression>`__.
 
-16.2.2??Initializing a *k*-nearest neighbors model
+16.2.2  Initializing a *k*-nearest neighbors model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Using the data in Table `16.1 <#table:training>`__, we create and
@@ -468,7 +474,7 @@ you avoid tied votes. The function name ``train`` is a bit of a
 misnomer, since no model training is done: this function simply stores
 ``xs``, ``ys``, and ``k`` in ``model``.
 
-16.2.3??Using a *k*-nearest neighbors model for classification
+16.2.3  Using a *k*-nearest neighbors model for classification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To classify new data using the *k*-nearest neighbors model, we use the
@@ -613,18 +619,19 @@ The leave-one-out analysis shows that *k*-nearest neighbors model is
 correct for 13 out of 17 gene pairs, which corresponds to a prediction
 accuracy of 76%.
 
-16.3??Na?ve Bayes
+16.3  NaÃ¯ve Bayes
 -----------------
 
 This section will describe the ``Bio.NaiveBayes`` module.
 
-16.4??Maximum Entropy
+16.4  Maximum Entropy
 ---------------------
 
 This section will describe the ``Bio.MaximumEntropy`` module.
 
-16.5??Markov Models
+16.5  Markov Models
 -------------------
 
 This section will describe the ``Bio.MarkovModel`` and/or
 ``Bio.HMM.MarkovModel`` modules.
+

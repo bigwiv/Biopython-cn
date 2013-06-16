@@ -1,5 +1,4 @@
-
-Chapter?11??Going 3D: The PDB module
+Chapter 11  Going 3D: The PDB module
 ====================================
 
 Bio.PDB is a Biopython module that focuses on working with crystal
@@ -9,10 +8,10 @@ be used to access the atomic data in the file in a convenient manner.
 There is limited support for parsing the information contained in the
 PDB header.
 
-11.1??Reading and writing crystal structure files
+11.1  Reading and writing crystal structure files
 -------------------------------------------------
 
-11.1.1??Reading a PDB file
+11.1.1  Reading a PDB file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First we create a ``PDBParser`` object:
@@ -30,7 +29,7 @@ if any problems are detected during the parse operation.
 
 The Structure object is then produced by letting the ``PDBParser``
 object parse a PDB file (the PDB file in this case is called
-°Øpdb1fat.ent°Ø, °Ø1fat°Ø is a user defined name for the structure):
+‚Äôpdb1fat.ent‚Äô, ‚Äô1fat‚Äô is a user defined name for the structure):
 
 .. code:: verbatim
 
@@ -47,7 +46,7 @@ interested in the header information, it is a good idea to extract
 information from mmCIF files using the* ``MMCIF2Dict`` *tool described
 below, instead of parsing the PDB header.*
 
-Now that is clarified, let°Øs return to parsing the PDB header. The
+Now that is clarified, let‚Äôs return to parsing the PDB header. The
 structure object has an attribute called ``header`` which is a Python
 dictionary that maps header records to their values.
 
@@ -73,7 +72,7 @@ object, ie. directly from the PDB file:
     >>> header_dict = parse_pdb_header(file)
     >>> file.close()
 
-11.1.2??Reading an mmCIF file
+11.1.2  Reading an mmCIF file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Similarly to the case the case of PDB files, first create an
@@ -114,18 +113,18 @@ Example: get the list of the *y* coordinates of all atoms
 
     >>> y_list = mmcif_dict['_atom_site.Cartn_y']
 
-11.1.3??Reading files in the PDB XML format
+11.1.3  Reading files in the PDB XML format
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-That°Øs not yet supported, but we are definitely planning to support that
-in the future (it°Øs not a lot of work). Contact the Biopython developers
+That‚Äôs not yet supported, but we are definitely planning to support that
+in the future (it‚Äôs not a lot of work). Contact the Biopython developers
 (`biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__)
 if you need this).
 
-11.1.4??Writing PDB files
+11.1.4  Writing PDB files
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use the PDBIO class for this. It°Øs easy to write out specific parts of a
+Use the PDBIO class for this. It‚Äôs easy to write out specific parts of a
 structure too, of course.
 
 Example: saving a structure
@@ -167,7 +166,7 @@ If this is all too complicated for you, the ``Dice`` module contains a
 handy ``extract`` function that writes out all residues in a chain
 between a start and end residue.
 
-11.2??Structure representation
+11.2  Structure representation
 ------------------------------
 
 The overall layout of a ``Structure`` object follows the so-called SMCRA
@@ -241,7 +240,7 @@ You can also get the parent from a child:
     >>> parent_entity = child_entity.get_parent()
 
 At all levels of the SMCRA hierarchy, you can also extract a *full id*.
-The full id is a tuple containing all id°Øs starting from the top object
+The full id is a tuple containing all id‚Äôs starting from the top object
 (Structure) down to the current object. A full id for a Residue object
 e.g. is something like:
 
@@ -262,7 +261,7 @@ The Residue id indicates that the residue is not a hetero-residue (nor a
 water) because it has a blank hetero field, that its sequence identifier
 is 10 and that its insertion code is "A".
 
-To get the entity°Øs id, use the ``get_id`` method:
+To get the entity‚Äôs id, use the ``get_id`` method:
 
 .. code:: verbatim
 
@@ -288,7 +287,7 @@ be done via a nice Decorator class that includes integrity checking, but
 you can take a look at the code (Entity.py) if you want to use the raw
 interface.
 
-11.2.1??Structure
+11.2.1  Structure
 ~~~~~~~~~~~~~~~~~
 
 The Structure object is at the top of the hierarchy. Its id is a user
@@ -298,7 +297,7 @@ structures typically consist of several models. Disorder in crystal
 structures of large parts of molecules can also result in several
 models.
 
-11.2.2??Model
+11.2.2  Model
 ~~~~~~~~~~~~~
 
 The id of the Model object is an integer, which is derived from the
@@ -317,13 +316,13 @@ As an example, to get the first model from a Structure object, use
 
 The Model object stores a list of Chain children.
 
-11.2.3??Chain
+11.2.3  Chain
 ~~~~~~~~~~~~~
 
 The id of a Chain object is derived from the chain identifier in the
 PDB/mmCIF file, and is a single character (typically a letter). Each
 Chain in a Model object has a unique id. As an example, to get the Chain
-object with identifier °∞A°± from a Model object, use
+object with identifier ‚ÄúA‚Äù from a Model object, use
 
 .. code:: verbatim
 
@@ -331,7 +330,7 @@ object with identifier °∞A°± from a Model object, use
 
 The Chain object stores a list of Residue children.
 
-11.2.4??Residue
+11.2.4  Residue
 ~~~~~~~~~~~~~~~
 
 A residue id is a tuple with three elements:
@@ -347,7 +346,7 @@ A residue id is a tuple with three elements:
    `11.4.1 <#hetero%20problems>`__.
 -  The **sequence identifier** (resseq), an integer describing the
    position of the residue in the chain (e.g., 100);
--  The **insertion code** (icode); a string, e.g. °ØA°Ø. The insertion
+-  The **insertion code** (icode); a string, e.g. ‚ÄôA‚Äô. The insertion
    code is sometimes used to preserve a certain desirable residue
    numbering scheme. A Ser 80 insertion mutant (inserted e.g. between a
    Thr 80 and an Asn 81 residue) could e.g. have sequence identifiers
@@ -356,7 +355,7 @@ A residue id is a tuple with three elements:
    type structure.
 
 The id of the above glucose residue would thus be
-``(°ØH_GLC°Ø, 100, °ØA°Ø)``. If the hetero-flag and insertion code are
+``(‚ÄôH_GLC‚Äô, 100, ‚ÄôA‚Äô)``. If the hetero-flag and insertion code are
 blank, the sequence identifier alone can be used:
 
 .. code:: verbatim
@@ -371,20 +370,20 @@ sequence identifier for an amino acid and a hetero-residue or a water,
 which would create obvious problems if the hetero-flag was not used.
 
 Unsurprisingly, a Residue object stores a set of Atom children. It also
-contains a string that specifies the residue name (e.g. °∞ASN°±) and the
+contains a string that specifies the residue name (e.g. ‚ÄúASN‚Äù) and the
 segment identifier of the residue (well known to X-PLOR users, but not
 used in the construction of the SMCRA data structure).
 
-Let°Øs look at some examples. Asn 10 with a blank insertion code would
-have residue id ``(°Ø °Ø, 10, °Ø °Ø)``. Water 10 would have residue id
-``(°ØW°Ø, 10, °Ø °Ø)``. A glucose molecule (a hetero residue with residue
+Let‚Äôs look at some examples. Asn 10 with a blank insertion code would
+have residue id ``(‚Äô ‚Äô, 10, ‚Äô ‚Äô)``. Water 10 would have residue id
+``(‚ÄôW‚Äô, 10, ‚Äô ‚Äô)``. A glucose molecule (a hetero residue with residue
 name GLC) with sequence identifier 10 would have residue id
-``(°ØH_GLC°Ø, 10, °Ø °Ø)``. In this way, the three residues (with the same
+``(‚ÄôH_GLC‚Äô, 10, ‚Äô ‚Äô)``. In this way, the three residues (with the same
 insertion code and sequence identifier) can be part of the same chain
-because their residue id°Øs are distinct.
+because their residue id‚Äôs are distinct.
 
 In most cases, the hetflag and insertion code fields will be blank, e.g.
-``(°Ø °Ø, 10, °Ø °Ø)``. In these cases, the sequence identifier can be used
+``(‚Äô ‚Äô, 10, ‚Äô ‚Äô)``. In these cases, the sequence identifier can be used
 as a shortcut for the full id:
 
 .. code:: verbatim
@@ -410,34 +409,34 @@ A Residue object has a number of additional methods:
 You can use ``is_aa(residue)`` to test if a Residue object is an amino
 acid.
 
-11.2.5??Atom
+11.2.5  Atom
 ~~~~~~~~~~~~
 
 The Atom object stores the data associated with an atom, and has no
-children. The id of an atom is its atom name (e.g. °∞OG°± for the side
+children. The id of an atom is its atom name (e.g. ‚ÄúOG‚Äù for the side
 chain oxygen of a Ser residue). An Atom id needs to be unique in a
 Residue. Again, an exception is made for disordered atoms, as described
 in section `11.3.2 <#disordered%20atoms>`__.
 
-The atom id is simply the atom name (eg. ``°ØCA°Ø``). In practice, the
+The atom id is simply the atom name (eg. ``‚ÄôCA‚Äô``). In practice, the
 atom name is created by stripping all spaces from the atom name in the
 PDB file.
 
 However, in PDB files, a space can be part of an atom name. Often,
-calcium atoms are called ``°ØCA..°Ø`` in order to distinguish them from C¶¡
-atoms (which are called ``°Ø.CA.°Ø``). In cases were stripping the spaces
-would create problems (ie. two atoms called ``°ØCA°Ø`` in the same
+calcium atoms are called ``‚ÄôCA..‚Äô`` in order to distinguish them from CŒ±
+atoms (which are called ``‚Äô.CA.‚Äô``). In cases were stripping the spaces
+would create problems (ie. two atoms called ``‚ÄôCA‚Äô`` in the same
 residue) the spaces are kept.
 
 In a PDB file, an atom name consists of 4 chars, typically with leading
 and trailing spaces. Often these spaces can be removed for ease of use
-(e.g. an amino acid C ¶¡ atom is labeled °∞.CA.°± in a PDB file, where the
+(e.g. an amino acid C Œ± atom is labeled ‚Äú.CA.‚Äù in a PDB file, where the
 dots represent spaces). To generate an atom name (and thus an atom id)
 the spaces are removed, unless this would result in a name collision in
 a Residue (i.e. two Atom objects with the same atom name and id). In the
 latter case, the atom name including spaces is tried. This situation can
-e.g. happen when one residue contains atoms with names °∞.CA.°± and
-°∞CA..°±, although this is not very likely.
+e.g. happen when one residue contains atoms with names ‚Äú.CA.‚Äù and
+‚ÄúCA..‚Äù, although this is not very likely.
 
 The atomic data stored includes the atom name, the atomic coordinates
 (including standard deviation if present), the B factor (including
@@ -475,11 +474,11 @@ operations on atomic coordinates. ``Vector`` implements the full set of
 3D vector operations, matrix multiplication (left and right) and some
 advanced rotation-related operations as well.
 
-As an example of the capabilities of Bio.PDB°Øs ``Vector`` module,
-suppose that you would like to find the position of a Gly residue°Øs C¶¬
+As an example of the capabilities of Bio.PDB‚Äôs ``Vector`` module,
+suppose that you would like to find the position of a Gly residue‚Äôs CŒ≤
 atom, if it had one. Rotating the N atom of the Gly residue along the
-C¶¡-C bond over -120 degrees roughly puts it in the position of a virtual
-C¶¬ atom. Here°Øs how to do it, making use of the ``rotaxis`` method
+CŒ±-C bond over -120 degrees roughly puts it in the position of a virtual
+CŒ≤ atom. Here‚Äôs how to do it, making use of the ``rotaxis`` method
 (which can be used to construct a rotation around a certain axis) of the
 ``Vector`` module:
 
@@ -500,14 +499,14 @@ C¶¬ atom. Here°Øs how to do it, making use of the ``rotaxis`` method
     # put on top of ca atom
     >>> cb = cb_at_origin+ca
 
-This example shows that it°Øs possible to do some quite nontrivial vector
+This example shows that it‚Äôs possible to do some quite nontrivial vector
 operations on atomic data, which can be quite useful. In addition to all
 the usual vector operations (cross (use ``*``\ ``*``), and dot (use
 ``*``) product, angle, norm, etc.) and the above mentioned ``rotaxis``
 function, the ``Vector`` module also has methods to rotate (``rotmat``)
 or reflect (``refmat``) one vector on top of another.
 
-11.2.6??Extracting a specific ``Atom/Residue/Chain/Model`` from a Structure
+11.2.6  Extracting a specific ``Atom/Residue/Chain/Model`` from a Structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These are some examples:
@@ -525,19 +524,19 @@ Note that you can use a shortcut:
 
     >>> atom = structure[0]['A'][100]['CA']
 
-11.3??Disorder
+11.3  Disorder
 --------------
 
 Bio.PDB can handle both disordered atoms and point mutations (i.e. a Gly
 and an Ala residue in the same position).
 
-11.3.1??General approach
+11.3.1  General approach
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Disorder should be dealt with from two points of view: the atom and the
 residue points of view. In general, we have tried to encapsulate all the
 complexity that arises from disorder. If you just want to loop over all
-C¶¡ atoms, you do not care that some residues have a disordered side
+CŒ± atoms, you do not care that some residues have a disordered side
 chain. On the other hand it should also be possible to represent
 disorder completely in the data structure. Therefore, disordered atoms
 or residues are stored in special objects that behave as if there is no
@@ -546,7 +545,7 @@ atoms or residues. Which subset is picked (e.g. which of the two
 disordered OG side chain atom positions of a Ser residue is used) can be
 specified by the user.
 
-11.3.2??Disordered atoms
+11.3.2  Disordered atoms
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Disordered atoms are represented by ordinary ``Atom`` objects, but all
@@ -574,7 +573,7 @@ object associated with a specific altloc identifier:
     >>> print atom.get_altloc()
     "B"
 
-11.3.3??Disordered residues
+11.3.3  Disordered residues
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Common case
@@ -595,7 +594,7 @@ A special case arises when disorder is due to a point mutation, i.e.
 when two or more point mutants of a polypeptide are present in the
 crystal. An example of this can be found in PDB structure 1EN2.
 
-Since these residues belong to a different residue type (e.g. let°Øs say
+Since these residues belong to a different residue type (e.g. let‚Äôs say
 Ser 60 and Cys 60) they should not be stored in a single ``Residue``
 object as in the common case. In this case, each residue is represented
 by one ``Residue`` object, and both ``Residue`` objects are stored in a
@@ -606,8 +605,8 @@ selected ``Residue`` object (by default the last ``Residue`` object
 added), and thus behaves like an ordinary residue. Each ``Residue``
 object in a ``DisorderedResidue`` object can be uniquely identified by
 its residue name. In the above example, residue Ser 60 would have id
-°∞SER°± in the ``DisorderedResidue`` object, while residue Cys 60 would
-have id °∞CYS°±. The user can select the active ``Residue`` object in a
+‚ÄúSER‚Äù in the ``DisorderedResidue`` object, while residue Cys 60 would
+have id ‚ÄúCYS‚Äù. The user can select the active ``Residue`` object in a
 ``DisorderedResidue`` object via this id.
 
 Example: suppose that a chain has a point mutation at position 10,
@@ -620,14 +619,14 @@ chain behaves as the Cys residue.
     >>> residue.disordered_select('CYS')
 
 In addition, you can get a list of all ``Atom`` objects (ie. all
-``DisorderedAtom`` objects are °Øunpacked°Ø to their individual ``Atom``
+``DisorderedAtom`` objects are ‚Äôunpacked‚Äô to their individual ``Atom``
 objects) using the ``get_unpacked_list`` method of a
 ``(Disordered)Residue`` object.
 
-11.4??Hetero residues
+11.4  Hetero residues
 ---------------------
 
-11.4.1??Associated problems
+11.4.1  Associated problems
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A common problem with hetero residues is that several hetero and
@@ -637,25 +636,25 @@ each hetero residue, waters and other hetero residues are treated in a
 different way.
 
 Remember that Residue object have the tuple (hetfield, resseq, icode) as
-id. The hetfield is blank (°∞ °±) for amino and nucleic acids, and a
+id. The hetfield is blank (‚Äú ‚Äù) for amino and nucleic acids, and a
 string for waters and other hetero residues. The content of the hetfield
 is explained below.
 
-11.4.2??Water residues
+11.4.2  Water residues
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The hetfield string of a water residue consists of the letter °∞W°±. So a
-typical residue id for a water is (°∞W°±, 1, °∞ °±).
+The hetfield string of a water residue consists of the letter ‚ÄúW‚Äù. So a
+typical residue id for a water is (‚ÄúW‚Äù, 1, ‚Äú ‚Äù).
 
-11.4.3??Other hetero residues
+11.4.3  Other hetero residues
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The hetfield string for other hetero residues starts with °∞H\_°± followed
-by the residue name. A glucose molecule e.g. with residue name °∞GLC°±
-would have hetfield °∞H\_GLC°±. Its residue id could e.g. be (°∞H\_GLC°±, 1,
-°∞ °±).
+The hetfield string for other hetero residues starts with ‚ÄúH\_‚Äù followed
+by the residue name. A glucose molecule e.g. with residue name ‚ÄúGLC‚Äù
+would have hetfield ‚ÄúH\_GLC‚Äù. Its residue id could e.g. be (‚ÄúH\_GLC‚Äù, 1,
+‚Äú ‚Äù).
 
-11.5??Navigating through a Structure object
+11.5  Navigating through a Structure object
 -------------------------------------------
 
 Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
@@ -826,8 +825,8 @@ To extract polypeptides from a structure, construct a list of
 A Polypeptide object is simply a UserList of Residue objects, and is
 always created from a single Model (in this case model 1). You can use
 the resulting ``Polypeptide`` object to get the sequence as a ``Seq``
-object or to get a list of C¶¡ atoms as well. Polypeptides can be built
-using a C-N or a C¶¡-C¶¡ distance criterion.
+object or to get a list of CŒ± atoms as well. Polypeptides can be built
+using a C-N or a CŒ±-CŒ± distance criterion.
 
 Example:
 
@@ -866,10 +865,10 @@ Example:
     >>> print seq
     Seq('SNVVE...', <class Bio.Alphabet.ProteinAlphabet>)
 
-11.6??Analyzing structures
+11.6  Analyzing structures
 --------------------------
 
-11.6.1??Measuring distances
+11.6.1  Measuring distances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The minus operator for atoms has been overloaded to return the distance
@@ -883,7 +882,7 @@ between two atoms.
     # Simply subtract the atoms to get their distance
     >>> distance = ca1-ca2
 
-11.6.2??Measuring angles
+11.6.2  Measuring angles
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the vector representation of the atomic coordinates, and the
@@ -896,7 +895,7 @@ Use the vector representation of the atomic coordinates, and the
     >>> vector3 = atom3.get_vector()
     >>> angle = calc_angle(vector1, vector2, vector3)
 
-11.6.3??Measuring torsion angles
+11.6.3  Measuring torsion angles
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the vector representation of the atomic coordinates, and the
@@ -910,7 +909,7 @@ Use the vector representation of the atomic coordinates, and the
     >>> vector4 = atom4.get_vector()
     >>> angle = calc_dihedral(vector1, vector2, vector3, vector4)
 
-11.6.4??Determining atom-atom contacts
+11.6.4  Determining atom-atom contacts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use ``NeighborSearch`` to perform neighbor lookup. The neighbor lookup
@@ -918,7 +917,7 @@ is done using a KD tree module written in C (see ``Bio.KDTree``), making
 it very fast. It also includes a fast method to find all point pairs
 within a certain distance of each other.
 
-11.6.5??Superimposing two structures
+11.6.5  Superimposing two structures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use a ``Superimposer`` object to superimpose two coordinate sets. This
@@ -954,28 +953,28 @@ To superimpose two structures based on their active sites, use the
 active site atoms to calculate the rotation/translation matrices (as
 above), and apply these to the whole molecule.
 
-11.6.6??Mapping the residues of two related structures onto each other
+11.6.6  Mapping the residues of two related structures onto each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, create an alignment file in FASTA format, then use the
 ``StructureAlignment`` class. This class can also be used for alignments
 with more than two structures.
 
-11.6.7??Calculating the Half Sphere Exposure
+11.6.7  Calculating the Half Sphere Exposure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Half Sphere Exposure (HSE) is a new, 2D measure of solvent exposure
-[`20 <#hamelryck2005>`__\ ]. Basically, it counts the number of C¶¡ atoms
+[`20 <#hamelryck2005>`__\ ]. Basically, it counts the number of CŒ± atoms
 around a residue in the direction of its side chain, and in the opposite
-direction (within a radius of 13 ?). Despite its simplicity, it
+direction (within a radius of 13 √Ö). Despite its simplicity, it
 outperforms many other measures of solvent exposure.
 
-HSE comes in two flavors: HSE¶¡ and HSE¶¬. The former only uses the C¶¡
-atom positions, while the latter uses the C¶¡ and C¶¬ atom positions. The
+HSE comes in two flavors: HSEŒ± and HSEŒ≤. The former only uses the CŒ±
+atom positions, while the latter uses the CŒ± and CŒ≤ atom positions. The
 HSE measure is calculated by the ``HSExposure`` class, which can also
 calculate the contact number. The latter class has methods which return
-dictionaries that map a ``Residue`` object to its corresponding HSE¶¡,
-HSE¶¬ and contact number values.
+dictionaries that map a ``Residue`` object to its corresponding HSEŒ±,
+HSEŒ≤ and contact number values.
 
 Example:
 
@@ -992,11 +991,11 @@ Example:
     # Print HSEalpha for a residue
     >>> print exp_ca[some_residue]
 
-11.6.8??Determining the secondary structure
+11.6.8  Determining the secondary structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For this functionality, you need to install DSSP (and obtain a license
-for it °™ free for academic use, see
+for it ‚Äî free for academic use, see
 ```http://www.cmbi.kun.nl/gv/dssp/`` <http://www.cmbi.kun.nl/gv/dssp/>`__).
 Then use the ``DSSP`` class, which maps ``Residue`` objects to their
 secondary structure (and accessible surface area). The DSSP codes are
@@ -1008,15 +1007,15 @@ and thus by consequence the class) cannot handle multiple models!
     +--------+-----------------------------+
     | Code   | Secondary structure         |
     +--------+-----------------------------+
-    | H      | ¶¡-helix                     |
+    | H      | Œ±-helix                     |
     +--------+-----------------------------+
-    | B      | Isolated ¶¬-bridge residue   |
+    | B      | Isolated Œ≤-bridge residue   |
     +--------+-----------------------------+
     | E      | Strand                      |
     +--------+-----------------------------+
     | G      | 3-10 helix                  |
     +--------+-----------------------------+
-    | I      | ¶∞-helix                     |
+    | I      | Œ†-helix                     |
     +--------+-----------------------------+
     | T      | Turn                        |
     +--------+-----------------------------+
@@ -1035,17 +1034,17 @@ The ``DSSP`` class can also be used to calculate the accessible surface
 area of a residue. But see also section
 `11.6.9 <#subsec:residue_depth>`__.
 
-11.6.9??Calculating the residue depth
+11.6.9  Calculating the residue depth
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Residue depth is the average distance of a residue°Øs atoms from the
-solvent accessible surface. It°Øs a fairly new and very powerful
+Residue depth is the average distance of a residue‚Äôs atoms from the
+solvent accessible surface. It‚Äôs a fairly new and very powerful
 parameterization of solvent accessibility. For this functionality, you
-need to install Michel Sanner°Øs MSMS program
+need to install Michel Sanner‚Äôs MSMS program
 (```http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html`` <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__).
 Then use the ``ResidueDepth`` class. This class behaves as a dictionary
-which maps ``Residue`` objects to corresponding (residue depth, C¶¡
-depth) tuples. The C¶¡ depth is the distance of a residue°Øs C¶¡ atom to
+which maps ``Residue`` objects to corresponding (residue depth, CŒ±
+depth) tuples. The CŒ± depth is the distance of a residue‚Äôs CŒ± atom to
 the solvent accessible surface.
 
 Example:
@@ -1060,7 +1059,7 @@ You can also get access to the molecular surface itself (via the
 ``get_surface`` function), in the form of a Numeric Python array with
 the surface points.
 
-11.7??Common problems in PDB files
+11.7  Common problems in PDB files
 ----------------------------------
 
 It is well known that many PDB files contain semantic errors (not the
@@ -1079,7 +1078,7 @@ Example:
     >>> strict_parser = PDBParser(PERMISSIVE=0)
 
 In the permissive state (DEFAULT), PDB files that obviously contain
-errors are °∞corrected°± (i.e. some residues or atoms are left out). These
+errors are ‚Äúcorrected‚Äù (i.e. some residues or atoms are left out). These
 errors include:
 
 -  Multiple residues with the same identifier
@@ -1099,10 +1098,10 @@ same atom. This is automatically interpreted in the right way.
 
 Sometimes a structure contains a list of residues belonging to chain A,
 followed by residues belonging to chain B, and again followed by
-residues belonging to chain A, i.e. the chains are °Øbroken°Ø. This is
+residues belonging to chain A, i.e. the chains are ‚Äôbroken‚Äô. This is
 also correctly interpreted.
 
-11.7.1??Examples
+11.7.1  Examples
 ~~~~~~~~~~~~~~~~
 
 The PDBParser/Structure class was tested on about 800 structures (each
@@ -1117,17 +1116,17 @@ error in the PDB file that should be corrected. Generating an exception
 in these cases is much better than running the chance of incorrectly
 describing the structure in a data structure.
 
-11.7.1.1??Duplicate residues
+11.7.1.1  Duplicate residues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 One structure contains two amino acid residues in one chain with the
 same sequence identifier (resseq 3) and icode. Upon inspection it was
-found that this chain contains the residues Thr A3, °≠, Gly A202, Leu A3,
+found that this chain contains the residues Thr A3, ‚Ä¶, Gly A202, Leu A3,
 Glu A204. Clearly, Leu A3 should be Leu A203. A couple of similar
 situations exist for structure 1FFK (which e.g. contains Gly B64, Met
 B65, Glu B65, Thr B67, i.e. residue Glu B65 should be Glu B66).
 
-11.7.1.2??Duplicate atoms
+11.7.1.2  Duplicate atoms
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Structure 1EJG contains a Ser/Pro point mutation in chain A at position
@@ -1141,13 +1140,13 @@ the N atom. Again, this points to a problem in the file: the N atom
 should be present in both the Ser and the Pro residue, in both cases
 associated with a suitable altloc identifier.
 
-11.7.2??Automatic correction
+11.7.2  Automatic correction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some errors are quite common and can be easily corrected without much
 risk of making a wrong interpretation. These cases are listed below.
 
-11.7.2.1??A blank altloc for a disordered atom
+11.7.2.1  A blank altloc for a disordered atom
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Normally each disordered atom should have a non-blank altloc identifier.
@@ -1155,22 +1154,22 @@ However, there are many structures that do not follow this convention,
 and have a blank and a non-blank identifier for two disordered positions
 of the same atom. This is automatically interpreted in the right way.
 
-11.7.2.2??Broken chains
+11.7.2.2  Broken chains
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Sometimes a structure contains a list of residues belonging to chain A,
 followed by residues belonging to chain B, and again followed by
-residues belonging to chain A, i.e. the chains are °∞broken°±. This is
+residues belonging to chain A, i.e. the chains are ‚Äúbroken‚Äù. This is
 correctly interpreted.
 
-11.7.3??Fatal errors
+11.7.3  Fatal errors
 ~~~~~~~~~~~~~~~~~~~~
 
 Sometimes a PDB file cannot be unambiguously interpreted. Rather than
 guessing and risking a mistake, an exception is generated, and the user
 is expected to correct the PDB file. These cases are listed below.
 
-11.7.3.1??Duplicate residues
+11.7.3.1  Duplicate residues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 All residues in a chain should have a unique id. This id is generated
@@ -1178,7 +1177,7 @@ based on:
 
 -  The sequence identifier (resseq).
 -  The insertion code (icode).
--  The hetfield string (°∞W°± for waters and °∞H\_°± followed by the residue
+-  The hetfield string (‚ÄúW‚Äù for waters and ‚ÄúH\_‚Äù followed by the residue
    name for other hetero residues)
 -  The residue names of the residues in the case of point mutations (to
    store the Residue objects in a DisorderedResidue object).
@@ -1186,7 +1185,7 @@ based on:
 If this does not lead to a unique id something is quite likely wrong,
 and an exception is generated.
 
-11.7.3.2??Duplicate atoms
+11.7.3.2  Duplicate atoms
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 All atoms in a residue should have a unique id. This id is generated
@@ -1198,10 +1197,10 @@ based on:
 If this does not lead to a unique id something is quite likely wrong,
 and an exception is generated.
 
-11.8??Accessing the Protein Data Bank
+11.8  Accessing the Protein Data Bank
 -------------------------------------
 
-11.8.1??Downloading structures from the Protein Data Bank
+11.8.1  Downloading structures from the Protein Data Bank
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Structures can be downloaded from the PDB (Protein Data Bank) by using
@@ -1233,7 +1232,7 @@ By default, the server of the Worldwide Protein Data Bank
 is used. See the API documentation for more details. Thanks again to
 Kristian Rother for donating this module.
 
-11.8.2??Downloading the entire PDB
+11.8.2  Downloading the entire PDB
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following commands will store all PDB files in the ``/data/pdb``
@@ -1248,9 +1247,9 @@ directory:
 The API method for this is called ``download_entire_pdb``. Adding the
 ``-d`` option will store all files in the same directory. Otherwise,
 they are sorted into PDB-style subdirectories according to their PDB
-ID°Øs. Depending on the traffic, a complete download will take 2-4 days.
+ID‚Äôs. Depending on the traffic, a complete download will take 2-4 days.
 
-11.8.3??Keeping a local copy of the PDB up to date
+11.8.3  Keeping a local copy of the PDB up to date
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This can also be done using the ``PDBList`` object. One simply creates a
@@ -1273,35 +1272,35 @@ entries that were added, modified or obsoleted during the current week.
 For more info on the possibilities of ``PDBList``, see the API
 documentation.
 
-11.9??General questions
+11.9  General questions
 -----------------------
 
-11.9.1??How well tested is Bio.PDB?
+11.9.1  How well tested is Bio.PDB?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pretty well, actually. Bio.PDB has been extensively tested on nearly
 5500 structures from the PDB - all structures seemed to be parsed
 correctly. More details can be found in the Bio.PDB Bioinformatics
 article. Bio.PDB has been used/is being used in many research projects
-as a reliable tool. In fact, I°Øm using Bio.PDB almost daily for research
+as a reliable tool. In fact, I‚Äôm using Bio.PDB almost daily for research
 purposes and continue working on improving it and adding new features.
 
-11.9.2??How fast is it?
+11.9.2  How fast is it?
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``PDBParser`` performance was tested on about 800 structures (each
 belonging to a unique SCOP superfamily). This takes about 20 minutes, or
 on average 1.5 seconds per structure. Parsing the structure of the large
 ribosomal subunit (1FKK), which contains about 64000 atoms, takes 10
-seconds on a 1000 MHz PC. In short: it°Øs more than fast enough for many
+seconds on a 1000 MHz PC. In short: it‚Äôs more than fast enough for many
 applications.
 
-11.9.3??Is there support for molecular graphics?
+11.9.3  Is there support for molecular graphics?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Not directly, mostly since there are quite a few Python based/Python
 aware solutions already, that can potentially be used with Bio.PDB. My
-choice is Pymol, BTW (I°Øve used this successfully with Bio.PDB, and
+choice is Pymol, BTW (I‚Äôve used this successfully with Bio.PDB, and
 there will probably be specific PyMol modules in Bio.PDB soon/some day).
 Python based/aware molecular graphics solutions include:
 
@@ -1322,7 +1321,7 @@ Python based/aware molecular graphics solutions include:
 -  MMTK:
    ```http://starship.python.net/crew/hinsen/MMTK/`` <http://starship.python.net/crew/hinsen/MMTK/>`__
 
-11.9.4??Who°Øs using Bio.PDB?
+11.9.4  Who‚Äôs using Bio.PDB?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bio.PDB was used in the construction of DISEMBL, a web server that
@@ -1338,3 +1337,5 @@ algorithm that identifies linear secondary structure elements
 
 Judging from requests for features and information, Bio.PDB is also used
 by several LPCs (Large Pharmaceutical Companies :-).
+
+

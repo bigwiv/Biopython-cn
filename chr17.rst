@@ -1,8 +1,19 @@
+Chapter 17  Graphics including GenomeDiagram
+============================================
 
-17.1??GenomeDiagram
+The ``Bio.Graphics`` module depends on the third party Python library
+`ReportLab <http://www.reportlab.org>`__. Although focused on producing
+PDF files, ReportLab can also create encapsulated postscript (EPS) and
+(SVG) files. In addition to these vector based images, provided certain
+further dependencies such as the `Python Imaging Library
+(PIL) <http://www.pythonware.com/products/pil/>`__ are installed,
+ReportLab can also output bitmap images (including JPEG, PNG, GIF, BMP
+and PICT formats).
+
+17.1  GenomeDiagram
 -------------------
 
-17.1.1??Introduction
+17.1.1  Introduction
 ~~~~~~~~~~~~~~~~~~~~
 
 The ``Bio.Graphics.GenomeDiagram`` module was added to Biopython 1.50,
@@ -25,9 +36,9 @@ with additional manual editing).
 This module is easiest to use if you have your genome loaded as a
 ``SeqRecord`` object containing lots of ``SeqFeature`` objects - for
 example as loaded from a GenBank file (see
-Chapters?\ `4 <#chapter:SeqRecord>`__ and?\ `5 <#chapter:Bio.SeqIO>`__).
+Chapters \ `4 <#chapter:SeqRecord>`__ and \ `5 <#chapter:Bio.SeqIO>`__).
 
-17.1.2??Diagrams, tracks, feature-sets and features
+17.1.2  Diagrams, tracks, feature-sets and features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GenomeDiagram uses a nested set of objects. At the top level, you have a
@@ -39,7 +50,7 @@ region. You might use one track to show the gene locations, another to
 show regulatory regions, and a third track to show the GC percentage.
 The most commonly used type of track will contain features, bundled
 together in feature-sets. You might choose to use one feature-set for
-all your CDS features, and another for tRNA features. This isn¡¯t
+all your CDS features, and another for tRNA features. This isnâ€™t
 required - they can all go in the same feature-set, but it makes it
 easier to update the properties of just selected features (e.g. make all
 the tRNA features red).
@@ -51,11 +62,11 @@ and use their methods to add the features. Secondly, you can create the
 individual objects separately (in whatever order suits your code), and
 then combine them.
 
-17.1.3??A top down example
+17.1.3  A top down example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We¡¯re going to draw a whole genome from a ``SeqRecord`` object read in
-from a GenBank file (see Chapter?\ `5 <#chapter:Bio.SeqIO>`__). This
+Weâ€™re going to draw a whole genome from a ``SeqRecord`` object read in
+from a GenBank file (see Chapter \ `5 <#chapter:Bio.SeqIO>`__). This
 example uses the pPCP1 plasmid from *Yersinia pestis biovar Microtus*,
 the file is included with the Biopython unit tests under the GenBank
 folder, or online
@@ -70,7 +81,7 @@ from our website.
     from Bio import SeqIO
     record = SeqIO.read("NC_005816.gb", "genbank")
 
-We¡¯re using a top down approach, so after loading in our sequence we
+Weâ€™re using a top down approach, so after loading in our sequence we
 next create an empty diagram, then add an (empty) track, and to that add
 an (empty) feature set:
 
@@ -81,7 +92,7 @@ an (empty) feature set:
     gd_feature_set = gd_track_for_features.new_set()
 
 Now the fun part - we take each gene ``SeqFeature`` object in our
-``SeqRecord``, and use it to generate a feature on the diagram. We¡¯re
+``SeqRecord``, and use it to generate a feature on the diagram. Weâ€™re
 going to color them blue, alternating between a dark blue and a light
 blue.
 
@@ -133,12 +144,12 @@ If you want to do a circular figure, then try this:
 
 |image14|
 
-These figures are not very exciting, but we¡¯ve only just got started.
+These figures are not very exciting, but weâ€™ve only just got started.
 
-17.1.4??A bottom up example
+17.1.4  A bottom up example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now let¡¯s produce exactly the same figures, but using the bottom up
+Now letâ€™s produce exactly the same figures, but using the bottom up
 approach. This means we create the different objects directly (and this
 can be done in almost any order) and then combine them.
 
@@ -175,12 +186,12 @@ You can now call the ``draw`` and ``write`` methods as before to produce
 a linear or circular diagram, using the code at the end of the top-down
 example above. The figures should be identical.
 
-17.1.5??Features without a SeqFeature
+17.1.5  Features without a SeqFeature
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the above example we used a ``SeqRecord``\ ¡¯s ``SeqFeature`` objects
-to build our diagram (see also Section?\ `4.3 <#sec:seq_features>`__).
-Sometimes you won¡¯t have ``SeqFeature`` objects, but just the
+In the above example we used a ``SeqRecord``\ â€™s ``SeqFeature`` objects
+to build our diagram (see also Section \ `4.3 <#sec:seq_features>`__).
+Sometimes you wonâ€™t have ``SeqFeature`` objects, but just the
 coordinates for a feature you want to draw. You have to create minimal
 ``SeqFeature`` object, but this is easy:
 
@@ -220,7 +231,7 @@ the default feature color, pale green).
 Notice that we have used the ``name`` argument here to specify the
 caption text for these features. This is discussed in more detail next.
 
-17.1.6??Feature captions
+17.1.6  Feature captions
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Recall we used the following (where ``feature`` was a ``SeqFeature``
@@ -232,7 +243,7 @@ object) to add a feature to the diagram:
 
 In the example above the ``SeqFeature`` annotation was used to pick a
 sensible caption for the features. By default the following possible
-entries under the ``SeqFeature`` object¡¯s qualifiers dictionary are
+entries under the ``SeqFeature`` objectâ€™s qualifiers dictionary are
 used: ``gene``, ``label``, ``name``, ``locus_tag``, and ``product``.
 More simply, you can specify a name directly:
 
@@ -240,7 +251,7 @@ More simply, you can specify a name directly:
 
     gd_feature_set.add_feature(feature, color=color, label=True, name="My Gene")
 
-In addition to the caption text for each feature¡¯s label, you can also
+In addition to the caption text for each featureâ€™s label, you can also
 choose the font, position (this defaults to the start of the sigil, you
 can also choose the middle or at the end) and orientation (for linear
 diagrams only, where this defaults to rotated by 45 degrees):
@@ -266,14 +277,14 @@ previous section should give something like this:
 
 |image15|
 
-We¡¯ve not shown it here, but you can also set ``label_color`` to control
-the label¡¯s color (used in Section?\ `17.1.9 <#sec:gd_nice_example>`__).
+Weâ€™ve not shown it here, but you can also set ``label_color`` to control
+the labelâ€™s color (used in Section \ `17.1.9 <#sec:gd_nice_example>`__).
 
-You¡¯ll notice the default font is quite small - this makes sense because
+Youâ€™ll notice the default font is quite small - this makes sense because
 you will usually be drawing many (small) features on a page, not just a
 few large ones as shown here.
 
-17.1.7??Feature sigils
+17.1.7  Feature sigils
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The examples above have all just used the default sigil for the feature,
@@ -309,11 +320,11 @@ These are shown below. Most sigils fit into a bounding box (as given by
 the default BOX sigil), either above or below the axis for the forward
 or reverse strand, or straddling it (double the height) for strand-less
 features. The BIGARROW sigil is different, always straddling the axis
-with the direction taken from the feature¡¯s stand.
+with the direction taken from the featureâ€™s stand.
 
 |image16|
 
-17.1.8??Arrow sigils
+17.1.8  Arrow sigils
 ~~~~~~~~~~~~~~~~~~~~
 
 We introduced the arrow sigils in the previous section. There are two
@@ -367,13 +378,13 @@ axis, pointing left for the reverse strand or right otherwise:
 All the shaft and arrow head options shown above for the ``ARROW`` sigil
 can be used for the ``BIGARROW`` sigil too.
 
-17.1.9??A nice example
+17.1.9  A nice example
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Now let¡¯s return to the pPCP1 plasmid from *Yersinia pestis biovar
+Now letâ€™s return to the pPCP1 plasmid from *Yersinia pestis biovar
 Microtus*, and the top down approach used in
-Section?\ `17.1.3 <#sec:gd_top_down>`__, but take advantage of the sigil
-options we¡¯ve now discussed. This time we¡¯ll use arrows for the genes,
+Section \ `17.1.3 <#sec:gd_top_down>`__, but take advantage of the sigil
+options weâ€™ve now discussed. This time weâ€™ll use arrows for the genes,
 and overlay them with strand-less features (as plain boxes) showing the
 position of some restriction digest sites.
 
@@ -437,30 +448,30 @@ And the output:
 
 |image20|
 
-17.1.10??Multiple tracks
+17.1.10  Multiple tracks
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 All the examples so far have used a single track, but you can have more
-than one track ¨C for example show the genes on one, and repeat regions
-on another. In this example we¡¯re going to show three phage genomes side
+than one track â€“ for example show the genes on one, and repeat regions
+on another. In this example weâ€™re going to show three phage genomes side
 by side to scale, inspired by Figure 6 in Proux *e*\ t al. (2002)
-[`5 <#proux2002>`__\ ]. We¡¯ll need the GenBank files for the following
+[`5 <#proux2002>`__\ ]. Weâ€™ll need the GenBank files for the following
 three phage:
 
--  ``NC_002703`` ¨C Lactococcus phage Tuc2009, complete genome (38347 bp)
--  ``AF323668`` ¨C Bacteriophage bIL285, complete genome (35538 bp)
--  ``NC_003212`` ¨C *Listeria innocua* Clip11262, complete genome, of
+-  ``NC_002703`` â€“ Lactococcus phage Tuc2009, complete genome (38347 bp)
+-  ``AF323668`` â€“ Bacteriophage bIL285, complete genome (35538 bp)
+-  ``NC_003212`` â€“ *Listeria innocua* Clip11262, complete genome, of
    which we are focussing only on integrated prophage 5 (similar
    length).
 
 You can download these using Entrez if you like, see
-Section?\ `9.6 <#sec:efetch>`__ for more details. For the third record
-we¡¯ve worked out where the phage is integrated into the genome, and
+Section \ `9.6 <#sec:efetch>`__ for more details. For the third record
+weâ€™ve worked out where the phage is integrated into the genome, and
 slice the record to extract it (with the features preserved, see
-Section?\ `4.6 <#sec:SeqRecord-slicing>`__), and must also reverse
+Section \ `4.6 <#sec:SeqRecord-slicing>`__), and must also reverse
 complement to match the orientation of the first two phage (again
 preserving the features, see
-Section?\ `4.8 <#sec:SeqRecord-reverse-complement>`__):
+Section \ `4.8 <#sec:SeqRecord-reverse-complement>`__):
 
 .. code:: verbatim
 
@@ -472,12 +483,12 @@ Section?\ `4.8 <#sec:SeqRecord-reverse-complement>`__):
 
 The figure we are imitating used different colors for different gene
 functions. One way to do this is to edit the GenBank file to record
-color preferences for each feature - something `Sanger¡¯s Artemis
+color preferences for each feature - something `Sangerâ€™s Artemis
 editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ does,
-and which GenomeDiagram should understand. Here however, we¡¯ll just hard
+and which GenomeDiagram should understand. Here however, weâ€™ll just hard
 code three lists of colors.
 
-Note that the annotation in the GenBank files doesn¡¯t exactly match that
+Note that the annotation in the GenBank files doesnâ€™t exactly match that
 shown in Proux *et al.*, they have drawn some unannotated genes.
 
 .. code:: verbatim
@@ -492,7 +503,7 @@ shown in Proux *et al.*, they have drawn some unannotated genes.
     C_colors = [grey]*30 + [green]*5 + [brown]*4 + [blue]*2 + [grey, blue] + [lightblue]*2 \
              + [grey]*5
 
-Now to draw them ¨C this time we add three tracks to the diagram, and
+Now to draw them â€“ this time we add three tracks to the diagram, and
 also notice they are given different start/end values to reflect their
 different lengths (this requires Biopython 1.59 or later).
 
@@ -539,10 +550,10 @@ phage are shown with different lengths - this is because they are all
 drawn to the same scale (they *are* different lengths).
 
 The key difference from the published figure is they have color-coded
-links between similar proteins ¨C which is what we will do in the next
+links between similar proteins â€“ which is what we will do in the next
 section.
 
-17.1.11??Cross-Links between tracks
+17.1.11  Cross-Links between tracks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Biopython 1.59 added the ability to draw cross links between tracks -
@@ -614,7 +625,7 @@ Likewise for B and C:
     ]
 
 For the first and last phage these identifiers are locus tags, for the
-middle phage there are no locus tags so I¡¯ve used gene names instead.
+middle phage there are no locus tags so Iâ€™ve used gene names instead.
 The following little helper function lets us lookup a feature using
 either a locus tag or gene name:
 
@@ -633,7 +644,7 @@ either a locus tag or gene name:
 We can now turn those list of identifier pairs into SeqFeature pairs,
 and thus find their location co-ordinates. We can now add all that code
 and the following snippet to the previous example (just before the
-``gd_diagram.draw(...)`` line ¨C see the finished example script
+``gd_diagram.draw(...)`` line â€“ see the finished example script
 `Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__
 included in the ``Doc/examples`` folder of the Biopython source code) to
 add cross links to the figure:
@@ -666,7 +677,7 @@ drawn flipped (useful for showing inversions).
 
 You can also see how we turn the BLAST percentage identity score into a
 colour, interpolating between white (0%) and a dark red (100%). In this
-example we don¡¯t have any problems with overlapping cross-links. One way
+example we donâ€™t have any problems with overlapping cross-links. One way
 to tackle that is to use transparency in ReportLab, by using colors with
 their alpha channel set. However, this kind of shaded color scheme
 combined with overlap transparency would be difficult to interpret. The
@@ -677,10 +688,10 @@ result:
 There is still a lot more that can be done within Biopython to help
 improve this figure. First of all, the cross links in this case are
 between proteins which are drawn in a strand specific manor. It can help
-to add a background region (a feature using the ¡®BOX¡¯ sigil) on the
+to add a background region (a feature using the â€˜BOXâ€™ sigil) on the
 feature track to extend the cross link. Also, we could reduce the
 vertical height of the feature tracks to allocate more to the links
-instead ¨C one way to do that is to allocate space for empty tracks.
+instead â€“ one way to do that is to allocate space for empty tracks.
 Furthermore, in cases like this where there are no large gene overlaps,
 we can use the axis-straddling ``BIGARROW`` sigil, which allows us to
 further reduce the vertical space needed for the track. These
@@ -700,10 +711,10 @@ cross-links overlap, using a transparent color in ReportLab is a very
 useful technique for superimposing multiple links. However, in this case
 a shaded color scheme should be avoided.
 
-17.1.12??Further options
+17.1.12  Further options
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can control the tick marks to show the scale ¨C after all every graph
+You can control the tick marks to show the scale â€“ after all every graph
 should show its units, and the number of the grey-track labels.
 
 Also, we have only used the ``FeatureSet`` so far. GenomeDiagram also
@@ -717,7 +728,7 @@ These options are not covered here yet, so for now we refer you to the
 included with the standalone version of GenomeDiagram (but please read
 the next section first), and the docstrings.
 
-17.1.13??Converting old code
+17.1.13  Converting old code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you have old code written using the standalone version of
@@ -769,7 +780,7 @@ for advice. One catch is that we have not included the old module
 functions, which will probably be merged under ``Bio.SeqUtils`` later
 on.
 
-17.2??Chromosomes
+17.2  Chromosomes
 -----------------
 
 The ``Bio.Graphics.BasicChromosome`` module allows drawing of
@@ -777,14 +788,14 @@ chromosomes. There is an example in Jupe *et al.* (2012)
 [`6 <#jupe2012>`__\ ] (open access) using colors to highlight different
 gene families.
 
-17.2.1??Simple Chromosomes
+17.2.1  Simple Chromosomes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is a very simple example - for which we¡¯ll use *Arabidopsis
+Here is a very simple example - for which weâ€™ll use *Arabidopsis
 thaliana*.
 
 You can skip this bit, but first I downloaded the five sequenced
-chromosomes from the NCBI¡¯s FTP site
+chromosomes from the NCBIâ€™s FTP site
 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__
 and then parsed them with ``Bio.SeqIO`` to find out their lengths. You
 could use the GenBank files for this, but it is faster to use the FASTA
@@ -802,7 +813,7 @@ files for the whole chromosomes:
        record = SeqIO.read(filename,"fasta")
        print name, len(record)
 
-This gave the lengths of the five chromosomes, which we¡¯ll now use in
+This gave the lengths of the five chromosomes, which weâ€™ll now use in
 the following short demonstration of the ``BasicChromosome`` module:
 
 .. code:: verbatim
@@ -856,12 +867,12 @@ This should create a very simple PDF file, shown here:
 This example is deliberately short and sweet. The next example shows the
 location of features of interest.
 
-17.2.2??Annotated Chromosomes
+17.2.2  Annotated Chromosomes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Continuing from the previous example, let¡¯s also show the tRNA genes.
-We¡¯ll get their locations by parsing the GenBank files for the five
-*Arabidopsis thaliana* chromosomes. You¡¯ll need to download these files
+Continuing from the previous example, letâ€™s also show the tRNA genes.
+Weâ€™ll get their locations by parsing the GenBank files for the five
+*Arabidopsis thaliana* chromosomes. Youâ€™ll need to download these files
 from the NCBI FTP site
 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__,
 and preserve the subdirectory names or edit the paths below:
@@ -923,3 +934,4 @@ look at the forward strand (right hand side) of Chr I, but it should
 create a colorful PDF file, shown here:
 
 |image25|
+

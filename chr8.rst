@@ -1,5 +1,4 @@
-
-Chapter?8??BLAST and other sequence search tools (*experimental code*)
+ï»¿Chapter 8  BLAST and other sequence search tools (*experimental code*)
 ======================================================================
 
 *WARNING*: This chapter of the Tutorial describes an *experimental*
@@ -9,7 +8,7 @@ and refinement before we declare it stable. Until then the details will
 probably change, and any scripts using the current ``Bio.SearchIO``
 would need to be updated. Please keep this in mind! For stable code
 working with NCBI BLAST, please continue to use Bio.Blast described in
-the preceding Chapter?\ `7 <#chapter:blast>`__.
+the preceding Chapter \ `7 <#chapter:blast>`__.
 
 Biological sequence identification is an integral part of
 bioinformatics. Several tools are available for this, each with their
@@ -19,7 +18,7 @@ use your sequence to search a database of potential matches. With the
 growing number of known sequences (hence the growing number of potential
 matches), interpreting the results becomes increasingly hard as there
 could be hundreds or even thousands of potential matches. Naturally,
-manual interpretation of these searches¡¯ results is out of the question.
+manual interpretation of these searchesâ€™ results is out of the question.
 Moreover, you often need to work with several sequence search tools,
 each with its own statistics, conventions, and output format. Imagine
 how daunting it would be when you need to work with multiple sequences
@@ -29,15 +28,15 @@ We know this too well ourselves, which is why we created the
 ``Bio.SearchIO`` submodule in Biopython. ``Bio.SearchIO`` allows you to
 extract information from your search results in a convenient way, while
 also dealing with the different standards and conventions used by
-different search tools. The name ``SearchIO`` is a homage to BioPerl¡¯s
+different search tools. The name ``SearchIO`` is a homage to BioPerlâ€™s
 module of the same name.
 
-In this chapter, we¡¯ll go through the main features of ``Bio.SearchIO``
-to show what it can do for you. We¡¯ll use two popular search tools along
+In this chapter, weâ€™ll go through the main features of ``Bio.SearchIO``
+to show what it can do for you. Weâ€™ll use two popular search tools along
 the way: BLAST and BLAT. They are used merely for illustrative purposes,
 and you should be able to adapt the workflow to any other search tools
-supported by ``Bio.SearchIO`` in a breeze. You¡¯re very welcome to follow
-along with the search output files we¡¯ll be using. The BLAST output file
+supported by ``Bio.SearchIO`` in a breeze. Youâ€™re very welcome to follow
+along with the search output files weâ€™ll be using. The BLAST output file
 can be downloaded
 `here <http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__, and the
 BLAT output file
@@ -53,15 +52,15 @@ The BLAST result is an XML file generated using ``blastn`` against the
 NCBI ``refseq_rna`` database. For BLAT, the sequence database was the
 February 2009 ``hg19`` human genome draft and the output format is PSL.
 
-We¡¯ll start from an introduction to the ``Bio.SearchIO`` object model.
+Weâ€™ll start from an introduction to the ``Bio.SearchIO`` object model.
 The model is the representation of your search results, thus it is core
-to ``Bio.SearchIO`` itself. After that, we¡¯ll check out the main
+to ``Bio.SearchIO`` itself. After that, weâ€™ll check out the main
 functions in ``Bio.SearchIO`` that you may often use.
 
-Now that we¡¯re all set, let¡¯s go to the first step: introducing the core
+Now that weâ€™re all set, letâ€™s go to the first step: introducing the core
 object model.
 
-8.1??The SearchIO object model
+8.1  The SearchIO object model
 ------------------------------
 
 Despite the wildly differing output styles among many sequence search
@@ -97,14 +96,14 @@ above. These objects are:
    unify ``HSP`` and ``HSPFragment`` objects as each ``HSP`` will only
    have a single ``HSPFragment``. However there are tools like BLAT and
    Exonerate that produce ``HSP`` containing multiple ``HSPFragment``.
-   Don¡¯t worry if this seems a tad confusing now, we¡¯ll elaborate more
+   Donâ€™t worry if this seems a tad confusing now, weâ€™ll elaborate more
    on these two objects later on.
 
 These four objects are the ones you will interact with when you use
 ``Bio.SearchIO``. They are created using one of the main
 ``Bio.SearchIO`` methods: ``read``, ``parse``, ``index``, or
 ``index_db``. The details of these methods are provided in later
-sections. For this section, we¡¯ll only be using read and parse. These
+sections. For this section, weâ€™ll only be using read and parse. These
 functions behave similarly to their ``Bio.SeqIO`` and ``Bio.AlignIO``
 counterparts:
 
@@ -113,14 +112,14 @@ counterparts:
 -  ``parse`` is used for search output files with multiple queries and
    returns a generator that yields ``QueryResult`` objects
 
-With that settled, let¡¯s start probing each ``Bio.SearchIO`` object,
+With that settled, letâ€™s start probing each ``Bio.SearchIO`` object,
 beginning with ``QueryResult``.
 
-8.1.1??QueryResult
+8.1.1  QueryResult
 ~~~~~~~~~~~~~~~~~~
 
 The QueryResult object represents a single search query and contains
-zero or more Hit objects. Let¡¯s see what it looks like using the BLAST
+zero or more Hit objects. Letâ€™s see what it looks like using the BLAST
 file we have:
 
 .. code:: verbatim
@@ -170,21 +169,21 @@ file we have:
                98      1  gi|297814701|ref|XM_002875188.1|  Arabidopsis lyrata su...
                99      1  gi|397513516|ref|XM_003827011.1|  PREDICTED: Pan panisc...
 
-We¡¯ve just begun to scratch the surface of the object model, but you can
-see that there¡¯s already some useful information. By invoking ``print``
+Weâ€™ve just begun to scratch the surface of the object model, but you can
+see that thereâ€™s already some useful information. By invoking ``print``
 on the ``QueryResult`` object, you can see:
 
 -  The program name and version (blastn version 2.2.27+)
 -  The query ID, description, and its sequence length (ID is 42291,
-   description is ¡®mystery\_seq¡¯, and it is 61 nucleotides long)
+   description is â€˜mystery\_seqâ€™, and it is 61 nucleotides long)
 -  The target database to search against (refseq\_rna)
 -  A quick overview of the resulting hits. For our query sequence, there
-   are 100 potential hits (numbered 0¨C99 in the table). For each hit, we
+   are 100 potential hits (numbered 0â€“99 in the table). For each hit, we
    can also see how many HSPs it contains, its ID, and a snippet of its
    description. Notice here that ``Bio.SearchIO`` truncates the hit
-   table overview, by showing only hits numbered 0¨C29, and then 97¨C99.
+   table overview, by showing only hits numbered 0â€“29, and then 97â€“99.
 
-Now let¡¯s check our BLAT results using the same procedure as above:
+Now letâ€™s check our BLAT results using the same procedure as above:
 
 .. code:: verbatim
 
@@ -199,17 +198,17 @@ Now let¡¯s check our BLAT results using the same procedure as above:
              ----  -----  ----------------------------------------------------------
                 0     17  chr19  <unknown description>                              
 
-You¡¯ll immediately notice that there are some differences. Some of these
-are caused by the way PSL format stores its details, as you¡¯ll see. The
+Youâ€™ll immediately notice that there are some differences. Some of these
+are caused by the way PSL format stores its details, as youâ€™ll see. The
 rest are caused by the genuine program and target database differences
 between our BLAST and BLAT searches:
 
 -  The program name and version. ``Bio.SearchIO`` knows that the program
    is BLAT, but in the output file there is no information regarding the
-   program version so it defaults to ¡®<unknown version>¡¯.
+   program version so it defaults to â€˜<unknown version>â€™.
 -  The query ID, description, and its sequence length. Notice here that
    these details are slightly different from the ones we saw in BLAST.
-   The ID is ¡®mystery\_seq¡¯ instead of 42991, there is no known
+   The ID is â€˜mystery\_seqâ€™ instead of 42991, there is no known
    description, but the query length is still 61. This is actually a
    difference introduced by the file formats themselves. BLAST sometimes
    creates its own query IDs and uses your original ID as the sequence
@@ -217,13 +216,13 @@ between our BLAST and BLAT searches:
 -  The target database is not known, as it is not stated in the BLAT
    output file.
 -  And finally, the list of hits we have is completely different. Here,
-   we see that our query sequence only hits the ¡®chr19¡¯ database entry,
+   we see that our query sequence only hits the â€˜chr19â€™ database entry,
    but in it we see 17 HSP regions. This should not be surprising
    however, given that we are using a different program, each with its
    own target database.
 
 All the details you saw when invoking the ``print`` method can be
-accessed individually using Python¡¯s object attribute access notation
+accessed individually using Pythonâ€™s object attribute access notation
 (a.k.a. the dot notation). There are also other format-specific
 attributes that you can access using the same method.
 
@@ -242,7 +241,7 @@ BLAST <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlastIO-module.html>`__
 and for
 `BLAT <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlatIO-module.html>`__.
 
-Having looked at using ``print`` on ``QueryResult`` objects, let¡¯s drill
+Having looked at using ``print`` on ``QueryResult`` objects, letâ€™s drill
 down deeper. What exactly is a ``QueryResult``? In terms of Python
 objects, ``QueryResult`` is a hybrid between a list and a dictionary. In
 other words, it is a container object with all the convenient features
@@ -263,7 +262,7 @@ iterable. Each iteration returns a ``Hit`` object:
     ...
 
 To check how many items (hits) a ``QueryResult`` has, you can simply
-invoke Python¡¯s ``len`` method:
+invoke Pythonâ€™s ``len`` method:
 
 .. code:: verbatim
 
@@ -301,7 +300,7 @@ the slice notation as well. In this case, the slice will return a new
                 1      1  gi|301171311|ref|NR_035856.1|  Pan troglodytes microRNA...
                 2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...
 
-Like Python dictionaries, you can also retrieve hits using the hit¡¯s ID.
+Like Python dictionaries, you can also retrieve hits using the hitâ€™s ID.
 This is particularly useful if you know a given hit ID exists within a
 search query results:
 
@@ -340,22 +339,22 @@ rescue:
     >>> blast_qresult.index('gi|301171437|ref|NR_035870.1|')
     22
 
-Remember that we¡¯re using Python¡¯s indexing style here, which is
+Remember that weâ€™re using Pythonâ€™s indexing style here, which is
 zero-based. This means our hit above is ranked at no. 23, not 22.
 
 Also, note that the hit rank you see here is based on the native hit
 ordering present in the original search output file. Different search
 tools may order these hits based on different criteria.
 
-If the native hit ordering doesn¡¯t suit your taste, you can use the
+If the native hit ordering doesnâ€™t suit your taste, you can use the
 ``sort`` method of the ``QueryResult`` object. It is very similar to
-Python¡¯s ``list.sort`` method, with the addition of an option to create
+Pythonâ€™s ``list.sort`` method, with the addition of an option to create
 a new sorted ``QueryResult`` object or not.
 
 Here is an example of using ``QueryResult.sort`` to sort the hits based
-on each hit¡¯s full sequence length. For this particular sort, we¡¯ll set
+on each hitâ€™s full sequence length. For this particular sort, weâ€™ll set
 the ``in_place`` flag to ``False`` so that sorting will return a new
-``QueryResult`` object and leave our initial object unsorted. We¡¯ll also
+``QueryResult`` object and leave our initial object unsorted. Weâ€™ll also
 set the ``reverse`` flag to ``True`` so that we sort in descending
 order.
 
@@ -381,26 +380,26 @@ order.
     gi|356517317|ref|XM_003527287.1| 3251
     gi|356543101|ref|XM_003539954.1| 2936
 
-The advantage of having the ``in_place`` flag here is that we¡¯re
+The advantage of having the ``in_place`` flag here is that weâ€™re
 preserving the native ordering, so we may use it again later. You should
 note that this is not the default behavior of ``QueryResult.sort``,
 however, which is why we needed to set the ``in_place`` flag to ``True``
 explicitly.
 
-At this point, you¡¯ve known enough about ``QueryResult`` objects to make
+At this point, youâ€™ve known enough about ``QueryResult`` objects to make
 it work for you. But before we go on to the next object in the
-``Bio.SearchIO`` model, let¡¯s take a look at two more sets of methods
+``Bio.SearchIO`` model, letâ€™s take a look at two more sets of methods
 that could make it even easier to work with ``QueryResult`` objects: the
 ``filter`` and ``map`` methods.
 
-If you¡¯re familiar with Python¡¯s list comprehensions, generator
-expressions or the built in ``filter`` and ``map`` functions, you¡¯ll
-know how useful they are for working with list-like objects (if you¡¯re
+If youâ€™re familiar with Pythonâ€™s list comprehensions, generator
+expressions or the built in ``filter`` and ``map`` functions, youâ€™ll
+know how useful they are for working with list-like objects (if youâ€™re
 not, check them out!). You can use these built in methods to manipulate
-``QueryResult`` objects, but you¡¯ll end up with regular Python lists and
+``QueryResult`` objects, but youâ€™ll end up with regular Python lists and
 lose the ability to do more interesting manipulations.
 
-That¡¯s why, ``QueryResult`` objects provide its own flavor of ``filter``
+Thatâ€™s why, ``QueryResult`` objects provide its own flavor of ``filter``
 and ``map`` methods. Analogous to ``filter``, there are ``hit_filter``
 and ``hsp_filter`` methods. As their name implies, these methods filter
 its ``QueryResult`` object either on its ``Hit`` objects or ``HSP``
@@ -409,7 +408,7 @@ provide the ``hit_map`` and ``hsp_map`` methods. These methods apply a
 given function to all hits or HSPs in a ``QueryResult`` object,
 respectively.
 
-Let¡¯s see these methods in action, beginning with ``hit_filter``. This
+Letâ€™s see these methods in action, beginning with ``hit_filter``. This
 method accepts a callback function that checks whether a given ``Hit``
 object passes the condition you set or not. In other words, the function
 must accept as its argument a single ``Hit`` object and returns ``True``
@@ -441,9 +440,9 @@ each hits.
 As for the ``map`` methods, they too accept a callback function as their
 arguments. However, instead of returning ``True`` or ``False``, the
 callback function must return the modified ``Hit`` or ``HSP`` object
-(depending on whether you¡¯re using ``hit_map`` or ``hsp_map``).
+(depending on whether youâ€™re using ``hit_map`` or ``hsp_map``).
 
-Let¡¯s see an example where we¡¯re using ``hit_map`` to rename the hit
+Letâ€™s see an example where weâ€™re using ``hit_map`` to rename the hit
 IDs:
 
 .. code:: verbatim
@@ -464,15 +463,15 @@ IDs:
 Again, ``hsp_map`` works the same as ``hit_map``, but on ``HSP`` objects
 instead of ``Hit`` objects.
 
-8.1.2??Hit
+8.1.2  Hit
 ~~~~~~~~~~
 
 ``Hit`` objects represent all query results from a single database
 entry. They are the second-level container in the ``Bio.SearchIO``
-object hierarchy. You¡¯ve seen that they are contained by ``QueryResult``
+object hierarchy. Youâ€™ve seen that they are contained by ``QueryResult``
 objects, but they themselves contain ``HSP`` objects.
 
-Let¡¯s see what they look like, beginning with our BLAST search:
+Letâ€™s see what they look like, beginning with our BLAST search:
 
 .. code:: verbatim
 
@@ -493,7 +492,7 @@ Let¡¯s see what they look like, beginning with our BLAST search:
               0   8.9e-20     100.47      60           [1:61]                [13:73]
               1   3.3e-06      55.39      60           [0:60]                [13:73]
 
-You see that we¡¯ve got the essentials covered here:
+You see that weâ€™ve got the essentials covered here:
 
 -  The query ID and description is present. A hit is always tied to a
    query, so we want to keep track of the originating query as well.
@@ -502,13 +501,13 @@ You see that we¡¯ve got the essentials covered here:
 -  We also have the unique hit ID, description, and full sequence
    lengths. They can be accessed using ``id``, ``description``, and
    ``seq_len``, respectively.
--  Finally, there¡¯s a table containing quick information about the HSPs
-   this hit contains. In each row, we¡¯ve got the important HSP details
+-  Finally, thereâ€™s a table containing quick information about the HSPs
+   this hit contains. In each row, weâ€™ve got the important HSP details
    listed: the HSP index, its e-value, its bit score, its span (the
    alignment length including gaps), its query coordinates, and its hit
    coordinates.
 
-Now let¡¯s contrast this with the BLAT search. Remember that in the BLAT
+Now letâ€™s contrast this with the BLAT search. Remember that in the BLAT
 search we had one hit with 17 HSPs.
 
 .. code:: verbatim
@@ -541,20 +540,20 @@ search we had one hit with 17 HSPs.
              15         ?          ?       ?           [8:51]    [54234278:54234321]
              16         ?          ?       ?           [8:61]    [54238143:54238196]
 
-Here, we¡¯ve got a similar level of detail as with the BLAST hit we saw
+Here, weâ€™ve got a similar level of detail as with the BLAST hit we saw
 earlier. There are some differences worth explaining, though:
 
 -  The e-value and bit score column values. As BLAT HSPs do not have
-   e-values and bit scores, the display defaults to ¡®?¡¯.
+   e-values and bit scores, the display defaults to â€˜?â€™.
 -  What about the span column? The span values is meant to display the
    complete alignment length, which consists of all residues and any
    gaps that may be present. The PSL format do not have this information
    readily available and ``Bio.SearchIO`` does not attempt to try guess
-   what it is, so we get a ¡®?¡¯ similar to the e-value and bit score
+   what it is, so we get a â€˜?â€™ similar to the e-value and bit score
    columns.
 
 In terms of Python objects, ``Hit`` behaves almost the same as Python
-lists, but contain ``HSP`` objects exclusively. If you¡¯re familiar with
+lists, but contain ``HSP`` objects exclusively. If youâ€™re familiar with
 lists, you should encounter no difficulties working with the ``Hit``
 object.
 
@@ -613,19 +612,19 @@ objects only have one variant of ``filter`` (``Hit.filter``) and one
 variant of ``map`` (``Hit.map``). Both of ``Hit.filter`` and ``Hit.map``
 work on the ``HSP`` objects a ``Hit`` has.
 
-8.1.3??HSP
+8.1.3  HSP
 ~~~~~~~~~~
 
 ``HSP`` (high-scoring pair) represents region(s) in the hit sequence
 that contains significant alignment(s) to the query sequence. It
 contains the actual match between your query sequence and a database
-entry. As this match is determined by the sequence search tool¡¯s
+entry. As this match is determined by the sequence search toolâ€™s
 algorithms, the ``HSP`` object contains the bulk of the statistics
 computed by the search tool. This also makes the distinction between
 ``HSP`` objects from different search tools more apparent compared to
-the differences you¡¯ve seen in ``QueryResult`` or ``Hit`` objects.
+the differences youâ€™ve seen in ``QueryResult`` or ``Hit`` objects.
 
-Let¡¯s see some examples from our BLAST and BLAT searches. We¡¯ll look at
+Letâ€™s see some examples from our BLAST and BLAT searches. Weâ€™ll look at
 the BLAST HSP first:
 
 .. code:: verbatim
@@ -652,9 +651,9 @@ shows its general details:
 
 -  There are the query and hit IDs and descriptions. We need these to
    identify our ``HSP``.
--  We¡¯ve also got the matching range of the query and hit sequences. The
-   slice notation we¡¯re using here is an indication that the range is
-   displayed using Python¡¯s indexing style (zero-based, half open). The
+-  Weâ€™ve also got the matching range of the query and hit sequences. The
+   slice notation weâ€™re using here is an indication that the range is
+   displayed using Pythonâ€™s indexing style (zero-based, half open). The
    number inside the parenthesis denotes the strand. In this case, both
    sequences have the plus strand.
 -  Some quick statistics are available: the e-value and bitscore.
@@ -675,7 +674,7 @@ like in ``QueryResult`` and ``Hit``:
     >>> blast_hsp.evalue
     4.91307e-23
 
-They¡¯re not the only attributes available, though. ``HSP`` objects come
+Theyâ€™re not the only attributes available, though. ``HSP`` objects come
 with a default set of properties that makes it easy to probe their
 various details. Here are some examples:
 
@@ -706,9 +705,9 @@ attributes can be accessed like so:
 
 These details are format-specific; they may not be present in other
 formats. To see which details are available for a given sequence search
-tool, you should check the format¡¯s documentation in ``Bio.SearchIO``.
+tool, you should check the formatâ€™s documentation in ``Bio.SearchIO``.
 Alternatively, you may also use ``.__dict__.keys()`` for a quick list of
-what¡¯s available:
+whatâ€™s available:
 
 .. code:: verbatim
 
@@ -726,7 +725,7 @@ of our HSP are not just regular strings:
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='gi|262205317|ref|NR_030195.1|', name='aligned hit sequence', description='Homo sapiens microRNA 520b (MIR520B), microRNA', dbxrefs=[])
 
 They are ``SeqRecord`` objects you saw earlier in
-Section?\ `4 <#chapter:SeqRecord>`__! This means that you can do all
+Section \ `4 <#chapter:SeqRecord>`__! This means that you can do all
 sorts of interesting things you can do with ``SeqRecord`` objects on
 ``HSP.query`` and/or ``HSP.hit``.
 
@@ -740,8 +739,8 @@ It should not surprise you now that the ``HSP`` object has an
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG 42291
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG gi|262205317|ref|NR_030195.1|
 
-Having probed the BLAST HSP, let¡¯s now take a look at HSPs from our BLAT
-results for a different kind of HSP. As usual, we¡¯ll begin by invoking
+Having probed the BLAST HSP, letâ€™s now take a look at HSPs from our BLAT
+results for a different kind of HSP. As usual, weâ€™ll begin by invoking
 ``print`` on it:
 
 .. code:: verbatim
@@ -758,12 +757,12 @@ results for a different kind of HSP. As usual, we¡¯ll begin by invoking
 
 Some of the outputs you may have already guessed. We have the query and
 hit IDs and descriptions and the sequence coordinates. Values for evalue
-and bitscore is ¡®?¡¯ as BLAT HSPs do not have these attributes. But The
-biggest difference here is that you don¡¯t see any sequence alignments
+and bitscore is â€˜?â€™ as BLAT HSPs do not have these attributes. But The
+biggest difference here is that you donâ€™t see any sequence alignments
 displayed. If you look closer, PSL formats themselves do not have any
-hit or query sequences, so ``Bio.SearchIO`` won¡¯t create any sequence or
+hit or query sequences, so ``Bio.SearchIO`` wonâ€™t create any sequence or
 alignment objects. What happens if you try to access ``HSP.query``,
-``HSP.hit``, or ``HSP.aln``? You¡¯ll get the default values for these
+``HSP.hit``, or ``HSP.aln``? Youâ€™ll get the default values for these
 attributes, which is ``None``:
 
 .. code:: verbatim
@@ -797,12 +796,12 @@ Other format-specific attributes are still present as well:
     0
 
 So far so good? Things get more interesting when you look at another
-¡®variant¡¯ of HSP present in our BLAT results. You might recall that in
-BLAT searches, sometimes we get our results separated into ¡®blocks¡¯.
+â€˜variantâ€™ of HSP present in our BLAT results. You might recall that in
+BLAT searches, sometimes we get our results separated into â€˜blocksâ€™.
 These blocks are essentially alignment fragments that may have some
 intervening sequence between them.
 
-Let¡¯s take a look at a BLAT HSP that contains multiple blocks to see how
+Letâ€™s take a look at a BLAT HSP that contains multiple blocks to see how
 ``Bio.SearchIO`` deals with this:
 
 .. code:: verbatim
@@ -820,10 +819,10 @@ Let¡¯s take a look at a BLAT HSP that contains multiple blocks to see how
                    0               ?                  [0:18]     [54233104:54233122]
                    1               ?                 [18:61]     [54264420:54264463]
 
-What¡¯s happening here? We still some essential details covered: the IDs
+Whatâ€™s happening here? We still some essential details covered: the IDs
 and descriptions, the coordinates, and the quick statistics are similar
-to what you¡¯ve seen before. But the fragments detail is all different.
-Instead of showing ¡®Fragments: 1¡¯, we now have a table with two data
+to what youâ€™ve seen before. But the fragments detail is all different.
+Instead of showing â€˜Fragments: 1â€™, we now have a table with two data
 rows.
 
 This is how ``Bio.SearchIO`` deals with HSPs having multiple fragments.
@@ -831,7 +830,7 @@ As mentioned before, an HSP alignment may be separated by intervening
 sequences into fragments. The intervening sequences are not part of the
 query-hit match, so they should not be considered part of query nor hit
 sequence. However, they do affect how we deal with sequence coordinates,
-so we can¡¯t ignore them.
+so we canâ€™t ignore them.
 
 Take a look at the hit coordinate of the HSP above. In the
 ``Hit range:`` field, we see that the coordinate is
@@ -867,7 +866,7 @@ parse the PSL file. All it needs are the start and end coordinates of
 each fragment.
 
 What about the ``query``, ``hit``, and ``aln`` attributes? If the HSP
-has multiple fragments, you won¡¯t be able to use these attributes as
+has multiple fragments, you wonâ€™t be able to use these attributes as
 they only fetch single ``SeqRecord`` or ``MultipleSeqAlignment``
 objects. However, you can use their ``*_all`` counterparts:
 ``query_all``, ``hit_all``, and ``aln_all``. These properties will
@@ -890,10 +889,10 @@ use the ``is_fragmented`` property like so:
 
 Before we move on, you should also know that we can use the slice
 notation on ``HSP`` objects, just like ``QueryResult`` or ``Hit``
-objects. When you use this notation, you¡¯ll get an ``HSPFragment``
+objects. When you use this notation, youâ€™ll get an ``HSPFragment``
 object in return, the last component of the object model.
 
-8.1.4??HSPFragment
+8.1.4  HSPFragment
 ~~~~~~~~~~~~~~~~~~
 
 ``HSPFragment`` represents a single, contiguous match between the query
@@ -901,7 +900,7 @@ and hit sequences. You could consider it the core of the object model
 and search result, since it is the presence of these fragments that
 determine whether your search have results or not.
 
-In most cases, you don¡¯t have to deal with ``HSPFragment`` objects
+In most cases, you donâ€™t have to deal with ``HSPFragment`` objects
 directly since not that many sequence search tools fragment their HSPs.
 When you do have to deal with them, what you should remember is that
 ``HSPFragment`` objects were written with to be as compact as possible.
@@ -910,7 +909,7 @@ sequences: strands, reading frames, alphabets, coordinates, the
 sequences themselves, and their IDs and descriptions.
 
 These attributes are readily shown when you invoke ``print`` on an
-``HSPFragment``. Here¡¯s an example, taken from our BLAST search:
+``HSPFragment``. Hereâ€™s an example, taken from our BLAST search:
 
 .. code:: verbatim
 
@@ -953,18 +952,18 @@ notation. Some examples:
     >>> blast_frag.hit              # hit sequence, as a SeqRecord object
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='gi|262205317|ref|NR_030195.1|', name='aligned hit sequence', description='Homo sapiens microRNA 520b (MIR520B), microRNA', dbxrefs=[])
 
-8.2??A note about standards and conventions
+8.2  A note about standards and conventions
 -------------------------------------------
 
 Before we move on to the main functions, there is something you ought to
-know about the standards ``Bio.SearchIO`` uses. If you¡¯ve worked with
+know about the standards ``Bio.SearchIO`` uses. If youâ€™ve worked with
 multiple sequence search tools, you might have had to deal with the many
 different ways each program deals with things like sequence coordinates.
 It might not have been a pleasant experience as these search tools
 usually have their own standards. For example, one tools might use
 one-based coordinates, while the other uses zero-based coordinates. Or,
 one program might reverse the start and end coordinates if the strand is
-minus, while others don¡¯t. In short, these often creates unnecessary
+minus, while others donâ€™t. In short, these often creates unnecessary
 mess must be dealt with.
 
 We realize this problem ourselves and we intend to address it in
@@ -975,14 +974,14 @@ object model you just saw.
 
 Now, you might complain, "Not another standard!". Well, eventually we
 have to choose one convention or the other, so this is necessary. Plus,
-we¡¯re not creating something entirely new here; just adopting a standard
+weâ€™re not creating something entirely new here; just adopting a standard
 we think is best for a Python programmer (it is Biopython, after all).
 
 There are three implicit standards that you can expect when working with
 ``Bio.SearchIO``:
 
 -  The first one pertains to sequence coordinates. In ``Bio.SearchIO``,
-   all sequence coordinates follows Python¡¯s coordinate style:
+   all sequence coordinates follows Pythonâ€™s coordinate style:
    zero-based and half open. For example, if in a BLAST XML output file
    the start and end coordinates of an HSP are 10 and 28, they would
    become 9 and 28 in ``Bio.SearchIO``. The start coordinate becomes 9
@@ -990,7 +989,7 @@ There are three implicit standards that you can expect when working with
    remains 28 as Python slices omit the last item in an interval.
 -  The second is on sequence coordinate orders. In ``Bio.SearchIO``,
    start coordinates are always less than or equal to end coordinates.
-   This isn¡¯t always the case with all sequence search tools, as some of
+   This isnâ€™t always the case with all sequence search tools, as some of
    them have larger start coordinates when the sequence strand is minus.
 -  The last one is on strand and reading frame values. For strands,
    there are only four valid choices: ``1`` (plus strand), ``-1`` (minus
@@ -1000,14 +999,14 @@ There are three implicit standards that you can expect when working with
 
 Note that these standards only exist in ``Bio.SearchIO`` objects. If you
 write ``Bio.SearchIO`` objects into an output format, ``Bio.SearchIO``
-will use the format¡¯s standard for the output. It does not force its
+will use the formatâ€™s standard for the output. It does not force its
 standard over to your output file.
 
-8.3??Reading search output files
+8.3  Reading search output files
 --------------------------------
 
 There are two functions you can use for reading search output files into
-``Bio.SearchIO`` objects: ``read`` and ``parse``. They¡¯re essentially
+``Bio.SearchIO`` objects: ``read`` and ``parse``. Theyâ€™re essentially
 similar to ``read`` and ``parse`` functions in other submodules like
 ``Bio.SeqIO`` or ``Bio.AlignIO``. In both cases, you need to supply the
 search output file name and the file format name, both as Python
@@ -1015,8 +1014,8 @@ strings. You can check the documentation for a list of format names
 ``Bio.SearchIO`` recognizes.
 
 ``Bio.SearchIO.read`` is used for reading search output files with only
-one query and returns a ``QueryResult`` object. You¡¯ve seen ``read``
-used in our previous examples. What you haven¡¯t seen is that ``read``
+one query and returns a ``QueryResult`` object. Youâ€™ve seen ``read``
+used in our previous examples. What you havenâ€™t seen is that ``read``
 may also accept additional keyword arguments, depending on the file
 format.
 
@@ -1037,7 +1036,7 @@ with comments in it:
 
 These keyword arguments differs among file formats. Check the format
 documentation to see if it has keyword arguments that modifies its
-parser¡¯s behavior.
+parserâ€™s behavior.
 
 As for the ``Bio.SearchIO.parse``, it is used for reading search output
 files with any number of queries. The function returns a generator
@@ -1060,10 +1059,10 @@ arguments:
     gi|16080617|ref|NP_391444.1|
     gi|11464971:4-101
 
-8.4??Dealing with large search output files with indexing
+8.4  Dealing with large search output files with indexing
 ---------------------------------------------------------
 
-Sometimes, you¡¯re handed a search output file containing hundreds or
+Sometimes, youâ€™re handed a search output file containing hundreds or
 thousands of queries that you need to parse. You can of course use
 ``Bio.SearchIO.parse`` for this file, but that would be grossly
 inefficient if you need to access only a few of the queries. This is
@@ -1072,8 +1071,8 @@ query of interest.
 
 In this case, the ideal choice would be to index the file using
 ``Bio.SearchIO.index`` or ``Bio.SearchIO.index_db``. If the names sound
-familiar, it¡¯s because you¡¯ve seen them before in
-Section?\ `5.4.2 <#sec:SeqIO-index>`__. These functions also behave
+familiar, itâ€™s because youâ€™ve seen them before in
+Section \ `5.4.2 <#sec:SeqIO-index>`__. These functions also behave
 similarly to their ``Bio.SeqIO`` counterparts, with the addition of
 format-specific keyword arguments.
 
@@ -1113,7 +1112,7 @@ Or with the ``key_function`` argument, as in ``Bio.SeqIO``:
 ``Bio.SearchIO.index_db`` works like as ``index``, only it writes the
 query offsets into an SQLite database file.
 
-8.5??Writing and converting search output files
+8.5  Writing and converting search output files
 -----------------------------------------------
 
 It is occasionally useful to be able to manipulate search results from
@@ -1134,9 +1133,9 @@ denotes the number or ``QueryResult``, ``Hit``, ``HSP``, and
 
 You should note different file formats require different attributes of
 the ``QueryResult``, ``Hit``, ``HSP`` and ``HSPFragment`` objects. If
-these attributes are not present, writing won¡¯t work. In other words,
-you can¡¯t always write to the output format that you want. For example,
-if you read a BLAST XML file, you wouldn¡¯t be able to write the results
+these attributes are not present, writing wonâ€™t work. In other words,
+you canâ€™t always write to the output format that you want. For example,
+if you read a BLAST XML file, you wouldnâ€™t be able to write the results
 to a PSL file as PSL files require attributes not calculated by BLAST
 (e.g. the number of repeat matches). You can always set these attributes
 manually, if you really want to write to PSL, though.

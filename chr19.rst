@@ -1,4 +1,4 @@
-Chapter?19??The Biopython testing framework
+Chapter 19  The Biopython testing framework
 ===========================================
 
 Biopython has a regression testing framework (the file ``run_tests.py``)
@@ -13,7 +13,7 @@ Biopython should have a test (and should also have documentation!). All
 our developers, and anyone installing Biopython from source, are
 strongly encouraged to run the unit tests.
 
-19.1??Running the tests
+19.1  Running the tests
 -----------------------
 
 When you download the Biopython source code, or check it out from our
@@ -37,7 +37,7 @@ running:
 
     python run_tests.py
 
-You°Øll often want to run just some of the tests, and this is done like
+You‚Äôll often want to run just some of the tests, and this is done like
 this:
 
 .. code:: verbatim
@@ -98,31 +98,31 @@ sub-section(s) of the test are failing. For example,
 
     python test_Cluster.py
 
-19.2??Writing tests
+19.2  Writing tests
 -------------------
 
-Let°Øs say you want to write some tests for a module called ``Biospam``.
-This can be a module you wrote, or an existing module that doesn°Øt have
+Let‚Äôs say you want to write some tests for a module called ``Biospam``.
+This can be a module you wrote, or an existing module that doesn‚Äôt have
 any tests yet. In the examples below, we assume that ``Biospam`` is a
 module that does simple math.
 
 Each Biopython test can have three important files and directories
 involved with it:
 
-#. ``test_Biospam.py`` ®C The actual test code for your module.
-#. ``Biospam`` [optional]®C A directory where any necessary input files
+#. ``test_Biospam.py`` ‚Äì The actual test code for your module.
+#. ``Biospam`` [optional]‚Äì A directory where any necessary input files
    will be located. Any output files that will be generated should also
    be written here (and preferably cleaned up after the tests are done)
    to prevent clogging up the main Tests directory.
-#. ``output/Biospam`` ®C [for print-and-compare tests only] This file
+#. ``output/Biospam`` ‚Äì [for print-and-compare tests only] This file
    contains the expected output from running ``test_Biospam.py``. This
    file is not needed for ``unittest``-style tests, since there the
    validation is done in the test script ``test_Biospam.py`` itself.
 
-It°Øs up to you to decide whether you want to write a print-and-compare
+It‚Äôs up to you to decide whether you want to write a print-and-compare
 test script or a ``unittest``-style test script. The important thing is
 that you cannot mix these two styles in a single test script.
-Particularly, don°Øt use ``unittest`` features in a print-and-compare
+Particularly, don‚Äôt use ``unittest`` features in a print-and-compare
 test.
 
 Any script with a ``test_`` prefix in the ``Tests`` directory will be
@@ -143,14 +143,14 @@ tests contained in it:
     test_CAPS ... ok
     test_Clustalw ... ok
 
-°≠
+‚Ä¶
 
 .. code:: verbatim
 
     ----------------------------------------------------------------------
     Ran 107 tests in 86.127 seconds
 
-19.2.1??Writing a print-and-compare test
+19.2.1  Writing a print-and-compare test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A print-and-compare style test should be much simpler for beginners or
@@ -187,13 +187,13 @@ Here is what you should do to make a print-and-compare test for the
       -  Manually look at the file ``test_Biospam`` to make sure the
          output is correct. When you are sure it is all right and there
          are no bugs, you need to quickly edit the ``test_Biospam`` file
-         so that the first line is: °Æ\ ``test_Biospam``\ °Ø (no quotes).
+         so that the first line is: ‚Äò\ ``test_Biospam``\ ‚Äô (no quotes).
       -  copy the ``test_Biospam`` file to the directory Tests/output
 
    #. The quick way:
 
       -  Run ``python run_tests.py -g test_Biospam.py``. The regression
-         testing framework is nifty enough that it°Øll put the output in
+         testing framework is nifty enough that it‚Äôll put the output in
          the right place in just the way it likes it.
       -  Go to the output (which should be in
          ``Tests/output/test_Biospam``) and double check the output to
@@ -202,7 +202,7 @@ Here is what you should do to make a print-and-compare test for the
 #. Now change to the Tests directory and run the regression tests with
    ``python run_tests.py``. This will run all of the tests, and you
    should see your test run (and pass!).
-#. That°Øs it! Now you°Øve got a nice test for your module ready to check
+#. That‚Äôs it! Now you‚Äôve got a nice test for your module ready to check
    in, or submit to Biopython. Congratulations!
 
 As an example, the ``test_Biospam.py`` test script to test the
@@ -235,7 +235,7 @@ track which line in the output corresponds to which command in the test
 script. For this purpose, it is important to print out some markers to
 help you match lines in the input script with the generated output.
 
-19.2.2??Writing a unittest-based test
+19.2.2  Writing a unittest-based test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We want all the modules in Biopython to have unit tests, and a simple
@@ -251,10 +251,10 @@ are keeping under your pillow, as recommended). There is also `online
 documentaion for
 unittest <http://docs.python.org/library/unittest.html>`__. If you are
 familiar with the ``unittest`` system (or something similar like the
-nose test framework), you shouldn°Øt have any trouble. You may find
+nose test framework), you shouldn‚Äôt have any trouble. You may find
 looking at the existing example within Biopython helpful too.
 
-Here°Øs a minimal ``unittest``-style test script for ``Biospam``, which
+Here‚Äôs a minimal ``unittest``-style test script for ``Biospam``, which
 you can copy and paste to get started:
 
 .. code:: verbatim
@@ -301,7 +301,7 @@ These are the key points of ``unittest``-based tests:
    which should be run before and after each test method. For example,
    the ``setUp`` method might be used to create an instance of the
    object you are testing, or open a file handle. The ``tearDown``
-   should do any °∞tidying up°±, for example closing the file handle.
+   should do any ‚Äútidying up‚Äù, for example closing the file handle.
 -  The tests are prefixed with ``test_`` and each test should cover one
    specific part of what you are trying to test. You can have as many
    tests as you want in a class.
@@ -314,7 +314,7 @@ These are the key points of ``unittest``-based tests:
            unittest.main(testRunner=runner)
 
    to execute the tests when the script is run by itself (rather than
-   imported from ``run_tests.py``). If you run this script, then you°Øll
+   imported from ``run_tests.py``). If you run this script, then you‚Äôll
    see something like the following:
 
    .. code:: verbatim
@@ -402,7 +402,7 @@ execute ``python test_Biospam.py``; with ``python run_tests.py``, the
 docstring tests are run automatically (assuming they are included in the
 list of docstring tests in ``run_tests.py``, see the section below).
 
-19.3??Writing doctests
+19.3  Writing doctests
 ----------------------
 
 Python modules, classes and functions support built in documentation
@@ -416,7 +416,7 @@ Currently only a small part of Biopython includes doctests. The
 purpose, at the top of the ``run_tests.py`` script is a manually
 compiled list of modules to test, which allows us to skip modules with
 optional external dependencies which may not be installed (e.g. the
-Reportlab and NumPy libraries). So, if you°Øve added some doctests to the
+Reportlab and NumPy libraries). So, if you‚Äôve added some doctests to the
 docstrings in a Biopython module, in order to have them included in the
 Biopython test suite, you must update ``run_tests.py`` to include your
 module. Currently, the relevant part of ``run_tests.py`` looks as

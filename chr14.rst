@@ -1,11 +1,11 @@
-Chapter?14??Sequence motif analysis using Bio.motifs
+Chapter 14  Sequence motif analysis using Bio.motifs
 ====================================================
 
 This chapter gives an overview of the functionality of the
 ``Bio.motifs`` package included in Biopython. It is intended for people
-who are involved in the analysis of sequence motifs, so I¡¯ll assume that
+who are involved in the analysis of sequence motifs, so Iâ€™ll assume that
 you are familiar with basic notions of motif analysis. In case something
-is unclear, please look at Section?\ `14.8 <#sec:links>`__ for some
+is unclear, please look at Section \ `14.8 <#sec:links>`__ for some
 relevant links.
 
 Most of this chapter describes the new ``Bio.motifs`` package included
@@ -21,7 +21,7 @@ library designed to deal with sequence motifs. It supports more
 *de-novo* motif finders, but it is not a part of Biopython and has some
 restrictions on commercial use.
 
-14.1??Motif objects
+14.1  Motif objects
 -------------------
 
 Since we are interested in motif analysis, we need to take a look at
@@ -37,7 +37,7 @@ a ``Motif`` object from a list of instances of the motif, or we can
 obtain a ``Motif`` object by parsing a file from a motif database or
 motif finding software.
 
-14.1.1??Creating a motif from instances
+14.1.1  Creating a motif from instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Suppose we have these instances of a DNA motif:
@@ -194,12 +194,12 @@ We can also get the reverse complement of a motif:
 The reverse complement and the degenerate consensus sequence are only
 defined for DNA motifs.
 
-14.1.2??Reading motifs
+14.1.2  Reading motifs
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Creating motifs from instances by hand is a bit boring, so it¡¯s useful
+Creating motifs from instances by hand is a bit boring, so itâ€™s useful
 to have some I/O functions for reading and writing motifs. There are no
-really well established standards for storing motifs, but there¡¯s a
+really well established standards for storing motifs, but thereâ€™s a
 couple of formats which are more used than others. The most important
 distinction is whether the motif representation is based on instances or
 on some version of PWM matrix.
@@ -699,10 +699,10 @@ output in a string and saving it in a file:
     >>> handle.write(text)
     >>> handle.close()
 
-14.1.3??Writing motifs
+14.1.3  Writing motifs
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Speaking of exporting, let¡¯s look at export functions in general. To
+Speaking of exporting, letâ€™s look at export functions in general. To
 export a motif in the JASPAR ``.pfm`` format, use
 
 .. code:: verbatim
@@ -763,7 +763,7 @@ TRANSFAC file. For example,
     //
     <BLANKLINE>
 
-14.1.4??Creating a sequence logo
+14.1.4  Creating a sequence logo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If we have internet access, we can create a
@@ -775,7 +775,7 @@ If we have internet access, we can create a
 
 We should get our logo saved as a PNG in the specified file.
 
-14.2??Position-Weight Matrices
+14.2  Position-Weight Matrices
 ------------------------------
 
 The ``.counts`` attribute of a Motif object shows how often each
@@ -857,10 +857,10 @@ directly from the ``pwm``:
     T:   0.18   0.29   0.07   0.84   0.40
     <BLANKLINE>
 
-14.3??Position-Specific Scoring Matrices
+14.3  Position-Specific Scoring Matrices
 ----------------------------------------
 
-Using the background distribution and PWM with pseudo-counts added, it¡¯s
+Using the background distribution and PWM with pseudo-counts added, itâ€™s
 easy to compute the log-odds ratios, telling us what are the log odds of
 a particular symbol to be coming from a motif against the background. We
 can use the ``.log_odds()`` method on the position-weight matrix:
@@ -878,7 +878,7 @@ can use the ``.log_odds()`` method on the position-weight matrix:
 
 Here we can see positive values for symbols more frequent in the motif
 than in the background and negative for symbols more frequent in the
-background. 0.0 means that it¡¯s equally likely to see a symbol in the
+background. 0.0 means that itâ€™s equally likely to see a symbol in the
 background and in the motif.
 
 This assumes that A, C, G, and T are equally likely in the background.
@@ -930,7 +930,7 @@ The ``.reverse_complement``, ``.consensus``, ``.anticonsensus``, and
 ``.degenerate_consensus`` methods can be applied directly to PSSM
 objects.
 
-14.4??Searching for instances
+14.4  Searching for instances
 -----------------------------
 
 The most frequent use for a motif is to find its instances in some
@@ -943,7 +943,7 @@ sequence like this:
     >>> len(test_seq)
     26
 
-14.4.1??Searching for exact matches
+14.4.1  Searching for exact matches
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The simplest way to find instances, is to look for exact matches of the
@@ -969,10 +969,10 @@ complementary strand):
     6 GCATT
     20 GCATT
 
-14.4.2??Searching for matches using the PSSM score
+14.4.2  Searching for matches using the PSSM score
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It¡¯s just as easy to look for positions, giving rise to high log-odds
+Itâ€™s just as easy to look for positions, giving rise to high log-odds
 scores against our motif:
 
 .. code:: verbatim
@@ -1026,7 +1026,7 @@ complement of the PSSM:
             -5.64668512,  -8.73414803,  -4.15613794,  -5.6796999 ,
              4.60124254,  -4.2480607 ], dtype=float32)
 
-14.4.3??Selecting a score threshold
+14.4.3  Selecting a score threshold
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you want to use a less arbitrary way of selecting thresholds, you can
@@ -1041,7 +1041,7 @@ manageable:
 
 The ``distribution`` object can be used to determine a number of
 different thresholds. We can specify the requested false-positive rate
-(probability of ¡°finding¡± a motif instance in background generated
+(probability of â€œfindingâ€ a motif instance in background generated
 sequence):
 
 .. code:: verbatim
@@ -1050,7 +1050,7 @@ sequence):
     >>> print "%5.3f" % threshold
     4.009
 
-or the false-negative rate (probability of ¡°not finding¡± an instance
+or the false-negative rate (probability of â€œnot findingâ€ an instance
 generated from the motif):
 
 .. code:: verbatim
@@ -1060,7 +1060,7 @@ generated from the motif):
     -0.510
 
 or a threshold (approximately) satisfying some relation between the
-false-positive rate and the false-negative rate (fnr/fpr? *t*):
+false-positive rate and the false-negative rate (fnr/fprâ‰ƒ *t*):
 
 .. code:: verbatim
 
@@ -1069,7 +1069,7 @@ false-positive rate and the false-negative rate (fnr/fpr? *t*):
     6.241
 
 or a threshold satisfying (roughly) the equality between the
-false-positive rate and the ?\ *log* of the information content (as used
+false-positive rate and the âˆ’\ *log* of the information content (as used
 in patser software by Hertz and Stormo):
 
 .. code:: verbatim
@@ -1095,7 +1095,7 @@ with balanced threshold with rate of 1000.
     Position 13: score = 5.738
     Position -6: score = 4.601
 
-14.5??Each motif object has an associated Position-Specific Scoring Matrix
+14.5  Each motif object has an associated Position-Specific Scoring Matrix
 --------------------------------------------------------------------------
 
 To facilitate searching for potential TFBSs using PSSMs, both the
@@ -1274,7 +1274,7 @@ the PWM or PSSM repeatedly, you can save them as a variable, as in
 
     >>> pssm = motif.pssm
 
-14.6??Comparing motifs
+14.6  Comparing motifs
 ----------------------
 
 Once we have more than one motif, we might want to compare them.
@@ -1326,8 +1326,8 @@ pseudocounts and the background distribution as our motif ``m``:
     T:  -1.53   1.72   1.72  -5.67  -5.67  -5.67  -5.67   0.41  -0.97
     <BLANKLINE>
 
-We¡¯ll compare these motifs using the Pearson correlation. Since we want
-it to resemble a distance measure, we actually take 1?\ *r*, where *r*
+Weâ€™ll compare these motifs using the Pearson correlation. Since we want
+it to resemble a distance measure, we actually take 1âˆ’\ *r*, where *r*
 is the Pearson correlation coefficient (PCC):
 
 .. code:: verbatim
@@ -1347,9 +1347,9 @@ obtained with the following alignment:
     m_reb1: GTTACCCGG
 
 where ``b`` stands for background distribution. The PCC itself is
-roughly 1?0.239=0.761.
+roughly 1âˆ’0.239=0.761.
 
-14.7??*De novo* motif finding
+14.7  *De novo* motif finding
 -----------------------------
 
 Currently, Biopython has only limited support for *de novo* motif
@@ -1357,10 +1357,10 @@ finding. Namely, we support running and parsing of AlignAce and MEME.
 Since the number of motif finding tools is growing rapidly,
 contributions of new parsers are welcome.
 
-14.7.1??MEME
+14.7.1  MEME
 ~~~~~~~~~~~~
 
-Let¡¯s assume, you have run MEME on sequences of your choice with your
+Letâ€™s assume, you have run MEME on sequences of your choice with your
 favorite parameters and saved the output in the file ``meme.out``. You
 can retrieve the motifs reported by MEME by running the following piece
 of code:
@@ -1405,7 +1405,7 @@ functionality, by adding additional information about the instances.
     >>> motifsM[0].instances[0].pvalue
     8.71e-07
 
-14.7.2??AlignAce
+14.7.2  AlignAce
 ~~~~~~~~~~~~~~~~
 
 We can do very similar things with the AlignACE program. Assume, you
@@ -1452,7 +1452,7 @@ to your motifs by parsing the first part of the result:
 
     >>> motifs = motifs.parse(stdout,"alignace")
 
-14.8??Useful links
+14.8  Useful links
 ------------------
 
 -  `Sequence motif <http://en.wikipedia.org/wiki/Sequence_motif>`__ in
@@ -1465,7 +1465,7 @@ to your motifs by parsing the first part of the result:
 -  `Comparison of different motif finding
    programs <http://bio.cs.washington.edu/assessment/>`__
 
-14.9??Obsolete Bio.Motif module
+14.9  Obsolete Bio.Motif module
 -------------------------------
 
 The rest of this chapter above describes the ``Bio.motifs`` package
@@ -1478,7 +1478,7 @@ To allow for a smooth transition, the older ``Bio.Motif`` package will
 be maintained in parallel with its replacement ``Bio.motifs`` at least
 two more releases, and at least one year.
 
-14.9.1??Motif objects
+14.9.1  Motif objects
 ~~~~~~~~~~~~~~~~~~~~~
 
 Since we are interested in motif analysis, we need to take a look at
@@ -1489,7 +1489,7 @@ Motif library:
 
     >>> from Bio import Motif
 
-and we can start creating our first motif objects. Let¡¯s create a DNA
+and we can start creating our first motif objects. Letâ€™s create a DNA
 motif:
 
 .. code:: verbatim
@@ -1497,7 +1497,7 @@ motif:
     >>> from Bio.Alphabet import IUPAC
     >>> m = Motif.Motif(alphabet=IUPAC.unambiguous_dna)
 
-This is for now just an empty container, so let¡¯s add some sequences to
+This is for now just an empty container, so letâ€™s add some sequences to
 our newly created motif:
 
 .. code:: verbatim
@@ -1509,7 +1509,7 @@ our newly created motif:
     >>> m.add_instance(Seq("TATAA",m.alphabet))
 
 Now we have a full ``Motif`` instance, so we can try to get some basic
-information about it. Let¡¯s start with length and consensus sequence:
+information about it. Letâ€™s start with length and consensus sequence:
 
 .. code:: verbatim
 
@@ -1556,7 +1556,7 @@ calling the ``.pwm()`` method:
      {'A': 0.65, 'C': 0.05, 'T': 0.25, 'G': 0.05}, 
      {'A': 0.85, 'C': 0.05, 'T': 0.05, 'G': 0.05}]
 
-The probabilities in the motif¡¯s PWM are based on the counts in the
+The probabilities in the motifâ€™s PWM are based on the counts in the
 instances, but we can see, that even though there were no Gs and no Cs
 in the instances, we still have non-zero probabilities assigned to them.
 These come from pseudo-counts which are, roughly speaking, a commonly
@@ -1586,7 +1586,7 @@ pseudo-counts we should add to the PWM. By default it is set to 1.0,
 so that the total input of pseudo-counts is equal to that of one
 instance.
 
-Using the background distribution and pwm with pseudo-counts added, it¡¯s
+Using the background distribution and pwm with pseudo-counts added, itâ€™s
 easy to compute the log-odds ratios, telling us what are the log odds of
 a particular symbol to be coming from a motif against the background. We
 can use the ``.log_odds()`` method:
@@ -1618,20 +1618,20 @@ can use the ``.log_odds()`` method:
 
 Here we can see positive values for symbols more frequent in the motif
 than in the background and negative for symbols more frequent in the
-background. 0.0 means that it¡¯s equally likely to see a symbol in
-background and in the motif (e.g. ¡®T¡¯ in the second-last position).
+background. 0.0 means that itâ€™s equally likely to see a symbol in
+background and in the motif (e.g. â€˜Tâ€™ in the second-last position).
 
-14.9.1.1??Reading and writing
+14.9.1.1  Reading and writing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Creating motifs from instances by hand is a bit boring, so it¡¯s useful
+Creating motifs from instances by hand is a bit boring, so itâ€™s useful
 to have some I/O functions for reading and writing motifs. There are no
-really well established standards for storing motifs, but there¡¯s a
+really well established standards for storing motifs, but thereâ€™s a
 couple of formats which are more used than others. The most important
 distinction is whether the motif representation is based on instances or
 on some version of PWM matrix. On of the most popular motif databases
 `JASPAR <http://jaspar.genereg.net>`__ stores motifs in both formats, so
-let¡¯s look at how we can import JASPAR motifs from instances:
+letâ€™s look at how we can import JASPAR motifs from instances:
 
 .. code:: verbatim
 
@@ -1690,7 +1690,7 @@ the original one. This does not make any difference if we are using the
 PWM as the representation of the motif, but one should be careful with
 exporting instances from count-based motifs.
 
-Speaking of exporting, let¡¯s look at export functions. We can export to
+Speaking of exporting, letâ€™s look at export functions. We can export to
 fasta:
 
 .. code:: verbatim
@@ -1732,7 +1732,7 @@ Finally, if we have internet access, we can create a
 
 We should get our logo saved as a png in the specified file.
 
-14.9.2??Searching for instances
+14.9.2  Searching for instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The most frequent use for a motif is to find its instances in some
@@ -1766,7 +1766,7 @@ complementary strand):
     12 TAATA
     20 TTATA
 
-It¡¯s just as easy to look for positions, giving rise to high log-odds
+Itâ€™s just as easy to look for positions, giving rise to high log-odds
 scores against our motif:
 
 .. code:: verbatim
@@ -1800,14 +1800,14 @@ manageable:
 The sd object can be used to determine a number of different thresholds.
 
 We can specify the requested false-positive rate (probability of
-¡°finding¡± a motif instance in background generated sequence):
+â€œfindingâ€ a motif instance in background generated sequence):
 
 .. code:: verbatim
 
     >>> sd.threshold_fpr(0.01)
     4.3535838726139886
 
-or the false-negative rate (probability of ¡°not finding¡± an instance
+or the false-negative rate (probability of â€œnot findingâ€ an instance
 generated from the motif):
 
 .. code:: verbatim
@@ -1816,7 +1816,7 @@ generated from the motif):
     0.26651713652234044
 
 or a threshold (approximately) satisfying some relation between fpr and
-fnr *fnr*/*fpr*\ ? *t*:
+fnr *fnr*/*fpr*\ â‰ƒ *t*:
 
 .. code:: verbatim
 
@@ -1824,7 +1824,7 @@ fnr *fnr*/*fpr*\ ? *t*:
     8.4406506087056368
 
 or a threshold satisfying (roughly) the equality between the
-false-positive rate and the ?\ *log* of the information content (as used
+false-positive rate and the âˆ’\ *log* of the information content (as used
 in patser software by Hertz and Stormo).
 
 For example, in case of our motif, you can get the threshold giving you
@@ -1841,7 +1841,7 @@ with balanced threshold with rate of 1000.
     -20 8.44065060871
     21 8.44065060871
 
-14.9.3??Comparing motifs
+14.9.3  Comparing motifs
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once we have more than one motif, we might want to compare them. For
@@ -1877,9 +1877,9 @@ is similar to our test motif ``m``:
     >>> ubx.consensus()
     Seq('TAAT', IUPACUnambiguousDNA())
 
-The first function we¡¯ll use to compare these motifs is based on Pearson
+The first function weâ€™ll use to compare these motifs is based on Pearson
 correlation. Since we want it to resemble a distance measure, we
-actually take 1?\ *r*, where *r* is the Pearson correlation coefficient
+actually take 1âˆ’\ *r*, where *r* is the Pearson correlation coefficient
 (PCC):
 
 .. code:: verbatim
@@ -1896,7 +1896,7 @@ obtained with the following alignment:
     TATAAb
 
 where ``b`` stands for background distribution. The PCC itself is
-roughly 1?0.42=0.58. If we try the reverse complement of the Ubx motif:
+roughly 1âˆ’0.42=0.58. If we try the reverse complement of the Ubx motif:
 
 .. code:: verbatim
 
@@ -1929,7 +1929,7 @@ independently generating the same instance by both motifs.
     >>> m.dist_product(ubx.reverse_complement())
     (0.16224587301064275, 1)
 
-14.9.4??*De novo* motif finding
+14.9.4  *De novo* motif finding
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Currently, Biopython has only limited support for *de novo* motif
@@ -1937,10 +1937,10 @@ finding. Namely, we support running and parsing of AlignAce and MEME.
 Since the number of motif finding tools is growing rapidly,
 contributions of new parsers are welcome.
 
-14.9.4.1??MEME
+14.9.4.1  MEME
 ^^^^^^^^^^^^^^
 
-Let¡¯s assume, you have run MEME on sequences of your choice with your
+Letâ€™s assume, you have run MEME on sequences of your choice with your
 favorite parameters and saved the output in the file ``meme.out``. You
 can retrieve the motifs reported by MEME by running the following piece
 of code:
@@ -1979,7 +1979,7 @@ functionality, by adding additional information about the instances.
     >>> motifsM[0].instances[0].strand
     '+'
 
-14.9.4.2??AlignAce
+14.9.4.2  AlignAce
 ^^^^^^^^^^^^^^^^^^
 
 We can do very similar things with AlignACE program. Assume, you have
@@ -2023,3 +2023,5 @@ your motifs by parsing the first part of the result:
 .. code:: verbatim
 
     motifs=list(Motif.parse(stdout,"AlignAce"))
+
+

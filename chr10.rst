@@ -1,21 +1,20 @@
-
-Chapter?10??Swiss-Prot and ExPASy
+ÔªøChapter 10  Swiss-Prot and ExPASy
 =================================
 
-10.1??Parsing Swiss-Prot files
+10.1  Parsing Swiss-Prot files
 ------------------------------
 
 Swiss-Prot
 (```http://www.expasy.org/sprot`` <http://www.expasy.org/sprot>`__) is a
 hand-curated database of protein sequences. Biopython can parse the
-°∞plain text°± Swiss-Prot file format, which is still used for the UniProt
+‚Äúplain text‚Äù Swiss-Prot file format, which is still used for the UniProt
 Knowledgebase which combined Swiss-Prot, TrEMBL and PIR-PSD. We do not
 (yet) support the UniProtKB XML file format.
 
-10.1.1??Parsing Swiss-Prot records
+10.1.1  Parsing Swiss-Prot records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In Section?\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__, we described
+In Section \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__, we described
 how to extract the sequence of a Swiss-Prot record as a ``SeqRecord``
 object. Alternatively, you can store the Swiss-Prot record in a
 ``Bio.SwissProt.Record`` object, which in fact stores the complete
@@ -51,11 +50,11 @@ Swiss-Prot record is stored:
        >>> from Bio import ExPASy
        >>> handle = ExPASy.get_sprot_raw(myaccessionnumber)
 
-The key point is that for the parser, it doesn°Øt matter how the handle
+The key point is that for the parser, it doesn‚Äôt matter how the handle
 was created, as long as it points to data in the Swiss-Prot format.
 
 We can use ``Bio.SeqIO`` as described in
-Section?\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ to get file format
+Section \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ to get file format
 agnostic ``SeqRecord`` objects. Alternatively, we can use
 ``Bio.SwissProt`` get ``Bio.SwissProt.Record`` objects, which are a much
 closer match to the underlying file format.
@@ -92,7 +91,7 @@ To parse a file that contains more than one Swiss-Prot record, we use
 the ``parse`` function instead. This function allows us to iterate over
 the records in the file.
 
-For example, let°Øs parse the full Swiss-Prot database and collect all
+For example, let‚Äôs parse the full Swiss-Prot database and collect all
 the descriptions. You can download this from the `ExPAYs FTP
 site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__
 as a single gzipped-file ``uniprot_sprot.dat.gz`` (about 300MB). This is
@@ -109,7 +108,7 @@ library ``gzip`` to open and uncompress a ``.gz`` file, like this:
 
 However, uncompressing a large file takes time, and each time you open
 the file for reading in this way, it has to be decompressed on the fly.
-So, if you can spare the disk space you°Øll save time in the long run if
+So, if you can spare the disk space you‚Äôll save time in the long run if
 you first decompress the file to disk, to get the ``uniprot_sprot.dat``
 file inside. Then you can open the file for reading as usual:
 
@@ -152,7 +151,7 @@ Because this is such a large input file, either way takes about eleven
 minutes on my new desktop computer (using the uncompressed
 ``uniprot_sprot.dat`` file as input).
 
-It is equally easy to extract any kind of information you°Ød like from
+It is equally easy to extract any kind of information you‚Äôd like from
 Swiss-Prot records. To see the members of a Swiss-Prot record, use
 
 .. code:: verbatim
@@ -165,7 +164,7 @@ Swiss-Prot records. To see the members of a Swiss-Prot record, use
     'references', 'seqinfo', 'sequence', 'sequence_length',
     'sequence_update', 'taxonomy_id']
 
-10.1.2??Parsing the Swiss-Prot keyword and category list
+10.1.2  Parsing the Swiss-Prot keyword and category list
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Swiss-Prot also distributes a file ``keywlist.txt``, which lists the
@@ -221,7 +220,7 @@ This prints
     protein.
     ...
 
-10.2??Parsing Prosite records
+10.2  Parsing Prosite records
 -----------------------------
 
 Prosite is a database containing protein domains, protein families,
@@ -246,7 +245,7 @@ a file, we again make use of an iterator:
 
 We can now take the records one at a time and print out some
 information. For example, using the file containing the complete Prosite
-database, we°Ød find
+database, we‚Äôd find
 
 .. code:: verbatim
 
@@ -275,7 +274,7 @@ database, we°Ød find
     >>> record.pdoc
     'PDOC00005'
 
-and so on. If you°Øre interested in how many Prosite records there are,
+and so on. If you‚Äôre interested in how many Prosite records there are,
 you could use
 
 .. code:: verbatim
@@ -301,7 +300,7 @@ function:
 This function raises a ValueError if no Prosite record is found, and
 also if more than one Prosite record is found.
 
-10.3??Parsing Prosite documentation records
+10.3  Parsing Prosite documentation records
 -------------------------------------------
 
 In the Prosite example above, the ``record.pdoc`` accession numbers
@@ -324,10 +323,10 @@ numbers of Prosite documentation record, you can use
 Again a ``read()`` function is provided to read exactly one Prosite
 documentation record from the handle.
 
-10.4??Parsing Enzyme records
+10.4  Parsing Enzyme records
 ----------------------------
 
-ExPASy°Øs Enzyme database is a repository of information on enzyme
+ExPASy‚Äôs Enzyme database is a repository of information on enzyme
 nomenclature. A typical Enzyme record looks as follows:
 
 .. code:: verbatim
@@ -413,7 +412,7 @@ make a list of all EC numbers for which an Enzyme record is available:
 
     >>> ecnumbers = [record["ID"] for record in records]
 
-10.5??Accessing the ExPASy server
+10.5  Accessing the ExPASy server
 ---------------------------------
 
 Swiss-Prot, Prosite, and Prosite documentation records can be downloaded
@@ -437,17 +436,17 @@ queries are available from ExPASy:
 To access this web server from a Python script, we use the
 ``Bio.ExPASy`` module.
 
-10.5.1??Retrieving a Swiss-Prot record
+10.5.1  Retrieving a Swiss-Prot record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let°Øs say we are looking at chalcone synthases for Orchids (see
-section?\ `2.3 <#sec:orchids>`__ for some justification for looking for
+Let‚Äôs say we are looking at chalcone synthases for Orchids (see
+section \ `2.3 <#sec:orchids>`__ for some justification for looking for
 interesting things about orchids). Chalcone synthase is involved in
 flavanoid biosynthesis in plants, and flavanoids make lots of cool
 things like pigment colors and UV protectants.
 
 If you do a search on Swiss-Prot, you can find three orchid proteins for
-Chalcone Synthase, id numbers O23729, O23730, O23731. Now, let°Øs write a
+Chalcone Synthase, id numbers O23729, O23730, O23731. Now, let‚Äôs write a
 script which grabs these, and parses out some interesting information.
 
 First, we grab the records, using the ``get_sprot_raw()`` function of
@@ -485,12 +484,12 @@ numbers:
     ...         print "WARNING: Accession %s not found" % accession
     ...     records.append(record)
 
-10.5.2??Searching Swiss-Prot
+10.5.2  Searching Swiss-Prot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now, you may remark that I knew the records°Ø accession numbers
+Now, you may remark that I knew the records‚Äô accession numbers
 beforehand. Indeed, ``get_sprot_raw()`` needs either the entry name or
-an accession number. When you don°Øt have them handy, you can use one of
+an accession number. When you don‚Äôt have them handy, you can use one of
 the ``sprot_search_de()`` or ``sprot_search_ful()`` functions.
 
 ``sprot_search_de()`` searches in the ID, DE, GN, OS and OG lines;
@@ -499,7 +498,7 @@ detailed on
 ```http://www.expasy.org/cgi-bin/sprot-search-de`` <http://www.expasy.org/cgi-bin/sprot-search-de>`__
 and
 ```http://www.expasy.org/cgi-bin/sprot-search-ful`` <http://www.expasy.org/cgi-bin/sprot-search-ful>`__
-respectively. Note that they don°Øt search in TrEMBL by default (argument
+respectively. Note that they don‚Äôt search in TrEMBL by default (argument
 ``trembl``). Note also that they return html pages; however, accession
 numbers are quite easily extractable:
 
@@ -517,7 +516,7 @@ numbers are quite easily extractable:
     ... else:
     ...     ids = re.findall(r'href="/cgi-bin/niceprot\.pl\?(\w+)"', html_results)
 
-10.5.3??Retrieving Prosite and Prosite documentation records
+10.5.3  Retrieving Prosite and Prosite documentation records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Prosite and Prosite documentation records can be retrieved either in
@@ -589,7 +588,7 @@ and similarly for a Prosite documentation record:
 For these functions, an invalid accession number returns an error
 message in HTML format.
 
-10.6??Scanning the Prosite database
+10.6  Scanning the Prosite database
 -----------------------------------
 
 `ScanProsite <http://www.expasy.org/tools/scanprosite/>`__ allows you to
@@ -600,7 +599,7 @@ documentation <http://www.expasy.org/tools/scanprosite/scanprosite-doc.html>`__
 as well as the `documentation for programmatic access of
 ScanProsite <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__.
 
-You can use Biopython°Øs ``Bio.ExPASy.ScanProsite`` module to scan the
+You can use Biopython‚Äôs ``Bio.ExPASy.ScanProsite`` module to scan the
 Prosite database from Python. This module both helps you to access
 ScanProsite programmatically, and to parse the results returned by
 ScanProsite. To scan for Prosite patterns in the following protein
@@ -621,7 +620,7 @@ you can use the following code:
     >>> handle = ScanProsite.scan(seq=sequence)
 
 By executing ``handle.read()``, you can obtain the search results in raw
-XML format. Instead, let°Øs use ``Bio.ExPASy.ScanProsite.read`` to parse
+XML format. Instead, let‚Äôs use ``Bio.ExPASy.ScanProsite.read`` to parse
 the raw XML into a Python object:
 
 .. code:: verbatim
