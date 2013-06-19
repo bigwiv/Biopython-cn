@@ -61,7 +61,7 @@
     #=GC seq_cons                 AEssss...AptAhDSLpspAT-hIu.sWshVsslVsAsluIKLFKKFsSKA
     //
 
-这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ ```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__ ）。但这不影响我的例子。假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下。
+这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ ```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__ ），但这并不影响我们的例子。假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下。
 
 .. code:: verbatim
 
@@ -100,13 +100,9 @@
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73
 
-You could also use the alignment object’s ``format`` method to show it
-in a particular file format – see
-Section \ `6.2.2 <#sec:alignment-format-method>`__ for details.
+你也可以使用上面alignment对象的 ``format`` 方法来以指定的格式显示它。具体信息可以参见 `6.2.2 <#sec:alignment-format-method>`__ 。
 
-Did you notice in the raw file above that several of the sequences
-include database cross-references to the PDB and the associated known
-secondary structure? Try this:
+你是否已经注意到以上原始数据文件中包含有引用蛋白数据库（PDB）以及相关二级结构的信息？你可以尝试一下代码：
 
 .. code:: verbatim
 
@@ -118,17 +114,16 @@ secondary structure? Try this:
     Q9T0Q9_BPFD/1-49 ['PDB; 1nh4 A; 1-49;']
     COATB_BPIF1/22-73 ['PDB; 1ifk ; 1-50;']
 
-To have a look at all the sequence annotation, try this:
+如果你希望显示所有的序列注释信息，请使用以下例子：
 
 .. code:: verbatim
 
     >>> for record in alignment:
     ...     print record
 
-Sanger provide a nice web interface at
+Sanger网站
 ```http://pfam.sanger.ac.uk/family?acc=PF05371`` <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
-which will actually let you download this alignment in several other
-formats. This is what the file looks like in the FASTA file format:
+可以让你下载各种不同的序列排列的格式。以下例子为FASTA格式：
 
 .. code:: verbatim
 
@@ -147,10 +142,7 @@ formats. This is what the file looks like in the FASTA file format:
     >COATB_BPIF1/22-73
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA
 
-Note the website should have an option about showing gaps as periods
-(dots) or dashes, we’ve shown dashes above. Assuming you download and
-save this as file “PF05371\_seed.faa” then you can load it with almost
-exactly the same code:
+注意Sanger网站有一个选项可以将序列排列中的间隔（gap）用小圆点或者是小横线表示。在以上例子中，序列间隔由小横线表示。假设你已经下载该文件，并保存为 “PF05371\_seed.faa”。你可以使用以下代码来读入该序列排列。
 
 .. code:: verbatim
 
@@ -158,23 +150,11 @@ exactly the same code:
     alignment = AlignIO.read("PF05371_seed.faa", "fasta")
     print alignment
 
-All that has changed in this code is the filename and the format string.
-You’ll get the same output as before, the sequences and record
-identifiers are the same. However, as you should expect, if you check
-each ``SeqRecord`` there is no annotation nor database cross-references
-because these are not included in the FASTA file format.
+你可能已经发现，以上代码中唯一的变化只是指定格式的参数。所返回的alignment对象将会包含同样的序列和序列名字。但是仔细的读者会发现，每一个alignment的SeqRecord中并不包含数据的引用注释。这是因为FASTA格式本身并没有包含这一类信息。
 
-Note that rather than using the Sanger website, you could have used
-``Bio.AlignIO`` to convert the original Stockholm format file into a
-FASTA file yourself (see below).
+此外，除了使用Sanger网站，你也可以利用 ``Bio.AlignIO`` 来将原始的Stockholm格式转化成FASTA文件格式（见以下代码）。
 
-With any supported file format, you can load an alignment in exactly the
-same way just by changing the format string. For example, use “phylip”
-for PHYLIP files, “nexus” for NEXUS files or “emboss” for the alignments
-output by the EMBOSS tools. There is a full listing on the wiki page
-(```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__)
-and in the built in documentation (also
-`online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__):
+对于任何一种Biopython支持的格式，你都可以用一样的方式读取它（通过指定文件的格式）。例如，你可以使用“phylip”来表示PHYLIP格式文件，用"nexus"来指定NEXUS格式文件或者用“emboss”来指定EMBOSS工具箱的输出文件。读者可以在以下链接中找到所有支持的格式。```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__ 和 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__:
 
 .. code:: verbatim
 
@@ -182,15 +162,12 @@ and in the built in documentation (also
     >>> help(AlignIO)
     ...
 
-6.1.2  Multiple Alignments
+6.1.2  多个序列排列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The previous section focused on reading files containing a single
-alignment. In general however, files can contain more than one
-alignment, and to read these files we must use the
-``Bio.AlignIO.parse()`` function.
+在前一章中，我们旨在读取的文件仅包含有一个序列排列。然而，在很多情况下，文件可能包含有多个序列排列。这时，你可以使用 ``Bio.AlignIO.parse()`` 来读取它们。
 
-Suppose you have a small alignment in PHYLIP format:
+假设我们有一个PHYLIP格式的很小的序列排列：
 
 .. code:: verbatim
 
@@ -201,10 +178,7 @@ Suppose you have a small alignment in PHYLIP format:
     Delta     CCACCA
     Epsilon   CCAAAC
 
-If you wanted to bootstrap a phylogenetic tree using the PHYLIP tools,
-one of the steps would be to create a set of many resampled alignments
-using the tool ``bootseq``. This would give output something like this,
-which has been abbreviated for conciseness:
+如果你想用PHYLIP工具包来bootstrap一个系统发生树，其中的一个步骤是用 ``bootseq`` 程序来产生许多序列排列。这将给出类似于以下格式的序列排列：
 
 .. code:: verbatim
 
@@ -234,7 +208,7 @@ which has been abbreviated for conciseness:
     Delta     CCCCAA
     Epsilon   CAAACC
 
-If you wanted to read this in using ``Bio.AlignIO`` you could use:
+如果你想用 ``Bio.AlignIO`` 来读取这个文件，你可以使用：
 
 .. code:: verbatim
 
@@ -244,7 +218,7 @@ If you wanted to read this in using ``Bio.AlignIO`` you could use:
         print alignment
         print
 
-This would give the following output, again abbreviated for display:
+这将给出以下的输出（这时只显示缩略的一部分）：
 
 .. code:: verbatim
 
@@ -278,10 +252,7 @@ This would give the following output, again abbreviated for display:
     CCCCAA Delta
     CAAACC Epsilon
 
-As with the function ``Bio.SeqIO.parse()``, using
-``Bio.AlignIO.parse()`` returns an iterator. If you want to keep all the
-alignments in memory at once, which will allow you to access them in any
-order, then turn the iterator into a list:
+与 ``Bio.SeqIO.parse`` 一样， ``Bio.SeqIO.parse()`` 将返回一个迭代器（iterator）。如果你希望把所有的序列排列都读取到内存中，以下代码将把它们储存在一个列表对象里。
 
 .. code:: verbatim
 
