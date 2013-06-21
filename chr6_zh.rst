@@ -5,7 +5,7 @@
 
 这里我们介绍一种新的对象 -- ``MultipleSeqAlignment`` 来表示这样一类数据，我们还将介绍 ``Bio.AlignIO`` 模块来读写不同格式的多序列比对数据（ ``Bio.AlignIO`` 在设计上与之前介绍的 ``Bio.SeqIO`` 模块是类似的）。Biopython中， ``Bio.SeqIO`` 和 ``Bio.AlignIO`` 都能读写各种格式的多序列排列数据。在实际处理中，使用哪一个模块取决于用户需要对数据进行何种操作。
 
-本章的第一部分是关于各种常用多序列排列程序（ClustalW and MUSCLE）的Biopython命令行封装。
+本章的第一部分是关于各种常用多序列排列程序（ClustalW和MUSCLE）的Biopython命令行封装。
 
 6.1 读取多序列排列数据
 -------------------------------------------
