@@ -261,14 +261,10 @@ Sanger网站
     last_align = alignments[-1]
     first_align = alignments[0]
 
-6.1.3  Ambiguous Alignments
+6.1.3  含糊的序列排列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Many alignment file formats can explicitly store more than one
-alignment, and the division between each alignment is clear. However,
-when a general sequence file format has been used there is no such block
-structure. The most common such situation is when alignments have been
-saved in the FASTA file format. For example consider the following:
+许多序列排列的文件格式可以非常明确地储存多个序列排列。然而，例如FASTA一类的普通序列文件格式并没有很直接的分隔符来分开多个序列排列。读者可以见以下例子：
 
 .. code:: verbatim
 
@@ -285,12 +281,9 @@ saved in the FASTA file format. For example consider the following:
     >Gamma
     ACTACGGCTAGCACAGAAG
 
-This could be a single alignment containing six sequences (with repeated
-identifiers). Or, judging from the identifiers, this is probably two
-different alignments each with three sequences, which happen to all have
-the same length.
+以上FASTA格式文件可以认为是一个包含有6条序列的序列排列（有重复序列名）。或者从文件名来看，这很可能是两个序列排列，每一个包含有三个序列，只是这两个序列排列恰好具有相同的长度。
 
-What about this next example?
+以下是另一个例子：
 
 .. code:: verbatim
 
@@ -307,11 +300,9 @@ What about this next example?
     >Delta
     ACTACGGCTAGCACAGAAG
 
-Again, this could be a single alignment with six sequences. However this
-time based on the identifiers we might guess this is three pairwise
-alignments which by chance have all got the same lengths.
+同样，这也可能是一个包含有六个序列的序列排列。然而，根据序列名判断，这很可能是三个两两间的序列比较，而且恰好有同样的长度。
 
-This final example is similar:
+最后一个例子也类似：
 
 .. code:: verbatim
 
@@ -328,24 +319,11 @@ This final example is similar:
     >ZZZ
     GGACTACGACAATAGCTCAGG
 
-In this third example, because of the differing lengths, this cannot be
-treated as a single alignment containing all six records. However, it
-could be three pairwise alignments.
+在这一个例子中，由于序列有不同的长度，这不能被当作是一个包含六个序列的单独的序列排列。很显然，这可以被看成是三个两两间的序列排列。
 
-Clearly trying to store more than one alignment in a FASTA file is not
-ideal. However, if you are forced to deal with these as input files
-``Bio.AlignIO`` can cope with the most common situation where all the
-alignments have the same number of records. One example of this is a
-collection of pairwise alignments, which can be produced by the EMBOSS
-tools ``needle`` and ``water`` – although in this situation,
-``Bio.AlignIO`` should be able to understand their native output using
-“emboss” as the format string.
+很明显，将多个序列排列以FASTA格式储存并不方便。然而，在某些情况下，如果你一定要这么做， ``Bio.AlignIO`` 依然能够处理上述情形（但是所有的序列排列必须都含有相同的序列）。一个很常见的例子是，我们经常会使用EMBOSS工具箱中的 ``needle`` 和 ``water`` 来产生许多两两间的序列排列（尽管在这种情况下，你可以指定数据格式为“emboss”给 ``Bio.AlignIO`` ）。
 
-To interpret these FASTA examples as several separate alignments, we can
-use ``Bio.AlignIO.parse()`` with the optional ``seq_count`` argument
-which specifies how many sequences are expected in each alignment (in
-these examples, 3, 2 and 2 respectively). For example, using the third
-example as the input data:
+为了处理这样的FASTA格式的数据，我们可以指定 ``Bio.AlignIO.parse()`` 的第三个可选参数 ``seq_count`` ，这一参数将告诉Biopython你所期望的每个序列排列中序列的个数。例如：
 
 .. code:: verbatim
 
@@ -355,7 +333,7 @@ example as the input data:
             print "%s - %s" % (record.seq, record.id)
         print
 
-giving:
+这将给出：
 
 .. code:: verbatim
 
@@ -371,42 +349,20 @@ giving:
     --ACTACGAC--TAGCTCAGG - Alpha
     GGACTACGACAATAGCTCAGG - ZZZ
 
-Using ``Bio.AlignIO.read()`` or ``Bio.AlignIO.parse()`` without the
-``seq_count`` argument would give a single alignment containing all six
-records for the first two examples. For the third example, an exception
-would be raised because the lengths differ preventing them being turned
-into a single alignment.
+如果你使用 ``Bio.AlignIO.read()`` 或者 ``Bio.AlignIO.parse()`` 而不指定 ``seq_count`` ，这将返回一个包含有六条序列的序列排列。对于上面的第三个例子，由于序列长度不同，Biopython将会报告一个错误。
 
-If the file format itself has a block structure allowing ``Bio.AlignIO``
-to determine the number of sequences in each alignment directly, then
-the ``seq_count`` argument is not needed. If it is supplied, and doesn’t
-agree with the file contents, an error is raised.
+如果数据格式本身包含有分割符， ``Bio.AlignIO`` 可以很聪明地自动确定文件中每一个序列排列而无需指定 ``seq_count`` 选项。如果你仍然指定 ``seq_count`` 但是却与数据本身的分隔符相冲突，Biopython也将报告一个错误。
 
-Note that this optional ``seq_count`` argument assumes each alignment in
-the file has the same number of sequences. Hypothetically you may come
-across stranger situations, for example a FASTA file containing several
-alignments each with a different number of sequences – although I would
-love to hear of a real world example of this. Assuming you cannot get
-the data in a nicer file format, there is no straight forward way to
-deal with this using ``Bio.AlignIO``. In this case, you could consider
-reading in the sequences themselves using ``Bio.SeqIO`` and batching
-them together to create the alignments as appropriate.
+注意指定这一可选的 ``seq_count`` 参数将假设文件中所有的序列排列都包含相同数目的序列。假如你真的遇到每一个序列排列都有不同数目的序列， ``Bio.AlignIO`` 将无法读取。这时，我们建议你使用 ``Bio.SeqIO`` 来读取数据，然后将序列转化为序列排列。
 
-6.2  Writing Alignments
+6.2  序列排列数据的写出
 -----------------------
 
-We’ve talked about using ``Bio.AlignIO.read()`` and
-``Bio.AlignIO.parse()`` for alignment input (reading files), and now
-we’ll look at ``Bio.AlignIO.write()`` which is for alignment output
-(writing files). This is a function taking three arguments: some
-``MultipleSeqAlignment`` objects (or for backwards compatibility the
-obsolete ``Alignment`` objects), a handle or filename to write to, and a
-sequence format.
+我们已经讨论了 ``Bio.AlignIO.read()`` 和 ``Bio.AlignIO.parse()`` 来读取各种格式的序列排列，现在让我们来使用 ``Bio.AlignIO.write()`` 写出序列排列文件。
 
-Here is an example, where we start by creating a few
-``MultipleSeqAlignment`` objects the hard way (by hand, rather than by
-loading them from a file). Note we create some ``SeqRecord`` objects to
-construct the alignment from.
+这一函数接受三个参数：一个 ``MultipleSeqAlignment`` 对象（或者是一个 ``Alignment`` 对象），一个可写的文件句柄（handle）或者期望写出的文件名，以及写出文件的格式。
+
+这里有一个手动构造一个 ``MultipleSeqAlignment`` 对象的例子（注意 ``MultipleSeqAlignment`` 是由若干个 ``SeqRecord`` 组成的）：
 
 .. code:: verbatim
 
@@ -435,16 +391,14 @@ construct the alignment from.
 
     my_alignments = [align1, align2, align3]
 
-Now we have a list of ``Alignment`` objects, we’ll write them to a
-PHYLIP format file:
+现在我们有一个包含三个 ``MultipleSeqAlignment`` 对象的列表（ ``my_alignments`` ），现在我们将它写出为PHYLIP格式：
 
 .. code:: verbatim
 
     from Bio import AlignIO
     AlignIO.write(my_alignments, "my_example.phy", "phylip")
 
-And if you open this file in your favourite text editor it should look
-like this:
+如果你用你喜欢的文本编辑器在你当前的工作目录下找到 ``my_example.phy`` 文件，你会看到以下内容：
 
 .. code:: verbatim
 
@@ -461,22 +415,13 @@ like this:
     Theta      ACTAGTACAG CT-
     Iota       -CTACTACAG GTG
 
-Its more common to want to load an existing alignment, and save that,
-perhaps after some simple manipulation like removing certain rows or
-columns.
+在更多情况下，你希望读取一个已经含有序列排列的文件，经过某些操作（例如去掉一些行和列）以后将它重新储存起来。
 
-Suppose you wanted to know how many alignments the
-``Bio.AlignIO.write()`` function wrote to the handle? If your alignments
-were in a list like the example above, you could just use
-``len(my_alignments)``, however you can’t do that when your records come
-from a generator/iterator. Therefore the ``Bio.AlignIO.write()``
-function returns the number of alignments written to the file.
+假如你希望知道有多少序列排列被 ``Bio.AlignIO.write()`` 函数写入句柄中。如果你的序列排列都被放在一个列表中（如同以上的例子），你可以很容易地使用 ``len(my_alignments)`` 来获得这一信息。然而，如果你的序列排列在一个迭代器对象中，你无法轻松地完成这件事情。为此， ``Bio.AlignIO.write()`` 将会返回它所写出的序列排列个数。
 
-*Note* - If you tell the ``Bio.AlignIO.write()`` function to write to a
-file that already exists, the old file will be overwritten without any
-warning.
+*注意* - 如果你所指定给 ``Bio.AlignIO.write()`` 的文件已经存在在当前目录下，这一文件将被直接覆盖掉而不会有任何警告。
 
-6.2.1  Converting between sequence alignment file formats
+6.2.1  序列排列的格式间转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Converting between sequence alignment file formats with ``Bio.AlignIO``
