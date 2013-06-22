@@ -415,7 +415,7 @@ Sanger网站
     Theta      ACTAGTACAG CT-
     Iota       -CTACTACAG GTG
 
-在更多情况下，你希望读取一个已经含有序列排列的文件，经过某些操作（例如去掉一些行和列）以后将它重新储存起来。
+在更多情况下，你希望读取一个已经含有序列排列的文件，经过某些操作（例如去掉一些行和列）然后将它重新储存起来。
 
 假如你希望知道有多少序列排列被 ``Bio.AlignIO.write()`` 函数写入句柄中。如果你的序列排列都被放在一个列表中（如同以上的例子），你可以很容易地使用 ``len(my_alignments)`` 来获得这一信息。然而，如果你的序列排列在一个迭代器对象中，你无法轻松地完成这件事情。为此， ``Bio.AlignIO.write()`` 将会返回它所写出的序列排列个数。
 
@@ -424,15 +424,9 @@ Sanger网站
 6.2.1  序列排列的格式间转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Converting between sequence alignment file formats with ``Bio.AlignIO``
-works in the same way as converting between sequence file formats with
-``Bio.SeqIO`` (Section `5.5.2 <#sec:SeqIO-conversion>`__). We load
-generally the alignment(s) using ``Bio.AlignIO.parse()`` and then save
-them using the ``Bio.AlignIO.write()`` – or just use the
-``Bio.AlignIO.convert()`` helper function.
+``Bio.AlignIO`` 模块中的序列排列格式转化功能与 ``Bio.SeqIO`` （见 `5.5.2 <#sec:SeqIO-conversion>`__ ）模块的格式转化是一样的。在通常情况下，我们建议使用 ``Bio.AlignIO.parse()`` 来读取序列排列数据，然后使用 ``Bio.AlignIO.write()`` 函数来写出。或者你也可以直接使用 ``Bio.AlignIO.convert()`` 函数来实现格式的转换。
 
-For this example, we’ll load the PFAM/Stockholm format file used earlier
-and save it as a Clustal W format file:
+在本例中，我们将读取PFAM/Stockholm格式的序列排列，然后将其保存为Clustal格式。
 
 .. code:: verbatim
 
@@ -440,7 +434,7 @@ and save it as a Clustal W format file:
     count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
     print "Converted %i alignments" % count
 
-Or, using ``Bio.AlignIO.parse()`` and ``Bio.AlignIO.write()``:
+或者，使用 ``Bio.AlignIO.parse()`` 和 ``Bio.AlignIO.write()`` ：
 
 .. code:: verbatim
 
@@ -449,13 +443,9 @@ Or, using ``Bio.AlignIO.parse()`` and ``Bio.AlignIO.write()``:
     count = AlignIO.write(alignments, "PF05371_seed.aln", "clustal")
     print "Converted %i alignments" % count
 
-The ``Bio.AlignIO.write()`` function expects to be given multiple
-alignment objects. In the example above we gave it the alignment
-iterator returned by ``Bio.AlignIO.parse()``.
+``Bio.AlignIO.write()`` 函数默认处理的情形是一个包括有多个序列排列的对象。在以上例子中，我们给予 ``Bio.AlignIO.write()`` 的参数是一个由 ``Bio.AlignIO.parse()`` 函数返回的一个迭代器。
 
-In this case, we know there is only one alignment in the file so we
-could have used ``Bio.AlignIO.read()`` instead, but notice we have to
-pass this alignment to ``Bio.AlignIO.write()`` as a single element list:
+在以下例子中，我们知道序列排列文件中仅包含有一个序列排列，因此我们使用 ``Bio.AlignIO.read()`` 函数来读取数据，然后使用 ``Bio.AlignIO.write()`` 来将保存数据保存为另一种格式。
 
 .. code:: verbatim
 
@@ -463,8 +453,7 @@ pass this alignment to ``Bio.AlignIO.write()`` as a single element list:
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
     AlignIO.write([alignment], "PF05371_seed.aln", "clustal")
 
-Either way, you should end up with the same new Clustal W format file
-“PF05371\_seed.aln” with the following content:
+使用以上两个例子，你都可以将PFAM/Stockholm格式的序列排列数据转化为Clustal格式。
 
 .. code:: verbatim
 
@@ -487,15 +476,14 @@ Either way, you should end up with the same new Clustal W format file
     Q9T0Q9_BPFD/1-49                    KA
     COATB_BPIF1/22-73                   RA
 
-Alternatively, you could make a PHYLIP format file which we’ll name
-“PF05371\_seed.phy”:
+另外，你也可以使用以下代码将它保存为PHYLIP格式。
 
 .. code:: verbatim
 
     from Bio import AlignIO
     AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip")
 
-This time the output looks like this:
+你可以获得以下PHYLIP格式的文件输出：
 
 .. code:: verbatim
 
@@ -516,13 +504,7 @@ This time the output looks like this:
                KA
                RA
 
-One of the big handicaps of the PHYLIP alignment file format is that the
-sequence identifiers are strictly truncated at ten characters. In this
-example, as you can see the resulting names are still unique - but they
-are not very readable. In this particular case, there is no clear way to
-compress the identifiers, but for the sake of argument you may want to
-assign your own names or numbering system. This following bit of code
-manipulates the record identifiers before saving the output:
+PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是都为10个字符（ID中多出的字符将被截短）。在这一个例子中，截短的序列ID依然是唯一的（只是缺少了可读性）。在某些情况下，我们并没有一个好的方式去压缩序列的ID。以下例子提供了另一种解决方案 —— 利用自定义的序列ID来代替原本的序列ID。
 
 .. code:: verbatim
 
@@ -536,14 +518,13 @@ manipulates the record identifiers before saving the output:
 
     AlignIO.write([alignment], "PF05371_seed.phy", "phylip")
 
-This code used a Python dictionary to record a simple mapping from the
-new sequence system to the original identifier:
+以上代码将会建立一个字典对象实现自定义的ID和原始ID的映射。
 
 .. code:: verbatim
 
     {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', ...}
 
-Here is the new PHYLIP format output:
+以下为PHYLIP的格式输出：
 
 .. code:: verbatim
 
@@ -564,10 +545,7 @@ Here is the new PHYLIP format output:
                KA
                RA
 
-In general, because of the identifier limitation, working with PHYLIP
-file formats shouldn’t be your first choice. Using the PFAM/Stockholm
-format on the other hand allows you to record a lot of additional
-annotation too.
+由于序列ID的限制性，PHYLIP格式不是储存序列排列的理想格式。我们建议你将数据储存成PFAM/Stockholm或者其它能对序列排列进行注释的格式来保存你的数据。
 
 6.2.2  Getting your alignment objects as formatted strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
