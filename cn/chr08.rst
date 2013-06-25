@@ -1,126 +1,94 @@
-﻿Chapter 8  BLAST and other sequence search tools (*experimental code*)
+﻿第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
 ======================================================================
 
-*WARNING*: This chapter of the Tutorial describes an *experimental*
-module in Biopython. It is being included in Biopython and documented
-here in the tutorial in a pre-final state to allow a period of feedback
-and refinement before we declare it stable. Until then the details will
-probably change, and any scripts using the current ``Bio.SearchIO``
-would need to be updated. Please keep this in mind! For stable code
-working with NCBI BLAST, please continue to use Bio.Blast described in
-the preceding Chapter \ `7 <#chapter:blast>`__.
+*WARNING*: 这章教程介绍了Biopython中一个*实验的*模块。它正在被加入到
+Biopython中，并且以一个预尾期的状态整理到教程当中，这样在我们发布稳定版
+的之前可以收到一系列的反馈和并作改进。那时有些细节可能会改变，并且用到
+当前``Bio.SearchIO``模块的脚步也需要更新。切记！为了与NCBI BLAST有关的
+代码可以稳定工作，请继续使用第\ `7 <#chapter:blast>`__章介绍的 Bio.Blast。
 
-Biological sequence identification is an integral part of
-bioinformatics. Several tools are available for this, each with their
-own algorithms and approaches, such as BLAST (arguably the most
-popular), FASTA, HMMER, and many more. In general, these tools usually
-use your sequence to search a database of potential matches. With the
-growing number of known sequences (hence the growing number of potential
-matches), interpreting the results becomes increasingly hard as there
-could be hundreds or even thousands of potential matches. Naturally,
-manual interpretation of these searches’ results is out of the question.
-Moreover, you often need to work with several sequence search tools,
-each with its own statistics, conventions, and output format. Imagine
-how daunting it would be when you need to work with multiple sequences
-using multiple search tools.
+生物序列的鉴定是生物信息工作的主要部分。有几个工具像BLAST（可能是最流行
+的），FASTA ,HMMER还有许多其它的都有这个功能，每个工具都有独特的算法和
+途径。一般来说，这些工具都是用你的序列在数据库中搜索可能的匹配。随着序列
+数量的增加（匹配数也会随之增加），将会有成百上千的可能匹配，解析这些结果
+无疑变得越来越困难。理所当然，人工解析搜索结果变得不可能。而且你可能会同
+时用几种不同的搜索工具，每种工具都有独特的统计方法、规则和输出格式。可以
+想象，同时用多种工具搜索多条序列是多么恐怖的事。
 
-We know this too well ourselves, which is why we created the
-``Bio.SearchIO`` submodule in Biopython. ``Bio.SearchIO`` allows you to
-extract information from your search results in a convenient way, while
-also dealing with the different standards and conventions used by
-different search tools. The name ``SearchIO`` is a homage to BioPerl’s
-module of the same name.
+我们对此非常了解，所以我们在Biopython创造了``Bio.SearchIO``亚模块。
+``Bio.SearchIO``模块使从搜索结果中提取信息变得简单，并且可以处理不同工具
+的不同标准和规则。``SearchIO``和BioPerl中模块名字一致。
 
-In this chapter, we’ll go through the main features of ``Bio.SearchIO``
-to show what it can do for you. We’ll use two popular search tools along
-the way: BLAST and BLAT. They are used merely for illustrative purposes,
-and you should be able to adapt the workflow to any other search tools
-supported by ``Bio.SearchIO`` in a breeze. You’re very welcome to follow
-along with the search output files we’ll be using. The BLAST output file
-can be downloaded
-`here <http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__, and the
-BLAT output file
-`here <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__. Both
-output files were generated using this sequence:
+在本章中，我们将学习``Bio.SearchIO``的主要功能，知道它可以为你做什么。我
+们将使用两个主要的搜索工具：BLAST和FASTA。它们只是用来阐明思路，你可以轻
+易地把工作流程应用到``Bio.SearchIO``支持的其他工具中。欢迎你使用我们将要
+用到的搜索结果文件。BLAST搜索结果文件可以在
+`这<http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__下载。
+BLAT输出结果文件可以在
+`这<http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__下载。两个结果
+文件都是用下面这条序列搜索产生的：
 
 .. code:: verbatim
 
     >mystery_seq
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-The BLAST result is an XML file generated using ``blastn`` against the
-NCBI ``refseq_rna`` database. For BLAT, the sequence database was the
-February 2009 ``hg19`` human genome draft and the output format is PSL.
+BLAST的XML结果是用``blastn``搜索NCBI的``refseq_rna``数据库得到的。对于
+BLAT，数据库是2009年2月份的``hg19``人类基因组草图，输出格式是PSL。
 
-We’ll start from an introduction to the ``Bio.SearchIO`` object model.
-The model is the representation of your search results, thus it is core
-to ``Bio.SearchIO`` itself. After that, we’ll check out the main
-functions in ``Bio.SearchIO`` that you may often use.
+我们从``Bio.SearchIO``的对象模型的介绍开始。这个模型代表你的搜索结果，因
+此它是``Bio.SearchIO``的核心。然后，我们会介绍``Bio.SearchIO``常用的主要
+功能。
 
-Now that we’re all set, let’s go to the first step: introducing the core
-object model.
+现在一切就绪，让我们开始第一步：介绍核心对象模型。
 
-8.1  The SearchIO object model
+8.1  SearchIO对象模型
 ------------------------------
 
-Despite the wildly differing output styles among many sequence search
-tools, it turns out that their underlying concept is similar:
+尽管多数搜索工具的输出风格极为不同，但是它们包含的概念很相似：
 
--  The output file may contain results from one or more search queries.
--  In each search query, you will see one or more hits from the given
-   search database.
--  In each database hit, you will see one or more regions containing the
-   actual sequence alignment between your query sequence and the
-   database sequence.
--  Some programs like BLAT or Exonerate may further split these regions
-   into several alignment fragments (or blocks in BLAT and possibly
-   exons in exonerate). This is not something you always see, as
-   programs like BLAST and HMMER do not do this.
 
-Realizing this generality, we decided use it as base for creating the
-``Bio.SearchIO`` object model. The object model consists of a nested
-hierarchy of Python objects, each one representing one concept outlined
-above. These objects are:
+-  输出文件可能包含一条或更多的搜索查询的结果。
+-  在每次查询中，你会在给定的数据库中得到一个或更多的hits。
+-  在每个hit中，你会得到一个或更多包含查询序列和数据库序列实际比对的区域。
+-  一些工具如BLAT和Exonerate可能会把这些区域分成几个比对片段（或在BLAT中
+   称为区块，在Exonerate中称为可能外显子）。这并不是很常见，像BLAST和
+   HMMER就不这么做。
 
--  ``QueryResult``, to represent a single search query.
--  ``Hit``, to represent a single database hit. ``Hit`` objects are
-   contained within ``QueryResult`` and in each ``QueryResult`` there is
-   zero or more ``Hit`` objects.
--  ``HSP`` (short for high-scoring pair), to represent region(s) of
-   significant alignments between query and hit sequences. ``HSP``
-   objects are contained within ``Hit`` objects and each ``Hit`` has one
-   or more ``HSP`` objects.
--  ``HSPFragment``, to represent a single contiguous alignment between
-   query and hit sequences. ``HSPFragment`` objects are contained within
-   ``HSP`` objects. Most sequence search tools like BLAST and HMMER
-   unify ``HSP`` and ``HSPFragment`` objects as each ``HSP`` will only
-   have a single ``HSPFragment``. However there are tools like BLAT and
-   Exonerate that produce ``HSP`` containing multiple ``HSPFragment``.
-   Don’t worry if this seems a tad confusing now, we’ll elaborate more
-   on these two objects later on.
+知道这些共性之后，我们决定它们作为创造``Bio.SearchIO``对象模型的基础。对
+象模型包括一个Python对象的嵌套分层，每个都代表一个上面列出的概念。这些对
+象是：
 
-These four objects are the ones you will interact with when you use
-``Bio.SearchIO``. They are created using one of the main
-``Bio.SearchIO`` methods: ``read``, ``parse``, ``index``, or
-``index_db``. The details of these methods are provided in later
-sections. For this section, we’ll only be using read and parse. These
-functions behave similarly to their ``Bio.SeqIO`` and ``Bio.AlignIO``
-counterparts:
+-  ``QueryResult``，代表单个查询序列。
+-  ``Hit``，代表单个的数据库hit。 ``Hit`` 对象包含在 ``QueryResult`` 中，
+   每个``QueryResult``中有0个或更多 ``Hit`` 对象。
+-  ``HSP`` (high-scoring pair（高分片段）的缩写)，代表查询和匹配序列中有
+   意义比对的区域。``HSP``对象包含在``Hit``对象中，而且每个``Hit``有一个
+   或更多的``HSP`` 对象。   
+-  ``HSPFragment``，代表查询和匹配序列中单个的邻近比对。``HSPFragment``
+   对象包含在``HSP`` 对象中。多数的搜索工具如BLAST和HMMER把``HSP`` 和
+   ``HSPFragment``合并，因为一个``HSP`` 只含有一个``HSPFragment``。但是
+   像BLAT和Exonerate会产生含有多个``HSPFragment``的``HSP`` 。似乎有些困
+   惑？不要紧，稍后我们将详细介绍这两个对象。
 
--  ``read`` is used for search output files with a single query and
-   returns a ``QueryResult`` object
--  ``parse`` is used for search output files with multiple queries and
-   returns a generator that yields ``QueryResult`` objects
+这四个对象是当你用``Bio.SearchIO``会碰到的。``Bio.SearchIO``四
+个主要方法：``read``，``parse``，``index``，or``index_db``中任意一个都可
+以产生这四个对象。这些方法的会在后面的部分详细介绍。这部分只会用到read和
+parse，这两个方法和``Bio.SeqIO``以及``Bio.AlignIO``中的read和parse方法功
+能相似：
 
-With that settled, let’s start probing each ``Bio.SearchIO`` object,
-beginning with ``QueryResult``.
+-  ``read``用于搜索有单个查询的输出文件并且返回一个``QueryResult``对象。
+-  ``parse``用于搜索有多个查询的输出文件并且返回一个可以yield
+   ``QueryResult``对象的generator。
+
+完成这些之后，让我们开始学习每个``Bio.SearchIO``对象，从``QueryResult``
+开始。
 
 8.1.1  QueryResult
 ~~~~~~~~~~~~~~~~~~
 
-The QueryResult object represents a single search query and contains
-zero or more Hit objects. Let’s see what it looks like using the BLAST
-file we have:
+``QueryResult``，代表单个查询序列，每个``QueryResult``中有0个或更多 ``Hit``
+对象。我们来看看BLAST文件时什么样的：
 
 .. code:: verbatim
 
