@@ -1,11 +1,11 @@
 ﻿第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
 ======================================================================
 
-*WARNING*: 这章教程介绍了Biopython中一个*实验的*模块。它正在被加入到
+*WARNING*: 这章教程介绍了Biopython中一个 *实验的* 模块。它正在被加入到
 Biopython中，并且以一个预尾期的状态整理到教程当中，这样在我们发布稳定版
 的之前可以收到一系列的反馈和并作改进。那时有些细节可能会改变，并且用到
-当前``Bio.SearchIO``模块的脚步也需要更新。切记！为了与NCBI BLAST有关的
-代码可以稳定工作，请继续使用第\ `7 <#chapter:blast>`__章介绍的 Bio.Blast。
+当前 ``Bio.SearchIO`` 模块的脚步也需要更新。切记！为了与NCBI BLAST有关的
+代码可以稳定工作，请继续使用第 \ `7 <#chapter:blast>`__ 章介绍的 Bio.Blast。
 
 生物序列的鉴定是生物信息工作的主要部分。有几个工具像BLAST（可能是最流行
 的），FASTA ,HMMER还有许多其它的都有这个功能，每个工具都有独特的算法和
@@ -15,17 +15,17 @@ Biopython中，并且以一个预尾期的状态整理到教程当中，这样�
 时用几种不同的搜索工具，每种工具都有独特的统计方法、规则和输出格式。可以
 想象，同时用多种工具搜索多条序列是多么恐怖的事。
 
-我们对此非常了解，所以我们在Biopython创造了``Bio.SearchIO``亚模块。
-``Bio.SearchIO``模块使从搜索结果中提取信息变得简单，并且可以处理不同工具
-的不同标准和规则。``SearchIO``和BioPerl中模块名字一致。
+我们对此非常了解，所以我们在Biopython创造了 ``Bio.SearchIO`` 亚模块。
+``Bio.SearchIO`` 模块使从搜索结果中提取信息变得简单，并且可以处理不同工具
+的不同标准和规则。``SearchIO`` 和BioPerl中模块名字一致。
 
-在本章中，我们将学习``Bio.SearchIO``的主要功能，知道它可以为你做什么。我
+在本章中，我们将学习 ``Bio.SearchIO`` 的主要功能，知道它可以为你做什么。我
 们将使用两个主要的搜索工具：BLAST和FASTA。它们只是用来阐明思路，你可以轻
-易地把工作流程应用到``Bio.SearchIO``支持的其他工具中。欢迎你使用我们将要
+易地把工作流程应用到 ``Bio.SearchIO`` 支持的其他工具中。欢迎你使用我们将要
 用到的搜索结果文件。BLAST搜索结果文件可以在
-`这<http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__下载。
+ `<http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__ 下载。
 BLAT输出结果文件可以在
-`这<http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__下载。两个结果
+ `<http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__ 下载。两个结果
 文件都是用下面这条序列搜索产生的：
 
 .. code:: verbatim
@@ -33,11 +33,11 @@ BLAT输出结果文件可以在
     >mystery_seq
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-BLAST的XML结果是用``blastn``搜索NCBI的``refseq_rna``数据库得到的。对于
-BLAT，数据库是2009年2月份的``hg19``人类基因组草图，输出格式是PSL。
+BLAST的XML结果是用 ``blastn`` 搜索NCBI的 ``refseq_rna`` 数据库得到的。对于
+BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格式是PSL。
 
-我们从``Bio.SearchIO``的对象模型的介绍开始。这个模型代表你的搜索结果，因
-此它是``Bio.SearchIO``的核心。然后，我们会介绍``Bio.SearchIO``常用的主要
+我们从 ``Bio.SearchIO`` 的对象模型的介绍开始。这个模型代表你的搜索结果，因
+此它是 ``Bio.SearchIO`` 的核心。然后，我们会介绍 ``Bio.SearchIO`` 常用的主要
 功能。
 
 现在一切就绪，让我们开始第一步：介绍核心对象模型。
@@ -55,33 +55,33 @@ BLAT，数据库是2009年2月份的``hg19``人类基因组草图，输出格式
    称为区块，在Exonerate中称为可能外显子）。这并不是很常见，像BLAST和
    HMMER就不这么做。
 
-知道这些共性之后，我们决定它们作为创造``Bio.SearchIO``对象模型的基础。对
+知道这些共性之后，我们决定它们作为创造 ``Bio.SearchIO`` 对象模型的基础。对
 象模型包括一个Python对象的嵌套分层，每个都代表一个上面列出的概念。这些对
 象是：
 
 -  ``QueryResult``，代表单个查询序列。
--  ``Hit``，代表单个的数据库hit。 ``Hit`` 对象包含在 ``QueryResult`` 中，
-   每个``QueryResult``中有0个或更多 ``Hit`` 对象。
+-  ``Hit``，代表单个的数据库hit。``Hit`` 对象包含在 ``QueryResult`` 中，
+   每个 ``QueryResult`` 中有0个或更多 ``Hit`` 对象。
 -  ``HSP`` (high-scoring pair（高分片段）的缩写)，代表查询和匹配序列中有
-   意义比对的区域。``HSP``对象包含在``Hit``对象中，而且每个``Hit``有一个
-   或更多的``HSP`` 对象。   
--  ``HSPFragment``，代表查询和匹配序列中单个的邻近比对。``HSPFragment``
-   对象包含在``HSP`` 对象中。多数的搜索工具如BLAST和HMMER把``HSP`` 和
-   ``HSPFragment``合并，因为一个``HSP`` 只含有一个``HSPFragment``。但是
-   像BLAT和Exonerate会产生含有多个``HSPFragment``的``HSP`` 。似乎有些困
+   意义比对的区域。``HSP`` 对象包含在 ``Hit`` 对象中，而且每个 ``Hit`` 有一个
+   或更多的 ``HSP`` 对象。   
+-  ``HSPFragment``，代表查询和匹配序列中单个的邻近比对。 ``HSPFragment``
+   对象包含在 ``HSP`` 对象中。多数的搜索工具如BLAST和HMMER把 ``HSP`` 和
+   ``HSPFragment`` 合并，因为一个 ``HSP`` 只含有一个 ``HSPFragment``。但是
+   像BLAT和Exonerate会产生含有多个 ``HSPFragment`` 的 ``HSP`` 。似乎有些困
    惑？不要紧，稍后我们将详细介绍这两个对象。
 
-这四个对象是当你用``Bio.SearchIO``会碰到的。``Bio.SearchIO``四
-个主要方法：``read``，``parse``，``index``，or``index_db``中任意一个都可
-以产生这四个对象。这些方法的会在后面的部分详细介绍。这部分只会用到read和
-parse，这两个方法和``Bio.SeqIO``以及``Bio.AlignIO``中的read和parse方法功
+这四个对象是当你用 ``Bio.SearchIO`` 会碰到的。 ``Bio.SearchIO`` 四
+个主要方法： ``read`` ，``parse``，``index``，or ``index_db`` 中任意一个都可
+以产生这四个对象。这些方法的会在后面的部分详细介绍。这部分只会用到 ``read`` 和
+``parse`` ，这两个方法和 ``Bio.SeqIO`` 以及 ``Bio.AlignIO`` 中的 ``read`` 和 ``parse`` 方法功
 能相似：
 
--  ``read``用于搜索有单个查询的输出文件并且返回一个``QueryResult``对象。
--  ``parse``用于搜索有多个查询的输出文件并且返回一个可以yield
-   ``QueryResult``对象的generator。
+-  ``read`` 用于搜索有单个查询的输出文件并且返回一个 ``QueryResult`` 对象。
+-  ``parse`` 用于搜索有多个查询的输出文件并且返回一个可以yield
+   ``QueryResult`` 对象的generator。
 
-完成这些之后，让我们开始学习每个``Bio.SearchIO``对象，从``QueryResult``
+完成这些之后，让我们开始学习每个 ``Bio.SearchIO`` 对象，从 ``QueryResult``
 开始。
 
 8.1.1  QueryResult
