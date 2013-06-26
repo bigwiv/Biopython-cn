@@ -1,4 +1,4 @@
-﻿第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
+第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
 ======================================================================
 
 *WARNING*: 这章教程介绍了Biopython中一个 *实验的* 模块。它正在被加入到
@@ -23,9 +23,9 @@ Biopython中，并且以一个预尾期的状态整理到教程当中，这样�
 们将使用两个主要的搜索工具：BLAST和FASTA。它们只是用来阐明思路，你可以轻
 易地把工作流程应用到 ``Bio.SearchIO`` 支持的其他工具中。欢迎你使用我们将要
 用到的搜索结果文件。BLAST搜索结果文件可以在
- `<http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__ 下载。
+`here <http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__ 下载。
 BLAT输出结果文件可以在
- `<http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__ 下载。两个结果
+`here <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__ 下载。两个结果
 文件都是用下面这条序列搜索产生的：
 
 .. code:: verbatim
@@ -87,7 +87,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 8.1.1  QueryResult
 ~~~~~~~~~~~~~~~~~~
 
-``QueryResult``，代表单个查询序列，每个``QueryResult``中有0个或更多 ``Hit``
+``QueryResult``，代表单个查询序列，每个 ``QueryResult`` 中有0个或更多 ``Hit``
 对象。我们来看看BLAST文件时什么样的：
 
 .. code:: verbatim
@@ -137,21 +137,17 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
                98      1  gi|297814701|ref|XM_002875188.1|  Arabidopsis lyrata su...
                99      1  gi|397513516|ref|XM_003827011.1|  PREDICTED: Pan panisc...
 
-We’ve just begun to scratch the surface of the object model, but you can
-see that there’s already some useful information. By invoking ``print``
-on the ``QueryResult`` object, you can see:
+虽然我们才接触对象模型的皮毛，但是你已经可以看到一些 有用的信息了。通过调用
+ ``QueryResult`` 对象的 ``print`` 方法，你可以看到：
 
--  The program name and version (blastn version 2.2.27+)
--  The query ID, description, and its sequence length (ID is 42291,
-   description is ‘mystery\_seq’, and it is 61 nucleotides long)
--  The target database to search against (refseq\_rna)
--  A quick overview of the resulting hits. For our query sequence, there
-   are 100 potential hits (numbered 0–99 in the table). For each hit, we
-   can also see how many HSPs it contains, its ID, and a snippet of its
-   description. Notice here that ``Bio.SearchIO`` truncates the hit
-   table overview, by showing only hits numbered 0–29, and then 97–99.
-
-Now let’s check our BLAT results using the same procedure as above:
+-  程序的名称和版本 (blastn version 2.2.27+)
+-  查询的ID，描述和序列的长度(ID是42291，描述是 ‘mystery\_seq’，长度是61)
+-  搜索的目标数据库 (refseq\_rna)
+-  hits结果的快速预览。对于我们的查询序列，有100个可能的hits（表格中标记
+   0-99）对于每个hit，我们可以看到它包含的高分比对片段（HSP)，ID和一个片
+   段的描述。注意， ``Bio.SearchIO`` 截断了表格，只显示0-29，然后是97-99。
+ 
+现在让我们用同样的步骤来检查BLAT的结果：
 
 .. code:: verbatim
 
@@ -166,33 +162,22 @@ Now let’s check our BLAT results using the same procedure as above:
              ----  -----  ----------------------------------------------------------
                 0     17  chr19  <unknown description>                              
 
-You’ll immediately notice that there are some differences. Some of these
-are caused by the way PSL format stores its details, as you’ll see. The
-rest are caused by the genuine program and target database differences
-between our BLAST and BLAT searches:
+马上可以看到有些不同点。有些是由于BLAT使用PSL格式储存它的信息，稍后会看
+到。其余是由于BLAST和BLAT搜索的程序和数据库之间明显的差异造成的：
 
--  The program name and version. ``Bio.SearchIO`` knows that the program
-   is BLAT, but in the output file there is no information regarding the
-   program version so it defaults to ‘<unknown version>’.
--  The query ID, description, and its sequence length. Notice here that
-   these details are slightly different from the ones we saw in BLAST.
-   The ID is ‘mystery\_seq’ instead of 42991, there is no known
-   description, but the query length is still 61. This is actually a
-   difference introduced by the file formats themselves. BLAST sometimes
-   creates its own query IDs and uses your original ID as the sequence
-   description.
--  The target database is not known, as it is not stated in the BLAT
-   output file.
--  And finally, the list of hits we have is completely different. Here,
-   we see that our query sequence only hits the ‘chr19’ database entry,
-   but in it we see 17 HSP regions. This should not be surprising
-   however, given that we are using a different program, each with its
-   own target database.
+-  程序名称和版本。 ``Bio.SearchIO`` 知道程序是BLAST，但是在输出文件中没
+   有信息显示程序版本，所以默认是 ‘<unknown version>’。
+-  查询的ID，描述和序列的长度。注意，这些细节和BLAST的细节只有细小的差别，
+   ID是 ‘mystery\_seq’ 而不是42991，这是未知描述，但是序列长度仍是61。这
+   实际上是文件格式本身导致的差异。BLAST有时创建自己的查询ID并且用你的原
+   始ID作为序列描述。
+-  目标数据库是未知的，因为BLAT输出文件没提到相关信息。
+-  最后，hits列表完全不同，这里，我们的查询序列只hit到 ‘chr19’ 数据库条
+   目，但是我们可以看到它含有17个HSP区域。这真是让人诧异，但是考虑到我们
+   使用的是不同的程序，并且这些程序都有自己的数据库。
 
-All the details you saw when invoking the ``print`` method can be
-accessed individually using Python’s object attribute access notation
-(a.k.a. the dot notation). There are also other format-specific
-attributes that you can access using the same method.
+所有通过调用 ``print``方法看到的信息都可以单独地用Python的对象属性入
+口标记获得（又叫点标记法）。同样还可以用相同的方法获得其他格式特有的属性。
 
 .. code:: verbatim
 
@@ -203,20 +188,17 @@ attributes that you can access using the same method.
     >>> blast_qresult.param_evalue_threshold    # blast-xml specific
     10.0
 
-For a complete list of accessible attributes, you can check each
-format-specific documentation. Here are the ones `for
+想获得一个可访问属性的完整列表，可以查询每个格式特有的文档。这些是 `for
 BLAST <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlastIO-module.html>`__
 and for
 `BLAT <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlatIO-module.html>`__.
 
-Having looked at using ``print`` on ``QueryResult`` objects, let’s drill
-down deeper. What exactly is a ``QueryResult``? In terms of Python
-objects, ``QueryResult`` is a hybrid between a list and a dictionary. In
-other words, it is a container object with all the convenient features
-of lists and dictionaries.
+已经看到了在 ``QueryResult`` 对象上调用 ``print`` 方法，让我们研究的更深
+一些。 ``QueryResult``到底是什么？就Python对象来说， ``QueryResult`` 混合
+了列表和字典的特性。换句话说，也就是一个包含了列表和字典方便功能的容器对象。
 
-Like Python lists and dictionaries, ``QueryResult`` objects are
-iterable. Each iteration returns a ``Hit`` object:
+和列表以及字典一样， ``QueryResult`` 对象是可迭代的。每次迭代返回一个hit
+对象：
 
 .. code:: verbatim
 
@@ -229,9 +211,8 @@ iterable. Each iteration returns a ``Hit`` object:
     Hit(id='gi|301171267|ref|NR_035851.1|', query_id='42291', 1 hsps)
     ...
 
-To check how many items (hits) a ``QueryResult`` has, you can simply
-invoke Python’s ``len`` method:
-
+要得到 ``QueryResult`` 对象有多少条目(hits)，可以简单调用Python的 ``len`` 
+方法：
 .. code:: verbatim
 
     >>> len(blast_qresult)
@@ -239,8 +220,7 @@ invoke Python’s ``len`` method:
     >>> len(blat_qresult)
     1
 
-Like Python lists, you can retrieve items (hits) from a ``QueryResult``
-using the slice notation:
+同列表类似，你可以用切片来获得 ``QueryResult``对象的条目(hits)：
 
 .. code:: verbatim
 
@@ -249,9 +229,8 @@ using the slice notation:
     >>> blast_qresult[-1]       # retrieves the last hit
     Hit(id='gi|397513516|ref|XM_003827011.1|', query_id='42291', 1 hsps)
 
-To retrieve multiple hits, you can slice ``QueryResult`` objects using
-the slice notation as well. In this case, the slice will return a new
-``QueryResult`` object containing only the sliced hits:
+要得到多个条目，你同样可以对 ``QueryResult`` 对象作切片。这种情况下，切片
+一个包含被切hits的新 ``QueryResult`` 对象：
 
 .. code:: verbatim
 
@@ -268,9 +247,8 @@ the slice notation as well. In this case, the slice will return a new
                 1      1  gi|301171311|ref|NR_035856.1|  Pan troglodytes microRNA...
                 2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...
 
-Like Python dictionaries, you can also retrieve hits using the hit’s ID.
-This is particularly useful if you know a given hit ID exists within a
-search query results:
+同字典类似，可以通过hit的ID获取hits。如果你知道一个特定的hit ID存在于一个
+搜索结果中时，这将特别 有用：
 
 .. code:: verbatim
 
