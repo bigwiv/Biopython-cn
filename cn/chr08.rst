@@ -248,15 +248,15 @@ and for
                 2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...
 
 同字典类似，可以通过hit的ID获取hits。如果你知道一个特定的hit ID存在于一个
-搜索结果中时，这将特别 有用：
+搜索结果中时，这将特别有用：
 
 .. code:: verbatim
 
     >>> blast_qresult['gi|262205317|ref|NR_030195.1|']
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
 
-You can also get a full list of ``Hit`` objects using ``hits`` and a
-full list of ``Hit`` IDs using ``hit_keys``:
+你可以用 ``hits`` 方法获得完整的 ``Hit`` 对象，也可以用 ``hit_keys``方法
+获得完整的``Hit`` IDs：
 
 .. code:: verbatim
 
@@ -265,9 +265,8 @@ full list of ``Hit`` IDs using ``hit_keys``:
     >>> blast_qresult.hit_keys
     [...]       # list of all hit IDs
 
-What if you just want to check whether a particular hit is present in
-the query results? You can do a simple Python membership test using the
-``in`` keyword:
+如果你想确定一个特殊的hit是否存在于查询对象中该怎么做呢？可以用 ``in`` 
+关键字作一个简单的成员检验：
 
 .. code:: verbatim
 
@@ -276,33 +275,27 @@ the query results? You can do a simple Python membership test using the
     >>> 'gi|262205317|ref|NR_030194.1|' in blast_qresult
     False
 
-Sometimes, knowing whether a hit is present is not enough; you also want
-to know the rank of the hit. Here, the ``index`` method comes to the
-rescue:
+有时候，只知道一个hit是否存在是不够的；你可能也会想知道hit的排名。 ``index`` 
+方法可以帮助你：
 
 .. code:: verbatim
 
     >>> blast_qresult.index('gi|301171437|ref|NR_035870.1|')
     22
 
-Remember that we’re using Python’s indexing style here, which is
-zero-based. This means our hit above is ranked at no. 23, not 22.
+记住，我们用的是Python风格的索引，是从0开始。这代表hit的排名是23而不是22。
 
-Also, note that the hit rank you see here is based on the native hit
-ordering present in the original search output file. Different search
-tools may order these hits based on different criteria.
+同样，注意你看的hit排名是基于原始搜索输出文件的本来顺序。不同的搜索工具可
+能会基于不同的标准排列这些hits。
 
-If the native hit ordering doesn’t suit your taste, you can use the
-``sort`` method of the ``QueryResult`` object. It is very similar to
-Python’s ``list.sort`` method, with the addition of an option to create
-a new sorted ``QueryResult`` object or not.
+如果原本的hit排序不合你意，可以用 ``QueryResult`` 对象的 ``sort`` 方法。
+它和Python的 ``list.sort`` 方法很相似，只是有个是否创建一个新的排序后的
+ ``QueryResult`` 对象的选项。
 
-Here is an example of using ``QueryResult.sort`` to sort the hits based
-on each hit’s full sequence length. For this particular sort, we’ll set
-the ``in_place`` flag to ``False`` so that sorting will return a new
-``QueryResult`` object and leave our initial object unsorted. We’ll also
-set the ``reverse`` flag to ``True`` so that we sort in descending
-order.
+这里有个用 ``QueryResult.sort`` 方法排序hits的例子，这个方法基于每个hit
+的完整序列长度。对于这个特殊的排序，我们设置 ``in_place`` 参数等于 ``False`` ，
+这样排序方法会返回一个新的 ``QueryResult`` 对象，而原来的对象是未排序的。
+我们同样可以设置 ``reverse`` 参数等于True以递减排序。
 
 .. code:: verbatim
 
@@ -326,42 +319,30 @@ order.
     gi|356517317|ref|XM_003527287.1| 3251
     gi|356543101|ref|XM_003539954.1| 2936
 
-The advantage of having the ``in_place`` flag here is that we’re
-preserving the native ordering, so we may use it again later. You should
-note that this is not the default behavior of ``QueryResult.sort``,
-however, which is why we needed to set the ``in_place`` flag to ``True``
-explicitly.
+有 ``in_place`` 参数的好处是可以保留原本的顺序，后面可能会用到。注意这不
+是 ``QueryResult.sort`` 的默认行为，需要我们明确地设置 ``in_place`` 为True。
 
-At this point, you’ve known enough about ``QueryResult`` objects to make
-it work for you. But before we go on to the next object in the
-``Bio.SearchIO`` model, let’s take a look at two more sets of methods
-that could make it even easier to work with ``QueryResult`` objects: the
-``filter`` and ``map`` methods.
+现在，你已经知道使用 ``QueryResult`` 对象。但是，在我们学习 ``Bio.SearchIO`` 
+模块下个对象前，先了解下可以使 ``QueryResult`` 对象更易使用的两个方法：
+ ``filter`` 和 ``map`` 方法。
 
-If you’re familiar with Python’s list comprehensions, generator
-expressions or the built in ``filter`` and ``map`` functions, you’ll
-know how useful they are for working with list-like objects (if you’re
-not, check them out!). You can use these built in methods to manipulate
-``QueryResult`` objects, but you’ll end up with regular Python lists and
-lose the ability to do more interesting manipulations.
+如果你对Python的列表推导式、generator表达式或内建的 ``filter`` 和 ``map`` 
+很熟悉，就知道（不知道就是看看吧!)它们在处理list-like的对象时有多有用。
+你可以用这些内建的方法来操作 ``QueryResult`` 对象，这将止于常规的list，
+并且你会丧失作更多有趣操作的能力。
 
-That’s why, ``QueryResult`` objects provide its own flavor of ``filter``
-and ``map`` methods. Analogous to ``filter``, there are ``hit_filter``
-and ``hsp_filter`` methods. As their name implies, these methods filter
-its ``QueryResult`` object either on its ``Hit`` objects or ``HSP``
-objects. Similarly, analogous to ``map``, ``QueryResult`` objects also
-provide the ``hit_map`` and ``hsp_map`` methods. These methods apply a
-given function to all hits or HSPs in a ``QueryResult`` object,
-respectively.
+这就是为什么 ``QueryResult`` 对象提供自己特有的 ``filter`` 和 ``map`` 
+方法。对于 ``filter`` 有相似的 ``hit_filter`` 和 ``hsp_filter`` 方法，
+从名称就可以看出，这些方法过滤 ``QueryResult`` 对象的 ``Hit`` 对象或者
+ ``HSP`` 对象。同样的，对于 ``map`` ， ``QueryResult`` 对象同样提供相似
+ 的  ``hit_map`` 和 ``hsp_map`` 方法。这些方法分别应用于 ``QueryResult`` 
+ 对象的所有hits或者HSPs。 
 
-Let’s see these methods in action, beginning with ``hit_filter``. This
-method accepts a callback function that checks whether a given ``Hit``
-object passes the condition you set or not. In other words, the function
-must accept as its argument a single ``Hit`` object and returns ``True``
-or ``False``.
+让我们来看看这些方法的功能，从 ``hit_filter`` 开始。这个方法接受一个回调
+函数，这个函数检验给定的 ``Hit`` 是否符合你设定的条件。换句话说，这个方法
+必须接受一个单独 ``Hit`` 对象作为参数并且返回True或False。 
 
-Here is an example of using ``hit_filter`` to filter out ``Hit`` objects
-that only have one HSP:
+这里有个用 ``hit_filter`` 筛选出只有一个HSP的 ``Hit`` 对象的例子：
 
 .. code:: verbatim
 
