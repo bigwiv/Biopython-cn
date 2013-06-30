@@ -138,7 +138,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
                99      1  gi|397513516|ref|XM_003827011.1|  PREDICTED: Pan panisc...
 
 虽然我们才接触对象模型的皮毛，但是你已经可以看到一些 有用的信息了。通过调用
- ``QueryResult`` 对象的 ``print`` 方法，你可以看到：
+``QueryResult`` 对象的 ``print`` 方法，你可以看到：
 
 -  程序的名称和版本 (blastn version 2.2.27+)
 -  查询的ID，描述和序列的长度(ID是42291，描述是 ‘mystery\_seq’，长度是61)
@@ -290,7 +290,7 @@ and for
 
 如果原本的hit排序不合你意，可以用 ``QueryResult`` 对象的 ``sort`` 方法。
 它和Python的 ``list.sort`` 方法很相似，只是有个是否创建一个新的排序后的
- ``QueryResult`` 对象的选项。
+``QueryResult`` 对象的选项。
 
 这里有个用 ``QueryResult.sort`` 方法排序hits的例子，这个方法基于每个hit
 的完整序列长度。对于这个特殊的排序，我们设置 ``in_place`` 参数等于 ``False`` ，
@@ -324,7 +324,7 @@ and for
 
 现在，你已经知道使用 ``QueryResult`` 对象。但是，在我们学习 ``Bio.SearchIO`` 
 模块下个对象前，先了解下可以使 ``QueryResult`` 对象更易使用的两个方法：
- ``filter`` 和 ``map`` 方法。
+``filter`` 和 ``map`` 方法。
 
 如果你对Python的列表推导式、generator表达式或内建的 ``filter`` 和 ``map`` 
 很熟悉，就知道（不知道就是看看吧!)它们在处理list-like的对象时有多有用。
@@ -334,9 +334,9 @@ and for
 这就是为什么 ``QueryResult`` 对象提供自己特有的 ``filter`` 和 ``map`` 
 方法。对于 ``filter`` 有相似的 ``hit_filter`` 和 ``hsp_filter`` 方法，
 从名称就可以看出，这些方法过滤 ``QueryResult`` 对象的 ``Hit`` 对象或者
- ``HSP`` 对象。同样的，对于 ``map`` ， ``QueryResult`` 对象同样提供相似
- 的  ``hit_map`` 和 ``hsp_map`` 方法。这些方法分别应用于 ``QueryResult`` 
- 对象的所有hits或者HSPs。 
+``HSP`` 对象。同样的，对于 ``map`` ， ``QueryResult`` 对象同样提供相似
+的  ``hit_map`` 和 ``hsp_map`` 方法。这些方法分别应用于 ``QueryResult`` 
+对象的所有hits或者HSPs。 
 
 让我们来看看这些方法的功能，从 ``hit_filter`` 开始。这个方法接受一个回调
 函数，这个函数检验给定的 ``Hit`` 是否符合你设定的条件。换句话说，这个方法
@@ -360,17 +360,14 @@ and for
     gi|262205298|ref|NR_030190.1| 2
     gi|270132717|ref|NR_032716.1| 2
 
-``hsp_filter`` works the same as ``hit_filter``, only instead of looking
-at the ``Hit`` objects, it performs filtering on the ``HSP`` objects in
-each hits.
+``hsp_filter`` 和 ``hit_filter``功能相同，只是它过滤每个hit中的 ``HSP`` 对象，
+而不是 ``Hit`` 。
 
-As for the ``map`` methods, they too accept a callback function as their
-arguments. However, instead of returning ``True`` or ``False``, the
-callback function must return the modified ``Hit`` or ``HSP`` object
-(depending on whether you’re using ``hit_map`` or ``hsp_map``).
+对于 ``map`` 方法，同样接受一个回调函数作为参数。但是回调函数返回修改过的
+ ``Hit`` 或 ``HSP``对象（取决于你是否使用 ``hit_map`` 或 ``hsp_map``方法），
+ 而不是返回 ``True`` 或 ``False``。
 
-Let’s see an example where we’re using ``hit_map`` to rename the hit
-IDs:
+来看一个用 ``hit_map`` 方法来重命名hit ID的例子：
 
 .. code:: verbatim
 
@@ -387,18 +384,17 @@ IDs:
     NR_035857.1
     NR_035851.1
 
-Again, ``hsp_map`` works the same as ``hit_map``, but on ``HSP`` objects
-instead of ``Hit`` objects.
+同样的， ``hsp_map`` 和 ``hit_map``作用相似, 但是作用于 ``HSP`` 对象而不
+是 ``Hit`` 对象。
 
 8.1.2  Hit
 ~~~~~~~~~~
 
-``Hit`` objects represent all query results from a single database
-entry. They are the second-level container in the ``Bio.SearchIO``
-object hierarchy. You’ve seen that they are contained by ``QueryResult``
-objects, but they themselves contain ``HSP`` objects.
+``Hit`` 对象代表从单个数据库获得所有查询结果。在 ``Bio.SearchIO``对象等级
+中是二级容器。它们被包含在 ``QueryResult``对象中，同时它们又包含 ``HSP`` 
+对象。
 
-Let’s see what they look like, beginning with our BLAST search:
+看看它们是什么样的，从我们的BLAST搜索开始：
 
 .. code:: verbatim
 
@@ -419,23 +415,18 @@ Let’s see what they look like, beginning with our BLAST search:
               0   8.9e-20     100.47      60           [1:61]                [13:73]
               1   3.3e-06      55.39      60           [0:60]                [13:73]
 
-You see that we’ve got the essentials covered here:
+可以看到我们获得了必要的信息：
 
--  The query ID and description is present. A hit is always tied to a
-   query, so we want to keep track of the originating query as well.
-   These values can be accessed from a hit using the ``query_id`` and
-   ``query_description`` attributes.
--  We also have the unique hit ID, description, and full sequence
-   lengths. They can be accessed using ``id``, ``description``, and
-   ``seq_len``, respectively.
--  Finally, there’s a table containing quick information about the HSPs
-   this hit contains. In each row, we’ve got the important HSP details
-   listed: the HSP index, its e-value, its bit score, its span (the
-   alignment length including gaps), its query coordinates, and its hit
-   coordinates.
+-  查询ID和描述信息。一个hit总是和一个查询绑定，所有我们同样希望记录原始
+   查询。这些值可以通过 ``query_id`` 和  ``query_description`` 属性从hit
+   中获取。
+-  我们同样得到了hit ID、描述和序列全长。它们可以分别通过 ``id``，
+   ``description``，和 ``seq_len`` 获取。
+-  最后，有一个含有这个hit的HSPs的简短信息的表。在每行中，HSP重要信息被
+   列出来：HSP索引，e值，得分，长度（包括gap），查询序列坐标和hit坐标。
 
-Now let’s contrast this with the BLAT search. Remember that in the BLAT
-search we had one hit with 17 HSPs.
+现在，和BLAT结果作对比。记住，在BLAT搜索结果中，我们发现有一个含有17HSP的
+hit。
 
 .. code:: verbatim
 
@@ -467,25 +458,18 @@ search we had one hit with 17 HSPs.
              15         ?          ?       ?           [8:51]    [54234278:54234321]
              16         ?          ?       ?           [8:61]    [54238143:54238196]
 
-Here, we’ve got a similar level of detail as with the BLAST hit we saw
-earlier. There are some differences worth explaining, though:
+我们得到了和前面看到的BLAST hit详细程度相似的结果。但是有些不同需要解释：
 
--  The e-value and bit score column values. As BLAT HSPs do not have
-   e-values and bit scores, the display defaults to ‘?’.
--  What about the span column? The span values is meant to display the
-   complete alignment length, which consists of all residues and any
-   gaps that may be present. The PSL format do not have this information
-   readily available and ``Bio.SearchIO`` does not attempt to try guess
-   what it is, so we get a ‘?’ similar to the e-value and bit score
-   columns.
+-  e-value和bit score列的值。因为BLAT HSP没有e-values和bit scores，默
+   认显示‘?’.
+-  span列是怎么回事呢？span值本来是显示完整的比对长度，包含所有的残基和
+   gap。但是PSL格式目前还不支持这些信息并且 ``Bio.SearchIO`` 也不打算去
+   猜它到底是多少，所有我们得到了和e-value以及bit score列相同的 ‘?’。 
 
-In terms of Python objects, ``Hit`` behaves almost the same as Python
-lists, but contain ``HSP`` objects exclusively. If you’re familiar with
-lists, you should encounter no difficulties working with the ``Hit``
-object.
+就Python对象来说， ``Hit`` 和列表行为最相似，但是额外含有 ``HSP`` 。如果
+你对列表熟悉，在使用 ``Hit``对象是不会遇到困难。
 
-Just like Python lists, ``Hit`` objects are iterable, and each iteration
-returns one ``HSP`` object it contains:
+和列表一样， ``Hit`` 对象是可迭代的，并且每次迭代返回一个 ``HSP`` 对象：
 
 .. code:: verbatim
 
@@ -494,8 +478,7 @@ returns one ``HSP`` object it contains:
     HSP(hit_id='gi|301171322|ref|NR_035857.1|', query_id='42291', 1 fragments)
     HSP(hit_id='gi|301171322|ref|NR_035857.1|', query_id='42291', 1 fragments)
 
-You can invoke ``len`` on a ``Hit`` to see how many ``HSP`` objects it
-has:
+你可以对 ``Hit`` 对象调用 ``len`` 方法查看它含有多少个 ``HSP`` 对象：
 
 .. code:: verbatim
 
@@ -504,10 +487,8 @@ has:
     >>> len(blat_hit)
     17
 
-You can use the slice notation on ``Hit`` objects, whether to retrieve
-single ``HSP`` or multiple ``HSP`` objects. Like ``QueryResult``, if you
-slice for multiple ``HSP``, a new ``Hit`` object will be returned
-containing only the sliced ``HSP`` objects:
+你可以对 ``Hit``对象使用切片取得单个或多个 ``HSP`` 对象，和 ``QueryResult``
+一样，如果切取多个 ``HSP``  ，会返回包含被切 ``HSP``  的一个新 ``Hit``对象。
 
 .. code:: verbatim
 
@@ -530,29 +511,22 @@ containing only the sliced ``HSP`` objects:
               3         ?          ?       ?           [0:60]    [54189735:54189795]
               4         ?          ?       ?           [0:61]    [54185425:54185486]
 
-You can also sort the ``HSP`` inside a ``Hit``, using the exact same
-arguments like the sort method you saw in the ``QueryResult`` object.
+你同样可以对一个 ``Hit`` 里的 ``HSP``  排序，和你在 ``QueryResult`` 对象
+中看到的方法一样。
 
-Finally, there are also the ``filter`` and ``map`` methods you can use
-on ``Hit`` objects. Unlike in the ``QueryResult`` object, ``Hit``
-objects only have one variant of ``filter`` (``Hit.filter``) and one
-variant of ``map`` (``Hit.map``). Both of ``Hit.filter`` and ``Hit.map``
-work on the ``HSP`` objects a ``Hit`` has.
+最后，同样可以对 ``Hit`` 对象使用 ``filter`` 和 ``map``方法。和 ``QueryResult`` 
+不同， ``Hit`` 对象只有一种 ``filter`` (``Hit.filter``) 和一种 ``map`` (``Hit.map``)。
 
 8.1.3  HSP
 ~~~~~~~~~~
 
-``HSP`` (high-scoring pair) represents region(s) in the hit sequence
-that contains significant alignment(s) to the query sequence. It
-contains the actual match between your query sequence and a database
-entry. As this match is determined by the sequence search tool’s
-algorithms, the ``HSP`` object contains the bulk of the statistics
-computed by the search tool. This also makes the distinction between
-``HSP`` objects from different search tools more apparent compared to
-the differences you’ve seen in ``QueryResult`` or ``Hit`` objects.
+``HSP`` (高分片段)代表hit序列中的一个区域，该区域包含对于查询序列有意义的
+比对。它包含了你的查询序列和一个数据库条目之间精确的匹配。由于匹配取决于
+序列搜索工具的算法， ``HSP``  含有大部分统计信息，这些统计是由搜索工具计
+算得到的。这使得不同搜索工具的 ``HSP``  对象之间的差异和你在 ``QueryResult`` 
+以及 ``Hit`` 对象看到的差异更加明显，
 
-Let’s see some examples from our BLAST and BLAT searches. We’ll look at
-the BLAST HSP first:
+我们来看看BLAST和BLAT搜索的例子。先看BLAST HSP：
 
 .. code:: verbatim
 
@@ -573,23 +547,18 @@ the BLAST HSP first:
                  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
            Hit - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-Just like ``QueryResult`` and ``Hit``, invoking ``print`` on an ``HSP``
-shows its general details:
+和 ``QueryResult`` 以及 ``Hit``类似，调用 ``HSP``  的 ``print`` 方法,
+显示细节：
 
--  There are the query and hit IDs and descriptions. We need these to
-   identify our ``HSP``.
--  We’ve also got the matching range of the query and hit sequences. The
-   slice notation we’re using here is an indication that the range is
-   displayed using Python’s indexing style (zero-based, half open). The
-   number inside the parenthesis denotes the strand. In this case, both
-   sequences have the plus strand.
--  Some quick statistics are available: the e-value and bitscore.
--  There is information about the HSP fragments. Ignore this for now; it
-   will be explained later on.
--  And finally, we have the query and hit sequence alignment itself.
+-  有query和hit ID以及描述。我们需要这些来辨识我买的 ``HSP``  。
+-  我们同样得到了query和hit序列的匹配范围。这里用的的切片标志着范围的表示
+   是使用Python的索引风格（从0开始，半开区间）。圆括号里的数字表示正负链。
+   这里，两条序列都是正链。
+-  还有一些简短统计：e-value和bitscore。
+-  还有一些HSP片段的信息。现在可以忽略，稍后会解释。
+-  最后，还有query和hit的比对本身。
 
-These details can be accessed on their own using the dot notation, just
-like in ``QueryResult`` and ``Hit``:
+这些信息可以用点标记从它们本身获得，和 ``Hit`` 以及 ``QueryResult``相同： 
 
 .. code:: verbatim
 
