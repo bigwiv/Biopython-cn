@@ -61,13 +61,11 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
                 Clade(branch_length=1.0, name="F")
                 Clade(branch_length=1.0, name="G")
 
-The ``Tree`` object contains global information about the tree, such as
-whether it’s rooted or unrooted. It has one root clade, and under that,
-it’s nested lists of clades all the way down to the tips.
+``Tree`` 对象包含树的全局信息，如树是有根树还是无根树。它包含一个根进化枝，
+和以此往下以列表嵌套的所有进化枝，直至叶子分支。
 
-The function ``draw_ascii`` creates a simple ASCII-art (plain text)
-dendrogram. This is a convenient visualization for interactive
-exploration, in case better graphical tools aren’t available.
+函数 ``draw_ascii`` 创建一个简单的ASCII-art(纯文本)系统发生图。在没有更好
+图形工具的情况下，这对于交互研究来说是一个方便的可视化展示方式。
 
 .. code:: verbatim
 
@@ -86,8 +84,7 @@ exploration, in case better graphical tools aren’t available.
                               |
                               |________________________ G
 
-If you have **matplotlib** or **pylab** installed, you can create a
-graphic using the ``draw`` function (see Fig.
+如果你安装有 **matplotlib** 或者 **pylab**, 你可以使用 ``draw`` 函数一个图像(见 Fig.
 `13.1 <#fig:phylo-simple-draw>`__):
 
 .. code:: verbatim
@@ -97,46 +94,38 @@ graphic using the ``draw`` function (see Fig.
 
 |image5|
 
-13.1.1  Coloring branches within a tree
+13.1.1  给树的分支上颜色
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+函数 ``draw`` 和 ``draw_graphviz`` 支持在树中显示不同的颜色和分支宽度。
+从Biopython 1.59开始，Clade对象就开始支持 ``color`` 和 ``width`` 属性，
+且使用他们不需要额外支持。这两个属性都表示导向给定的进化枝前面的分支的
+属性，并依次往下作用，所以所有的后代分支在显示时也都继承相同的宽度和颜
+色。
 
-The functions ``draw`` and ``draw_graphviz`` support the display of
-different colors and branch widths in a tree. As of Biopython 1.59, the
-``color`` and ``width`` attributes are available on the basic Clade
-object and there’s nothing extra required to use them. Both attributes
-refer to the branch leading the given clade, and apply recursively, so
-all descendent branches will also inherit the assigned width and color
-values during display.
+在早期的Biopython版本中，PhyloXML树有些特殊的特性，使用这些属性需要首先
+将这个树转换为一个基本树对象的子类Phylogeny，该类在Bio.Phylo.PhyloXML模
+块中。
 
-In earlier versions of Biopython, these were special features of
-PhyloXML trees, and using the attributes required first converting the
-tree to a subclass of the basic tree object called Phylogeny, from the
-Bio.Phylo.PhyloXML module.
-
-In Biopython 1.55 and later, this is a convenient tree method:
+在Biopython 1.55和之后的版本中，这是一个很方便的树方法：
 
 .. code:: verbatim
 
     >>> tree = tree.as_phyloxml()
 
-In Biopython 1.54, you can accomplish the same thing with one extra
-import:
+在Biopython 1.54中, 你能通过导入一个额外的模块实现相同的事情：
 
 .. code:: verbatim
 
     >>> from Bio.Phylo.PhyloXML import Phylogeny
     >>> tree = Phylogeny.from_tree(tree)
 
-Note that the file formats Newick and Nexus don’t support branch colors
-or widths, so if you use these attributes in Bio.Phylo, you will only be
-able to save the values in PhyloXML format. (You can still save a tree
-as Newick or Nexus, but the color and width values will be skipped in
-the output file.)
+注意Newick和Nexus文件类型并不支持分支颜色和宽度，如果你在Bio.Phylo中使用
+这些属性，你只能保存这些值到PhyloXML格式中。（你也可以保存成Newick或Nexus
+格式，但是颜色和宽度信息在输出的文件时会被忽略掉。）
 
-Now we can begin assigning colors. First, we’ll color the root clade
-gray. We can do that by assigning the 24-bit color value as an RGB
-triple, an HTML-style hex string, or the name of one of the predefined
-colors.
+现在我们开始赋值颜色。首先，我们将设置根进化枝为灰色。我们能通过赋值24位
+的颜色值来实现，用三位数的RGB值、HTML格式的十六进制字符串、或者预先设置好的
+颜色名称。
 
 .. code:: verbatim
 
@@ -154,31 +143,28 @@ Or:
 
     >>> tree.root.color = "gray"
 
-Colors for a clade are treated as cascading down through the entire
-clade, so when we colorize the root here, it turns the whole tree gray.
-We can override that by assigning a different color lower down on the
-tree.
+一个进化枝的颜色会被当作从上而下整个进化枝的颜色，所以我们这里设置根的
+的颜色会将整个树的颜色变为灰色。我们能通过在树中下面分支赋值不同的颜色
+来重新定义某个分支的颜色。
 
-Let’s target the most recent common ancestor (MRCA) of the nodes named
-“E” and “F”. The ``common_ancestor`` method returns a reference to that
-clade in the original tree, so when we color that clade “salmon”, the
-color will show up in the original tree.
+让我们先定位“E”和“F”最近祖先（MRCA）节点。方法 ``common_ancestor`` 返回
+原始树中这个进化枝的引用，所以当我们设置该进化枝为“salmon”颜色时，这个颜
+色则会在原始的树中显示出来。
 
 .. code:: verbatim
 
     >>> mrca = tree.common_ancestor({"name": "E"}, {"name": "F"})
     >>> mrca.color = "salmon"
 
-If we happened to know exactly where a certain clade is in the tree, in
-terms of nested list entries, we can jump directly to that position in
-the tree by indexing it. Here, the index ``[0,1]`` refers to the second
-child of the first child of the root.
+当我没碰巧明确地知道某个进化枝在树中的位置，以嵌套列表的形式，我们就能
+通过索引的方式直接跳到那个位置。这里，索引 ``[0,1]`` 表示根节点的第一个
+子代节点的第二个子代。
 
 .. code:: verbatim
 
     >>> tree.clade[0,1].color = "blue"
 
-Finally, show our work (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
+最后，展示一下我们的工作结果 (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
 
 .. code:: verbatim
 
@@ -186,17 +172,13 @@ Finally, show our work (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
 
 |image6|
 
-Note that a clade’s color includes the branch leading to that clade, as
-well as its descendents. The common ancestor of E and F turns out to be
-just under the root, and with this coloring we can see exactly where the
-root of the tree is.
+注意进化枝的颜色包括导向它的分支和它的子代的分支。E和F的共同祖先结果刚好
+在根分支下面，而通过这样上色，我们能清楚的看出这个树的根在哪里。
 
-My, we’ve accomplished a lot! Let’s take a break here and save our work.
-Call the ``write`` function with a file name or handle — here we use
-standard output, to see what would be written — and the format
-``phyloxml``. PhyloXML saves the colors we assigned, so you can open
-this phyloXML file in another tree viewer like Archaeopteryx, and the
-colors will show up there, too.
+我们已经完成了很多！现在让我们休息一下，保存一下我们的工作。使用一个文件
+名或句柄（这里我们使用标准输出来查看将会输出什么）和 ``phyloxml`` 格式来
+调用 ``write`` 函数。PhyloXML格式保存了我们设置的颜色，所以你能通过其他树
+查看工具，如Archaeopteryx，打开这个phyloXML文件，这些颜色也会显示出来。
 
 .. code:: verbatim
 
@@ -220,9 +202,8 @@ colors will show up there, too.
                 <phy:name>A</phy:name>
                 ...
 
-The rest of this chapter covers the core functionality of Bio.Phylo in
-greater detail. For more examples of using Bio.Phylo, see the cookbook
-page on Biopython.org:
+本章的其余部分将更加细致的介绍Bio.Phylo核心功能。关于Bio.Phylo的更多例
+子，请参见Biopython.org上的Cookbook手册页面。
 
 ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
 
