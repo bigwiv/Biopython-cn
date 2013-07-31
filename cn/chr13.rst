@@ -207,16 +207,14 @@ Or:
 
 ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
 
-13.2  I/O functions
+13.2  I/O 函数
 -------------------
 
-Like SeqIO and AlignIO, Phylo handles file input and output through four
-functions: ``parse``, ``read``, ``write`` and ``convert``, all of which
-support the tree file formats Newick, NEXUS, phyloXML and NeXML.
+和SeqIO、AlignIO类似, Phylo使用四个函数处理文件的输入输出： ``parse`` 、
+``read`` 、 ``write`` 和 ``convert`` ，所有的函数都支持Newick、NEXUS、
+phyloXML和NeXML等树文件格式。
 
-The ``read`` function parses a single tree in the given file and returns
-it. Careful; it will raise an error if the file contains more than one
-tree, or no trees.
+``read`` 函数解析并返回给定文件中的单个树。注意，如果文件中包含多个或不包含任何树，它将抛出一个错误。
 
 .. code:: verbatim
 
@@ -224,11 +222,9 @@ tree, or no trees.
     >>> tree = Phylo.read("Tests/Nexus/int_node_labels.nwk", "newick")
     >>> print tree
 
-(Example files are available in the ``Tests/Nexus/`` and
-``Tests/PhyloXML/`` directories of the Biopython distribution.)
+（Biopython发布包的 ``Tests/Nexus/`` 和 ``Tests/PhyloXML/`` 文件夹中有相应的例子）
 
-To handle multiple (or an unknown number of) trees, use the ``parse``
-function iterates through each of the trees in the given file:
+处理多个（或者未知个数）的树文件，需要使用 ``parse`` 函数迭代给定文件中的每一个树。
 
 .. code:: verbatim
 
@@ -236,8 +232,7 @@ function iterates through each of the trees in the given file:
     >>> for tree in trees:
     ...     print tree
 
-Write a tree or iterable of trees back to file with the ``write``
-function:
+使用 ``write‵‵ 函数输出一个或多个可迭代的树。
 
 .. code:: verbatim
 
@@ -249,8 +244,7 @@ function:
     >>> Phylo.write(others, "other_trees.xml", "phyloxml")
     12
 
-Convert files between any of the supported formats with the ``convert``
-function:
+使用 ``convert`` 函数转换任何支持的树格式。
 
 .. code:: verbatim
 
@@ -259,8 +253,7 @@ function:
     >>> Phylo.convert("other_trees.xml", "phyloxml", "other_trees.nex", 'nexus")
     12
 
-To use strings as input or output instead of actual files, use
-``StringIO`` as you would with SeqIO and AlignIO:
+和SeqIO和AlignIO类似，当使用字符串而不是文件作为输入输出时，需要使用 ‵‵StringIO`` 函数。
 
 .. code:: verbatim
 
@@ -269,11 +262,10 @@ To use strings as input or output instead of actual files, use
     >>> handle = StringIO("(((A,B),(C,D)),(E,F,G));")
     >>> tree = Phylo.read(handle, "newick")
 
-13.3  View and export trees
+13.3  查看和导出树
 ---------------------------
 
-The simplest way to get an overview of a ``Tree`` object is to ``print``
-it:
+了解一个 ``Tree`` 对象概况的最简单的方法是用 ``print`` 函数将它打印出来：
 
 .. code:: verbatim
 
@@ -287,12 +279,11 @@ it:
                 Clade(branch_length='0.23', name='B')
             Clade(branch_length='0.4', name='C')
 
-This is essentially an outline of the object hierarchy Biopython uses to
-represent a tree. But more likely, you’d want to see a drawing of the
-tree. There are three functions to do this.
+上面实际上是Biopython的树对象层次结构的一个概况。然而更可能的情况是，你希望见到
+画出树的形状，这里有三个函数来做这件事情。
 
-As we saw in the demo, ``draw_ascii`` prints an ascii-art drawing of the
-tree (a rooted phylogram) to standard output, or an open file handle if
+如我们在demo中看到的一样， ``draw_ascii`` 打印一个树的ascii-art图像（有根进化树）
+到标准输出 to standard output, or an open file handle if
 given. Not all of the available information about the tree is shown, but
 it provides a way to quickly view the tree without relying on any
 external dependencies.
