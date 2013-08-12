@@ -283,10 +283,8 @@ phyloXML和NeXML等树文件格式。
 画出树的形状，这里有三个函数来做这件事情。
 
 如我们在demo中看到的一样， ``draw_ascii`` 打印一个树的ascii-art图像（有根进化树）
-到标准输出 to standard output, or an open file handle if
-given. Not all of the available information about the tree is shown, but
-it provides a way to quickly view the tree without relying on any
-external dependencies.
+到标准输出，或者一个打开的文件句柄，若有提供。不是所有关于树的信息被显示出来，但是它提供了一个
+不依靠于任何外部依赖的快速查看树的方法。
 
 .. code:: verbatim
 
@@ -298,9 +296,8 @@ external dependencies.
      |
      |___________________________________________________________________________ C
 
-The ``draw`` function draws a more attractive image using the matplotlib
-library. See the API documentation for details on the arguments it
-accepts to customize the output.
+``draw`` 函数则使用matplotlib类库画出一个更加好看的图像。查看API文档以获得关于它所接受的
+用来定制输出的参数。
 
 .. code:: verbatim
 
@@ -309,11 +306,9 @@ accepts to customize the output.
 
 |image7|
 
-``draw_graphviz`` draws an unrooted cladogram, but requires that you
-have Graphviz, PyDot or PyGraphviz, NetworkX, and matplotlib (or pylab)
-installed. Using the same example as above, and the ``dot`` program
-included with Graphviz, let’s draw a rooted tree (see
-Fig. `13.3 <#fig:phylo-dot>`__):
+``draw_graphviz`` 则画出一个无根的进化分枝图（cladogram），但是它要求你安装有Graphviz、
+PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
+ ``dot`` 程序，让我们来画一个有根树（见图. `13.3 <#fig:phylo-dot>`__ ）：
 
 .. code:: verbatim
 
@@ -325,19 +320,15 @@ Fig. `13.3 <#fig:phylo-dot>`__):
 
 |image8|
 
-(Tip: If you execute IPython with the ``-pylab`` option, calling
-``draw_graphviz`` causes the matplotlib viewer to launch automatically
-without manually calling ``show()``.)
+（提示：如果你使用 ``-pylab`` 选项执行IPython，调用 ``draw_graphviz`` 将导致matplotlib
+查看器自动运行，而不需要手动的调用 ``show()`` 方法。）
 
-This exports the tree object to a NetworkX graph, uses Graphviz to lay
-out the nodes, and displays it using matplotlib. There are a number of
-keyword arguments that can modify the resulting diagram, including most
-of those accepted by the NetworkX functions ``networkx.draw`` and
-``networkx.draw_graphviz``.
+这将输出树对象到一个NetworkX图中，使用Graphviz来布局节点的位置，并使用matplotlib来显示
+它。这里有几个关键词参数来修改结果图像，包括大多数被NetworkX函数 ``networkx.draw`` 和
+``networkx.draw_graphviz`` 所接受的参数。
 
-The display is also affected by the ``rooted`` attribute of the given
-tree object. Rooted trees are shown with a “head” on each branch
-indicating direction (see Fig. `13.3 <#fig:phylo-rooted>`__):
+最终的显示也受所提供的树对象的 ``rooted`` 属性的影响。有根树在每个分支（branch）上显示
+一个“head”来表明它的方向（见图. `13.3 <#fig:phylo-rooted>`__ ）：
 
 .. code:: verbatim
 
@@ -347,13 +338,10 @@ indicating direction (see Fig. `13.3 <#fig:phylo-rooted>`__):
 
 |image9|
 
-The “prog” argument specifies the Graphviz engine used for layout. The
-default, ``twopi``, behaves well for any size tree, reliably avoiding
-crossed branches. The ``neato`` program may draw more attractive
-moderately-sized trees, but sometimes will cross branches (see
-Fig. `13.3 <#fig:phylo-color>`__). The ``dot`` program may be useful
-with small trees, but tends to do surprising things with the layout of
-larger trees.
+“prog”参数指定Graphviz的用来布局的引擎。默认的引擎 ``twopi`` 对任何大小的树都表现很好，
+很可靠的避免交叉的分支出现。``neato``程序可能画出更加好看的中等大小的树，但是有时候会
+有交叉分支出现（见图. `13.3 <#fig:phylo-color>`__ ）。 ``dot`` 程序或许对小型的树有用，
+但是对于大一点的树的布局易产生奇怪的事情。
 
 .. code:: verbatim
 
@@ -361,9 +349,8 @@ larger trees.
 
 |image10|
 
-This viewing mode is particularly handy for exploring larger trees,
-because the matplotlib viewer can zoom in on a selected region, thinning
-out a cluttered graphic.
+这个查看方式非常方便研究大型的树，因为matplotlib查看器可以放大选择的区域，使得杂乱的图像
+变得稀疏。
 
 .. code:: verbatim
 
@@ -372,38 +359,29 @@ out a cluttered graphic.
 
 |image11| |image12|
 
-Note that branch lengths are not displayed accurately, because Graphviz
-ignores them when creating the node layouts. The branch lengths are
-retained when exporting a tree as a NetworkX graph object
-(``to_networkx``), however.
+注意，分支长度并没有被正确地显示，因为Graphviz在布局时忽略了他们。然而，分支长度可以在输出
+树为NetworkX图对象（ ``to_networkx`` ）时重新获得。
 
-See the Phylo page on the Biopython wiki
+查看Biopython维基的Phylo页面
 (```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
-for descriptions and examples of the more advanced functionality in
-``draw_ascii``, ``draw_graphviz`` and ``to_networkx``.
+以获得关于 ``draw_ascii`` 、 ``draw_graphviz`` 和 ``to_networkx`` 的更加高级的功能的描述
+和例子。
 
-13.4  Using Tree and Clade objects
+13.4  使用Tree和Clade对象
 ----------------------------------
 
-The ``Tree`` objects produced by ``parse`` and ``read`` are containers
-for recursive sub-trees, attached to the ``Tree`` object at the ``root``
-attribute (whether or not the phylogenic tree is actually considered
-rooted). A ``Tree`` has globally applied information for the phylogeny,
-such as rootedness, and a reference to a single ``Clade``; a ``Clade``
-has node- and clade-specific information, such as branch length, and a
-list of its own descendent ``Clade`` instances, attached at the
-``clades`` attribute.
+``parse`` 和 ``read`` 方法产生的 ``Tree`` 对象是一些包含递归的子树的容器，连接到 ``Tree``
+对象的 ``root`` 属性（不管进化树实际上被认为是否有根）。一个 ``Tree`` 包含进化树的全局信息，
+如有根性（rootedness）和指向一个单独的 ``Clade`` 的引用; 一个 ``Clade`` 包含节点和进化枝
+特异性信息，如分支长度（branch length）和一个它自身后代 ``Clade`` 实例的列表，附着在 ``clades``
+属性上。
 
-So there is a distinction between ``tree`` and ``tree.root``. In
-practice, though, you rarely need to worry about it. To smooth over the
-difference, both ``Tree`` and ``Clade`` inherit from ``TreeMixin``,
-which contains the implementations for methods that would be commonly
-used to search, inspect or modify a tree or any of its clades. This
-means that almost all of the methods supported by ``tree`` are also
-available on ``tree.root`` and any clade below it. (``Clade`` also has a
-``root`` property, which returns the clade object itself.)
+所以，这里 ``tree`` 和 ``tree.root`` 间是有区别的. 然而，实际操作中，你几乎不需要担心它。为了
+缓和这个不同，``Tree`` 和 ``Clade`` 两者都继承自 ``TreeMixin``，它包含常用的用来查找、审视和
+修改树和任何它的进化枝的方法的实现。这意味着，所有 ``tree`` 所支持的方法在 ``tree.root`` 和
+任何它下面的clade中都能用。（ ``Clade`` 也有一个 ``root`` 属性，它返回clade对象本身。）
 
-13.4.1  Search and traversal methods
+13.4.1  查找和遍历类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For convenience, we provide a couple of simplified methods that return
@@ -522,7 +500,7 @@ Two more methods help navigating between nodes in the tree:
     List of all clade object between two targets in this tree. Excluding
     start, including finish.
 
-13.4.2  Information methods
+13.4.2  信息类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These methods provide information about the whole tree (or any clade).
@@ -575,12 +553,11 @@ The rest of these methods are boolean checks:
     True if all direct descendents are terminal; False if any direct
     descendent is not terminal.
 
-13.4.3  Modification methods
+13.4.3  修改类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These methods modify the tree in-place. If you want to keep the original
-tree intact, make a complete copy of the tree first, using Python’s
-``copy`` module:
+这些方法都在原地对树进行修改，所以如果你想保持原来的树不变，你首先要使用Python的
+``copy`` 模块对树进行完整的拷贝：
 
 .. code:: verbatim
 
@@ -589,76 +566,58 @@ tree intact, make a complete copy of the tree first, using Python’s
     newtree = copy.deepcopy(tree)
 
  **``collapse``**
-    Deletes the target from the tree, relinking its children to its
-    parent.
+    从树中删除目标，重新连接它的子代（children）到它的父亲节点（parent）。
 **``collapse_all``**
-    Collapse all the descendents of this tree, leaving only terminals.
-    Branch lengths are preserved, i.e. the distance to each terminal
-    stays the same. With a target specification (see above), collapses
-    only the internal nodes matching the specification.
+    删除这个树的所有后代（descendents），只保留末端节点（terminals）。
+    分支长度被保留，即到每个末端节点的距离保持不变。如指定一个目标（见上），
+    只坍塌（collapses）和指定匹配的内部节点。
 **``ladderize``**
-    Sort clades in-place according to the number of terminal nodes.
-    Deepest clades are placed last by default. Use ``reverse=True`` to
-    sort clades deepest-to-shallowest.
+    根据末端节点的个数，在原地对进化枝（clades）进行排序。越深的进化枝默认被放到最后，
+    使用 ``reverse=True`` 将其放到最前。
 **``prune``**
-    Prunes a terminal clade from the tree. If taxon is from a
-    bifurcation, the connecting node will be collapsed and its branch
-    length added to remaining terminal node. This might no longer be a
-    meaningful value.
+    从树中修剪末端进化枝（terminal clade）。如果分类名（taxon）来自一个二叉枝（bifurcation），
+    连接的节点将被坍塌，它的分支长度将被加到剩下的末端节点上。这可能不再是一个有意义的值。
 **``root_with_outgroup``**
-    Reroot this tree with the outgroup clade containing the given
-    targets, i.e. the common ancestor of the outgroup. This method is
-    only available on Tree objects, not Clades.
+    使用包含给定目标的外群进化枝（outgroup clade）重新确定树的根节点，即外群的共同祖先。该方法
+    只在Tree对象中能用，不能用于Clade对象。
 
-    If the outgroup is identical to self.root, no change occurs. If the
-    outgroup clade is terminal (e.g. a single terminal node is given as
-    the outgroup), a new bifurcating root clade is created with a
-    0-length branch to the given outgroup. Otherwise, the internal node
-    at the base of the outgroup becomes a trifurcating root for the
-    whole tree. If the original root was bifurcating, it is dropped from
-    the tree.
+    如果外群和self.root一致，将不发生改变。如果外群进化枝是末端（即一个末端节点被作为外群），一个
+    新的二叉根进化枝将被创建，且到给定外群的分支长度为0。否则，外群根部的内部节点变为整个树的一个
+    三叉根。如果原先的根是一个二叉，它将被从树中遗弃。
 
-    In all cases, the total branch length of the tree stays the same.
+    在所有的情况下，树的分支长度总和保持不变。
 
 **``root_at_midpoint``**
-    Reroot this tree at the calculated midpoint between the two most
-    distant tips of the tree. (This uses ``root_with_outgroup`` under
-    the hood.)
+    重新选择树中两个最远的节点的中点作为树的根。（这实际上是使用 ``root_with_outgroup`` 函数。）
 **``split``**
-    Generate *n* (default 2) new descendants. In a species tree, this is
-    a speciation event. New clades have the given ``branch_length`` and
-    the same name as this clade’s root plus an integer suffix (counting
-    from 0) — for example, splitting a clade named “A” produces the
-    sub-clades “A0” and “A1”.
+    产生 *n* （默认为2）个 新的后代。在一个物种树中，这是一个物种形成事件。新的进化枝拥有给定的
+    ``branch_length`` 以及和这个进化枝的根相同的名字，名字后面包含一个整数后缀（从0开始计数）——
+    例如，分割名为“A”的进化枝将生成子进化枝“A0”和“A1”。
 
-See the Phylo page on the Biopython wiki
+查看Biopython维基的Phylo页面
 (```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
-for more examples of using the available methods.
+以获得更多已有方法的使用示例。
 
-13.4.4  Features of PhyloXML trees
+13.4.4  PhyloXML树的特性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The phyloXML file format includes fields for annotating trees with
-additional data types and visual cues.
+phyloXML文件格式包含用来注释树的，采用额外数据格式和图像提示的字段。
 
-See the PhyloXML page on the Biopython wiki
+参加Biopython维基上的PhyloXML页面
 (```http://biopython.org/wiki/PhyloXML`` <http://biopython.org/wiki/PhyloXML>`__)
-for descriptions and examples of using the additional annotation
-features provided by PhyloXML.
+以查看关于使用PhyloXML提供的额外注释特性的描述和例子。
 
-13.5  Running external applications
+13.5  运行外部程序
 -----------------------------------
 
-While Bio.Phylo doesn’t infer trees from alignments itself, there are
-third-party programs available that do. These are supported through the
-module ``Bio.Phylo.Applications``, using the same general framework as
-``Bio.Emboss.Applications``, ``Bio.Align.Applications`` and others.
+尽管Bio.Phylo本身不从序列比对推断进化树，但这里有一些第三方的程序可以使用。
+他们通过 ``Bio.Phylo.Applications`` 模块获得支持，使用和 ``Bio.Emboss.Applications`` 、
+ ``Bio.Align.Applications`` 以及其他模块相同的通用框架。
 
-Biopython 1.58 introduced a wrapper for PhyML
-(```http://www.atgc-montpellier.fr/phyml/`` <http://www.atgc-montpellier.fr/phyml/>`__).
-The program accepts an input alignment in ``phylip-relaxed`` format
-(that’s Phylip format, but without the 10-character limit on taxon
-names) and a variety of options. A quick example:
+Biopython 1.58引入了一个PhyML的打包程序（wrapper）
+(```http://www.atgc-montpellier.fr/phyml/`` <http://www.atgc-montpellier.fr/phyml/>`__)。
+该程序接受一个 ``phylip-relaxed`` 格式（它是Phylip格式，然而没有对分类名称的10个字符的限制）
+的比对输入和多种参数。一个快速的例子是：
 
 .. code:: verbatim
 
@@ -667,45 +626,38 @@ names) and a variety of options. A quick example:
     >>> cmd = PhymlCommandline(input='Tests/Phylip/random.phy')
     >>> out_log, err_log = cmd()
 
-This generates a tree file and a stats file with the names
-[*input filename*\ ]\ ``_phyml_tree.txt`` and
-[*input filename*\ ]\ ``_phyml_stats.txt``. The tree file is in Newick
-format:
+这生成一个树文件盒一个统计文件，名称为：
+[*input filename*\ ]\ ``_phyml_tree.txt`` 和
+[*input filename*\ ]\ ``_phyml_stats.txt``. 树文件的格式是Newick格式：
 
 .. code:: verbatim
 
     >>> tree = Phylo.read('Tests/Phylip/random.phy_phyml_tree.txt', 'newick')
     >>> Phylo.draw_ascii(tree)
 
-A similar wrapper for RAxML
+一个类似的RAxML打包程序
 (```http://sco.h-its.org/exelixis/software.html`` <http://sco.h-its.org/exelixis/software.html>`__)
-was added in Biopython 1.60.
+也已经被添加到Biopython 1.60中。
 
-Note that some popular Phylip programs, including ``dnaml`` and
-``protml``, are already available through the EMBOSS wrappers in
-``Bio.Emboss.Applications`` if you have the Phylip extensions to EMBOSS
-installed on your system. See Section \ `6.4 <#sec:alignment-tools>`__
-for some examples and clues on how to use programs like these.
+注意，如果你系统中已经安装了EMBOSS的Phylip扩展，一些常用的Phylip程序，包括 ``dnaml`` 和 ``protml`` 
+已经通过 ``Bio.Emboss.Applications`` 中的EMBOSS打包程序被支持。参见章节 \ `6.4 <#sec:alignment-tools>`__
+以查看使用这些程序的例子和提示。
 
-13.6  PAML integration
+13.6  PAML整合
 ----------------------
 
-Biopython 1.58 brought support for PAML
+Biopython 1.58引入了对PAML的支持
 (```http://abacus.gene.ucl.ac.uk/software/paml.html`` <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
-a suite of programs for phylogenetic analysis by maximum likelihood.
-Currently the programs codeml, baseml and yn00 are implemented. Due to
-PAML’s usage of control files rather than command line arguments to
-control runtime options, usage of this wrapper strays from the format of
-other application wrappers in Biopython.
+它是一个采用最大似然法（maximum likelihood）进行系统进化分析的程序包。目前，对程序codeml、baseml和yn00的支持
+已经实现。由于PAML使用控制文件而不是命令行参数来控制运行时选项，这个打包程序（wrapper）的使用格式和Biopython
+的其他应用打包程序有些差异。
 
-A typical workflow would be to initialize a PAML object, specifying an
-alignment file, a tree file, an output file and a working directory.
-Next, runtime options are set via the ``set_options()`` method or by
-reading an existing control file. Finally, the program is run via the
-``run()`` method and the output file is automatically parsed to a
-results dictionary.
+一个典型的流程是：初始化一个PAML对象，指定一个比对文件，一个树文件，一个输出文件和工作路径。下一步，运行时
+选项通过 ``set_options()`` 方法或者读入一个已有的控制文件来设定。最后，程序通过 ``run()`` 方法来运行，输出文件
+将自动被解析到一个结果目录。
 
-Here is an example of typical usage of codeml:
+
+下面是一个codeml典型用法的例子：
 
 .. code:: verbatim
 
@@ -731,44 +683,32 @@ Here is an example of typical usage of codeml:
     >>> m0_params = m0.get("parameters")
     >>> print m0_params.get("omega")
 
-Existing output files may be parsed as well using a module’s ``read()``
-function:
+已有的输出文件也可以通过模块的 ``read()`` 方法来解析：
 
 .. code:: verbatim
 
     >>> results = codeml.read("Tests/PAML/Results/codeml/codeml_NSsites_all.out")
     >>> print results.get("lnL max")
 
-Detailed documentation for this new module currently lives on the
-Biopython wiki:
+这个新模块的详细介绍目前在Biopython维基上可以看到：
 ```http://biopython.org/wiki/PAML`` <http://biopython.org/wiki/PAML>`__
 
-13.7  Future plans
+13.7  未来计划
 ------------------
 
-Bio.Phylo is under active development. Here are some features we might
-add in future releases:
+Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版本中添加的特性：
 
- **New methods**
-    Generally useful functions for operating on Tree or Clade objects
-    appear on the Biopython wiki first, so that casual users can test
-    them and decide if they’re useful before we add them to Bio.Phylo:
-
+ **新方法**
+    通常用来操作Tree和Clade对象的有用方法会首先出现在Biopython维基上，这样常规用户
+    就能在我们添加到Bio.Phylo之前测试这些方法，看看它们是否有用：
     ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
 
 **Bio.Nexus port**
-    Much of this module was written during Google Summer of Code 2009,
-    under the auspices of NESCent, as a project to implement Python
-    support for the phyloXML data format (see
-    `13.4.4 <#sec:PhyloXML>`__). Support for Newick and Nexus formats
-    was added by porting part of the existing Bio.Nexus module to the
-    new classes used by Bio.Phylo.
+    这个模块的大部分是在2009年NESCent主办的谷歌编程夏令营中写的，作为实现Python对phyloXML数据格式（见
+    `13.4.4 <#sec:PhyloXML>`__ ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
+    的一部分被添加到Bio.Phylo使用的新类中。
 
-    Currently, Bio.Nexus contains some useful features that have not yet
-    been ported to Bio.Phylo classes — notably, calculating a consensus
-    tree. If you find some functionality lacking in Bio.Phylo, try
-    poking throught Bio.Nexus to see if it’s there instead.
+    目前，Bio.Nexus包含一些还没有导入到Bio.Phylo类中的有用的特性——特别是，计算一致树（consensus tree）。
+    如果你发现某些功能Bio.Phylo中没有，试试在Bio.Nexus中能不能找到。
 
-We’re open to any suggestions for improving the functionality and
-usability of this module; just let us know on the mailing list or our
-bug database.
+我们乐意接受任何增强该模块功能和使用性的建议；如果有，只需要通过邮件列表或我们的bug数据库让我们知道。
