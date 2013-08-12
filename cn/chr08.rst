@@ -1,126 +1,90 @@
-﻿Chapter 8  BLAST and other sequence search tools (*experimental code*)
+第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
 ======================================================================
 
-*WARNING*: This chapter of the Tutorial describes an *experimental*
-module in Biopython. It is being included in Biopython and documented
-here in the tutorial in a pre-final state to allow a period of feedback
-and refinement before we declare it stable. Until then the details will
-probably change, and any scripts using the current ``Bio.SearchIO``
-would need to be updated. Please keep this in mind! For stable code
-working with NCBI BLAST, please continue to use Bio.Blast described in
-the preceding Chapter \ `7 <#chapter:blast>`__.
+*WARNING*: 这章教程介绍了Biopython中一个 *实验的* 模块。它正在被加入到
+Biopython中，并且以一个预尾期的状态整理到教程当中，这样在我们发布稳定版
+的之前可以收到一系列的反馈和并作改进。那时有些细节可能会改变，并且用到
+当前 ``Bio.SearchIO`` 模块的脚本也需要更新。切记！为了与NCBI BLAST有关的
+代码可以稳定工作，请继续使用第 \ `7 <#chapter:blast>`__ 章介绍的Bio.Blast。
 
-Biological sequence identification is an integral part of
-bioinformatics. Several tools are available for this, each with their
-own algorithms and approaches, such as BLAST (arguably the most
-popular), FASTA, HMMER, and many more. In general, these tools usually
-use your sequence to search a database of potential matches. With the
-growing number of known sequences (hence the growing number of potential
-matches), interpreting the results becomes increasingly hard as there
-could be hundreds or even thousands of potential matches. Naturally,
-manual interpretation of these searches’ results is out of the question.
-Moreover, you often need to work with several sequence search tools,
-each with its own statistics, conventions, and output format. Imagine
-how daunting it would be when you need to work with multiple sequences
-using multiple search tools.
+生物序列的鉴定是生物信息工作的主要部分。有几个工具像BLAST（可能是最流行
+的），FASTA ，HMMER还有许多其它的都有这个功能，每个工具都有独特的算法和
+途径。一般来说，这些工具都是用你的序列在数据库中搜索可能的匹配。随着序列
+数量的增加（匹配数也会随之增加），将会有成百上千的可能匹配，解析这些结果
+无疑变得越来越困难。理所当然，人工解析搜索结果变得不可能。而且你可能会同
+时用几种不同的搜索工具，每种工具都有独特的统计方法、规则和输出格式。可以
+想象，同时用多种工具搜索多条序列是多么恐怖的事。
 
-We know this too well ourselves, which is why we created the
-``Bio.SearchIO`` submodule in Biopython. ``Bio.SearchIO`` allows you to
-extract information from your search results in a convenient way, while
-also dealing with the different standards and conventions used by
-different search tools. The name ``SearchIO`` is a homage to BioPerl’s
-module of the same name.
+我们对此非常了解，所以我们在Biopython构建了 ``Bio.SearchIO`` 亚模块。``Bio.SearchIO`` 模块使从搜索结果中提取信息变得简单，并且可以处理不同工具
+的不同标准和规则。``SearchIO`` 和BioPerl中模块名称一致。
 
-In this chapter, we’ll go through the main features of ``Bio.SearchIO``
-to show what it can do for you. We’ll use two popular search tools along
-the way: BLAST and BLAT. They are used merely for illustrative purposes,
-and you should be able to adapt the workflow to any other search tools
-supported by ``Bio.SearchIO`` in a breeze. You’re very welcome to follow
-along with the search output files we’ll be using. The BLAST output file
-can be downloaded
-`here <http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__, and the
-BLAT output file
-`here <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__. Both
-output files were generated using this sequence:
+在本章中，我们将学习 ``Bio.SearchIO`` 的主要功能，了解它可以做什么。我
+们将使用两个主要的搜索工具：BLAST和FASTA。它们只是用来阐明思路，你可以轻
+易地把工作流程应用到 ``Bio.SearchIO`` 支持的其他工具中。欢迎你使用我们将要
+用到的搜索结果文件。BLAST搜索结果文件可以在
+`这里 <http://biopython.org/SRC/Tests/Tutorial/my_blast.xml>`__ 下载。
+BLAT输出结果文件可以在
+`这里 <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__ 下载。两个结果
+文件都是用下面这条序列搜索产生的：
 
 .. code:: verbatim
 
     >mystery_seq
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-The BLAST result is an XML file generated using ``blastn`` against the
-NCBI ``refseq_rna`` database. For BLAT, the sequence database was the
-February 2009 ``hg19`` human genome draft and the output format is PSL.
+BLAST的XML结果是用 ``blastn`` 搜索NCBI的 ``refseq_rna`` 数据库得到的。对于
+BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格式是PSL。
 
-We’ll start from an introduction to the ``Bio.SearchIO`` object model.
-The model is the representation of your search results, thus it is core
-to ``Bio.SearchIO`` itself. After that, we’ll check out the main
-functions in ``Bio.SearchIO`` that you may often use.
+我们从 ``Bio.SearchIO`` 的对象模型的介绍开始。这个模型代表你的搜索结果，因
+此它是 ``Bio.SearchIO`` 的核心。然后，我们会介绍 ``Bio.SearchIO`` 常用的主要
+功能。
 
-Now that we’re all set, let’s go to the first step: introducing the core
-object model.
+现在一切就绪，让我们开始第一步：介绍核心对象模型。
 
-8.1  The SearchIO object model
+8.1  SearchIO对象模型
 ------------------------------
 
-Despite the wildly differing output styles among many sequence search
-tools, it turns out that their underlying concept is similar:
+尽管多数搜索工具的输出风格极为不同，但是它们蕴含的理念很相似：
 
--  The output file may contain results from one or more search queries.
--  In each search query, you will see one or more hits from the given
-   search database.
--  In each database hit, you will see one or more regions containing the
-   actual sequence alignment between your query sequence and the
-   database sequence.
--  Some programs like BLAT or Exonerate may further split these regions
-   into several alignment fragments (or blocks in BLAT and possibly
-   exons in exonerate). This is not something you always see, as
-   programs like BLAST and HMMER do not do this.
 
-Realizing this generality, we decided use it as base for creating the
-``Bio.SearchIO`` object model. The object model consists of a nested
-hierarchy of Python objects, each one representing one concept outlined
-above. These objects are:
+-  输出文件可能包含一条或更多的搜索查询的结果。
+-  在每次查询中，你会在给定的数据库中得到一个或更多的hit（命中）。
+-  在每个hit中，你会得到一个或更多包含query（查询)序列和数据库序列实际比对的区域。
+-  一些工具如BLAT和Exonerate可能会把这些区域分成几个比对片段（或在BLAT中
+   称为区块，在Exonerate中称为可能外显子）。这并不是很常见，像BLAST和
+   HMMER就不这么做。
 
--  ``QueryResult``, to represent a single search query.
--  ``Hit``, to represent a single database hit. ``Hit`` objects are
-   contained within ``QueryResult`` and in each ``QueryResult`` there is
-   zero or more ``Hit`` objects.
--  ``HSP`` (short for high-scoring pair), to represent region(s) of
-   significant alignments between query and hit sequences. ``HSP``
-   objects are contained within ``Hit`` objects and each ``Hit`` has one
-   or more ``HSP`` objects.
--  ``HSPFragment``, to represent a single contiguous alignment between
-   query and hit sequences. ``HSPFragment`` objects are contained within
-   ``HSP`` objects. Most sequence search tools like BLAST and HMMER
-   unify ``HSP`` and ``HSPFragment`` objects as each ``HSP`` will only
-   have a single ``HSPFragment``. However there are tools like BLAT and
-   Exonerate that produce ``HSP`` containing multiple ``HSPFragment``.
-   Don’t worry if this seems a tad confusing now, we’ll elaborate more
-   on these two objects later on.
+知道这些共性之后，我们决定把它们作为创造 ``Bio.SearchIO`` 对象模型的基础。对
+象模型是Python对象组成的嵌套分级系统，每个对象都代表一个上面列出的概念。这些对
+象是：
 
-These four objects are the ones you will interact with when you use
-``Bio.SearchIO``. They are created using one of the main
-``Bio.SearchIO`` methods: ``read``, ``parse``, ``index``, or
-``index_db``. The details of these methods are provided in later
-sections. For this section, we’ll only be using read and parse. These
-functions behave similarly to their ``Bio.SeqIO`` and ``Bio.AlignIO``
-counterparts:
+-  ``QueryResult``，代表单个搜索查询。
+-  ``Hit``，代表单个的数据库hit。``Hit`` 对象包含在 ``QueryResult`` 中，
+   每个 ``QueryResult`` 中有0个或多个 ``Hit`` 对象。
+-  ``HSP`` (high-scoring pair（高分片段）)，代表query和hit序列中有
+   意义比对的区域。``HSP`` 对象包含在 ``Hit`` 对象中，而且每个 ``Hit`` 有一个
+   或更多的 ``HSP`` 对象。   
+-  ``HSPFragment``，代表query和hit序列中单个的邻近比对。 ``HSPFragment``
+   对象包含在 ``HSP`` 对象中。多数的搜索工具如BLAST和HMMER把 ``HSP`` 和
+   ``HSPFragment`` 合并，因为一个 ``HSP`` 只含有一个 ``HSPFragment``。但是
+   像BLAT和Exonerate会产生含有多个 ``HSPFragment`` 的 ``HSP`` 。似乎有些困
+   惑？不要紧，稍后我们将详细介绍这两个对象。
 
--  ``read`` is used for search output files with a single query and
-   returns a ``QueryResult`` object
--  ``parse`` is used for search output files with multiple queries and
-   returns a generator that yields ``QueryResult`` objects
+这四个对象是当你用 ``Bio.SearchIO`` 会碰到的。 ``Bio.SearchIO`` 四
+个主要方法： ``read`` ，``parse``，``index`` 或 ``index_db`` 中任意一个都可
+以产生这四个对象。这些方法的会在后面的部分详细介绍。这部分只会用到 ``read`` 和
+``parse`` ，这两个方法和 ``Bio.SeqIO`` 以及 ``Bio.AlignIO`` 中的 ``read`` 和 ``parse`` 方法功
+能相似：
 
-With that settled, let’s start probing each ``Bio.SearchIO`` object,
-beginning with ``QueryResult``.
+-  ``read`` 用于单query对输出文件进行搜索并且返回一个 ``QueryResult`` 对象。
+-  ``parse`` 用于多query对输出文件进行搜索并且返回一个可以yield ``QueryResult`` 对象的generator。
+
+完成这些之后，让我们开始学习每个 ``Bio.SearchIO`` 对象，从 ``QueryResult`` 开始。
 
 8.1.1  QueryResult
 ~~~~~~~~~~~~~~~~~~
 
-The QueryResult object represents a single search query and contains
-zero or more Hit objects. Let’s see what it looks like using the BLAST
-file we have:
+``QueryResult``，代表单query搜索，每个 ``QueryResult`` 中有0个或多个 ``Hit`` 对象。我们来看看BLAST文件是什么样的：
 
 .. code:: verbatim
 
@@ -169,21 +133,16 @@ file we have:
                98      1  gi|297814701|ref|XM_002875188.1|  Arabidopsis lyrata su...
                99      1  gi|397513516|ref|XM_003827011.1|  PREDICTED: Pan panisc...
 
-We’ve just begun to scratch the surface of the object model, but you can
-see that there’s already some useful information. By invoking ``print``
-on the ``QueryResult`` object, you can see:
+虽然我们才接触对象模型的皮毛，但是你已经可以看到一些有用的信息了。通过调用``QueryResult`` 对象的 ``print`` 方法，你可以看到：
 
--  The program name and version (blastn version 2.2.27+)
--  The query ID, description, and its sequence length (ID is 42291,
-   description is ‘mystery\_seq’, and it is 61 nucleotides long)
--  The target database to search against (refseq\_rna)
--  A quick overview of the resulting hits. For our query sequence, there
-   are 100 potential hits (numbered 0–99 in the table). For each hit, we
-   can also see how many HSPs it contains, its ID, and a snippet of its
-   description. Notice here that ``Bio.SearchIO`` truncates the hit
-   table overview, by showing only hits numbered 0–29, and then 97–99.
-
-Now let’s check our BLAT results using the same procedure as above:
+-  程序的名称和版本 (blastn version 2.2.27+)
+-  query的ID，描述和序列长度(ID是42291，描述是 ‘mystery\_seq’，长度是61)
+-  搜索的目标数据库 (refseq\_rna)
+-  hit结果的快速预览。对于我们的查询序列，有100个可能的hit（表格中表示的是
+   0-99）对于每个hit，我们可以看到它包含的高分比对片段（HSP)，ID和一个片
+   段描述。注意， ``Bio.SearchIO`` 截断了表格，只显示0-29，然后是97-99。
+ 
+现在让我们用同样的步骤来检查BLAT的结果：
 
 .. code:: verbatim
 
@@ -198,33 +157,21 @@ Now let’s check our BLAT results using the same procedure as above:
              ----  -----  ----------------------------------------------------------
                 0     17  chr19  <unknown description>                              
 
-You’ll immediately notice that there are some differences. Some of these
-are caused by the way PSL format stores its details, as you’ll see. The
-rest are caused by the genuine program and target database differences
-between our BLAST and BLAT searches:
+马上可以看到一些不同点。有些是由于BLAT使用PSL格式储存它的信息，稍后会看
+到。其余是由于BLAST和BLAT搜索的程序和数据库之间明显的差异造成的：
 
--  The program name and version. ``Bio.SearchIO`` knows that the program
-   is BLAT, but in the output file there is no information regarding the
-   program version so it defaults to ‘<unknown version>’.
--  The query ID, description, and its sequence length. Notice here that
-   these details are slightly different from the ones we saw in BLAST.
-   The ID is ‘mystery\_seq’ instead of 42991, there is no known
-   description, but the query length is still 61. This is actually a
-   difference introduced by the file formats themselves. BLAST sometimes
-   creates its own query IDs and uses your original ID as the sequence
-   description.
--  The target database is not known, as it is not stated in the BLAT
-   output file.
--  And finally, the list of hits we have is completely different. Here,
-   we see that our query sequence only hits the ‘chr19’ database entry,
-   but in it we see 17 HSP regions. This should not be surprising
-   however, given that we are using a different program, each with its
-   own target database.
+-  程序名称和版本。 ``Bio.SearchIO`` 知道程序是BLAST，但是在输出文件中没
+   有信息显示程序版本，所以默认是 ‘<unknown version>’。
+-  query的ID，描述和序列的长度。注意，这些细节和BLAST的细节只有细小的差别，
+   ID是 ‘mystery\_seq’ 而不是42991，缺少描述，但是序列长度仍是61。这
+   实际上是文件格式本身导致的差异。BLAST有时创建自己的query ID并且用你的原
+   始ID作为序列描述。
+-  目标数据库是未知的，因为BLAT输出文件没提到相关信息。
+-  最后，hit列表完全不同。这里，我们的查询序列只命中到 ‘chr19’ 数据库条
+   目，但是我们可以看到它含有17个HSP区域。这并不让人诧异，考虑到我们
+   使用的是不同的程序，并且这些程序都有自己的数据库。
 
-All the details you saw when invoking the ``print`` method can be
-accessed individually using Python’s object attribute access notation
-(a.k.a. the dot notation). There are also other format-specific
-attributes that you can access using the same method.
+所有通过调用 ``print`` 方法看到的信息都可以单独地用Python的对象属性获得（又叫点标记法）。同样还可以用相同的方法获得其他格式特有的属性。
 
 .. code:: verbatim
 
@@ -235,20 +182,16 @@ attributes that you can access using the same method.
     >>> blast_qresult.param_evalue_threshold    # blast-xml specific
     10.0
 
-For a complete list of accessible attributes, you can check each
-format-specific documentation. Here are the ones `for
-BLAST <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlastIO-module.html>`__
-and for
+想获得一个可访问属性的完整列表，可以查询每个格式特有的文档。这些是 
+`BLAST <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlastIO-module.html>`__
 `BLAT <http://biopython.org/DIST/docs/api/Bio.SearchIO.BlatIO-module.html>`__.
 
-Having looked at using ``print`` on ``QueryResult`` objects, let’s drill
-down deeper. What exactly is a ``QueryResult``? In terms of Python
-objects, ``QueryResult`` is a hybrid between a list and a dictionary. In
-other words, it is a container object with all the convenient features
-of lists and dictionaries.
+已经知道了在 ``QueryResult`` 对象上可以调用 ``print`` 方法，让我们研究的更深
+一些。 ``QueryResult`` 到底是什么？就Python对象来说， ``QueryResult`` 混合
+了列表和字典的特性。换句话说，也就是一个包含了列表和字典功能的容器对象。
 
-Like Python lists and dictionaries, ``QueryResult`` objects are
-iterable. Each iteration returns a ``Hit`` object:
+和列表以及字典一样， ``QueryResult`` 对象是可迭代的。每次迭代返回一个hit
+对象：
 
 .. code:: verbatim
 
@@ -261,8 +204,7 @@ iterable. Each iteration returns a ``Hit`` object:
     Hit(id='gi|301171267|ref|NR_035851.1|', query_id='42291', 1 hsps)
     ...
 
-To check how many items (hits) a ``QueryResult`` has, you can simply
-invoke Python’s ``len`` method:
+要得到 ``QueryResult`` 对象有多少hit，可以简单调用Python的 ``len`` 方法：
 
 .. code:: verbatim
 
@@ -271,8 +213,7 @@ invoke Python’s ``len`` method:
     >>> len(blat_qresult)
     1
 
-Like Python lists, you can retrieve items (hits) from a ``QueryResult``
-using the slice notation:
+同列表类似，你可以用切片来获得 ``QueryResult`` 对象的hit：
 
 .. code:: verbatim
 
@@ -281,9 +222,7 @@ using the slice notation:
     >>> blast_qresult[-1]       # retrieves the last hit
     Hit(id='gi|397513516|ref|XM_003827011.1|', query_id='42291', 1 hsps)
 
-To retrieve multiple hits, you can slice ``QueryResult`` objects using
-the slice notation as well. In this case, the slice will return a new
-``QueryResult`` object containing only the sliced hits:
+要得到多个hit，你同样可以对 ``QueryResult`` 对象作切片。这种情况下，返回一个包含被切hit的新 ``QueryResult`` 对象：
 
 .. code:: verbatim
 
@@ -300,17 +239,14 @@ the slice notation as well. In this case, the slice will return a new
                 1      1  gi|301171311|ref|NR_035856.1|  Pan troglodytes microRNA...
                 2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...
 
-Like Python dictionaries, you can also retrieve hits using the hit’s ID.
-This is particularly useful if you know a given hit ID exists within a
-search query results:
+同字典类似，可以通过ID获取hit。如果你知道一个特定的hit ID存在于一个搜索结果中时，特别有用：
 
 .. code:: verbatim
 
     >>> blast_qresult['gi|262205317|ref|NR_030195.1|']
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
 
-You can also get a full list of ``Hit`` objects using ``hits`` and a
-full list of ``Hit`` IDs using ``hit_keys``:
+你可以用 ``hits`` 方法获得完整的 ``Hit`` 对象，也可以用 ``hit_keys`` 方法获得完整的 ``Hit`` ID：
 
 .. code:: verbatim
 
@@ -319,9 +255,7 @@ full list of ``Hit`` IDs using ``hit_keys``:
     >>> blast_qresult.hit_keys
     [...]       # list of all hit IDs
 
-What if you just want to check whether a particular hit is present in
-the query results? You can do a simple Python membership test using the
-``in`` keyword:
+如果你想确定一个特定的hit是否存在于查询结果中该怎么做呢？可以用 ``in`` 关键字作一个简单的成员检验：
 
 .. code:: verbatim
 
@@ -330,33 +264,26 @@ the query results? You can do a simple Python membership test using the
     >>> 'gi|262205317|ref|NR_030194.1|' in blast_qresult
     False
 
-Sometimes, knowing whether a hit is present is not enough; you also want
-to know the rank of the hit. Here, the ``index`` method comes to the
-rescue:
+有时候，只知道一个hit是否存在是不够的，你可能也会想知道hit的排名。 ``index`` 方法可以帮助你：
 
 .. code:: verbatim
 
     >>> blast_qresult.index('gi|301171437|ref|NR_035870.1|')
     22
 
-Remember that we’re using Python’s indexing style here, which is
-zero-based. This means our hit above is ranked at no. 23, not 22.
+记住，我们用的是Python风格的索引，是从0开始。这代表hit的排名是23而不是22。
 
-Also, note that the hit rank you see here is based on the native hit
-ordering present in the original search output file. Different search
-tools may order these hits based on different criteria.
+同样，注意你看的hit排名是基于原始搜索输出文件的本来顺序。不同的搜索工具可
+能会基于不同的标准排列hit。
 
-If the native hit ordering doesn’t suit your taste, you can use the
-``sort`` method of the ``QueryResult`` object. It is very similar to
-Python’s ``list.sort`` method, with the addition of an option to create
-a new sorted ``QueryResult`` object or not.
+如果原本的hit排序不合你意，可以用 ``QueryResult`` 对象的 ``sort`` 方法。
+它和Python的 ``list.sort`` 方法很相似，只是有个是否创建一个新的排序后的
+``QueryResult`` 对象的选项。
 
-Here is an example of using ``QueryResult.sort`` to sort the hits based
-on each hit’s full sequence length. For this particular sort, we’ll set
-the ``in_place`` flag to ``False`` so that sorting will return a new
-``QueryResult`` object and leave our initial object unsorted. We’ll also
-set the ``reverse`` flag to ``True`` so that we sort in descending
-order.
+这里有个用 ``QueryResult.sort`` 方法对hit排序的例子，这个方法基于每个hit
+的完整序列长度。对于这个特殊的排序，我们设置 ``in_place`` 参数等于 ``False`` ，
+这样排序方法会返回一个新的 ``QueryResult`` 对象，而原来的对象是未排序的。
+我们同样可以设置 ``reverse`` 参数等于`` True ``以递减排序。
 
 .. code:: verbatim
 
@@ -380,42 +307,27 @@ order.
     gi|356517317|ref|XM_003527287.1| 3251
     gi|356543101|ref|XM_003539954.1| 2936
 
-The advantage of having the ``in_place`` flag here is that we’re
-preserving the native ordering, so we may use it again later. You should
-note that this is not the default behavior of ``QueryResult.sort``,
-however, which is why we needed to set the ``in_place`` flag to ``True``
-explicitly.
+有 ``in_place`` 参数的好处是可以保留原本的顺序，后面会用到。注意这不是 ``QueryResult.sort`` 的默认行为，需要我们明确地设置 ``in_place`` 为 ``True`` 。
 
-At this point, you’ve known enough about ``QueryResult`` objects to make
-it work for you. But before we go on to the next object in the
-``Bio.SearchIO`` model, let’s take a look at two more sets of methods
-that could make it even easier to work with ``QueryResult`` objects: the
-``filter`` and ``map`` methods.
+现在，你已经知道使用 ``QueryResult`` 对象。但是，在我们学习 ``Bio.SearchIO`` 
+模块下个对象前，先了解下可以让 ``QueryResult`` 对象更易使用的两个方法：
+``filter`` 和 ``map`` 方法。
 
-If you’re familiar with Python’s list comprehensions, generator
-expressions or the built in ``filter`` and ``map`` functions, you’ll
-know how useful they are for working with list-like objects (if you’re
-not, check them out!). You can use these built in methods to manipulate
-``QueryResult`` objects, but you’ll end up with regular Python lists and
-lose the ability to do more interesting manipulations.
+如果你对Python的列表推导式、generator表达式或内建的 ``filter`` 和 ``map`` 
+很熟悉，就知道（不知道就是看看吧!)它们在处理list-like的对象时有多有用。
+你可以用这些内建的方法来操作 ``QueryResult`` 对象，但是这只对正常list有效，并且可操作性也会受到限制。
 
-That’s why, ``QueryResult`` objects provide its own flavor of ``filter``
-and ``map`` methods. Analogous to ``filter``, there are ``hit_filter``
-and ``hsp_filter`` methods. As their name implies, these methods filter
-its ``QueryResult`` object either on its ``Hit`` objects or ``HSP``
-objects. Similarly, analogous to ``map``, ``QueryResult`` objects also
-provide the ``hit_map`` and ``hsp_map`` methods. These methods apply a
-given function to all hits or HSPs in a ``QueryResult`` object,
-respectively.
+这就是为什么 ``QueryResult`` 对象提供自己特有的 ``filter`` 和 ``map`` 
+方法。对于 ``filter`` 有相似的 ``hit_filter`` 和 ``hsp_filter`` 方法，
+从名称就可以看出，这些方法过滤 ``QueryResult`` 对象的 ``Hit`` 对象或者
+``HSP`` 对象。同样的，对于 ``map`` ， ``QueryResult`` 对象同样提供相似
+的  ``hit_map`` 和 ``hsp_map`` 方法。这些方法分别应用于 ``QueryResult`` 对象 ``hit`` 或者 ``HSP`` 对象。 
 
-Let’s see these methods in action, beginning with ``hit_filter``. This
-method accepts a callback function that checks whether a given ``Hit``
-object passes the condition you set or not. In other words, the function
-must accept as its argument a single ``Hit`` object and returns ``True``
-or ``False``.
+让我们来看看这些方法的功能，从 ``hit_filter`` 开始。这个方法接受一个回调
+函数，这个函数检验给定的 ``Hit`` 是否符合你设定的条件。换句话说，这个方法
+必须接受一个单独 ``Hit`` 对象作为参数并且返回  ``True`` 或 ``False`` 。 
 
-Here is an example of using ``hit_filter`` to filter out ``Hit`` objects
-that only have one HSP:
+这里有个用 ``hit_filter`` 筛选出只有一个HSP的 ``Hit`` 对象的例子：
 
 .. code:: verbatim
 
@@ -433,17 +345,13 @@ that only have one HSP:
     gi|262205298|ref|NR_030190.1| 2
     gi|270132717|ref|NR_032716.1| 2
 
-``hsp_filter`` works the same as ``hit_filter``, only instead of looking
-at the ``Hit`` objects, it performs filtering on the ``HSP`` objects in
-each hits.
+``hsp_filter`` 和 ``hit_filter``功能相同，只是它过滤每个hit中的 ``HSP`` 对象，
+而不是 ``Hit`` 。
 
-As for the ``map`` methods, they too accept a callback function as their
-arguments. However, instead of returning ``True`` or ``False``, the
-callback function must return the modified ``Hit`` or ``HSP`` object
-(depending on whether you’re using ``hit_map`` or ``hsp_map``).
+对于 ``map`` 方法，同样接受一个回调函数作为参数。但是回调函数返回修改过的 ``Hit`` 或 ``HSP``对象（取决于你是否使用 ``hit_map`` 或 ``hsp_map``方法），
+而不是返回 ``True`` 或 ``False``。
 
-Let’s see an example where we’re using ``hit_map`` to rename the hit
-IDs:
+来看一个用 ``hit_map`` 方法来重命名hit ID的例子：
 
 .. code:: verbatim
 
@@ -460,18 +368,14 @@ IDs:
     NR_035857.1
     NR_035851.1
 
-Again, ``hsp_map`` works the same as ``hit_map``, but on ``HSP`` objects
-instead of ``Hit`` objects.
+同样的， ``hsp_map`` 和 ``hit_map`` 作用相似, 但是作用于 ``HSP`` 对象而不是 ``Hit`` 对象。
 
 8.1.2  Hit
 ~~~~~~~~~~
 
-``Hit`` objects represent all query results from a single database
-entry. They are the second-level container in the ``Bio.SearchIO``
-object hierarchy. You’ve seen that they are contained by ``QueryResult``
-objects, but they themselves contain ``HSP`` objects.
+``Hit`` 对象代表从单个数据库获得所有查询结果。在 ``Bio.SearchIO`` 对象等级中是二级容器。它们被包含在 ``QueryResult`` 对象中，同时它们又包含 ``HSP`` 对象。
 
-Let’s see what they look like, beginning with our BLAST search:
+看看它们是什么样的，从我们的BLAST搜索开始：
 
 .. code:: verbatim
 
@@ -492,23 +396,17 @@ Let’s see what they look like, beginning with our BLAST search:
               0   8.9e-20     100.47      60           [1:61]                [13:73]
               1   3.3e-06      55.39      60           [0:60]                [13:73]
 
-You see that we’ve got the essentials covered here:
+可以看到我们获得了必要的信息：
 
--  The query ID and description is present. A hit is always tied to a
-   query, so we want to keep track of the originating query as well.
-   These values can be accessed from a hit using the ``query_id`` and
-   ``query_description`` attributes.
--  We also have the unique hit ID, description, and full sequence
-   lengths. They can be accessed using ``id``, ``description``, and
-   ``seq_len``, respectively.
--  Finally, there’s a table containing quick information about the HSPs
-   this hit contains. In each row, we’ve got the important HSP details
-   listed: the HSP index, its e-value, its bit score, its span (the
-   alignment length including gaps), its query coordinates, and its hit
-   coordinates.
+-  query的ID和描述信息。一个hit总是和一个query绑定，所以我们同样希望记录原始
+   query。这些值可以通过 ``query_id`` 和  ``query_description`` 属性从hit
+   中获取。
+-  我们同样得到了hit的ID、描述和序列全长。它们可以分别通过 ``id``，
+   ``description``，和 ``seq_len`` 获取。
+-  最后，有一个hit含有的HSP的简短信息表。在每行中，HSP重要信息被
+   列出来：HSP索引，e值，得分，长度（包括gap），query坐标和hit坐标。
 
-Now let’s contrast this with the BLAT search. Remember that in the BLAT
-search we had one hit with 17 HSPs.
+现在，和BLAT结果作对比。记住，在BLAT搜索结果中，我们发现有一个含有17HSP的hit。
 
 .. code:: verbatim
 
@@ -540,25 +438,17 @@ search we had one hit with 17 HSPs.
              15         ?          ?       ?           [8:51]    [54234278:54234321]
              16         ?          ?       ?           [8:61]    [54238143:54238196]
 
-Here, we’ve got a similar level of detail as with the BLAST hit we saw
-earlier. There are some differences worth explaining, though:
+我们得到了和前面看到的BLAST hit详细程度相似的结果。但是有些不同点需要解释：
 
--  The e-value and bit score column values. As BLAT HSPs do not have
-   e-values and bit scores, the display defaults to ‘?’.
--  What about the span column? The span values is meant to display the
-   complete alignment length, which consists of all residues and any
-   gaps that may be present. The PSL format do not have this information
-   readily available and ``Bio.SearchIO`` does not attempt to try guess
-   what it is, so we get a ‘?’ similar to the e-value and bit score
-   columns.
+-  e-value和bit score列的值。因为BLAT HSP没有e-values和bit scores，默
+   认显示‘?’.
+-  span列是怎么回事呢？span值本来是显示完整的比对长度，包含所有的残基和
+   gap。但是PSL格式目前还不支持这些信息并且 ``Bio.SearchIO`` 也不打算去猜它到底是多少，所有我们得到了和e-value以及bit score列相同的 ‘?’。 
 
-In terms of Python objects, ``Hit`` behaves almost the same as Python
-lists, but contain ``HSP`` objects exclusively. If you’re familiar with
-lists, you should encounter no difficulties working with the ``Hit``
-object.
+就Python对象来说， ``Hit`` 和列表行为最相似，但是额外含有 ``HSP`` 。如果
+你对列表熟悉，在使用 ``Hit``对象是不会遇到困难。
 
-Just like Python lists, ``Hit`` objects are iterable, and each iteration
-returns one ``HSP`` object it contains:
+和列表一样， ``Hit`` 对象是可迭代的，并且每次迭代返回一个 ``HSP`` 对象：
 
 .. code:: verbatim
 
@@ -567,8 +457,7 @@ returns one ``HSP`` object it contains:
     HSP(hit_id='gi|301171322|ref|NR_035857.1|', query_id='42291', 1 fragments)
     HSP(hit_id='gi|301171322|ref|NR_035857.1|', query_id='42291', 1 fragments)
 
-You can invoke ``len`` on a ``Hit`` to see how many ``HSP`` objects it
-has:
+你可以对 ``Hit`` 对象调用 ``len`` 方法查看它含有多少个 ``HSP`` 对象：
 
 .. code:: verbatim
 
@@ -577,10 +466,8 @@ has:
     >>> len(blat_hit)
     17
 
-You can use the slice notation on ``Hit`` objects, whether to retrieve
-single ``HSP`` or multiple ``HSP`` objects. Like ``QueryResult``, if you
-slice for multiple ``HSP``, a new ``Hit`` object will be returned
-containing only the sliced ``HSP`` objects:
+你可以对 ``Hit`` 对象作切片取得单个或多个 ``HSP`` 对象，和 ``QueryResult``
+一样，如果切取多个 ``HSP``  ，会返回包含被切片 ``HSP``  的一个新 ``Hit`` 对象。
 
 .. code:: verbatim
 
@@ -603,29 +490,22 @@ containing only the sliced ``HSP`` objects:
               3         ?          ?       ?           [0:60]    [54189735:54189795]
               4         ?          ?       ?           [0:61]    [54185425:54185486]
 
-You can also sort the ``HSP`` inside a ``Hit``, using the exact same
-arguments like the sort method you saw in the ``QueryResult`` object.
+你同样可以对一个 ``Hit`` 里的 ``HSP``  排序，和你在 ``QueryResult`` 对象
+中看到的方法一样。
 
-Finally, there are also the ``filter`` and ``map`` methods you can use
-on ``Hit`` objects. Unlike in the ``QueryResult`` object, ``Hit``
-objects only have one variant of ``filter`` (``Hit.filter``) and one
-variant of ``map`` (``Hit.map``). Both of ``Hit.filter`` and ``Hit.map``
-work on the ``HSP`` objects a ``Hit`` has.
+最后，同样可以对 ``Hit`` 对象使用 ``filter`` 和 ``map`` 方法。和 ``QueryResult`` 
+不同， ``Hit`` 对象只有一种 ``filter`` (``Hit.filter``) 和一种 ``map`` (``Hit.map``)。
 
 8.1.3  HSP
 ~~~~~~~~~~
 
-``HSP`` (high-scoring pair) represents region(s) in the hit sequence
-that contains significant alignment(s) to the query sequence. It
-contains the actual match between your query sequence and a database
-entry. As this match is determined by the sequence search tool’s
-algorithms, the ``HSP`` object contains the bulk of the statistics
-computed by the search tool. This also makes the distinction between
-``HSP`` objects from different search tools more apparent compared to
-the differences you’ve seen in ``QueryResult`` or ``Hit`` objects.
+``HSP`` (高分片段)代表hit序列中的一个区域，该区域包含对于查询序列有意义的
+比对。它包含了你的查询序列和一个数据库条目之间精确的匹配。由于匹配取决于
+序列搜索工具的算法， ``HSP``  含有大部分统计信息，这些统计是由搜索工具计
+算得到的。这使得不同搜索工具的 ``HSP``  对象之间的差异和你在 ``QueryResult`` 
+以及 ``Hit`` 对象看到的差异更加明显。
 
-Let’s see some examples from our BLAST and BLAT searches. We’ll look at
-the BLAST HSP first:
+我们来看看BLAST和BLAT搜索的例子。先看BLAST HSP：
 
 .. code:: verbatim
 
@@ -646,23 +526,18 @@ the BLAST HSP first:
                  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
            Hit - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-Just like ``QueryResult`` and ``Hit``, invoking ``print`` on an ``HSP``
-shows its general details:
+和 ``QueryResult`` 以及 ``Hit`` 类似，调用 ``HSP``  的 ``print`` 方法,
+显示细节：
 
--  There are the query and hit IDs and descriptions. We need these to
-   identify our ``HSP``.
--  We’ve also got the matching range of the query and hit sequences. The
-   slice notation we’re using here is an indication that the range is
-   displayed using Python’s indexing style (zero-based, half open). The
-   number inside the parenthesis denotes the strand. In this case, both
-   sequences have the plus strand.
--  Some quick statistics are available: the e-value and bitscore.
--  There is information about the HSP fragments. Ignore this for now; it
-   will be explained later on.
--  And finally, we have the query and hit sequence alignment itself.
+-  有query和hit的ID以及描述。我们需要这些来识别我们的 ``HSP``  。
+-  我们同样得到了query和hit序列的匹配范围。这里用的的切片标志着范围的表示
+   是使用Python的索引风格（从0开始，半开区间）。圆括号里的数字表示正负链。
+   这里，两条序列都是正链。
+-  还有一些简短统计：e-value和bitscore。
+-  还有一些HSP片段的信息。现在可以忽略，稍后会解释。
+-  最后，还有query和hit的比对。
 
-These details can be accessed on their own using the dot notation, just
-like in ``QueryResult`` and ``Hit``:
+这些信息可以用点标记从它们本身获得，和 ``Hit`` 以及 ``QueryResult`` 相同： 
 
 .. code:: verbatim
 
@@ -674,9 +549,8 @@ like in ``QueryResult`` and ``Hit``:
     >>> blast_hsp.evalue
     4.91307e-23
 
-They’re not the only attributes available, though. ``HSP`` objects come
-with a default set of properties that makes it easy to probe their
-various details. Here are some examples:
+它们并不是仅有的属性， ``HSP``  对象有一系列的属性，使得获得它们的具体信
+息更加容易。下面是一些例子：
 
 .. code:: verbatim
 
@@ -687,14 +561,12 @@ various details. Here are some examples:
     >>> blast_hsp.aln_span          # how long the alignment is
     61
 
-Check out the ``HSP``
-`documentation <http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html>`__
-for a full list of these predefined properties.
+查看 ``HSP``
+`文档 <http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html>`__
+获取完整的属性列表。
 
-Furthermore, each sequence search tool usually computes its own
-statistics / details for its ``HSP`` objects. For example, an XML BLAST
-search also outputs the number of gaps and identical residues. These
-attributes can be accessed like so:
+不仅如此，每个搜索工具通常会对它的 ``HSP``  对象作统计学或其他细节计算。例如，一个
+XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以像这样被获取：
 
 .. code:: verbatim
 
@@ -703,19 +575,17 @@ attributes can be accessed like so:
     >>> blast_hsp.ident_num     # number of identical residues
     61
 
-These details are format-specific; they may not be present in other
-formats. To see which details are available for a given sequence search
-tool, you should check the format’s documentation in ``Bio.SearchIO``.
-Alternatively, you may also use ``.__dict__.keys()`` for a quick list of
-what’s available:
+这些细节是格式特异的；它们可能不会出现在其他的格式中。要知道哪些细节在给
+定的序列搜索工具中是存在的，你应该查看那种格式的在 ``Bio.SearchIO`` 中的
+文档。或者可以用 ``.__dict__.keys()`` 获得快速列表：
 
 .. code:: verbatim
 
     >>> blast_hsp.__dict__.keys()
     ['bitscore', 'evalue', 'ident_num', 'gap_num', 'bitscore_raw', 'pos_num', '_items']
 
-Finally, you may have noticed that the ``query`` and ``hit`` attributes
-of our HSP are not just regular strings:
+最后，你可能已经注意到了，我们HSP的 ``query`` 和 ``hit`` 属性不只是规律字符串： 
+
 
 .. code:: verbatim
 
@@ -724,13 +594,11 @@ of our HSP are not just regular strings:
     >>> blast_hsp.hit
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='gi|262205317|ref|NR_030195.1|', name='aligned hit sequence', description='Homo sapiens microRNA 520b (MIR520B), microRNA', dbxrefs=[])
 
-They are ``SeqRecord`` objects you saw earlier in
-Section \ `4 <#chapter:SeqRecord>`__! This means that you can do all
-sorts of interesting things you can do with ``SeqRecord`` objects on
-``HSP.query`` and/or ``HSP.hit``.
+它们是你已经在第 \ `4 <#chapter:SeqRecord>`__ 章看到过的 ``SeqRecord`` 对象！
+意味着你可以对 ``SeqRecord`` 对象做的各种有趣的事同样适用于 ``HSP.query`` 和 ``HSP.hit`` 对象。
 
-It should not surprise you now that the ``HSP`` object has an
-``alignment`` property which is a ``MultipleSeqAlignment`` object:
+现在 ``HSP``  对象有个 ``alignment`` 属性（一个 ``MultipleSeqAlignment`` 
+对象）应该不会让你感到惊讶：
 
 .. code:: verbatim
 
@@ -739,9 +607,8 @@ It should not surprise you now that the ``HSP`` object has an
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG 42291
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG gi|262205317|ref|NR_030195.1|
 
-Having probed the BLAST HSP, let’s now take a look at HSPs from our BLAT
-results for a different kind of HSP. As usual, we’ll begin by invoking
-``print`` on it:
+
+探索完BLAST HSP对象，让我们看看来自BLAT结果的不一样的HSP。我们将对它调用 ``print`` 方法： 
 
 .. code:: verbatim
 
@@ -755,15 +622,12 @@ results for a different kind of HSP. As usual, we’ll begin by invoking
     Quick stats: evalue ?; bitscore ?
       Fragments: 1 (? columns)
 
-Some of the outputs you may have already guessed. We have the query and
-hit IDs and descriptions and the sequence coordinates. Values for evalue
-and bitscore is ‘?’ as BLAT HSPs do not have these attributes. But The
-biggest difference here is that you don’t see any sequence alignments
-displayed. If you look closer, PSL formats themselves do not have any
-hit or query sequences, so ``Bio.SearchIO`` won’t create any sequence or
-alignment objects. What happens if you try to access ``HSP.query``,
-``HSP.hit``, or ``HSP.aln``? You’ll get the default values for these
-attributes, which is ``None``:
+一些输出你应该已经猜到了。我们得到了查询序列、hit ID、描述以及序列坐标。
+evalue和bitscore的值是 ‘?’ ，因为BLAT HSP并没有这些属性。但是最大的不同
+是你看不到任何的序列比对展示。如果你看的更仔细，PSL格式本身并没有任何的
+hit和query序列，所以 ``Bio.SearchIO`` 不会创建任何序列或者比对对象。如果
+你尝试获取 ``HSP.query`` ，``HSP.hit`` ， 或者 ``HSP.aln`` 属性会怎么样
+呢？你会得到这些属性的默认值 ``None`` ：
 
 .. code:: verbatim
 
@@ -774,10 +638,9 @@ attributes, which is ``None``:
     >>> blat_hsp.aln is None
     True
 
-This does not affect other attributes, though. For example, you can
-still access the length of the query or hit alignment. Despite not
-displaying any attributes, the PSL format still have this information so
-``Bio.SearchIO`` can extract them:
+这并不影响其他的属性。例如，你仍然可以获取query和hit比对的长度。尽管不显
+示任何的属性，但是PSL格式还是有这些信息的，所以 ``Bio.SearchIO`` 可以抽
+提出这些信息。
 
 .. code:: verbatim
 
@@ -786,7 +649,7 @@ displaying any attributes, the PSL format still have this information so
     >>> blat_hsp.hit_span       # length of hit match
     61
 
-Other format-specific attributes are still present as well:
+其他格式特异的属性同样被展示出来：
 
 .. code:: verbatim
 
@@ -795,14 +658,10 @@ Other format-specific attributes are still present as well:
     >>> blat_hsp.mismatch_num   # the mismatch column
     0
 
-So far so good? Things get more interesting when you look at another
-‘variant’ of HSP present in our BLAT results. You might recall that in
-BLAT searches, sometimes we get our results separated into ‘blocks’.
-These blocks are essentially alignment fragments that may have some
-intervening sequence between them.
+到目前为止，一切还不错？当你看到BLAT结果中不同的HSP时，事情变得更有趣了。
+你可能会回想起在BLAT搜索中，有时我们把结果分成 ‘blocks’ 。这些区块是必需比对片段，可能会有些内含子在它们之间。
 
-Let’s take a look at a BLAT HSP that contains multiple blocks to see how
-``Bio.SearchIO`` deals with this:
+让我们看看 ``Bio.SearchIO`` 怎么处理包含多个区块的BLAT HSP：
 
 .. code:: verbatim
 
@@ -819,31 +678,21 @@ Let’s take a look at a BLAT HSP that contains multiple blocks to see how
                    0               ?                  [0:18]     [54233104:54233122]
                    1               ?                 [18:61]     [54264420:54264463]
 
-What’s happening here? We still some essential details covered: the IDs
-and descriptions, the coordinates, and the quick statistics are similar
-to what you’ve seen before. But the fragments detail is all different.
-Instead of showing ‘Fragments: 1’, we now have a table with two data
-rows.
+怎么回事？我们仍然得到了一些必要的信息：ID，描述信息，坐标和快速统计，和
+你前面看到的一样。但是片段信息完全不同。我们得到了有两行数据的表格，而不是显示 ‘Fragment: 1’。
 
-This is how ``Bio.SearchIO`` deals with HSPs having multiple fragments.
-As mentioned before, an HSP alignment may be separated by intervening
-sequences into fragments. The intervening sequences are not part of the
-query-hit match, so they should not be considered part of query nor hit
-sequence. However, they do affect how we deal with sequence coordinates,
-so we can’t ignore them.
+这就是 ``Bio.SearchIO`` 处理含有多片段HSP的方式。和前面提到的一样，一个
+HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹配的一部分，所以
+它们不能被当成query或hit序列的一部分。但是，它们确实影响我们处理序列坐标，
+所以我们不能忽视。
 
-Take a look at the hit coordinate of the HSP above. In the
-``Hit range:`` field, we see that the coordinate is
-``[54233104:54264463]``. But looking at the table rows, we see that not
-the entire region spanned by this coordinate matches our query.
-Specifically, the intervening region spans from ``54233122`` to
-``54264420``.
+看看上面的HSP的hit坐标。在 ``Hit range`` 区域，我们看到坐标是
+``[54233104:54264463]``。但是看看表格中的行，我们发现不是坐标跨度的所有区域
+都能匹配我们的query。特殊的是，间断区域从 ``54233122`` 到 ``54264420`` 。
 
-Why then, is the query coordinates seem to be contiguous, you ask? This
-is perfectly fine. In this case it means that the query match is
-contiguous (no intervening regions), while the hit match is not.
+你可能会问，为什么query坐标好像是邻近的?这是很好的。在这个例子中，query是连续的（无间断区域），但是hit却不是。
 
-All these attributes are accessible from the HSP directly, by the way:
+所有的这些属性都是可以直接从HSP获取的，通过这样的方式：
 
 .. code:: verbatim
 
@@ -860,25 +709,19 @@ All these attributes are accessible from the HSP directly, by the way:
     >>> blat_hsp2.hit_inter_spans   # span of intervening regions in the hit sequence
     [31298]
 
-Most of these attributes are not readily available from the PSL file we
-have, but ``Bio.SearchIO`` calculates them for you on the fly when you
-parse the PSL file. All it needs are the start and end coordinates of
-each fragment.
+这些属性中大多数都不能简单地从PSL文件获得，但是当你分析PSL文件时，
+``Bio.SearchIO`` 会动态地帮你计算。它需要的只是每个片段的开始和结束坐标。
 
-What about the ``query``, ``hit``, and ``aln`` attributes? If the HSP
-has multiple fragments, you won’t be able to use these attributes as
-they only fetch single ``SeqRecord`` or ``MultipleSeqAlignment``
-objects. However, you can use their ``*_all`` counterparts:
-``query_all``, ``hit_all``, and ``aln_all``. These properties will
-return a list containing ``SeqRecord`` or ``MultipleSeqAlignment``
-objects from each of the HSP fragment. There are other attributes that
-behave similarly, i.e. they only work for HSPs with one fragment. Check
-out the ``HSP``
-`documentation <http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html>`__
-for a full list.
+``query``， ``hit``， 和 ``aln`` 属性又是什么情况？如果HSP含有多个片段，
+你就不能使用这些属性，因为它们只取回单个 ``SeqRecord`` 或
+``MultipleSeqAlignment`` 对象。但是，你可以用相应的 ``*_all`` 方法：
+``query_all``， ``hit_all``， 和 ``aln_all``。 这些属性会返回包含每个HSP
+片段的 ``SeqRecord`` 或 ``MultipleSeqAlignment`` 对象的列表。还有其他相同
+功能的属性，也就是只对只有一个片段的HSP有效。查看 ``HSP``
+`文档 <http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html>`__
+获得完整的列表。
 
-Finally, to check whether you have multiple fragments or not, you can
-use the ``is_fragmented`` property like so:
+最后，想要检查是否是多片段HSP，你可以用 ``is_fragmented`` 属性：
 
 .. code:: verbatim
 
@@ -886,30 +729,23 @@ use the ``is_fragmented`` property like so:
     True
     >>> blat_hsp.is_fragmented      # BLAT HSP from earlier, with one fragment
     False
+在进入下部分之前，你只需要了解我们可以对 ``HSP`` 对象使用切片，和
+``QueryResult`` 或 ``Hit`` 对象一样。当你使用切片的时候，会返回一个
+``HSPFragment`` 对象。
 
-Before we move on, you should also know that we can use the slice
-notation on ``HSP`` objects, just like ``QueryResult`` or ``Hit``
-objects. When you use this notation, you’ll get an ``HSPFragment``
-object in return, the last component of the object model.
-
-8.1.4  HSPFragment
+8.1.4  HSP片段
 ~~~~~~~~~~~~~~~~~~
 
-``HSPFragment`` represents a single, contiguous match between the query
-and hit sequences. You could consider it the core of the object model
-and search result, since it is the presence of these fragments that
-determine whether your search have results or not.
+``HSPFragment`` 代表query和hit之间单个连续匹配。应该把它当作对象模型
+和搜索结果的核心，因为它决定你的搜索是否有结果。
 
-In most cases, you don’t have to deal with ``HSPFragment`` objects
-directly since not that many sequence search tools fragment their HSPs.
-When you do have to deal with them, what you should remember is that
-``HSPFragment`` objects were written with to be as compact as possible.
-In most cases, they only contain attributes directly related to
-sequences: strands, reading frames, alphabets, coordinates, the
-sequences themselves, and their IDs and descriptions.
+在多数情况下，你不必直接处理 ``HSPFragment`` 对象，因为没有那么多搜索工具
+断裂它们的HSP。当你确实需要处理它们时，需要记住的是 ``HSPFragment`` 对象
+要被写地尽量压缩。在多数情况下，它们仅仅包含直接与序列有关的属性：正负链，
+阅读框，字母表，位置坐标，序列本身以及它们的ID和描述。
 
-These attributes are readily shown when you invoke ``print`` on an
-``HSPFragment``. Here’s an example, taken from our BLAST search:
+当你对 ``HSPFragment`` 对象调用 ``print`` 方法时，这些属性可以非常简单地显示
+出来。这里有个从我们BLAST搜索得到的例子：
 
 .. code:: verbatim
 
@@ -926,8 +762,7 @@ These attributes are readily shown when you invoke ``print`` on an
                  |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
            Hit - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
 
-At this level, the BLAT fragment looks quite similar to the BLAST
-fragment, save for the query and hit sequences which are not present:
+在这个水平上，BLAT和BLAST片段看起来非常相似，除了没有出现的query和hit序列：
 
 .. code:: verbatim
 
@@ -940,8 +775,7 @@ fragment, save for the query and hit sequences which are not present:
       Hit range: [54204480:54204541] (1)
       Fragments: 1 (? columns)
 
-In all cases, these attributes are accessible using our favorite dot
-notation. Some examples:
+在所有情况下，这些属性都可以通过我们最爱的点标记访问。一些例子：
 
 .. code:: verbatim
 
@@ -952,77 +786,55 @@ notation. Some examples:
     >>> blast_frag.hit              # hit sequence, as a SeqRecord object
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='gi|262205317|ref|NR_030195.1|', name='aligned hit sequence', description='Homo sapiens microRNA 520b (MIR520B), microRNA', dbxrefs=[])
 
-8.2  A note about standards and conventions
+8.2  一个关于标准和惯例的注意事项
 -------------------------------------------
 
-Before we move on to the main functions, there is something you ought to
-know about the standards ``Bio.SearchIO`` uses. If you’ve worked with
-multiple sequence search tools, you might have had to deal with the many
-different ways each program deals with things like sequence coordinates.
-It might not have been a pleasant experience as these search tools
-usually have their own standards. For example, one tools might use
-one-based coordinates, while the other uses zero-based coordinates. Or,
-one program might reverse the start and end coordinates if the strand is
-minus, while others don’t. In short, these often creates unnecessary
-mess must be dealt with.
+在我们进入到主要功能前，你需要知道 ``Bio.SearchIO`` 使用的一些标准。如果
+你已经接触过多序列搜索工具，你可能必须面对每个程序处理事情方式不同的问题，
+如序列位置坐标。这可能不是一个令人高兴的经历，因为这些搜索工具通常有它们
+自己的标准。例如，一种工具可能使用“从1开始”(one-based)的坐标，而其他工具
+使用“从0开始”(zero-based)的坐标。或者，一种程序在处理负链时，可能会反转
+开始和结束坐标，而其他程序确不会。简而言之，会产生一些必须要处理的混乱。
 
-We realize this problem ourselves and we intend to address it in
-``Bio.SearchIO``. After all, one of the goals of ``Bio.SearchIO`` is to
-create a common, easy to use interface to deal with various search
-output files. This means creating standards that extend beyond the
-object model you just saw.
+我们意识到这种问题，并且打算在 ``Bio.SearchIO`` 中解决。毕竟， ``Bio.SearchIO`` 的目标之一就是创建一个通用简单的接口来处理多种不同的搜索
+ 输出文件。意味着要制定一个超越你所见的对象模型的标准。
 
-Now, you might complain, "Not another standard!". Well, eventually we
-have to choose one convention or the other, so this is necessary. Plus,
-we’re not creating something entirely new here; just adopting a standard
-we think is best for a Python programmer (it is Biopython, after all).
+现在，你可能抱怨，”不要又来一个标准“。好吧，最后我们必须选择一个标准，这
+是必须的。并且，我们并不是创造一个全新的事物；只是采用一个我们觉得对Python
+使用者最好的标准（这是Biopython，毕竟）。
 
-There are three implicit standards that you can expect when working with
-``Bio.SearchIO``:
+在使用 ``Bio.SearchIO`` 时你可以认为有个三个隐含的标准：
 
--  The first one pertains to sequence coordinates. In ``Bio.SearchIO``,
-   all sequence coordinates follows Python’s coordinate style:
-   zero-based and half open. For example, if in a BLAST XML output file
-   the start and end coordinates of an HSP are 10 and 28, they would
-   become 9 and 28 in ``Bio.SearchIO``. The start coordinate becomes 9
-   because Python indices start from zero, while the end coordinate
-   remains 28 as Python slices omit the last item in an interval.
--  The second is on sequence coordinate orders. In ``Bio.SearchIO``,
-   start coordinates are always less than or equal to end coordinates.
-   This isn’t always the case with all sequence search tools, as some of
-   them have larger start coordinates when the sequence strand is minus.
--  The last one is on strand and reading frame values. For strands,
-   there are only four valid choices: ``1`` (plus strand), ``-1`` (minus
-   strand), ``0`` (protein sequences), and ``None`` (no strand). For
-   reading frames, the valid choices are integers from ``-3`` to ``3``
-   and ``None``.
+-  第一个适用于序列坐标。在 ``Bio.SearchIO`` 模块中，所有序列坐标遵循Python
+   的坐标风格：
+   从0开始，半开区间。例如，在一个BLAST XML输出文件中，HSP的起始和结束坐标
+   是10和28，它们在 ``Bio.SearchIO`` 中将变成9和28。起始坐标变成9因为Python
+   中索引是从0开始，而结束坐标仍然是28因为Python索引删除了区间中最后一个
+   项目。
+-  第二个是关于序列坐标顺序。在 ``Bio.SearchIO`` 中，开始坐标总是小于或
+   等于结束坐标。但是这不是在所有的序列搜索工具中都始终适用。因为当序列
+   为负链时，起始坐标会更大一些。
+-  最后一个标准是关于链和阅读框的值。对于链值，只有四个可选值： ``1`` (正链)， ``-1`` (负链)， ``0`` (蛋白序列)， 和 ``None`` (无链)。对于阅读框，
+   可选值是从 ``-3`` 至 ``3`` 的整型以及 ``None`` 。
+   
+注意，这些标准只是存在于 ``Bio.SearchIO`` 对象中。如果你把 ``Bio.SearchIO`` 
+对象写入一种输出格式， ``Bio.SearchIO`` 会使用该格式的标准来输出。它并不
+强加它的标准到你的输出文件。
 
-Note that these standards only exist in ``Bio.SearchIO`` objects. If you
-write ``Bio.SearchIO`` objects into an output format, ``Bio.SearchIO``
-will use the format’s standard for the output. It does not force its
-standard over to your output file.
-
-8.3  Reading search output files
+8.3  读取搜索输出文件
 --------------------------------
 
-There are two functions you can use for reading search output files into
-``Bio.SearchIO`` objects: ``read`` and ``parse``. They’re essentially
-similar to ``read`` and ``parse`` functions in other submodules like
-``Bio.SeqIO`` or ``Bio.AlignIO``. In both cases, you need to supply the
-search output file name and the file format name, both as Python
-strings. You can check the documentation for a list of format names
-``Bio.SearchIO`` recognizes.
+有两个方法，你可以用来读取搜索输出文件到 ``Bio.SearchIO`` 对象： ``read`` 和 ``parse``。
+它们和其他亚模块如 ``Bio.SeqIO`` 或 ``Bio.AlignIO`` 中的 ``read`` 和 ``parse`` 方法在
+本质上是相似的。你都需要提供搜索输出文件名和文件格式名，都是Python字符串类型。你可以
+查阅文档来获得 ``Bio.SearchIO`` 可以识别的格式清单。
 
-``Bio.SearchIO.read`` is used for reading search output files with only
-one query and returns a ``QueryResult`` object. You’ve seen ``read``
-used in our previous examples. What you haven’t seen is that ``read``
-may also accept additional keyword arguments, depending on the file
-format.
+ ``Bio.SearchIO.read`` 用于读取单query的搜索输出文件并且返回一个 ``QueryResult`` 对象。你在前面的例子中已经看到过 ``read`` 的使用了。
+ 你没看到的是， ``read`` 同样接受额外的关键字参数，取决于文件的格式。
 
-Here are some examples. In the first one, we use ``read`` just like
-previously to read a BLAST tabular output file. In the second one, we
-use a keyword argument to modify so it parses the BLAST tabular variant
-with comments in it:
+这里有一些例子。在第一个例子中，我们和前面一样用 ``read`` 读BLAST表格输出
+文件。在第二个例子中，我们用一个关键字来修饰，所以它分析带有注释的BLAST
+表格变量。
 
 .. code:: verbatim
 
@@ -1034,15 +846,11 @@ with comments in it:
     >>> qresult2
     QueryResult(id='gi|16080617|ref|NP_391444.1|', 3 hits)
 
-These keyword arguments differs among file formats. Check the format
-documentation to see if it has keyword arguments that modifies its
-parser’s behavior.
+这些关键字在不同的文件格式中是不一样的。查看格式文档，看看它是否有关键字参数来控制它的分析器行为。
 
-As for the ``Bio.SearchIO.parse``, it is used for reading search output
-files with any number of queries. The function returns a generator
-object that yields a ``QueryResult`` object in each iteration. Like
-``Bio.SearchIO.read``, it also accepts format-specific keyword
-arguments:
+对于 ``Bio.SearchIO.parse``，是用来读取含有任意数量query的搜索输出文件。
+这个方法返回一个generator对象，在每次迭代中yield一个 ``QueryResult`` 对象。
+和 ``Bio.SearchIO.read`` 一样，它同样接受格式特异的关键字参数：
 
 .. code:: verbatim
 
@@ -1059,25 +867,19 @@ arguments:
     gi|16080617|ref|NP_391444.1|
     gi|11464971:4-101
 
-8.4  Dealing with large search output files with indexing
+8.4  用索引处理含有大量搜索输出的文件
 ---------------------------------------------------------
 
-Sometimes, you’re handed a search output file containing hundreds or
-thousands of queries that you need to parse. You can of course use
-``Bio.SearchIO.parse`` for this file, but that would be grossly
-inefficient if you need to access only a few of the queries. This is
-because ``parse`` will parse all queries it sees before it fetches your
-query of interest.
+有时，你得到了一个包含成百上千个query的搜索输出文件要分析，你当然可以使用
+``Bio.SearchIO.parse`` 来处理，但是如果你仅仅需要访问少数query的话，效率
+是及其低下的。这是因为 ``parse`` 会分析所有的query，直到找到你感兴趣。
 
-In this case, the ideal choice would be to index the file using
-``Bio.SearchIO.index`` or ``Bio.SearchIO.index_db``. If the names sound
-familiar, it’s because you’ve seen them before in
-Section \ `5.4.2 <#sec:SeqIO-index>`__. These functions also behave
-similarly to their ``Bio.SeqIO`` counterparts, with the addition of
-format-specific keyword arguments.
+在这种情况下，理想的选择是用 ``Bio.SearchIO.index`` 或 ``Bio.SearchIO.index_db`` 
+来索引文件。如果名字听起来很熟悉，是因为你之前已经见过了，在
+Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO`` 
+中相应的方法行为很相似，只是多了些格式特异的关键字参数。
 
-Here are some examples. You can use ``index`` with just the filename and
-format name:
+这里有一些例子。你可以只用文件名和格式名来 ``index`` 
 
 .. code:: verbatim
 
@@ -1088,7 +890,7 @@ format name:
     >>> idx['gi|16080617|ref|NP_391444.1|']
     QueryResult(id='gi|16080617|ref|NP_391444.1|', 3 hits)
 
-Or also with the format-specific keyword argument:
+或者依旧使用格式特异的关键字参数：
 
 .. code:: verbatim
 
@@ -1098,7 +900,7 @@ Or also with the format-specific keyword argument:
     >>> idx['gi|16080617|ref|NP_391444.1|']
     QueryResult(id='gi|16080617|ref|NP_391444.1|', 3 hits)
 
-Or with the ``key_function`` argument, as in ``Bio.SeqIO``:
+或者使用 ``key_function`` 参数，和 ``Bio.SeqIO`` 中一样：
 
 .. code:: verbatim
 
@@ -1109,20 +911,17 @@ Or with the ``key_function`` argument, as in ``Bio.SeqIO``:
     >>> idx['GI|16080617|REF|NP_391444.1|']
     QueryResult(id='gi|16080617|ref|NP_391444.1|', 3 hits)
 
-``Bio.SearchIO.index_db`` works like as ``index``, only it writes the
-query offsets into an SQLite database file.
+``Bio.SearchIO.index_db`` 和 ``index`` 作用差不多，不同的只是它把query
+偏移量写入一个SQLite数据库文件中。
 
-8.5  Writing and converting search output files
+8.5  写入和转换搜索输出文件
 -----------------------------------------------
 
-It is occasionally useful to be able to manipulate search results from
-an output file and write it again to a new file. ``Bio.SearchIO``
-provides a ``write`` function that lets you do exactly this. It takes as
-its arguments an iterable returning ``QueryResult`` objects, the output
-filename to write to, the format name to write to, and optionally some
-format-specific keyword arguments. It returns a four-item tuple, which
-denotes the number or ``QueryResult``, ``Hit``, ``HSP``, and
-``HSPFragment`` objects that were written.
+有时候，读取一个搜索输出文件，作些调整并写到一个新的文件是很有用的。
+``Bio.SearchIO`` 提供了一个 ``write`` 方法，让你可以准确地完成这种工作。
+它需要的参数是：一个可迭代返回 ``QueryResult`` 的对象，输出文件名，输出文件
+格式和一些可选的格式特异的关键字参数。它返回一个4项目的元组，分别代表
+被写入的 ``QueryResult``， ``Hit``， ``HSP``， 和 ``HSPFragment`` 对象的数量。 
 
 .. code:: verbatim
 
@@ -1131,23 +930,17 @@ denotes the number or ``QueryResult``, ``Hit``, ``HSP``, and
     >>> SearchIO.write(qresults, 'results.tab', 'blast-tab')    # write to tabular file
     (3, 239, 277, 277)
 
-You should note different file formats require different attributes of
-the ``QueryResult``, ``Hit``, ``HSP`` and ``HSPFragment`` objects. If
-these attributes are not present, writing won’t work. In other words,
-you can’t always write to the output format that you want. For example,
-if you read a BLAST XML file, you wouldn’t be able to write the results
-to a PSL file as PSL files require attributes not calculated by BLAST
-(e.g. the number of repeat matches). You can always set these attributes
-manually, if you really want to write to PSL, though.
+你应该注意，不同的文件格式需要 ``QueryResult``， ``Hit``， ``HSP`` 和
+``HSPFragment`` 对象的不同属性。如果这些属性不存在，那么将不能写入。
+也就是，你想写入的格式可能有时也会失效。举个例子，如果你读取一个BLASTXML文件，
+你就不能将结果写入PSL文件，因为PSL文件需要一些属性，而这些属性BLAST却不能
+提供（如重复匹配的数量）。如果你确实想写到PSL，可以手工设置这些属性。
 
-Like ``read``, ``parse``, ``index``, and ``index_db``, ``write`` also
-accepts format-specific keyword arguments. Check out the documentation
-for a complete list of formats ``Bio.SearchIO`` can write to and their
-arguments.
+和 ``read``， ``parse``， ``index`` 和 ``index_db`` 相似， ``write`` 同
+样接受格式特异的关键字参数。查阅文档获得 ``Bio.SearchIO`` 可写格式和这些
+格式的参数的完整清单。
 
-Finally, ``Bio.SearchIO`` also provides a ``convert`` function, which is
-simply a shortcut for ``Bio.SearchIO.parse`` and ``Bio.SearchIO.write``.
-Using the convert function, our example above would be:
+最后， ``Bio.SearchIO`` 同样提供一个 ``convert`` 方法，可以理解为 ``Bio.SearchIO.parse`` 和 ``Bio.SearchIO.write`` 的简单替代方法。使用 ``convert`` 方法的例子如下：
 
 .. code:: verbatim
 
@@ -1155,8 +948,7 @@ Using the convert function, our example above would be:
     >>> SearchIO.convert('mirna.xml', 'blast-xml', 'results.tab', 'blast-tab')
     (3, 239, 277, 277)
 
-As ``convert`` uses ``write``, it is only limited to format conversions
-that have all the required attributes. Here, the BLAST XML file provides
-all the default values a BLAST tabular file requires, so it works just
-fine. However, other format conversions are less likely to work since
-you need to manually assign the required attributes first.
+因为 ``convert`` 使用 ``write`` 方法，所以只有所有需要的属性都存在时，格式
+转换才能正常工作。这里由于BLAST XML文件提供BLAST 表格文件所需的所有默认值，
+格式转换才能正常完成。但是，其他格式转换就可能不会正常工作，因为你需要先手工指定所需的属性。
+
