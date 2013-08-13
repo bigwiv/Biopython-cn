@@ -1,155 +1,107 @@
-Chapter 11  Going 3D: The PDB module
-====================================
+第11章  走向3D：PDB模块
+=========================================================
 
-Bio.PDB is a Biopython module that focuses on working with crystal
-structures of biological macromolecules. Among other things, Bio.PDB
-includes a PDBParser class that produces a Structure object, which can
-be used to access the atomic data in the file in a convenient manner.
-There is limited support for parsing the information contained in the
-PDB header.
+Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的类之外，Bio.PDB包含PDBParser类，此类能够产生一个Structure对象，以一种较方便的方式获取文件中的原子数据。在处理PDB文件头包含的信息的时候有一定的局限性。
 
-11.1  Reading and writing crystal structure files
--------------------------------------------------
 
-11.1.1  Reading a PDB file
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+11.1  结构文件的读与写 
+----------------------
 
-First we create a ``PDBParser`` object:
+11.1.1  PDB文件的读取 
+~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+首先，我们创建一个 ``PDBParser`` 对象：
+
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> p = PDBParser(PERMISSIVE=1)
 
-The ``PERMISSIVE`` flag indicates that a number of common problems (see
-`11.7.1 <#problem%20structures>`__) associated with PDB files will be
-ignored (but note that some atoms and/or residues will be missing). If
-the flag is not present a ``PDBConstructionException`` will be generated
-if any problems are detected during the parse operation.
+``PERMISSIV`` 标签表示一些和PDB文件相关的问题(见 `11.7.1 <#problem%20structures>`__ )会被忽略，注意某些原子和/或残基会丢失。如果这个标签没有产生 ``PDBConstructionException`` ，则会在解析器运行期间有问题被检测到的时候生成。
 
-The Structure object is then produced by letting the ``PDBParser``
-object parse a PDB file (the PDB file in this case is called
-’pdb1fat.ent’, ’1fat’ is a user defined name for the structure):
 
-.. code:: verbatim
+Structure对象由 ``PDBParser`` 解析PDB文件产生（在此例子中，PDB文件为'pdb1fat.ent'，'1fat'是用户的定义的结构名字）:
+
 
     >>> structure_id = "1fat"
     >>> filename = "pdb1fat.ent"
     >>> s = p.get_structure(structure_id, filename)
 
-You can extract the header and trailer (simple lists of strings) of the
-PDB file from the PDBParser object with the ``get_header`` and
-``get_trailer`` methods. Note however that many PDB files contain
-headers with incomplete or erroneous information. Many of the errors
-have been fixed in the equivalent mmCIF files. *Hence, if you are
-interested in the header information, it is a good idea to extract
-information from mmCIF files using the* ``MMCIF2Dict`` *tool described
-below, instead of parsing the PDB header.*
+你可以通过PDBParser的 ``get_header`` 和 ``get_trailer`` 方法来提取PDB文件中的文件头和文件尾（简单字符串的列表）。然而许多PDB文件包含不完整或错误信息的文件头。许多错误在mmCIF格式文件得到修正。* 因此，如果你对文件头的信息感兴趣，可以用下面即将讲到的 ``MMCIF2Dict`` 来提取信息，而不是直接处理PDB文件文件头。* 
 
-Now that is clarified, let’s return to parsing the PDB header. The
-structure object has an attribute called ``header`` which is a Python
-dictionary that maps header records to their values.
 
-Example:
+让我们回到解析PDB文件头。结构对象有个属性叫 ``header`` ，这是一个Python字典将文件头的记录与他们的值关联起来。
 
-.. code:: verbatim
+
+例子：
 
     >>> resolution = structure.header['resolution']
     >>> keywords = structure.header['keywords']
 
+在这个字典中可用的键有 ``name`` 、 ``head`` 、 ``deposition_date`` 、 ``release_date`` 、 ``structure_method`` 、 ``resolution`` 、 ``structure_reference`` （这关联到一个参考文献的列表）、 ``journal_reference`` 、 ``author`` 、和 ``compound`` （关联一个包含各种晶体成分的各种信息）。
 The available keys are ``name``, ``head``, ``deposition_date``,
 ``release_date``, ``structure_method``, ``resolution``,
 ``structure_reference`` (which maps to a list of references),
 ``journal_reference``, ``author``, and ``compound`` (which maps to a
 dictionary with various information about the crystallized compound).
 
-The dictionary can also be created without creating a ``Structure``
-object, ie. directly from the PDB file:
-
-.. code:: verbatim
+这个字典也能在没有创建 ``Structure`` 对象的时候被创建，比如直接从PDB文件创建:
 
     >>> file = open(filename,'r')
     >>> header_dict = parse_pdb_header(file)
     >>> file.close()
 
-11.1.2  Reading an mmCIF file
+11.1.2  读取mmCIF文件 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Similarly to the case the case of PDB files, first create an
-``MMCIFParser`` object:
-
-.. code:: verbatim
+与PDB文件类似的也是先创建一个 ``MMCIFParser`` 对象：
 
     >>> from Bio.PDB.MMCIFParser import MMCIFParser
     >>> parser = MMCIFParser()
 
-Then use this parser to create a structure object from the mmCIF file:
-
-.. code:: verbatim
+然后用这个解析器从mmCIF文件闯将创建一个结构对象：
 
     >>> structure = parser.get_structure('1fat', '1fat.cif')
 
-To have some more low level access to an mmCIF file, you can use the
-``MMCIF2Dict`` class to create a Python dictionary that maps all mmCIF
-tags in an mmCIF file to their values. If there are multiple values
-(like in the case of tag ``_atom_site.Cartn_y``, which holds the *y*
-coordinates of all atoms), the tag is mapped to a list of values. The
-dictionary is created from the mmCIF file as follows:
-
-.. code:: verbatim
+为了获得最少次数访问mmCIF文件，可以用 ``MMCIF2Dict`` 类类创建一个Python字典来储存所有mmCIF文件中各种标签和他们对应的值。如果有多个值（ ``_atom_site.Cartn_y`` 标签储存的是所有原子的y坐标的坐标值），这个标签会与一个值的列表关联。如下所示从mmCIF文件创建字典：
 
     >>> from Bio.PDB.MMCIF2Dict import MMCIF2Dict
     >>> mmcif_dict = MMCIF2Dict('1FAT.cif')
 
-Example: get the solvent content from an mmCIF file:
-
-.. code:: verbatim
+例：从mmCIF文件获取溶剂成分:
 
     >>> sc = mmcif_dict['_exptl_crystal.density_percent_sol']
 
-Example: get the list of the *y* coordinates of all atoms
-
-.. code:: verbatim
+例：获取所有包含所有原子y坐标的列表:
 
     >>> y_list = mmcif_dict['_atom_site.Cartn_y']
 
-11.1.3  Reading files in the PDB XML format
+11.1.3  读取PDB XML格式的文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-That’s not yet supported, but we are definitely planning to support that
-in the future (it’s not a lot of work). Contact the Biopython developers
-(`biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__)
-if you need this).
+这部分暂时还未支持，正在开发中。如果你需要的话联系Biopython开发人员( `biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__ )。
 
-11.1.4  Writing PDB files
+11.1.4  写PDB文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use the PDBIO class for this. It’s easy to write out specific parts of a
-structure too, of course.
+用类PDBIO可以实现PDB文件输出，也能很方便的输出结构的某个特定部分。
 
-Example: saving a structure
+例子：保存结构：
 
-.. code:: verbatim
 
     >>> io = PDBIO()
     >>> io.set_structure(s)
     >>> io.save('out.pdb')
 
-If you want to write out a part of the structure, make use of the
-``Select`` class (also in ``PDBIO``). Select has four methods:
+如果你想输出结构的一部分，可以用 `Select` 类（也是在 ``PDBIO`` 中）来实现。 `Select` 有如下四种方法：
 
 -  ``accept_model(model)``
 -  ``accept_chain(chain)``
 -  ``accept_residue(residue)``
 -  ``accept_atom(atom)``
 
-By default, every method returns 1 (which means the
-model/chain/residue/atom is included in the output). By subclassing
-``Select`` and returning 0 when appropriate you can exclude models,
-chains, etc. from the output. Cumbersome maybe, but very powerful. The
-following code only writes out glycine residues:
+在默认情况下，每种方法的返回值都为1（表示model/chain/residue/atom被包含在输出结果中）。通过子类 ``Select`` 和返回值0你可以排除结构域、链等。也许比较麻烦笨重，但是还是很强大的。接下来的代码将只输出甘氨酸残基：
 
-.. code:: verbatim
+
 
     >>> class GlySelect(Select):
     ...     def accept_residue(self, residue):
@@ -162,296 +114,182 @@ following code only writes out glycine residues:
     >>> io.set_structure(s)
     >>> io.save('gly_only.pdb', GlySelect())
 
-If this is all too complicated for you, the ``Dice`` module contains a
-handy ``extract`` function that writes out all residues in a chain
-between a start and end residue.
+如果这部分对你来说太复杂， ``Dice`` 模块有一个很方便的函数 ``extract`` ，它可以输出一条链的起始和终止氨基酸残基之间的所有氨基酸残基。
 
-11.2  Structure representation
-------------------------------
+11.2  结构表示方法 
+-------------------------------------------
 
-The overall layout of a ``Structure`` object follows the so-called SMCRA
-(Structure/Model/Chain/Residue/Atom) architecture:
+一个 ``Structure`` 对象的整体布局由称为SMCRA（Structure结构/Model域/Chain链/Residue残基/Atom原子）：
+ -  结构有域组成
+ -  域由多条链组成
+ -  链由残基组成
+ -  多个原子构成残基
 
--  A structure consists of models
--  A model consists of chains
--  A chain consists of residues
--  A residue consists of atoms
-
-This is the way many structural biologists/bioinformaticians think about
-structure, and provides a simple but efficient way to deal with
-structure. Additional stuff is essentially added when needed. A UML
-diagram of the ``Structure`` object (forget about the ``Disordered``
-classes for now) is shown in Fig. `11.1 <#fig:smcra>`__. Such a data
-structure is not necessarily best suited for the representation of the
-macromolecular content of a structure, but it is absolutely necessary
-for a good interpretation of the data present in a file that describes
-the structure (typically a PDB or MMCIF file). If this hierarchy cannot
-represent the contents of a structure file, it is fairly certain that
-the file contains an error or at least does not describe the structure
-unambiguously. If a SMCRA data structure cannot be generated, there is
-reason to suspect a problem. Parsing a PDB file can thus be used to
-detect likely problems. We will give several examples of this in section
-`11.7.1 <#problem%20structures>`__.
+这是很多结构生物学家/生物信息学家看待结构的方法，也是一种简单并有效的途径处理结构。额外的信息在需要的时候加载。一个 ``Structure`` 对象的UML图如下图所示 `11.1 <#fig:smcra>`__ 。这样的数据结构不是必须合适这样一个结构的生物大分子内容的展示，但对于描述结构的文件（最典型的就是PDB或MMCIF文件了）必然是个很好的途径来展示数据。如果这样层次结构不能描述结构文件的内容，那么很确定的是这个文件有错误或至少描述结构不够明确。一旦SMCRA数据结构不能产生，有理由怀疑这个问题。解析PDB文件时能够检测到这样类似的问题。我们将在这节给出一些例子 `11.7.1 <#problem%20structures>`__ 。
 
     --------------
 
     |image3|
     +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.   |
+    | 图11.1：用来展示生物大分子结构的 ``Structure`` 类的SMCRA体系的UML图。带方块的实线表示集合，带箭头的实线表示涉及，带三角形的实线表示继承，带三角形的虚线表示接口实现。    |
     +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
     --------------
 
-Structure, Model, Chain and Residue are all subclasses of the Entity
-base class. The Atom class only (partly) implements the Entity interface
-(because an Atom does not have children).
+结构，域，链，残基是实体类的子类。原子类仅仅（部分）实现实体接口（因为原子类没有子类）。
 
-For each Entity subclass, you can extract a child by using a unique id
-for that child as a key (e.g. you can extract an Atom object from a
-Residue object by using an atom name string as a key, you can extract a
-Chain object from a Model object by using its chain identifier as a
-key).
+对于每个实体子类，你可以用唯一的标识符作为键来提取子类（比如，你可以用原子名称作为键从残基对象中提取原子；用链的标识符作为键从域对象中提取链）。
 
-Disordered atoms and residues are represented by DisorderedAtom and
-DisorderedResidue classes, which are both subclasses of the
-DisorderedEntityWrapper base class. They hide the complexity associated
-with disorder and behave exactly as Atom and Residue objects.
+无序的原子和残基用DisorderedAtom和DisorderedResidue类来描述，二者都是DisorderedEntityWrapper基本类的子类。他们隐藏了和无序的复杂性，表现得与原子和残基对象无二。
 
-In general, a child Entity object (i.e. Atom, Residue, Chain, Model) can
-be extracted from its parent (i.e. Residue, Chain, Model, Structure,
-respectively) by using an id as a key.
-
-.. code:: verbatim
+一般地，一个实体子类（如原子，残基，链，域）能通过标识符键从父类中提取。
 
     >>> child_entity = parent_entity[child_id]
 
-You can also get a list of all child Entities of a parent Entity object.
-Note that this list is sorted in a specific way (e.g. according to chain
-identifier for Chain objects in a Model object).
+你可以从一个父Entity对象获得一个子Entity的列表。需要注意的是这个列表以一定的方式排列（例如根据在Model对象中链对象的链标识符）。
 
-.. code:: verbatim
+
 
     >>> child_list = parent_entity.get_list()
 
-You can also get the parent from a child:
-
-.. code:: verbatim
+你也可以从子类获得父类：
 
     >>> parent_entity = child_entity.get_parent()
 
-At all levels of the SMCRA hierarchy, you can also extract a *full id*.
-The full id is a tuple containing all id’s starting from the top object
-(Structure) down to the current object. A full id for a Residue object
-e.g. is something like:
-
-.. code:: verbatim
+在SMCRA的所有层次结构，你可以提取 *完整的ID* 。完整的id是一个含所有从顶层对象（结构分子）到当前对象的id字符串的元组。Residue对象的完整id可以这么获取：
 
     >>> full_id = residue.get_full_id()
     >>> print full_id
     ("1abc", 0, "A", ("", 10, "A"))
 
-This corresponds to:
+与这些相对应的：
+ - id为iabc的结构
+ - id为0的Model
+ - id为A的链
+ - id为(" ", 10, "A")的残基
 
--  The Structure with id "1abc"
--  The Model with id 0
--  The Chain with id "A"
--  The Residue with id (" ", 10, "A").
 
-The Residue id indicates that the residue is not a hetero-residue (nor a
-water) because it has a blank hetero field, that its sequence identifier
-is 10 and that its insertion code is "A".
+Residue的id表示这个残基不是hetero残基（也不是水分子），因为hetero值为空；它的序列标识符为10，插入码为“A”。
 
-To get the entity’s id, use the ``get_id`` method:
 
-.. code:: verbatim
+欲获取entity的id，用 ``get_id`` 方法：
 
     >>> entity.get_id()
 
-You can check if the entity has a child with a given id by using the
-``has_id`` method:
-
-.. code:: verbatim
+可以用 ``has_id`` 方法检查这个entity是否有给定id的子类：
 
     >>> entity.has_id(entity_id)
 
-The length of an entity is equal to its number of children:
+entity的长度等于子类的个数：
 
-.. code:: verbatim
 
     >>> nr_children = len(entity)
 
-It is possible to delete, rename, add, etc. child entities from a parent
-entity, but this does not include any sanity checks (e.g. it is possible
-to add two residues with the same id to one chain). This really should
-be done via a nice Decorator class that includes integrity checking, but
-you can take a look at the code (Entity.py) if you want to use the raw
-interface.
+它能删除，重命名，添加，比如从父entity得到的子entity并没有进行完整性检查（有可能添加两个相同id的残基到同一条链上）。这需要Decorator类来完成包括完整性检查，但是如果你想使用最初的接口的话可以查看源代码（Entity.py）。
 
-11.2.1  Structure
+
+11.2.1  结构
 ~~~~~~~~~~~~~~~~~
 
-The Structure object is at the top of the hierarchy. Its id is a user
-given string. The Structure contains a number of Model children. Most
-crystal structures (but not all) contain a single model, while NMR
-structures typically consist of several models. Disorder in crystal
-structures of large parts of molecules can also result in several
-models.
+结构对象是成此结构中最高的一层。它的id是用户指定的字符串。结构包含一系列子结构域。大部分晶体结构（但不是全部）含有一个结构域，但是NMR结构经常含有多个结构域。晶体结构中大部分子的无序状态也能导致多个结构域。
 
-11.2.2  Model
-~~~~~~~~~~~~~
 
-The id of the Model object is an integer, which is derived from the
-position of the model in the parsed file (they are automatically
-numbered starting from 0). Crystal structures generally have only one
-model (with id 0), while NMR files usually have several models. Whereas
-many PDB parsers assume that there is only one model, the ``Structure``
-class in ``Bio.PDB`` is designed such that it can easily handle PDB
-files with more than one model.
+11.2.2  结构域
+~~~~~~~~~~~~~~~
 
-As an example, to get the first model from a Structure object, use
+结构域对象的id是一个整数，得自该结构域在被解析的文件中的位置（自动的从0开始标记）。晶体结构通常只有一个结构域（id为0），而NMR文件则含有多个结构域。然而许多PDB解析器都假定只有一个结构域， ``Bio.PDB`` 中的 ``Structure`` 就是为解决这个而设计的，它能轻易的处理含有多个结构域的PDB文件。
 
-.. code:: verbatim
+
+举例如下，从结构对象中获取第一个结构域：
+
 
     >>> first_model = structure[0]
 
-The Model object stores a list of Chain children.
+结构域对象储存着一个链对象的列表。
 
-11.2.3  Chain
-~~~~~~~~~~~~~
 
-The id of a Chain object is derived from the chain identifier in the
-PDB/mmCIF file, and is a single character (typically a letter). Each
-Chain in a Model object has a unique id. As an example, to get the Chain
-object with identifier “A” from a Model object, use
+11.2.3  链
+~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+链对象的id取自PDB/mmCIF文件中链的标识符，是个单字符（通常是一个字母）。结构域中的链都有一个唯一的id。例如，从一个结构域对象取出标识符为“A”的链：
+
 
     >>> chain_A = model["A"]
 
-The Chain object stores a list of Residue children.
+链对象储存着一个残基对象的列表。
 
-11.2.4  Residue
-~~~~~~~~~~~~~~~
 
-A residue id is a tuple with three elements:
+11.2.4  残基
+~~~~~~~~~~~~~~~~~~~
 
--  The **hetero-field** (hetfield): this is
+一个残基标识符是三个元素组成的元组：
+ - **hetero-field** (hetfield)，即：
+	- ``'W'`` 代表水分子
+	-  氨基酸残基名字后面紧跟的 ``'H_'`` 代表其他hetero残基（例如 ``'H_GLC'`` 表示一个葡萄糖分子） 
+	- 空值表示标准的氨基酸和核酸
 
-   -  ``'W'`` in the case of a water molecule;
-   -  ``'H_'`` followed by the residue name for other hetero residues
-      (e.g. ``'H_GLC'`` in the case of a glucose molecule);
-   -  blank for standard amino and nucleic acids.
+   图表在 `11.4.1 <#hetero%20problems>`__ 部分描述。
+ -   **序列标识符** （resseq），一个描述改残基在链上位置的整数（如100）；
+ -  **插入码** （icode），一个字符串，如“A”。插入码有时候用来保持合适residue numbering scheme。一个Ser80的点突变（在Thr80和Asn81间插入）会有如下的序列标识符和插入码：Thr 80 A, Ser 80 B, Asn 81。通过这种方式，residue numbering scheme保持与野生型结构一致。 
 
-   This scheme is adopted for reasons described in section
-   `11.4.1 <#hetero%20problems>`__.
--  The **sequence identifier** (resseq), an integer describing the
-   position of the residue in the chain (e.g., 100);
--  The **insertion code** (icode); a string, e.g. ’A’. The insertion
-   code is sometimes used to preserve a certain desirable residue
-   numbering scheme. A Ser 80 insertion mutant (inserted e.g. between a
-   Thr 80 and an Asn 81 residue) could e.g. have sequence identifiers
-   and insertion codes as follows: Thr 80 A, Ser 80 B, Asn 81. In this
-   way the residue numbering scheme stays in tune with that of the wild
-   type structure.
-
-The id of the above glucose residue would thus be
-``(’H_GLC’, 100, ’A’)``. If the hetero-flag and insertion code are
-blank, the sequence identifier alone can be used:
-
-.. code:: verbatim
+上述葡萄糖的id可以是 ``(’H_GLC’, 100, ’A’)`` 。如果hetero标签和插入码为空，序列标识符为：
 
     # Full id
     >>> residue=chain[(' ', 100, ' ')]
     # Shortcut id
     >>> residue=chain[100]
 
-The reason for the hetero-flag is that many, many PDB files use the same
-sequence identifier for an amino acid and a hetero-residue or a water,
-which would create obvious problems if the hetero-flag was not used.
+hetero标签的起因是许多许多PDB文件用相同的序列标识符表示氨基酸和hetero残基或水分子，这会产生一个很明显的问题如果不是用hetero标签的话。
 
-Unsurprisingly, a Residue object stores a set of Atom children. It also
-contains a string that specifies the residue name (e.g. “ASN”) and the
-segment identifier of the residue (well known to X-PLOR users, but not
-used in the construction of the SMCRA data structure).
+不令人吃惊的是，一个Residue对象存储这一系列的子Atom，也包含一个表示残基名字的字符串（如 “ASN”）和残基的片段标识符（这对X-PLOR的用户来说很熟悉，但是在SMCRA数据结构的构建红却不使用）。
 
-Let’s look at some examples. Asn 10 with a blank insertion code would
-have residue id ``(’ ’, 10, ’ ’)``. Water 10 would have residue id
-``(’W’, 10, ’ ’)``. A glucose molecule (a hetero residue with residue
-name GLC) with sequence identifier 10 would have residue id
-``(’H_GLC’, 10, ’ ’)``. In this way, the three residues (with the same
-insertion code and sequence identifier) can be part of the same chain
-because their residue id’s are distinct.
 
-In most cases, the hetflag and insertion code fields will be blank, e.g.
-``(’ ’, 10, ’ ’)``. In these cases, the sequence identifier can be used
-as a shortcut for the full id:
+让我们来看一些例子。插入码为空的Asn 10的残基id可为 ``(’ ’, 10, ’ ’)`` ；Water 10的残基id为 ``(’W’, 10, ’ ’)``；一个序列标识符是10的葡萄糖分子（一个残基名字是GLC的hetero残基）的残基id为 ``(’H_GLC’, 10, ’ ’)`` 。在这种情况下，三个相同插入码和序列标识符的残基可以位于同一条链上，因为他们的残基id是不同的。
 
-.. code:: verbatim
+
+在大多数情况下，hetflag和插入码都会为空，如 ``(’ ’, 10, ’ ’)`` 。在那些情况下，序列标识符可以用来作为完整的id：
+
 
     # use full id
     >>> res10 = chain[(' ', 10, ' ')]
     # use shortcut
     >>> res10 = chain[10]
 
-Each Residue object in a Chain object should have a unique id. However,
-disordered residues are dealt with in a special way, as described in
-section `11.3.3 <#point%20mutations>`__.
+在Chain上的每个Residue对象都应该有一个唯一的id。然而，无序残基以一种特别的方式对待，详见 `11.3.3 <#point%20mutations>`__ 。
 
-A Residue object has a number of additional methods:
 
-.. code:: verbatim
+一个Residue对象还有如下额外的方法：
+
+
 
     >>> residue.get_resname()       # returns the residue name, e.g. "ASN"
     >>> residue.is_disordered()     # returns 1 if the residue has disordered atoms
     >>> residue.get_segid()         # returns the SEGID, e.g. "CHN1"
     >>> residue.has_id(name)        # test if a residue has a certain atom
 
-You can use ``is_aa(residue)`` to test if a Residue object is an amino
-acid.
+你可以用 ``is_aa(residue)`` 来测试一个Residue对象是否是氨基酸。
 
-11.2.5  Atom
+
+11.2.5  原子Atom
 ~~~~~~~~~~~~
 
-The Atom object stores the data associated with an atom, and has no
-children. The id of an atom is its atom name (e.g. “OG” for the side
-chain oxygen of a Ser residue). An Atom id needs to be unique in a
-Residue. Again, an exception is made for disordered atoms, as described
-in section `11.3.2 <#disordered%20atoms>`__.
+Atom对象储存这所有和原子有关的数据，没有子类。原子的id是它的原子名字（如，“OG”代表Ser残基侧链的氧原子）。在Residue中Atom的id需要是唯一的。而且，对于无序原子会产生异常，见 `11.3.2 <#disordered%20atoms>`__ 描述。
 
-The atom id is simply the atom name (eg. ``’CA’``). In practice, the
-atom name is created by stripping all spaces from the atom name in the
-PDB file.
 
-However, in PDB files, a space can be part of an atom name. Often,
-calcium atoms are called ``’CA..’`` in order to distinguish them from Cα
-atoms (which are called ``’.CA.’``). In cases were stripping the spaces
-would create problems (ie. two atoms called ``’CA’`` in the same
-residue) the spaces are kept.
+原子id是简单的原子名字（如 ``’CA’`` ）。在实际中，原子名字通过去除PDB文件中原子名字中的空格创建的。
 
-In a PDB file, an atom name consists of 4 chars, typically with leading
-and trailing spaces. Often these spaces can be removed for ease of use
-(e.g. an amino acid C α atom is labeled “.CA.” in a PDB file, where the
-dots represent spaces). To generate an atom name (and thus an atom id)
-the spaces are removed, unless this would result in a name collision in
-a Residue (i.e. two Atom objects with the same atom name and id). In the
-latter case, the atom name including spaces is tried. This situation can
-e.g. happen when one residue contains atoms with names “.CA.” and
-“CA..”, although this is not very likely.
 
-The atomic data stored includes the atom name, the atomic coordinates
-(including standard deviation if present), the B factor (including
-anisotropic B factors and standard deviation if present), the altloc
-specifier and the full atom name including spaces. Less used items like
-the atom element number or the atomic charge sometimes specified in a
-PDB file are not stored.
+可是，在PDB文件中空格可以是原子名字的一部分。通常，钙原子称为 ``’CA..’`` 是为了和Cα原子（叫做 ``’.CA.’`` ）区分开。在这种情况，如果空格去除则会产生问题（如统一个残基中的两个原子都叫做 ``’CA’`` ），所以空格保留。
 
-To manipulate the atomic coordinates, use the ``transform`` method of
-the ``Atom`` object. Use the ``set_coord`` method to specify the atomic
-coordinates directly.
 
-An Atom object has the following additional methods:
+在PDB文件中，一个原子名字有4个字符组成，通常头尾皆为空格。为了方便使用空格经常被移除（在PDB文件中氨基酸的Cα原子标记为“.CA.”，点表示空格）。为了生成原子名字（然后是原子id），空格会被移除，除非回造成名字冲突（如两个Atom对象有相同的名字和id）。对于后者，会尝试原子名字包含空格。这种情况可能会发生当残基含名字为“.CA.”和“CA..”的原子，尽管这不怎么可能。
 
-.. code:: verbatim
+储存的原子数据包括原子名字，原子坐标（如果有的话还包括标准差），B因子（包括anisotropicB因子和可能存在的标准差），altloc标识符和完整的包括空格的原子名字。少用有时没有在PDB文件中存储的原子序号和原子电荷。
+
+为了操纵原子坐标，可以用 ``’CA’`` 对象的 ``transform`` 方法。用 ``set_coord`` 方法可以直接指定原子坐标。
+
+一个Atom对象还有如下额外的方法：
+
 
     >>> a.get_name()       # atom name (spaces stripped, e.g. "CA")
     >>> a.get_id()         # id (equals atom name)
@@ -465,24 +303,13 @@ An Atom object has the following additional methods:
     >>> a.get_anisou()     # anisotropic B factor
     >>> a.get_fullname()   # atom name (with spaces, e.g. ".CA.")
 
-To represent the atom coordinates, siguij, anisotropic B factor and
-sigatm Numpy arrays are used.
+siguij，anisotropic B因子和sigatm Numpy可以用来表示原子坐标。
 
-The ``get_vector`` method returns a ``Vector`` object representation of
-the coordinates of the ``Atom`` object, allowing you to do vector
-operations on atomic coordinates. ``Vector`` implements the full set of
-3D vector operations, matrix multiplication (left and right) and some
-advanced rotation-related operations as well.
+方法 ``get_vector`` 回返回一个代表 ``Atom``  对象坐标的 ``Vector`` 对象，可以对原子坐标做向量操作。 ``Vector`` 实现了完整的三维向量操作、矩阵乘法（包括左和右）和一些高级的旋转相关的操作。
 
-As an example of the capabilities of Bio.PDB’s ``Vector`` module,
-suppose that you would like to find the position of a Gly residue’s Cβ
-atom, if it had one. Rotating the N atom of the Gly residue along the
-Cα-C bond over -120 degrees roughly puts it in the position of a virtual
-Cβ atom. Here’s how to do it, making use of the ``rotaxis`` method
-(which can be used to construct a rotation around a certain axis) of the
-``Vector`` module:
 
-.. code:: verbatim
+作为Bio.PDB的 ``Vector`` 模块的性能展示的一个例子，假设你查找Gly氨基酸残基的Cβ原子的位置,如果存在的话。将Gly残基的N原子沿Cα-C旋转-120度，能大致将其放在一个虚拟的Cβ原子的位置上。下面是使用 ``Vector`` 模块中的``rotaxis`` 方法（能用来完成绕一个轴的旋转）如何实现的：
+
 
     # get atom coordinates as vectors
     >>> n = residue['N'].get_vector() 
@@ -499,72 +326,46 @@ Cβ atom. Here’s how to do it, making use of the ``rotaxis`` method
     # put on top of ca atom
     >>> cb = cb_at_origin+ca
 
-This example shows that it’s possible to do some quite nontrivial vector
-operations on atomic data, which can be quite useful. In addition to all
-the usual vector operations (cross (use ``*``\ ``*``), and dot (use
-``*``) product, angle, norm, etc.) and the above mentioned ``rotaxis``
-function, the ``Vector`` module also has methods to rotate (``rotmat``)
-or reflect (``refmat``) one vector on top of another.
+这个例子展示了在原子数据上能进行非常不一样的向量操作的可能性，这些操作是非常有用的。另外，所有有用的向量操作（交叉（用 ``*``\ ``*`` ），点积（用 ``*`` ），angle, norm等）和上述提到的 ``rotaxis`` 函数，``Vector`` 模块也有方法实现将一个向量叠加（ ``rotmat`` ）或反射（ ``refmat`` ）到两外一个向量上。
 
-11.2.6  Extracting a specific ``Atom/Residue/Chain/Model`` from a Structure
+
+11.2.6  从结构分子中提取特定的 ``Atom/Residue/Chain/Model`` 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These are some examples:
+例子如下：
 
-.. code:: verbatim
+
 
     >>> model = structure[0]
     >>> chain = model['A']
     >>> residue = chain[100]
     >>> atom = residue['CA']
 
-Note that you can use a shortcut:
-
-.. code:: verbatim
+还有比较简单的方式：
 
     >>> atom = structure[0]['A'][100]['CA']
 
 11.3  Disorder
 --------------
 
-Bio.PDB can handle both disordered atoms and point mutations (i.e. a Gly
-and an Ala residue in the same position).
+Bio.PDB能够处理无序原子和点突变（比如Gly和Ala残基在相同位置上）。
 
-11.3.1  General approach
+
+11.3.1  一般途径 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Disorder should be dealt with from two points of view: the atom and the
-residue points of view. In general, we have tried to encapsulate all the
-complexity that arises from disorder. If you just want to loop over all
-Cα atoms, you do not care that some residues have a disordered side
-chain. On the other hand it should also be possible to represent
-disorder completely in the data structure. Therefore, disordered atoms
-or residues are stored in special objects that behave as if there is no
-disorder. This is done by only representing a subset of the disordered
-atoms or residues. Which subset is picked (e.g. which of the two
-disordered OG side chain atom positions of a Ser residue is used) can be
-specified by the user.
+杂乱性可以从两个角度来解决：原子和残基的角度。一般来说，我们尝试压缩所有的会增加杂乱性。如果你仅仅想遍历所有Cα原子，你不必关注一些含杂乱侧链的残基。另一方面，应该考虑在数据结构中描述杂乱性。因此，杂乱原子或残基存储在特定的对象中表现得毫无杂乱性。这可以通过描述杂乱原子或残基的子集来完成。至于哪个子集（例如用到Ser残基侧链上的两个杂乱的OG原子）被挑选出来由用户来决定。
 
-11.3.2  Disordered atoms
+
+11.3.2  杂乱的原子
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Disordered atoms are represented by ordinary ``Atom`` objects, but all
-``Atom`` objects that represent the same physical atom are stored in a
-``DisorderedAtom`` object (see Fig. `11.1 <#fig:smcra>`__). Each
-``Atom`` object in a ``DisorderedAtom`` object can be uniquely indexed
-using its altloc specifier. The ``DisorderedAtom`` object forwards all
-uncaught method calls to the selected Atom object, by default the one
-that represents the atom with the highest occupancy. The user can of
-course change the selected ``Atom`` object, making use of its altloc
-specifier. In this way atom disorder is represented correctly without
-much additional complexity. In other words, if you are not interested in
-atom disorder, you will not be bothered by it.
+杂乱原子可以用普通的 ``Atom`` 对象来描述，但是所有描述相同物理物理原子的 ``Atom`` 对象储存在一个 ``DisorderedAtom`` 对象中（见图Fig. `11.1 <#fig:smcra>`__ ）。 ``DisorderedAtom`` 对象中每个 ``Atom`` 对象都可以被它的altloc标识符唯一的索引。 ``DisorderedAtom`` 对象转寄所有uncaught method calls到选定的Atom对象，用过它的altloc标识符。以这种方式，原子杂乱性哪呢个正确的呗描述而没有额外的复杂性。换言之，如果你对杂乱原子不敢兴趣，你不会被它困扰。
 
-Each disordered atom has a characteristic altloc identifier. You can
-specify that a ``DisorderedAtom`` object should behave like the ``Atom``
-object associated with a specific altloc identifier:
 
-.. code:: verbatim
+每个杂乱原子有个特有的altloc标识符。你可以指定一个 ``DisorderedAtom`` 对象表现得像 ``Atom`` 对象和特定的altloc标识符关联：
+
+
 
     >>> atom.disordered_select('A') # select altloc A atom
     >>> print atom.get_altloc()
@@ -573,94 +374,66 @@ object associated with a specific altloc identifier:
     >>> print atom.get_altloc()
     "B"
 
-11.3.3  Disordered residues
+11.3.3  杂乱的残基
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Common case
+普通例子
 ^^^^^^^^^^^
 
-The most common case is a residue that contains one or more disordered
-atoms. This is evidently solved by using DisorderedAtom objects to
-represent the disordered atoms, and storing the DisorderedAtom object in
-a Residue object just like ordinary Atom objects. The DisorderedAtom
-will behave exactly like an ordinary atom (in fact the atom with the
-highest occupancy) by forwarding all uncaught method calls to one of the
-Atom objects (the selected Atom object) it contains.
+最常见的例子是一个残基包含一个或多个杂乱原子。这显然可以通过用DisorderedAtom对象描述这些杂乱原子来解决，并将DisorderedAtom对象保存在Residue对象中想正常的Atom对象一样。DisorderedAtom对象通过转寄所有uncaught method calls到其中一个Atom对象（被选中的Atom对象）一个表现的非常像正常的原子（事实上这个原子有最高的使用率）。
 
-Point mutations
+
+点突变
 ^^^^^^^^^^^^^^^
 
-A special case arises when disorder is due to a point mutation, i.e.
-when two or more point mutants of a polypeptide are present in the
-crystal. An example of this can be found in PDB structure 1EN2.
+当点突变导致杂乱会产生一个特殊的例子，例如，当多肽中有两个或更多的点突变展示在晶体结构中。这个例子可以在PDB结构1EN2中找到。
 
-Since these residues belong to a different residue type (e.g. let’s say
-Ser 60 and Cys 60) they should not be stored in a single ``Residue``
-object as in the common case. In this case, each residue is represented
-by one ``Residue`` object, and both ``Residue`` objects are stored in a
-single ``DisorderedResidue`` object (see Fig. `11.1 <#fig:smcra>`__).
 
-The ``DisorderedResidue`` object forwards all uncaught methods to the
-selected ``Residue`` object (by default the last ``Residue`` object
-added), and thus behaves like an ordinary residue. Each ``Residue``
-object in a ``DisorderedResidue`` object can be uniquely identified by
-its residue name. In the above example, residue Ser 60 would have id
-“SER” in the ``DisorderedResidue`` object, while residue Cys 60 would
-have id “CYS”. The user can select the active ``Residue`` object in a
-``DisorderedResidue`` object via this id.
+既然这些残基属于不同的残基类型（举例说Ser 60 和Cys 60），他们不应该存储在一个 ``Residue`` 对象中像普通情况一样。在这是，每个残基被描述成 ``Residue`` 对象，所有 ``Residue`` 对象保存在一个 ``DisorderedResidue`` 对象中（见 Fig. `11.1 <#fig:smcra>`__ ）。
 
-Example: suppose that a chain has a point mutation at position 10,
-consisting of a Ser and a Cys residue. Make sure that residue 10 of this
-chain behaves as the Cys residue.
 
-.. code:: verbatim
+``DisorderedResidue`` 对象转寄所有uncaught methods到选定的 ``Residue`` 对象（默认下最后一个 ``Residue`` 对象被添加），然后表现得的一个正常的残基一样。在 ``DisorderedResidue`` 中的每个 ``Residue`` 对象通过残基名字被势必人出来。在上述例子中，残基Ser60在 ``DisorderedResidue`` 对象中的id为“SER”，而残基Cys 60则是“CYS”。他们能在 ``DisorderedResidue`` 中通过这个id选择现行的 ``Residue`` 对象。
+
+
+例子：假设一个子类在10位有一个由Ser和Cys构成的点突变。让这个链的10位残基表现为Cys残基。
+
+
 
     >>> residue = chain[10]
     >>> residue.disordered_select('CYS')
 
-In addition, you can get a list of all ``Atom`` objects (ie. all
-``DisorderedAtom`` objects are ’unpacked’ to their individual ``Atom``
-objects) using the ``get_unpacked_list`` method of a
-``(Disordered)Residue`` object.
+另外，你能获得所有 ``Atom`` 对象的列表（如所有 ``DisorderedAtom`` 对象从他们各自的 ``Atom`` 对象中’unpacked’），通过使用 ``(Disordered)Residue`` 对象的 ``get_unpacked_list`` 方法。
 
-11.4  Hetero residues
+
+11.4  Hetero残基
 ---------------------
 
-11.4.1  Associated problems
+11.4.1  相关问题
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A common problem with hetero residues is that several hetero and
-non-hetero residues present in the same chain share the same sequence
-identifier (and insertion code). Therefore, to generate a unique id for
-each hetero residue, waters and other hetero residues are treated in a
-different way.
+关于hetero残基的一个很普遍的问题是若干hetero和非hetero残基在同一条链中有同样的序列标识符和插入码。因此，为了生成每个hetero残基唯一的id，水分子和其他hetero残基应该以不同的方式来对待。
 
-Remember that Residue object have the tuple (hetfield, resseq, icode) as
-id. The hetfield is blank (“ ”) for amino and nucleic acids, and a
-string for waters and other hetero residues. The content of the hetfield
-is explained below.
 
-11.4.2  Water residues
-~~~~~~~~~~~~~~~~~~~~~~
+记住Residue残基有一个元组（hetfield, resseq, icode）作为id。hetfield值为空(“ ”)表示为氨基酸和核酸；为一个字符串表示水分子和其他hetero残基。hetfield的内容将在下面解释。
 
-The hetfield string of a water residue consists of the letter “W”. So a
-typical residue id for a water is (“W”, 1, “ ”).
+11.4.2  水分子
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-11.4.3  Other hetero residues
+water residue的hetfield字符串由字母“W”组成。所以一个典型的水分子的残基id为(“W”, 1, “ ”)。
+
+11.4.3  其他hetero残基
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The hetfield string for other hetero residues starts with “H\_” followed
-by the residue name. A glucose molecule e.g. with residue name “GLC”
-would have hetfield “H\_GLC”. Its residue id could e.g. be (“H\_GLC”, 1,
-“ ”).
+其他hetero残基的hetfield字符以“H\_”起始，后接残基名字。一个葡萄糖分子的残基名称为“GLC”，则hetfield字符为“H\_GLC”；它的残基id可以是(“H\_GLC”, 1,
+“ ”)。
 
-11.5  Navigating through a Structure object
+11.5  操纵Structure对象
 -------------------------------------------
 
-Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
+解析PDB文件，提取若干Model、Chain、Residue和Atom对象 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
+
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> parser = PDBParser()
@@ -670,10 +443,10 @@ Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
     >>> residue = chain[1]
     >>> atom = residue["CA"]
 
-Iterating through all atoms of a structure
+遍历一个结构中的所有原子
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
+
 
     >>> p = PDBParser()
     >>> structure = p.get_structure('X', 'pdb1fat.ent')
@@ -684,73 +457,61 @@ Iterating through all atoms of a structure
     ...                 print atom
     ...
 
-There is a shortcut if you want to iterate over all atoms in a
-structure:
+如果你想遍历一个结构中所有原子，这儿有个捷径可以走：
 
-.. code:: verbatim
 
     >>> atoms = structure.get_atoms()
     >>> for atom in atoms:
     ...     print atom
     ...
 
-Similarly, to iterate over all atoms in a chain, use
+类似地，遍历一条链中的原子，可以这么做：
 
-.. code:: verbatim
 
     >>> atoms = chain.get_atoms()
     >>> for atom in atoms:
     ...     print atom
     ...
 
-Iterating over all residues of a model
+遍历结构域中的所有残基
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-or if you want to iterate over all residues in a model:
+或者，如果你想遍历在一条链上的所有残基：
 
-.. code:: verbatim
 
     >>> residues = model.get_residues()
     >>> for residue in residues:
     ...     print residue
     ...
 
-You can also use the ``Selection.unfold_entities`` function to get all
-residues from a structure:
+你也可以用 ``Selection.unfold_entities`` 函数来从一个结构中获取所有残基：
 
-.. code:: verbatim
 
     >>> res_list = Selection.unfold_entities(structure, 'R')
 
-or to get all atoms from a chain:
+或者从链上获得所有原子：
 
-.. code:: verbatim
 
     >>> atom_list = Selection.unfold_entities(chain, 'A')
 
-Obviously, ``A=atom, R=residue, C=chain, M=model, S=structure``. You can
-use this to go up in the hierarchy, e.g. to get a list of (unique)
-``Residue`` or ``Chain`` parents from a list of ``Atoms``:
+明显的是， ``A=atom, R=residue, C=chain, M=model, S=structure`` 。你可以用此返回上一层，如从一个 ``Atoms`` 列表回溯到一个唯一的 ``Residue`` 或 ``Chain`` 的列表：
 
-.. code:: verbatim
 
     >>> residue_list = Selection.unfold_entities(atom_list, 'R')
     >>> chain_list = Selection.unfold_entities(atom_list, 'C')
 
-For more info, see the API documentation.
+更多信息详见API文档。
 
-Extract a hetero residue from a chain (e.g. a glucose (GLC) moiety with resseq 10)
+从链中提取hetero残基（如葡萄糖（GLC）resseq 10的那部分）
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
 
     >>> residue_id = ("H_GLC", 10, " ")
     >>> residue = chain[residue_id]
 
-Print all hetero residues in chain
+输出链上所有的hetero残基
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
 
     >>> for residue in chain.get_list():
     ...    residue_id = residue.get_id()
@@ -759,10 +520,9 @@ Print all hetero residues in chain
     ...        print residue_id
     ...
 
-Print out the coordinates of all CA atoms in a structure with B factor greater than 50
+输出一个结构分子中所有B因子大于50的CA原子的坐标
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -773,10 +533,9 @@ Print out the coordinates of all CA atoms in a structure with B factor greater t
     ...                     print ca.get_coord()
     ...
 
-Print out all the residues that contain disordered atoms
+输出所有含无序原子的残基
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: verbatim
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -789,13 +548,10 @@ Print out all the residues that contain disordered atoms
     ...                 print model_id, chain_id, resname, resseq
     ...
 
-Loop over all disordered atoms, and select all atoms with altloc A (if present)
+遍历所有无序原子，并选取所有altloc A的原子（如果有的话）
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This will make sure that the SMCRA data structure will behave as if only
-the atoms with altloc A are present.
-
-.. code:: verbatim
+这需要确定的是SMCRA数据结构表现得如同altloc A原子存在。
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -807,14 +563,10 @@ the atoms with altloc A are present.
     ...                             atom.disordered_select("A")
     ...
 
-Extracting polypeptides from a ``Structure`` object
+从 ``Structure`` 对象中提取多肽
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To extract polypeptides from a structure, construct a list of
-``Polypeptide`` objects from a ``Structure`` object using
-``PolypeptideBuilder`` as follows:
-
-.. code:: verbatim
+为了从一个结构中提取多肽，需要用 ``PolypeptideBuilder`` 从 ``Structure`` 构建一个 ``Polypeptide`` 对象的列表，如下所示：
 
     >>> model_nr = 1
     >>> polypeptide_list = build_peptides(structure, model_nr)
@@ -822,15 +574,11 @@ To extract polypeptides from a structure, construct a list of
     ...     print polypeptide
     ...
 
-A Polypeptide object is simply a UserList of Residue objects, and is
-always created from a single Model (in this case model 1). You can use
-the resulting ``Polypeptide`` object to get the sequence as a ``Seq``
-object or to get a list of Cα atoms as well. Polypeptides can be built
-using a C-N or a Cα-Cα distance criterion.
+Polypeptide对象是Residue对象的一个简单UserList，总是从单结构域中创建（在此例中为结构域1）。你可以从刚生成的 ``Polypeptide`` 对象提取序列作为 ``Seq`` 对象，或获得Cα原子的列表。多肽可以通过C-N 或a Cα-Cα距离标准来建立。
 
-Example:
 
-.. code:: verbatim
+例子：
+
 
     # Using C-N 
     >>> ppb=PPBuilder()
@@ -843,38 +591,30 @@ Example:
     ...     print pp.get_sequence()
     ...
 
-Note that in the above case only model 0 of the structure is considered
-by ``PolypeptideBuilder``. However, it is possible to use
-``PolypeptideBuilder`` to build ``Polypeptide`` objects from ``Model``
-and ``Chain`` objects as well.
+需要注意的是，在上述例子中这个结构中，只有结构域0被 ``PolypeptideBuilder`` 考虑。尽管如此，还是可以用 ``PolypeptideBuilder`` 从 ``Model`` 和 ``Chain`` 对象创建 ``Polypeptide`` 对象。
 
-Obtaining the sequence of a structure
+
+从结构中获取序列
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first thing to do is to extract all polypeptides from the structure
-(as above). The sequence of each polypeptide can then easily be obtained
-from the ``Polypeptide`` objects. The sequence is represented as a
-Biopython ``Seq`` object, and its alphabet is defined by a
-``ProteinAlphabet`` object.
+要做的第一件事就是从结构中提取所有多肽（如上述）。每条多肽的序列可以轻易的通过 ``Polypeptide`` 对象获得。这个序列当作Biopython中 ``Seq`` 对象来描述，它的字母表由 ``ProteinAlphabet`` 对象来定义。
 
-Example:
+例子：
 
-.. code:: verbatim
+
 
     >>> seq = polypeptide.get_sequence()
     >>> print seq
     Seq('SNVVE...', <class Bio.Alphabet.ProteinAlphabet>)
 
-11.6  Analyzing structures
+11.6  结构分析
 --------------------------
 
-11.6.1  Measuring distances
+11.6.1  测定距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The minus operator for atoms has been overloaded to return the distance
-between two atoms.
+两个已叠加的原子通过减法运算可以返回两个原子之间的距离。
 
-.. code:: verbatim
 
     # Get some atoms
     >>> ca1 = residue1['CA']
@@ -882,26 +622,23 @@ between two atoms.
     # Simply subtract the atoms to get their distance
     >>> distance = ca1-ca2
 
-11.6.2  Measuring angles
+11.6.2  测定角度
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use the vector representation of the atomic coordinates, and the
-``calc_angle`` function from the ``Vector`` module:
+用向量表示原子坐标，然后用 ``Vector`` 模块中的 ``calc_angle`` 函数可以计算角度。
 
-.. code:: verbatim
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
     >>> vector3 = atom3.get_vector()
     >>> angle = calc_angle(vector1, vector2, vector3)
 
-11.6.3  Measuring torsion angles
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+11.6.3  测定扭转角Measuring torsion angles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use the vector representation of the atomic coordinates, and the
-``calc_dihedral`` function from the ``Vector`` module:
+用向量表示原子坐标，然后用 ``Vector`` 模块中的 ``calc_dihedral`` 函数可以计算角度。
 
-.. code:: verbatim
+
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
@@ -909,34 +646,23 @@ Use the vector representation of the atomic coordinates, and the
     >>> vector4 = atom4.get_vector()
     >>> angle = calc_dihedral(vector1, vector2, vector3, vector4)
 
-11.6.4  Determining atom-atom contacts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+11.6.4  确定原子-原子接触Determining atom-atom contacts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use ``NeighborSearch`` to perform neighbor lookup. The neighbor lookup
-is done using a KD tree module written in C (see ``Bio.KDTree``), making
-it very fast. It also includes a fast method to find all point pairs
-within a certain distance of each other.
+用 ``NeighborSearch`` 实现临近查询。临近查询能够使用用C语言写的KD树模块（见 ``Bio.KDTree`` ）来比较快速的实现。它也包含了一个比较快速的方法找出一定距离内所有成对的点。
 
-11.6.5  Superimposing two structures
+11.6.5  叠加两个结构
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use a ``Superimposer`` object to superimpose two coordinate sets. This
-object calculates the rotation and translation matrix that rotates two
-lists of atoms on top of each other in such a way that their RMSD is
-minimized. Of course, the two lists need to contain the same number of
-atoms. The ``Superimposer`` object can also apply the
-rotation/translation to a list of atoms. The rotation and translation
-are stored as a tuple in the ``rotran`` attribute of the
-``Superimposer`` object (note that the rotation is right multiplying!).
-The RMSD is stored in the ``rmsd`` attribute.
+可以用 ``Superimposer`` 对象将两组坐标数据重叠。这个对象计算叠加和转化矩阵，这个矩阵通过叠加两个原子的列表以他们的RMSD最小的方式叠加在一起得到的矩阵。当然这两个列表含有相同数目的原子。 ``Superimposer`` 对象将叠加/转化应用在原子上。叠加和转化作为元组储存在 ``Superimposer`` 对象的 ``rotran`` 属性（注意的是叠加是right multiplying），RMSD储存在属性 ``rmsd`` 中。
 
-The algorithm used by ``Superimposer`` comes from [`17 <#golub1989>`__,
-Golub & Van Loan] and makes use of singular value decomposition (this is
-implemented in the general ``Bio.SVDSuperimposer`` module).
 
-Example:
+``Superimposer`` 使用的算法来自[`17 <#golub1989>`__,
+Golub & Van Loan]，用有意义的分解值（这在 ``Bio.SVDSuperimposer`` 模块中实现）。
 
-.. code:: verbatim
+例子：
+
+
 
     >>> sup = Superimposer()
     # Specify the atom lists
@@ -949,36 +675,26 @@ Example:
     # Apply rotation/translation to the moving atoms
     >>> sup.apply(moving)
 
-To superimpose two structures based on their active sites, use the
-active site atoms to calculate the rotation/translation matrices (as
-above), and apply these to the whole molecule.
+为了将结构根据他们的现行的位点叠加在一起，用active位点的原子计算叠加和转化矩阵（类似上述），将那些应用到整个分子。
 
-11.6.6  Mapping the residues of two related structures onto each other
+
+11.6.6  相互映射这两个结构的残基到对方
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First, create an alignment file in FASTA format, then use the
-``StructureAlignment`` class. This class can also be used for alignments
-with more than two structures.
+首先，创建一个FASTA格式的比对文件，然后用``StructureAlignment`` 类。这个类也可以用来映射多余两个结构和比对。
 
-11.6.7  Calculating the Half Sphere Exposure
+11.6.7  计算Half Sphere Exposure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Half Sphere Exposure (HSE) is a new, 2D measure of solvent exposure
-[`20 <#hamelryck2005>`__\ ]. Basically, it counts the number of Cα atoms
-around a residue in the direction of its side chain, and in the opposite
-direction (within a radius of 13 Å). Despite its simplicity, it
-outperforms many other measures of solvent exposure.
+Half Sphere Exposure (HSE)是一种新的，2D测量solvent exposure [`20 <#hamelryck2005>`__\ ]。基本上，它计算围绕一个残基的Cα原子的个数，在它侧链的方向上，及反方向（在13 Å范围内）。除了简单，它还比其他solvent exposure测量工具好。
 
-HSE comes in two flavors: HSEα and HSEβ. The former only uses the Cα
-atom positions, while the latter uses the Cα and Cβ atom positions. The
-HSE measure is calculated by the ``HSExposure`` class, which can also
-calculate the contact number. The latter class has methods which return
-dictionaries that map a ``Residue`` object to its corresponding HSEα,
-HSEβ and contact number values.
 
-Example:
+HSE有两种HSEα和HSEβ。前者仅用Cα原子的位置，而后者都用Cα和Cβ原子位置。HSE测定的通过 ``HSExposure`` 类计算的，也能计算原子接触数目。后者能返回一个将``Residue`` 对象映射到相应的HSEα,HSEβ和接触数目值的字典。
 
-.. code:: verbatim
+
+例子：
+
+
 
     >>> model = structure[0]
     >>> hse = HSExposure()
@@ -991,16 +707,10 @@ Example:
     # Print HSEalpha for a residue
     >>> print exp_ca[some_residue]
 
-11.6.8  Determining the secondary structure
+11.6.8  确定二级结构
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For this functionality, you need to install DSSP (and obtain a license
-for it — free for academic use, see
-```http://www.cmbi.kun.nl/gv/dssp/`` <http://www.cmbi.kun.nl/gv/dssp/>`__).
-Then use the ``DSSP`` class, which maps ``Residue`` objects to their
-secondary structure (and accessible surface area). The DSSP codes are
-listed in Table `11.1 <#cap:DSSP-codes>`__. Note that DSSP (the program,
-and thus by consequence the class) cannot handle multiple models!
+与这个功能，你需要安装DSSP（获得一个对学术免费的证书，参见 ```http://www.cmbi.kun.nl/gv/dssp/`` <http://www.cmbi.kun.nl/gv/dssp/>`__ ）。然后用 ``DSSP`` 类，可以 ``Residue`` 对象到他们的二级结构上（和accessible surface area）。DSSP代码如下表所列 Table `11.1 <#cap:DSSP-codes>`__ 。注意DSSP（程序及其相应的类）不能处理多个结构域！
 
     --------------
 
@@ -1025,51 +735,41 @@ and thus by consequence the class) cannot handle multiple models!
     +--------+-----------------------------+
 
     +--------------------------------------+
-    | Table 11.1: DSSP codes in Bio.PDB.   |
+    | Table 11.1: Bio.PDB中的DSSP代码。   |
     +--------------------------------------+
 
     --------------
 
-The ``DSSP`` class can also be used to calculate the accessible surface
-area of a residue. But see also section
-`11.6.9 <#subsec:residue_depth>`__.
+``DSSP`` 类也可以用来计算残基的易接近的表面。但是也参考 `11.6.9 <#subsec:residue_depth>`__ 。
 
-11.6.9  Calculating the residue depth
+
+11.6.9  计算残基深度
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Residue depth is the average distance of a residue’s atoms from the
-solvent accessible surface. It’s a fairly new and very powerful
-parameterization of solvent accessibility. For this functionality, you
-need to install Michel Sanner’s MSMS program
-(```http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html`` <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__).
-Then use the ``ResidueDepth`` class. This class behaves as a dictionary
-which maps ``Residue`` objects to corresponding (residue depth, Cα
-depth) tuples. The Cα depth is the distance of a residue’s Cα atom to
-the solvent accessible surface.
+残基深度残基的原子到solvent accessible surface的平均距离。它是个费城新颖和强大的描述solvent accessibility的参数。为了这个功能，你需要安装Michel Sanner的 MSMS程序（ ```http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html`` <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__ ）。然后用 ``ResidueDepth`` 类。这个类想字典一样将 ``Residue`` 对象映射到相应的元组（残基深度，Cα深度）。Cα深度是残基的Cα原子到solvent accessible surface的距离。
 
-Example:
 
-.. code:: verbatim
+例子：
+
+
 
     >>> model = structure[0]
     >>> rd = ResidueDepth(model, pdb_file)
     >>> residue_depth, ca_depth=rd[some_residue]
 
-You can also get access to the molecular surface itself (via the
+你也可以获得分子表面本身（通过 ``get_surface`` 函数），以Python数组的形式的形式和表面点。You can also get access to the molecular surface itself (via the
 ``get_surface`` function), in the form of a Numeric Python array with
 the surface points.
 
-11.7  Common problems in PDB files
+11.7  PDB文件中的常见问题
 ----------------------------------
 
-It is well known that many PDB files contain semantic errors (not the
-structures themselves, but their representation in PDB files). Bio.PDB
-tries to handle this in two ways. The PDBParser object can behave in two
-ways: a restrictive way and a permissive way, which is the default.
+都知道一些PDB文件有语义错误（不是结构本身的错误，而是在PDB文件中描述时出错）。Bio.PDB可以有两种途径来处理这个问题。PDBParser对象能以两种方式处理：严格（restrictive）方式和宽松（permissive）方式（默认方式）：
 
-Example:
 
-.. code:: verbatim
+例子:
+
+
 
     # Permissive parser
     >>> parser = PDBParser(PERMISSIVE=1)
@@ -1077,232 +777,152 @@ Example:
     # Strict parser
     >>> strict_parser = PDBParser(PERMISSIVE=0)
 
-In the permissive state (DEFAULT), PDB files that obviously contain
-errors are “corrected” (i.e. some residues or atoms are left out). These
-errors include:
+在宽松状态（默认），还有错误的PDB文件会被认为是“正确的”（比如说一些残基或原子丢失）。这些错误包括：
+ - 多个残基使用同一个标识符
+ - 多个原子使用统一个标识符（考虑altloc识别符）
 
--  Multiple residues with the same identifier
--  Multiple atoms with the same identifier (taking into account the
-   altloc identifier)
 
-These errors indicate real problems in the PDB file (for details see
-[`18 <#hamelryck2003a>`__, Hamelryck and Manderick, 2003]). In the
-restrictive state, PDB files with errors cause an exception to occur.
-This is useful to find errors in PDB files.
+这些错误暗示了PDB文件中确实在错误（详情见 [`18 <#hamelryck2003a>`__, Hamelryck and Manderick, 2003] ）。在严格模式，PDB文件中的这些错误会报错，这能帮助发现PDB文件的存在的错误。
 
-Some errors however are automatically corrected. Normally each
-disordered atom should have a non-blank altloc identifier. However,
-there are many structures that do not follow this convention, and have a
-blank and a non-blank identifier for two disordered positions of the
-same atom. This is automatically interpreted in the right way.
+有些错误能自动修正。正常情况下，每个无序原子应该会有一个非空altloc标识符，可是有些结构没有遵循这个惯例，在用同一个原子上会同时存在两个无序位置的空的和非空的标识符。这个错误能够以正确的方式被解析。
 
-Sometimes a structure contains a list of residues belonging to chain A,
-followed by residues belonging to chain B, and again followed by
-residues belonging to chain A, i.e. the chains are ’broken’. This is
-also correctly interpreted.
 
-11.7.1  Examples
+有时候一个结构会有这样的情况：一部分残基属于A链，接下来一部分残基属于B链，然后又有一部分残基属于A链，这种链称为“断链”，这也能被正确的解析。
+
+
+11.7.1  例子
 ~~~~~~~~~~~~~~~~
 
-The PDBParser/Structure class was tested on about 800 structures (each
-belonging to a unique SCOP superfamily). This takes about 20 minutes, or
-on average 1.5 seconds per structure. Parsing the structure of the large
-ribosomal subunit (1FKK), which contains about 64000 atoms, takes 10
-seconds on a 1000 MHz PC.
+PDBParser/Structure类经将近800个结构测试（每个都属于不同的SCOP超家族），总共花费20分钟左右，也就是说平均每个结构只需1.5秒。在一台1000 MHz的PC上解析巨大的包含近64000个原子的核糖体亚单位（1FKK）只需10秒。
 
-Three exceptions were generated in cases where an unambiguous data
-structure could not be built. In all three cases, the likely cause is an
-error in the PDB file that should be corrected. Generating an exception
-in these cases is much better than running the chance of incorrectly
-describing the structure in a data structure.
+当明确的数据结构不能建立的时候会有三个异常发生。在这三个异常中，可能的起因是PDB文件中本应修正的错误没有被修正。产生异常总要比冒险不正确描述一个在那样的数据结构中的结构分子好的多。
 
-11.7.1.1  Duplicate residues
+
+11.7.1.1  重复残基
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-One structure contains two amino acid residues in one chain with the
-same sequence identifier (resseq 3) and icode. Upon inspection it was
-found that this chain contains the residues Thr A3, …, Gly A202, Leu A3,
-Glu A204. Clearly, Leu A3 should be Leu A203. A couple of similar
-situations exist for structure 1FFK (which e.g. contains Gly B64, Met
-B65, Glu B65, Thr B67, i.e. residue Glu B65 should be Glu B66).
+一个结构分子在相同的序列标识符（resseq3）和icode的链上存在两个相同的氨基酸残基。仔细观察可以发现这条链包含残基：Thr A3, …, Gly A202, Leu A3；很明显第二个Leu A3应该是Leu A203。类似的情况也存在于1FFK结构上（含残基Gly B64, Met B65, Glu B65, Thr B67；第二个Glu B65应该是Glu B66）。
 
-11.7.1.2  Duplicate atoms
+
+11.7.1.2  重复原子
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Structure 1EJG contains a Ser/Pro point mutation in chain A at position
-22. In turn, Ser 22 contains some disordered atoms. As expected, all
-atoms belonging to Ser 22 have a non-blank altloc specifier (B or C).
-All atoms of Pro 22 have altloc A, except the N atom which has a blank
-altloc. This generates an exception, because all atoms belonging to two
-residues at a point mutation should have non-blank altloc. It turns out
-that this atom is probably shared by Ser and Pro 22, as Ser 22 misses
-the N atom. Again, this points to a problem in the file: the N atom
-should be present in both the Ser and the Pro residue, in both cases
-associated with a suitable altloc identifier.
+结构1EJG含有在A链22位的Ser/Pro点突变。依次，Ser 22含一些杂乱原子。和期望的一样，所有属于 Ser 22的原子都有一个非空的altloc标识符（B或C）。所有Pro 22的原子都为altloc A，除了含空altloc的N原子。这会申城一个异常，因为所有属于一个点突变的两个残基的原子都应该有非空的altloc。这导致这个原子被Ser 和 Pro 22共用，Ser22丢失了这个N原子。再者，这意味着在文件中的问题：这个N原子应该在Ser和Pro残基中都有描述，都与合适的altloc标识符关联。
 
-11.7.2  Automatic correction
+
+11.7.2  自动修正
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some errors are quite common and can be easily corrected without much
-risk of making a wrong interpretation. These cases are listed below.
+一些错误比较普遍，能够在没有太大解释错误的风险下被修改。这些错误如下所述。
 
-11.7.2.1  A blank altloc for a disordered atom
+11.7.2.1  无序原子的空altloc 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Normally each disordered atom should have a non-blank altloc identifier.
-However, there are many structures that do not follow this convention,
-and have a blank and a non-blank identifier for two disordered positions
-of the same atom. This is automatically interpreted in the right way.
+正常情况下，每个无序原子应该会有一个非空altloc标识符，可是有些结构没有遵循这个惯例，在用同一个原子上会同时存在两个无序位置的空的和非空的标识符。这个错误能够以正确的方式被解析。
 
-11.7.2.2  Broken chains
+11.7.2.2  断链
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Sometimes a structure contains a list of residues belonging to chain A,
-followed by residues belonging to chain B, and again followed by
-residues belonging to chain A, i.e. the chains are “broken”. This is
-correctly interpreted.
+有时候一个结构会有这样的情况：一部分残基属于A链，接下来一部分残基属于B链，然后又有一部分残基属于A链，这种链称为“断链”，这也能被正确的解析。
 
-11.7.3  Fatal errors
+11.7.3  致命错误Fatal errors
 ~~~~~~~~~~~~~~~~~~~~
 
-Sometimes a PDB file cannot be unambiguously interpreted. Rather than
-guessing and risking a mistake, an exception is generated, and the user
-is expected to correct the PDB file. These cases are listed below.
+有时候一个PDB文件不能被明确的解释，这会产生异常而不是猜测和冒出错的风险，等待用户去修正这个PDB文件。这些异常如下所述。
 
-11.7.3.1  Duplicate residues
+11.7.3.1  残基重复
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All residues in a chain should have a unique id. This id is generated
-based on:
+所有在一条链上的残基应该有一个唯一的id，这id基于下述生成：
 
--  The sequence identifier (resseq).
--  The insertion code (icode).
--  The hetfield string (“W” for waters and “H\_” followed by the residue
-   name for other hetero residues)
--  The residue names of the residues in the case of point mutations (to
-   store the Residue objects in a DisorderedResidue object).
+ - 序列标识符（resseq）
+ - 插入码（icode）
+ - hetfield字符（“W”代表水分子，残基名字后面的“H\_”代表其他异性残基）
+ - 发生点突变的残基名字（在DisorderedResidue对象中保存Residue对象）
 
-If this does not lead to a unique id something is quite likely wrong,
-and an exception is generated.
 
-11.7.3.2  Duplicate atoms
+如果这样还不能生成一个唯一的id，则会生成异常。
+
+
+11.7.3.2  原子重复
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-All atoms in a residue should have a unique id. This id is generated
-based on:
+一个残基上所有原子应该有一个唯一的id，这个id基于下述产生：
+ - 原子名称（没有空格，否则会报错）
+ - altloc标识符
 
--  The atom name (without spaces, or with spaces if a problem arises).
--  The altloc specifier.
+如果这不能生成一个唯一的id，则会生成异常。
 
-If this does not lead to a unique id something is quite likely wrong,
-and an exception is generated.
-
-11.8  Accessing the Protein Data Bank
+11.8  访问Protein Data Bank
 -------------------------------------
 
-11.8.1  Downloading structures from the Protein Data Bank
+11.8.1  从Protein Data Bank下载结构
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Structures can be downloaded from the PDB (Protein Data Bank) by using
+结构可以从PDB数据库（Protein Data Bank）通过 ``PDBList`` 对象的 ``retrieve_pdb_file`` 方法下载。这种方法的要点是结构在PDB中的唯一标识符。Structures can be downloaded from the PDB (Protein Data Bank) by using
 the ``retrieve_pdb_file`` method on a ``PDBList`` object. The argument
 for this method is the PDB identifier of the structure.
-
-.. code:: verbatim
 
     >>> pdbl = PDBList()
     >>> pdbl.retrieve_pdb_file('1FAT')
 
-The ``PDBList`` class can also be used as a command-line tool:
-
-.. code:: verbatim
+``PDBList`` 类也能作为命令行工具来使用：
 
     python PDBList.py 1fat
 
-The downloaded file will be called ``pdb1fat.ent`` and stored in the
-current working directory. Note that the ``retrieve_pdb_file`` method
-also has an optional argument ``pdir`` that specifies a specific
-directory in which to store the downloaded PDB files.
+下载的文件将以 ``pdb1fat.ent`` 为名保存在当前工作目录。 ``retrieve_pdb_file`` 方法有个可选参数 ``pdir`` 来指定路径保存所下载的PDB文件。
 
-The ``retrieve_pdb_file`` method also has some options to specify the
-compression format used for the download, and the program used for local
-decompression (default ``.Z`` format and ``gunzip``). In addition, the
-PDB ftp site can be specified upon creation of the ``PDBList`` object.
-By default, the server of the Worldwide Protein Data Bank
-(```ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/`` <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__)
-is used. See the API documentation for more details. Thanks again to
-Kristian Rother for donating this module.
+``retrieve_pdb_file`` 方法还有其他选项可以指定下载的压缩格式（默认的 ``.Z`` 格式和 ``gunzip`` 格式）。另外，在创建 ``PDBList`` 对象时还可以指定PDB ftp站点。一般使用Worldwide Protein Data Bank（ ```ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/`` <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__ ）。详细内容参见API文档。再次感谢Kristian Rother对此模块的所做的贡献。
 
-11.8.2  Downloading the entire PDB
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+11.8.2  下载完整PDB数据 Downloading the entire PDB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following commands will store all PDB files in the ``/data/pdb``
-directory:
+下面的命令将会保存所有PDB文件至 ``/data/pdb`` 路径：
 
-.. code:: verbatim
 
     python PDBList.py all /data/pdb
 
     python PDBList.py all /data/pdb -d
 
-The API method for this is called ``download_entire_pdb``. Adding the
-``-d`` option will store all files in the same directory. Otherwise,
-they are sorted into PDB-style subdirectories according to their PDB
-ID’s. Depending on the traffic, a complete download will take 2-4 days.
+在API中这个方法叫做 ``download_entire_pdb`` 。添加 ``-d`` 能保存所有文件在相同的路径。否则将分别保存至和它们PDB ID相对应的子目录中。根据网速，完整的下载全部PDB文件大概需要2-4天。
 
-11.8.3  Keeping a local copy of the PDB up to date
+
+11.8.3  保持本地拷贝与PDN数据库更新
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+这也能通过 ``PDBList`` 对象来完成。可以简单的创建一个 ``PDBList`` 对象（指定本地拷贝保存的路径），然后调用 ``update_pdb`` 方法：
 This can also be done using the ``PDBList`` object. One simply creates a
 ``PDBList`` object (specifying the directory where the local copy of the
 PDB is present) and calls the ``update_pdb`` method:
 
-.. code:: verbatim
 
     >>> pl = PDBList(pdb='/data/pdb')
     >>> pl.update_pdb()
 
-One can of course make a weekly ``cronjob`` out of this to keep the
-local copy automatically up-to-date. The PDB ftp site can also be
-specified (see API documentation).
+当然还可以用 ``cronjob`` 实现本地拷贝每周的自动更新。可以指定PDB ftp站点（详见API文档）。
 
-``PDBList`` has some additional methods that can be of use. The
-``get_all_obsolete`` method can be used to get a list of all obsolete
-PDB entries. The ``changed_this_week`` method can be used to obtain the
-entries that were added, modified or obsoleted during the current week.
-For more info on the possibilities of ``PDBList``, see the API
-documentation.
+``PDBList`` 有其他许多另外的方法可供调用。 ``get_all_obsolete`` 方法可以获取已经废弃不用的PDB entries；  ``changed_this_week``  方法可以获得当前一周内新增加、修改或废弃的PDB entries。更多 ``PDBList`` 的用法参见API文档。
 
-11.9  General questions
------------------------
 
-11.9.1  How well tested is Bio.PDB?
+11.9  一般疑问
+-------------------------------
+
+11.9.1  对Bio.PDB测试如何？ 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pretty well, actually. Bio.PDB has been extensively tested on nearly
-5500 structures from the PDB - all structures seemed to be parsed
-correctly. More details can be found in the Bio.PDB Bioinformatics
-article. Bio.PDB has been used/is being used in many research projects
-as a reliable tool. In fact, I’m using Bio.PDB almost daily for research
-purposes and continue working on improving it and adding new features.
+事实上，相当好。Bio.PDB已经在从PDB获得的近5500个结构上广泛的测试过，所有文件都能正常的被解析。更多细节可以参考在Bioinformatics上发表的关于Bio.PDB的文章。Bio.PDB已经并且正在被作为很使用的工具用于许多研究项目中。我几乎每天都在用它，处于研究目的、提升其性能和增加新属性。
 
-11.9.2  How fast is it?
-~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``PDBParser`` performance was tested on about 800 structures (each
-belonging to a unique SCOP superfamily). This takes about 20 minutes, or
-on average 1.5 seconds per structure. Parsing the structure of the large
-ribosomal subunit (1FKK), which contains about 64000 atoms, takes 10
-seconds on a 1000 MHz PC. In short: it’s more than fast enough for many
-applications.
+11.9.2  它有多快？
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-11.9.3  Is there support for molecular graphics?
+``PDBParser`` 的性能经将近800个结构测试（每个都属于不同的SCOP超家族），总共花费20分钟左右，也就是说平均每个结构只需1.5秒。在一台1000 MHz的PC上解析巨大的包含近64000个原子的核糖体亚单位（1FKK）只需10秒。总而言之，它比其他的一些应用程序更快。
+
+
+11.9.3  是否支持分子图形展示？
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Not directly, mostly since there are quite a few Python based/Python
-aware solutions already, that can potentially be used with Bio.PDB. My
-choice is Pymol, BTW (I’ve used this successfully with Bio.PDB, and
-there will probably be specific PyMol modules in Bio.PDB soon/some day).
-Python based/aware molecular graphics solutions include:
+现在已经有很多应用直接或间接用Pyhton解决问题的应用，将来也可能回用到Bio.PDB。我的选择是Pymol，我在Pymol中使用Bio.PDB非常成功，将来会有特定的Bio.PDB中会有特定的PyMol模块。基于Python的分子图形展示的解决方案包括：
 
 -  PyMol:
    ```http://pymol.sourceforge.net/`` <http://pymol.sourceforge.net/>`__
@@ -1314,28 +934,18 @@ Python based/aware molecular graphics solutions include:
    ```http://www.ysbl.york.ac.uk/~emsley/coot/`` <http://www.ysbl.york.ac.uk/~emsley/coot/>`__
 -  CCP4mg:
    ```http://www.ysbl.york.ac.uk/~lizp/molgraphics.html`` <http://www.ysbl.york.ac.uk/~lizp/molgraphics.html>`__
--  mmLib:
-   ```http://pymmlib.sourceforge.net/`` <http://pymmlib.sourceforge.net/>`__
+-  mmLib: ```http://pymmlib.sourceforge.net/`` <http://pymmlib.sourceforge.net/>`__ 
 -  VMD:
    ```http://www.ks.uiuc.edu/Research/vmd/`` <http://www.ks.uiuc.edu/Research/vmd/>`__
 -  MMTK:
    ```http://starship.python.net/crew/hinsen/MMTK/`` <http://starship.python.net/crew/hinsen/MMTK/>`__
 
-11.9.4  Who’s using Bio.PDB?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+11.9.4  谁在用Bio.PDB？ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bio.PDB was used in the construction of DISEMBL, a web server that
-predicts disordered regions in proteins
-(```http://dis.embl.de/`` <http://dis.embl.de/>`__), and COLUMBA, a
-website that provides annotated protein structures
-(```http://www.columba-db.de/`` <http://www.columba-db.de/>`__). Bio.PDB
-has also been used to perform a large scale search for active sites
-similarities between protein structures in the PDB
-[`19 <#hamelryck2003b>`__, Hamelryck, 2003], and to develop a new
-algorithm that identifies linear secondary structure elements
-[`26 <#majumdar2005>`__, Majumdar *et al.*, 2005].
+Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的非规则区域( ```http://dis.embl.de/`` <http://dis.embl.de/>`__ )；COLUMBA，一个提供经注释的蛋白结构的站点( ```http://www.columba-db.de/`` <http://www.columba-db.de/>`__ )。Bio.PDB也用于PDB数据库中蛋白质间大规模活性位点相似性的搜索[`19 <#hamelryck2003b>`__, Hamelryck, 2003]，开发新的算法鉴别线性二级结构元件[`26 <#majumdar2005>`__, Majumdar *et al.*, 2005]。
 
-Judging from requests for features and information, Bio.PDB is also used
-by several LPCs (Large Pharmaceutical Companies :-).
+基于新属性和信息的需求反馈，也可以得知Bio.PDB也在许多大型制药公司中使用。
+
 
 
