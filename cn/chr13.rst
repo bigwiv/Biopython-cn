@@ -384,174 +384,125 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 13.4.1  查找和遍历类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For convenience, we provide a couple of simplified methods that return
-all external or internal nodes directly as a list:
+为了方便起见，我们提供了两个简化的方法来直接返回所有的外部或内部节点为列表：
 
  **``get_terminals``**
-    makes a list of all of this tree’s terminal (leaf) nodes.
+    创建一个包含树的所有末端（叶子）节点的列表。
 **``get_nonterminals``**
-    makes a list of all of this tree’s nonterminal (internal) nodes.
+    创建一个包含树的所有非末端（内部）节点的列表。
 
-These both wrap a method with full control over tree traversal,
-``find_clades``. Two more traversal methods, ``find_elements`` and
-``find_any``, rely on the same core functionality and accept the same
-arguments, which we’ll call a “target specification” for lack of a
-better description. These specify which objects in the tree will be
-matched and returned during iteration. The first argument can be any of
-the following types:
+这两个都包装了一个能完全控制树的遍历的方法 ``find_clades``。另外两个遍历方法 ``find_elements`` 
+和 ``find_any`` 依赖于同样的核心功能，也接受同样的参数，没有更好的描述我们就把这个参数叫做
+“目标说明”（target specification）吧。它们指定哪些树中的对象将被匹配并在迭代过程中返回。
+第一个参数可以是下面的任何类型：
 
--  A **TreeElement instance**, which tree elements will match by
-   identity — so searching with a Clade instance as the target will find
-   that clade in the tree;
--  A **string**, which matches tree elements’ string representation — in
-   particular, a clade’s ``name`` *(added in Biopython 1.56)*;
--  A **class** or **type**, where every tree element of the same type
-   (or sub-type) will be matched;
--  A **dictionary** where keys are tree element attributes and values
-   are matched to the corresponding attribute of each tree element. This
-   one gets even more elaborate:
+-  一个 **TreeElement 实例** ，那个树的元素将根据一致性被匹配——这样，使用Clade实例作为目标将找到
+   树中的这个Clade；
+-  一个 **string** ，匹配树元素的字符串表示——特别地，Clade的 ``name`` *(在Biopython 1.56中引入)*；
+-  一个 **class** 或 **type**，这样每一个类型（或子类型）相同的树元素都被匹配；
+-  一个 **dictionary** ，其中键（key）是树元素的属性名，值（value）将匹配到每个树元素相应的属性值。
+   它变得更加详细：
 
-   -  If an ``int`` is given, it matches numerically equal attributes,
-      e.g. 1 will match 1 or 1.0
-   -  If a boolean is given (True or False), the corresponding attribute
-      value is evaluated as a boolean and checked for the same
-   -  ``None`` matches ``None``
-   -  If a string is given, the value is treated as a regular expression
-      (which must match the whole string in the corresponding element
-      attribute, not just a prefix). A given string without special
-      regex characters will match string attributes exactly, so if you
-      don’t use regexes, don’t worry about it. For example, in a tree
-      with clade names Foo1, Foo2 and Foo3,
-      ``tree.find_clades({"name": "Foo1"})`` matches Foo1,
-      ``{"name": "Foo.*"}`` matches all three clades, and
-      ``{"name": "Foo"}`` doesn’t match anything.
+   -  如果提供的是 ``int`` 类型，它将匹配数值上相等的属性，即，1将匹配1或者1.0
+   -  如果提供的是boolean类型（True或者False），对应的属性值将被当做boolean求值和检验
+   -  ``None`` 匹配 ``None``
+   -  如果提供的是字符串，将被当做正则表达式对待（必须匹配对应元素属性的全部，不能只是前面的部分）。
+      提供没有特殊正则表达式字符的字符串将精准的匹配字符串属性，所以如果你不适用正则表达式，不用
+      担心它。例如，包含进化枝名称Foo1、Foo2和Foo3的一个树，
+      ``tree.find_clades({"name": "Foo1"})`` 将匹配 Foo1，
+      ``{"name": "Foo.*"}`` 匹配所有的三个进化枝，而
+      ``{"name": "Foo"}`` 并不匹配任何进化枝。
 
-   Since floating-point arithmetic can produce some strange behavior, we
-   don’t support matching ``float``\ s directly. Instead, use the
-   boolean ``True`` to match every element with a nonzero value in the
-   specified attribute, then filter on that attribute manually with an
-   inequality (or exact number, if you like living dangerously).
+   由于浮点数值可能产生奇怪的行为，我们不支持直接匹配 ``float``\ s 类型。作为替代，使用boolean值
+   ``True`` 来匹配每个元素中指定属性的非零值，然后再对这个属性用不等式（或精确地数值，如果你喜欢
+   危险地活着）进行手动过滤。
 
-   If the dictionary contains multiple entries, a matching element must
-   match each of the given attribute values — think “and”, not “or”.
+   如果该字典包含多个条目，匹配的元素必须匹配所有给定的属性值——以“and”方式思考，而不是“or”。
 
--  A **function** taking a single argument (it will be applied to each
-   element in the tree), returning True or False. For convenience,
-   LookupError, AttributeError and ValueError are silenced, so this
-   provides another safe way to search for floating-point values in the
-   tree, or some more complex characteristic.
+-  一个接受一个参数（它将应用于树中的每一个元素），返回True或False的函数 **function** 。为方便起见，
+   LookupError、AttributeError和ValueError被沉默，这样就提供了另外一个在树中查找浮点值的安全方式，
+   或者一些更加复杂的特性。
 
-After the target, there are two optional keyword arguments:
+在目标参数后面，有两个可选的关键词参数：
 
  **terminal**
-    — A boolean value to select for or against terminal clades (a.k.a.
-    leaf nodes): True searches for only terminal clades, False for
-    non-terminal (internal) clades, and the default, None, searches both
-    terminal and non-terminal clades, as well as any tree elements
-    lacking the ``is_terminal`` method.
+    — 用来选择或排除末端进化枝（或者叫叶子节点）的一个boolean值：True仅搜索末端进化枝，False则搜索
+    非末端（内部）进化枝，而默认为None，同时搜索末端和非末端进化枝，包括没有 ``is_terminal`` 方法的
+    任何树元素。
 **order**
-    — Tree traversal order: ``"preorder"`` (default) is depth-first
-    search, ``"postorder"`` is DFS with child nodes preceding parents,
-    and ``"level"`` is breadth-first search.
+    — 树遍历的顺序：``"preorder"`` （默认值）是深度优先搜索（depth-first search，DFS）， ``"postorder"``
+    是子节点先于父节点的DFS搜索， ``"level"`` 是宽度优先搜索（breadth-first search，BFS）。
 
-Finally, the methods accept arbitrary keyword arguments which are
-treated the same way as a dictionary target specification: keys indicate
-the name of the element attribute to search for, and the argument value
-(string, integer, None or boolean) is compared to the value of each
-attribute found. If no keyword arguments are given, then any TreeElement
-types are matched. The code for this is generally shorter than passing a
-dictionary as the target specification:
-``tree.find_clades({"name": "Foo1"})`` can be shortened to
-``tree.find_clades(name="Foo1")``.
+最后，这些方法接受任意的关键词参数，这些参数将被以和词典“目标说明”相同的方式对待：键表示要搜索的元素
+属性的名称，参数值（string、integer、None或者boolean）将和找到的每个属性的值进行比较。如果没有提供
+关键词参数，则任何TreeElement类型将被匹配。这个的代码普遍比传入一个词典作为“目标说明”要短：
+``tree.find_clades({"name": "Foo1"})`` 可以简化为 ``tree.find_clades(name="Foo1")``。
 
-(In Biopython 1.56 or later, this can be even shorter:
-``tree.find_clades("Foo1")``)
+（在Biopython 1.56和以后的版本中，这可以更短：``tree.find_clades("Foo1")`` ）
 
-Now that we’ve mastered target specifications, here are the methods used
-to traverse a tree:
+现在我们已经掌握了“目标说明”，这里有一些遍历树的方法：
 
  **``find_clades``**
-    Find each clade containing a matching element. That is, find each
-    element as with ``find_elements``, but return the corresponding
-    clade object. (This is usually what you want.)
+    查找每个包含匹配元素的进化枝。就是说，用 ``find_elements`` 查找每个元素，然而返回对应的clade对象。
+    （这通常是你想要的。）
 
-    The result is an iterable through all matching objects, searching
-    depth-first by default. This is not necessarily the same order as
-    the elements appear in the Newick, Nexus or XML source file!
+    最终的结果是一个包含所有匹配对象的迭代器，默认为深度优先搜索。这不一定是和Newick、Nexus或XML原文件
+    中显示的相同的顺序。
 
 **``find_elements``**
-    Find all tree elements matching the given attributes, and return the
-    matching elements themselves. Simple Newick trees don’t have complex
-    sub-elements, so this behaves the same as ``find_clades`` on them.
-    PhyloXML trees often do have complex objects attached to clades, so
-    this method is useful for extracting those.
+    查找和给定属性匹配的所有树元素，返回匹配的元素本身。简单的Newick树没有复杂的子元素，所以它将和
+     ``find_clades`` 的行为一致。PhyloXML树通常在clade上附加有复杂的对象，所以这个方法对提取这些信息
+     非常有用。
 **``find_any``**
-    Return the first element found by ``find_elements()``, or None. This
-    is also useful for checking whether any matching element exists in
-    the tree, and can be used in a conditional.
+    返回 ``find_elements()`` 所找到的第一个元素，或者None。这对于检测树中是否存在匹配的元素也非常有用，
+    可以在条件判断语句中使用。
 
-Two more methods help navigating between nodes in the tree:
+另外两个用于帮助在树的节点间导航的方法：
 
  **``get_path``**
-    List the clades directly between the tree root (or current clade)
-    and the given target. Returns a list of all clade objects along this
-    path, ending with the given target, but excluding the root clade.
+    直接列出从树的根节点（或当前进化枝）到给定的目标间的所有clade。返回包含这个路径上所有clade对象的
+    列表，以给定目标为结尾，但不包含根进化枝。
 **``trace``**
-    List of all clade object between two targets in this tree. Excluding
-    start, including finish.
+    列出树中两个目标间的所有clade对象，不包含起始和结尾。
 
 13.4.2  信息类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These methods provide information about the whole tree (or any clade).
+这些方法提供关于整个树（或任何进化枝）的信息。
 
  **``common_ancestor``**
-    Find the most recent common ancestor of all the given targets. (This
-    will be a Clade object). If no target is given, returns the root of
-    the current clade (the one this method is called from); if 1 target
-    is given, this returns the target itself. However, if any of the
-    specified targets are not found in the current tree (or clade), an
-    exception is raised.
+    查找所提供的所有目标的最近共同祖先（the most recent common ancestor）
+    （这将是一个Clade对象）。如果没有提供任何目标，将返回当前Clade（调用该
+    方法的那个）的根；如果提供一个目标，将返回目标本身。然而，如果有任何提供
+    的目标无法在当前tree（或clade）中找到，将引起一个异常。
 **``count_terminals``**
-    Counts the number of terminal (leaf) nodes within the tree.
+    计算树中末端（叶子）节点的个数。
 **``depths``**
-    Create a mapping of tree clades to depths. The result is a
-    dictionary where the keys are all of the Clade instances in the
-    tree, and the values are the distance from the root to each clade
-    (including terminals). By default the distance is the cumulative
-    branch length leading to the clade, but with the
-    ``unit_branch_lengths=True`` option, only the number of branches
-    (levels in the tree) is counted.
+    创建一个树中进化枝到其深度的映射。结果是一个字典，其中键是树中所有的Clade
+    实例，值是从根到每个clade（包含末端）的距离。默认距离是到这个clade的分支
+    长度累加，然而使用 ``unit_branch_lengths=True`` 选项，将只计算分支的个数
+    （其在树中的级数）。
 **``distance``**
-    Calculate the sum of the branch lengths between two targets. If only
-    one target is specified, the other is the root of this tree.
+    计算两个目标间的分支长度总和。如果只指定一个目标，另一个则为该树的根。
 **``total_branch_length``**
-    Calculate the sum of all the branch lengths in this tree. This is
-    usually just called the “length” of the tree in phylogenetics, but
-    we use a more explicit name to avoid confusion with Python
-    terminology.
+    计算这个树中的分支长度总和。这在系统发生学中通常就称为树的长度“length”，
+    但是我们使用更加明确的名称，以避免和Python的术语混淆。
 
-The rest of these methods are boolean checks:
+余下的方法是boolean检测方法：
 
  **``is_bifurcating``**
-    True if the tree is strictly bifurcating; i.e. all nodes have either
-    2 or 0 children (internal or external, respectively). The root may
-    have 3 descendents and still be considered part of a bifurcating
-    tree.
+    如果树是严格的二叉树；即，所有的节点有2个或者0个子代（对应的，内部或外部）。
+    根节点可能有三个后代，然而仍然被认为是二叉树的一部分。
 **``is_monophyletic``**
-    Test if all of the given targets comprise a complete subclade —
-    i.e., there exists a clade such that its terminals are the same set
-    as the given targets. The targets should be terminals of the tree.
-    For convenience, this method returns the common ancestor (MCRA) of
-    the targets if they are monophyletic (instead of the value
-    ``True``), and ``False`` otherwise.
+    检验给定的所有目标是否组成一个完成的子进化枝——即，存在一个进化枝满足：它的
+    末端节点和给定的目标是相同的集合。目标需要时树中的末端节点。为方便起见，若
+    给定目标是一个单系（monophyletic），这个方法将返回它们的共同祖先（MCRA）（
+    而不是 ``True`` ），否则将返回 ``False`` 。
 **``is_parent_of``**
-    True if target is a descendent of this tree — not required to be a
-    direct descendent. To check direct descendents of a clade, simply
-    use list membership testing: ``if subclade in clade: ...``
+    若目标是这个树的后代（descendant）则为True——不必为直接后代。检验一个进化枝的
+    直接后代，只需要用简单的列表成员检测方法： ``if subclade in clade: ...``
 **``is_preterminal``**
-    True if all direct descendents are terminal; False if any direct
-    descendent is not terminal.
+    若所有的直接后代都为末端则为True；否则任何一个直接后代不为末端则为False。
 
 13.4.3  修改类方法
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -568,7 +519,7 @@ The rest of these methods are boolean checks:
  **``collapse``**
     从树中删除目标，重新连接它的子代（children）到它的父亲节点（parent）。
 **``collapse_all``**
-    删除这个树的所有后代（descendents），只保留末端节点（terminals）。
+    删除这个树的所有后代（descendants），只保留末端节点（terminals）。
     分支长度被保留，即到每个末端节点的距离保持不变。如指定一个目标（见上），
     只坍塌（collapses）和指定匹配的内部节点。
 **``ladderize``**
