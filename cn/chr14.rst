@@ -1,46 +1,32 @@
-Chapter 14  Sequence motif analysis using Bio.motifs
+第14章   使用Bio.motifs进行模体序列分析
 ====================================================
 
-This chapter gives an overview of the functionality of the
-``Bio.motifs`` package included in Biopython. It is intended for people
-who are involved in the analysis of sequence motifs, so I’ll assume that
-you are familiar with basic notions of motif analysis. In case something
-is unclear, please look at Section \ `14.8 <#sec:links>`__ for some
-relevant links.
+这章为Biopython中的``Bio.motifs`` 包进行一个主要的介绍。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
 
-Most of this chapter describes the new ``Bio.motifs`` package included
-in Biopython 1.61 onwards, which is replacing the older ``Bio.Motif``
-package introduced with Biopython 1.50, which was in turn based on two
-older former Biopython modules, ``Bio.AlignAce`` and ``Bio.MEME``. It
-provides most of their functionality with a unified motif object
-implementation.
+这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 ``Bio.motifs`` 包，该包替代了Biopython 1.50版本中的 ``Bio.Motif`` 包，而``Bio.Motif`` 包是基于较早版本的Biopython 中的两个模块 ``Bio.AlignAce`` 和 ``Bio.MEME`` 。``Bio.motifs`` 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。
 
-Speaking of other libraries, if you are reading this you might be
-interested in `TAMO <http://fraenkel.mit.edu/TAMO/>`__, another python
-library designed to deal with sequence motifs. It supports more
-*de-novo* motif finders, but it is not a part of Biopython and has some
-restrictions on commercial use.
+说到其他库，看到这里，你或许会对 `TAMO <http://fraenkel.mit.edu/TAMO/>`__ 感兴趣，这是另一个分析模体序列的Python库。它能提供更多关于*de-novo*模体的查找方式，不过它并没有纳入到Biopython中，而且在商业用途上还有一些限制。
 
-14.1  Motif objects
+14.1  模体对象
 -------------------
 
-Since we are interested in motif analysis, we need to take a look at
-``Motif`` objects in the first place. For that we need to import the
-Bio.motifs library:
+由于我们感兴趣的是模体分析，所以我们需要先看看 ``Motif`` 对象。对此我们需要先导入Bio.motifs库：
 
 .. code:: verbatim
 
     >>> from Bio import motifs
 
-and we can start creating our first motif objects. We can either create
-a ``Motif`` object from a list of instances of the motif, or we can
-obtain a ``Motif`` object by parsing a file from a motif database or
-motif finding software.
+然后我们可以开始创建我们第一个模体对象。我们可以从模体的实例列表中创建一个 ``Motif`` 对象，也可以通过读取模体数据库中或模体查找软件产生的文件来获得一个 ``Motif`` 对象。
 
-14.1.1  Creating a motif from instances
+.. code:: verbatim
+
+    >>> from Bio import motifs
+
+
+14.1.1  从实例中创建一个模体
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose we have these instances of a DNA motif:
+假设我们有一些DNA模体的实例：
 
 .. code:: verbatim
 
@@ -54,16 +40,13 @@ Suppose we have these instances of a DNA motif:
     ...              Seq("AATGC"),
     ...             ]
 
-then we can create a Motif object as follows:
+然后我们可以如下创建一个模体对象：
 
 .. code:: verbatim
 
     >>> m = motifs.create(instances)
 
-The instances are saved in an attribute ``m.instances``, which is
-essentially a Python list with some added functionality, as described
-below. Printing out the Motif object shows the instances from which it
-was constructed:
+这些实例被存储在一个名为 ``m.instances`` 的属性中，这个其实也就是一个Python的列表，只不过附加了一些功能，这些功能将在之后介绍。将这些模体对象打印出来后就可以看出这些实例是从哪构建出来的。
 
 .. code:: verbatim
 
@@ -77,17 +60,14 @@ was constructed:
     AATGC
     <BLANKLINE>
 
-The length of the motif defined as the sequence length, which should be
-the same for all instances:
+模体的长度像其他一些实例一些被定义为序列的长度：
 
 .. code:: verbatim
 
     >>> len(m)
     5
 
-The Motif object has an attribute ``.counts`` containing the counts of
-each nucleotide at each position. Printing this counts matrix shows it
-in an easily readable format:
+模体对象有一个 ``.counts`` 属性，可以用来查看碱基在每个位置的数目。可以把这个统计表用易读的格式打印出来：
 
 .. code:: verbatim
 
@@ -99,15 +79,14 @@ in an easily readable format:
     T:   4.00   0.00   2.00   0.00   0.00
     <BLANKLINE>
 
-You can access these counts as a dictionary:
+你也可以像使用字典一样获取这些数目：
 
 .. code:: verbatim
 
     >>> m.counts['A']
     [3, 7, 0, 2, 1]
 
-but you can also think of it as a 2D array with the nucleotide as the
-first dimension and the position as the second dimension:
+但是你也可以把它看成一个二维数列，核苷酸作为列，位置作为行：
 
 .. code:: verbatim
 
@@ -118,15 +97,14 @@ first dimension and the position as the second dimension:
     >>> m.counts['T',3]
     0
 
-You can also directly access columns of the counts matrix
+你还可以直接获得核苷酸数目矩阵中的列
 
 .. code:: verbatim
 
     >>> m.counts[:,3]
     {'A': 2, 'C': 2, 'T': 0, 'G': 3}
 
-Instead of the nucleotide itself, you can also use the index of the
-nucleotide in the sorted letters in the alphabet of the motif:
+除了使用核苷酸本身，你还可以使用模体碱基序列按字符排序后的核苷酸索引：
 
 .. code:: verbatim
 
@@ -141,38 +119,28 @@ nucleotide in the sorted letters in the alphabet of the motif:
     >>> m.counts[0,:]
     (3, 7, 0, 2, 1)
 
-The motif has an associated consensus sequence, defined as the sequence
-of letters along the positions of the motif for which the largest value
-in the corresponding columns of the ``.counts`` matrix is obtained:
+模体有一个相关联的一致序列，这个序列被定义为由 ``.counts`` 矩阵相应列中具有最大值的碱基，这些碱基是按模体序列排列的：
 
 .. code:: verbatim
 
     >>> m.consensus
     Seq('TACGC', IUPACUnambiguousDNA())
 
-as well as an anticonsensus sequence, corresponding to the smallest
-values in the columns of the ``.counts`` matrix:
+反一致序列也一样，只不过是由 ``.counts`` 矩阵中相应列的最小值来选：
 
 .. code:: verbatim
 
     >>> m.anticonsensus
     Seq('GGGTG', IUPACUnambiguousDNA())
 
-You can also ask for a degenerate consensus sequence, in which ambiguous
-nucleotides are used for positions where there are multiple nucleotides
-with high counts:
+你也可以利用降级的一致序列，用不确定核苷酸来表示序列某一位置的所有核苷酸：
 
 .. code:: verbatim
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
-Here, W and R follow the IUPAC nucleotide ambiguity codes: W is either A
-or T, and V is A, C, or G [`10 <#cornish1985>`__\ ]. The degenerate
-consensus sequence is constructed following the rules specified by
-Cavener [`11 <#cavener1987>`__\ ].
-
-We can also get the reverse complement of a motif:
+在这，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [`10 <#cornish1985>`__\ ] 。这些降级一致序列是按照Cavener指定的规则[`11 <#cavener1987>`__\ ]来建立的。
 
 .. code:: verbatim
 
@@ -191,28 +159,18 @@ We can also get the reverse complement of a motif:
     GCATT
     <BLANKLINE>
 
-The reverse complement and the degenerate consensus sequence are only
-defined for DNA motifs.
+反向互补序列和降级一致序列都只在DNA模体中有。
 
-14.1.2  Reading motifs
+14.1.2  读取模体
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Creating motifs from instances by hand is a bit boring, so it’s useful
-to have some I/O functions for reading and writing motifs. There are no
-really well established standards for storing motifs, but there’s a
-couple of formats which are more used than others. The most important
-distinction is whether the motif representation is based on instances or
-on some version of PWM matrix.
+从实例手动创建一个模体确实有点无趣，所以用一些I/O函数来读写模体是很有用的。目前对于如何存储模体还没有一些真正的标准，不过有一些格式用得比其他一些经常。这其中最重要的区别在于模体表示是基于实例还是某种PWM矩阵。
 
 JASPAR
 ^^^^^^
 
-One of the most popular motif databases
-`JASPAR <http://jaspar.genereg.net>`__ stores motifs either as a list of
-instances, or as a frequency matrix. As an example, these are the
-beginning and ending lines of the JASPAR ``Arnt.sites`` file showing
-known binding sites of the mouse helix-loop-helix transcription factor
-Arnt:
+作为一个最流行的模体数据库 `JASPAR <http://jaspar.genereg.net>`__ 它不是以一系列的实例就是频率矩阵。比如，下面就是JASPAR ``Arnt.sites`` 文件的开头和结尾行显示了老鼠螺旋-环-螺旋转录因子Arnt的结合位点：
+
 
 .. code:: verbatim
 
@@ -230,18 +188,16 @@ Arnt:
     >MA0004 ARNT    20
     aggaatCGCGTGc
 
-The parts of the sequence in capital letters are the motif instances
-that were found to align to each other.
+那些用大字字母表示的序列的一部分就是被开来互相比对的模体实例。
 
-We can create a ``Motif`` object from these instances as follows:
+我们可以从下面的实例创建一个 ``Motif`` 对象：
 
 .. code:: verbatim
 
     >>> from Bio import motifs
     >>> arnt = motifs.read(open("Arnt.sites"), "sites")
 
-The instances from which this motif was created is stored in the
-``.instances`` property:
+从这个模体创建的实例存储在该模体的 ``.instances`` 属性：
 
 .. code:: verbatim
 
@@ -271,8 +227,7 @@ The instances from which this motif was created is stored in the
     AACGTG
     CGCGTG
 
-The counts matrix of this motif is automatically calculated from the
-instances:
+这个模体的计数矩阵可以自动的由这些实例中计算出来：
 
 .. code:: verbatim
 
@@ -284,10 +239,7 @@ instances:
     T:   0.00   0.00   0.00   0.00  20.00   0.00
     <BLANKLINE>
 
-The JASPAR database also makes motifs available directly as a count
-matrix, without the instances from which it was created. For example,
-this is the JASPAR file ``SRF.pfm`` containing the count matrix for the
-human SRF transcription factor:
+JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些创建它们的实例。比如，下面这个JASPAR文件 ``SRF.pfm`` 包含了人类SRF转录因子的计数矩阵：
 
 .. code:: verbatim
 
@@ -296,7 +248,7 @@ human SRF transcription factor:
     39  2  1  0  0  0  0  0  0  0 44 43
      4  2  0  0 13 42  0 45  3 30  0  0
 
-We can create a motif for this count matrix as follows:
+我们可以像下面那样为计数矩阵创建一个模体：
 
 .. code:: verbatim
 
@@ -309,15 +261,14 @@ We can create a motif for this count matrix as follows:
     T:   4.00   2.00   0.00   0.00  13.00  42.00   0.00  45.00   3.00  30.00   0.00   0.00
     <BLANKLINE>
 
-As this motif was created from the counts matrix directly, it has no
-instances associated with it:
+由于这个模体是由计数矩阵直接创建的，所以它没有相关和实例：
 
 .. code:: verbatim
 
     >>> print srf.instances
     None
 
-We can now ask for the consensus sequence of these two motifs:
+我们可以获得这两个模体的一致序列：
 
 .. code:: verbatim
 
@@ -329,14 +280,9 @@ We can now ask for the consensus sequence of these two motifs:
 MEME
 ^^^^
 
-MEME [`12 <#bailey1994>`__\ ] is a tool for discovering motifs in a
-group of related DNA or protein sequences. It takes as input a group of
-DNA or protein sequences and outputs as many motifs as requested.
-Therefore, in contrast to JASPAR files, MEME output files typically
-contain multiple motifs. This is an example.
+MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。以下是一个例子。
 
-At the top of an output file generated by MEME shows some background
-information about the MEME and the version of MEME used:
+在输出文件的开头，有一些MEME生成的关于MEME和所用MEME版本的背景信息：
 
 .. code:: verbatim
 
@@ -346,7 +292,7 @@ information about the MEME and the version of MEME used:
     MEME version 3.0 (Release date: 2004/08/18 09:07:01)
     ...
 
-Further down, the input set of training sequences is recapitulated:
+往下，简要概括了输入的训练序列集：
 
 .. code:: verbatim
 
@@ -363,7 +309,7 @@ Further down, the input set of training sequences is recapitulated:
     OPI3                     1.0000    800
     ********************************************************************************
 
-and the exact command line that was used:
+以及所使用到的命令：
 
 .. code:: verbatim
 
@@ -376,7 +322,7 @@ and the exact command line that was used:
     command: meme -mod oops -dna -revcomp -nmotifs 2 -bfile yeast.nc.6.freq INO_up800.s
     ...
 
-Next is detailed information on each motif that was found:
+接下来就是每个被发现模体的详细信息：
 
 .. code:: verbatim
 
@@ -391,7 +337,7 @@ Next is detailed information on each motif that was found:
     probability       G  ::::1::94:4:
     matrix            T  aa:1::9::11:
 
-To parse this file (stored as ``meme.dna.oops.txt``), use
+读取这个文件（以 ``meme.dna.oops.txt`` 存储），使用下面的方法：
 
 .. code:: verbatim
 
@@ -399,9 +345,7 @@ To parse this file (stored as ``meme.dna.oops.txt``), use
     >>> record = motifs.parse(handle, "meme")
     >>> handle.close()
 
-The ``motifs.parse`` command reads the complete file directly, so you
-can close the file after calling ``motifs.parse``. The header
-information is stored in attributes:
+``motifs.parse`` 命令直接读取整个文件，所以在使用后可以关闭这个文件。其中头文件信息被存储于属性中
 
 .. code:: verbatim
 
@@ -416,9 +360,7 @@ information is stored in attributes:
     >>> record.sequences
     ['CHO1', 'CHO2', 'FAS1', 'FAS2', 'ACC1', 'INO1', 'OPI3']
 
-The record is an object of the ``Bio.motifs.meme.Record`` class. The
-class inherits from list, and you can think of ``record`` as a list of
-Motif objects:
+这个数据记录是 ``Bio.motifs.meme.Record`` 类的一个对象。这个类继承于列表（list），所以你可以把这个 ``record`` 看成模体对象的一个列表：
 
 .. code:: verbatim
 
@@ -430,8 +372,7 @@ Motif objects:
     >>> print motif.degenerate_consensus
     TTCACATGSCNC
 
-In addition to these generic motif attributes, each motif also stores
-its specific information as calculated by MEME. For example,
+除了一般的模体属性外，每个模体同时还保存着它们由MEME计算的各自特异信息。例如：
 
 .. code:: verbatim
 
@@ -445,16 +386,13 @@ its specific information as calculated by MEME. For example,
     >>> motif.name
     'Motif 1'
 
-In addition to using an index into the record, as we did above, you can
-also find it by its name:
+除了像上面所做的用索引来获得相关记录，你也可以用它的名称来找到这个记录：
 
 .. code:: verbatim
 
     >>> motif = record['Motif 1']
 
-Each motif has an attribute ``.instances`` with the sequence instances
-in which the motif was found, providing some information on each
-instance:
+每个模体都有一个 ``.instances`` 拥有创建这个模体序列实例的属性，能够为每个实例提供一些信息：
 
 .. code:: verbatim
 
@@ -485,13 +423,9 @@ MAST
 TRANSFAC
 ^^^^^^^^
 
-TRANSFAC is a manually curated database of transcription factors,
-together with their genomic binding sites and DNA binding profiles
-[`27 <#matys2003>`__\ ]. While the file format used in the TRANSFAC
-database is nowadays also used by others, we will refer to it as the
-TRANSFAC file format.
+TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [`27 <#matys2003>`__\ ]。TRANSFAC数据库中所用的文件格式在今天还被其他地方所用到，我们下面将介绍TRANSFAC文件格式。
 
-A minimal file in the TRANSFAC format looks as follows:
+TRANSFAC文件格式简单概括如下：
 
 .. code:: verbatim
 
@@ -511,10 +445,7 @@ A minimal file in the TRANSFAC format looks as follows:
     12      1      0      3      1      G
     //
 
-This file shows the frequency matrix of motif ``motif1`` of 12
-nucleotides. In general, one file in the TRANSFAC format can contain
-multiple motifs. For example, this is the contents of the example
-TRANSFAC file ``transfac.dat``:
+这个文件显示了模体 ``motif1`` 中12个核苷酸的频率矩阵。总的来说，一个TRANSFAC文件里面可以包含多个模体。以下是示例文件 ``transfac.dat`` 的内容：
 
 .. code:: verbatim
 
@@ -539,7 +470,7 @@ TRANSFAC file ``transfac.dat``:
     10      0      2      0      3      Y
     //
 
-To parse a TRANSFAC file, use
+可用下面的方法读取TRANSFAC文件：
 
 .. code:: verbatim
 
@@ -547,19 +478,14 @@ To parse a TRANSFAC file, use
     >>> record = motifs.parse(handle, "TRANSFAC")
     >>> handle.close()
 
-The overall version number, if available, is stored as
-``record.version``:
+如果有总版本号的话，它是存储在 ``record.version`` 中：
 
 .. code:: verbatim
 
     >>> record.version
     'EXAMPLE January 15, 2013'
 
-Each motif in ``record`` is in instance of the
-``Bio.motifs.transfac.Motif`` class, which inherits both from the
-``Bio.motifs.Motif`` class and from a Python dictionary. The dictionary
-uses the two-letter keys to store any additional information about the
-motif:
+每个在 ``record`` 中的模体都是 ``Bio.motifs.transfac.Motif`` 类的实例，这些实例同时继承 ``Bio.motifs.Motif`` 类和Python字典的特性。这些字典用双字母的键来存储关于这个模体的其他附加信息：
 
 .. code:: verbatim
 
@@ -569,85 +495,85 @@ motif:
     >>> motif['ID'] # Using motif as a dictionary
     'motif1'
 
-TRANSFAC files are typically much more elaborate than this example,
-containing lots of additional information about the motif. Table
-`14.1.2 <#table:transfaccodes>`__ lists the two-letter field codes that
-are commonly found in TRANSFAC files:
+TRANSFAC文件一般比这些例子更好的详细，包含了许多关于模体的附加信息。表格 `14.1.2 <#table:transfaccodes>`__ 列出了在TRANSFAC文件常见的双字母含义：
 
     --------------
 
     +-------------------------------------------------------+
-    | Table 14.1: Fields commonly found in TRANSFAC files   |
+    | Table 14.1: TRANSFAC文件中常见的字段                  |
     +-------------------------------------------------------+
 
     +----------+---------------------------------------------------+
-    | ``AC``   | Accession number                                  |
+    | ``AC``   | Accession numbers 序列号                          |
     +----------+---------------------------------------------------+
-    | ``AS``   | Accession numbers, secondary                      |
+    | ``AS``   | Accession numbers, secondary 第二序列号           |
     +----------+---------------------------------------------------+
-    | ``BA``   | Statistical basis                                 |
+    | ``BA``   | Statistical basis 统计依据                        |
     +----------+---------------------------------------------------+
-    | ``BF``   | Binding factors                                   |
+    | ``BF``   | Binding factors 结合因子                          |
     +----------+---------------------------------------------------+
     | ``BS``   | Factor binding sites underlying the matrix        |
+    |          | 基于矩阵的转录结合位点                            | 
     +----------+---------------------------------------------------+
-    | ``CC``   | Comments                                          |
+    | ``CC``   | Comments 注解                                     |
     +----------+---------------------------------------------------+
-    | ``CO``   | Copyright notice                                  |
+    | ``CO``   | Copyright notice 版权事项                         |
     +----------+---------------------------------------------------+
-    | ``DE``   | Short factor description                          |
+    | ``DE``   | Short factor description 短因子说明               |
     +----------+---------------------------------------------------+
-    | ``DR``   | External databases                                |
+    | ``DR``   | External databases 外部数据库                     |
     +----------+---------------------------------------------------+
-    | ``DT``   | Date created/updated                              |
+    | ``DT``   | Date created/updated 创建或更新日期               |
     +----------+---------------------------------------------------+
-    | ``HC``   | Subfamilies                                       |
+    | ``HC``   | Subfamilies 亚家庭名称                            |
     +----------+---------------------------------------------------+
-    | ``HP``   | Superfamilies                                     |
+    | ``HP``   | Superfamilies 超家庭名称                          |
     +----------+---------------------------------------------------+
-    | ``ID``   | Identifier                                        |
+    | ``ID``   | Identifier 身份证                                 |
     +----------+---------------------------------------------------+
-    | ``NA``   | Name of the binding factor                        |
+    | ``NA``   | Name of the binding factor 结合因子的名称         |
     +----------+---------------------------------------------------+
-    | ``OC``   | Taxonomic classification                          |
+    | ``OC``   | Taxonomic classification 分类                     |
     +----------+---------------------------------------------------+
-    | ``OS``   | Species/Taxon                                     |
+    | ``OS``   | Species/Taxon 种类或分类                          |
     +----------+---------------------------------------------------+
-    | ``OV``   | Older version                                     |
+    | ``OV``   | Older version 旧版本                              |
     +----------+---------------------------------------------------+
-    | ``PV``   | Preferred version                                 |
+    | ``PV``   | Preferred version 首先版本                        |
     +----------+---------------------------------------------------+
-    | ``TY``   | Type                                              |
+    | ``TY``   | Type 类型                                         |
     +----------+---------------------------------------------------+
     | ``XX``   | Empty line; these are not stored in the Record.   |
+    |          | 空白行;没在记录中存储的数据                       | 
     +----------+---------------------------------------------------+
 
     --------------
 
 Each motif also has an attribute ``.references`` containing the
 references associated with the motif, using these two-letter keys:
+每个模体同时也有一个包含与这个模体相关参考资料的 ``references`` 属性，用下面的双字母键来获得：
 
     --------------
 
     +-----------------------------------------------------------------+
-    | Table 14.2: Fields used to store references in TRANSFAC files   |
+    | Table 14.2: TRANSFAC文件中用来存储参考资料的字段                |
     +-----------------------------------------------------------------+
 
-    +----------+---------------------+
-    | ``RN``   | Reference number    |
-    +----------+---------------------+
-    | ``RA``   | Reference authors   |
-    +----------+---------------------+
-    | ``RL``   | Reference data      |
-    +----------+---------------------+
-    | ``RT``   | Reference title     |
-    +----------+---------------------+
-    | ``RX``   | PubMed ID           |
-    +----------+---------------------+
+    +----------+-------------------------------+
+    | ``RN``   | Reference number 参考数目     |
+    +----------+-------------------------------+
+    | ``RA``   | Reference authors 参考资料作者|
+    +----------+-------------------------------+
+    | ``RL``   | Reference data 参考数据       |
+    +----------+-------------------------------+
+    | ``RT``   | Reference title 参考标题      |
+    +----------+-------------------------------+
+    | ``RX``   | PubMed ID                     |
+    +----------+-------------------------------+
 
     --------------
 
-Printing the motifs writes them out in their native TRANSFAC format:
+将TRANSFAC文件按原来格式打印出来：
 
 .. code:: verbatim
 
@@ -689,8 +615,7 @@ Printing the motifs writes them out in their native TRANSFAC format:
     //
     <BLANKLINE>
 
-You can export the motifs in the TRANSFAC format by capturing this
-output in a string and saving it in a file:
+通过用字符串形式来截取输出并且保存在文件中，你可以按TRANSFAC的格式导出这些模体：
 
 .. code:: verbatim
 
@@ -699,11 +624,10 @@ output in a string and saving it in a file:
     >>> handle.write(text)
     >>> handle.close()
 
-14.1.3  Writing motifs
+14.1.3  模体写入
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Speaking of exporting, let’s look at export functions in general. To
-export a motif in the JASPAR ``.pfm`` format, use
+说到导出，我们可以先看看导出函数。以JASPAR ``.pfm`` 格式导出模体文件，可以用：
 
 .. code:: verbatim
 
@@ -714,7 +638,7 @@ export a motif in the JASPAR ``.pfm`` format, use
     4       0       2       0       0
     <BLANKLINE>
 
-To write the motif in a TRANSFAC-like matrix format, use
+用TRANSFAC类似的格式导出一个模体，可以用：
 
 .. code:: verbatim
 
@@ -729,9 +653,7 @@ To write the motif in a TRANSFAC-like matrix format, use
     //
     <BLANKLINE>
 
-To write out multiple motifs, you can use ``motifs.write``. This
-function can be used regardless of whether the motifs originated from a
-TRANSFAC file. For example,
+你可以用 ``motifs.write`` 来写入多个模体。这个函数在使用的时候不必担心这些模体来自于TRANSFAC文件。比如：
 
 .. code:: verbatim
 
@@ -763,36 +685,23 @@ TRANSFAC file. For example,
     //
     <BLANKLINE>
 
-14.1.4  Creating a sequence logo
+14.1.4  绘制序列标识图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If we have internet access, we can create a
-`weblogo <http://weblogo.berkeley.edu>`__:
+如何能够联网，我们可以在该网址 `weblogo <http://weblogo.berkeley.edu>`__ 创建一个：
 
 .. code:: verbatim
 
     >>> arnt.weblogo("Arnt.png")
 
-We should get our logo saved as a PNG in the specified file.
+将得到的标识图存储成PNG格式。
 
-14.2  Position-Weight Matrices
+14.2  位置权重矩阵
 ------------------------------
 
-The ``.counts`` attribute of a Motif object shows how often each
-nucleotide appeared at each position along the alignment. We can
-normalize this matrix by dividing by the number of instances in the
-alignment, resulting in the probability of each nucleotide at each
-position along the alignment. We refer to these probabilities as the
-position-weight matrix. However, beware that in the literature this term
-may also be used to refer to the position-specific scoring matrix, which
-we discuss below.
+模体对象的 ``.counts`` 属性能够显示在序列上每个位置核苷酸出现的次数。我们可以把这矩阵除以序列中的实例数目来标准化这矩阵，得到每个核苷酸在序列位置上出现概率。我们把这概率看作位置权重矩阵。不过，要知道在字面上，这个术语也可以用来说明位置特异性得分矩阵，这个我们将会在下面讨论。
 
-Usually, pseudocounts are added to each position before normalizing.
-This avoids overfitting of the position-weight matrix to the limited
-number of motif instances in the alignment, and can also prevent
-probabilities from becoming zero. To add a fixed pseudocount to all
-nucleotides at all positions, specify a number for the ``pseudocounts``
-argument:
+通常来说，伪计数（pseudocounts）在归一化之前都加到了每个位置中。这样可以避免在这序列上过度拟合位置权重矩阵以至趋向于模体的实例的有限数量，还可以避免概率为0。向每个位置的核苷酸添加一个固定的伪计数，可以为 ``pseudocounts`` 参数指定一个数值：
 
 .. code:: verbatim
 
@@ -805,10 +714,7 @@ argument:
     T:   0.50   0.06   0.28   0.06   0.06
     <BLANKLINE>
 
-Alternatively, ``pseudocounts`` can be a dictionary specifying the
-pseudocounts for each nucleotide. For example, as the GC content of the
-human genome is about 40%, you may want to choose the pseudocounts
-accordingly:
+另外， ``pseudocounts`` 可以利用字典为每个核苷酸指定一个伪计数值。例如，由于在人类基因组中GC含量大概为40%,因此可以选择下面这些伪计数值：
 
 .. code:: verbatim
 
@@ -821,8 +727,7 @@ accordingly:
     T:   0.51   0.07   0.29   0.07   0.07
     <BLANKLINE>
 
-The position-weight matrix has its own methods to calculate the
-consensus, anticonsensus, and degenerate consensus sequences:
+位置权重矩阵有它自己的方法计算一致序列、反向一致序列和降级的一致序列（degenerate consensus sequences)：
 
 .. code:: verbatim
 
@@ -833,18 +738,14 @@ consensus, anticonsensus, and degenerate consensus sequences:
     >>> pwm.degenerate_consensus
     Seq('WACNC', IUPACAmbiguousDNA())
 
-Note that due to the pseudocounts, the degenerate consensus sequence
-calculated from the position-weight matrix is slightly different from
-the degenerate consensus sequence calculated from the instances in the
-motif:
+应当注意到由于伪计数的原因，由位置仅重矩阵计算得到的降级一致序列和由模体中实例计算得到的降级一致序列有一点不同：
 
 .. code:: verbatim
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
-The reverse complement of the position-weight matrix can be calculated
-directly from the ``pwm``:
+位置权重矩阵的反向互补矩阵可以直接用 ``pwm`` 计算出来：
 
 .. code:: verbatim
 
@@ -857,13 +758,10 @@ directly from the ``pwm``:
     T:   0.18   0.29   0.07   0.84   0.40
     <BLANKLINE>
 
-14.3  Position-Specific Scoring Matrices
+14.3  位置特异性得分矩阵
 ----------------------------------------
 
-Using the background distribution and PWM with pseudo-counts added, it’s
-easy to compute the log-odds ratios, telling us what are the log odds of
-a particular symbol to be coming from a motif against the background. We
-can use the ``.log_odds()`` method on the position-weight matrix:
+使用背景分布和加入伪计数的PWM，很容易就能计算出log-odds比率，提供特定标记的log odds值，这值来自于在这个背景的模体。我们可以用在位置仅重矩阵中 ``.log-odds()`` 方法：
 
 .. code:: verbatim
 
@@ -876,15 +774,9 @@ can use the ``.log_odds()`` method on the position-weight matrix:
     T:   1.03  -1.91   0.21  -1.91  -1.91
     <BLANKLINE>
 
-Here we can see positive values for symbols more frequent in the motif
-than in the background and negative for symbols more frequent in the
-background. 0.0 means that it’s equally likely to see a symbol in the
-background and in the motif.
+这时我们可以更经常看到特定标记和背景下的正值和负值。0.0意味着在模体和在背景中看到一个标记的可能性是一样的。
 
-This assumes that A, C, G, and T are equally likely in the background.
-To calculate the position-specific scoring matrix against a background
-with unequal probabilities for A, C, G, T, use the ``background``
-argument. For example, against a background with a 40% GC content, use
+上面是假设A,C,G和T在背景中出现的概率是相同的。那在A,C,G和T出现概率不同的情况下，为了计算特定背景下的位置特异性得分矩阵，可以使用 ``background`` 参数。例如，在40%GC含量的背景下，可以用：
 
 .. code:: verbatim
 
@@ -898,8 +790,7 @@ argument. For example, against a background with a 40% GC content, use
     T:   0.77  -2.17  -0.05  -2.17  -2.17
     <BLANKLINE>
 
-The maximum and minimum score obtainable from the PSSM are stored in the
-``.max`` and ``.min`` properties:
+从PSSM中得到的最大和最小值被存储在 ``.max`` 和 ``.min`` 属性中：
 
 .. code:: verbatim
 
@@ -908,9 +799,7 @@ The maximum and minimum score obtainable from the PSSM are stored in the
     >>> print "%4.2f" % pssm.min
     -10.85
 
-The mean and standard deviation of the PSSM scores with respect to a
-specific background are calculated by the ``.mean`` and ``.std``
-methods.
+在特定背景下计算平均值和标准方差可以使用 ``.mean`` 和 ``.std`` 方法。
 
 .. code:: verbatim
 
@@ -919,23 +808,14 @@ methods.
     >>> print "mean = %0.2f, standard deviation = %0.2f" % (mean, std)
     mean = 3.21, standard deviation = 2.59
 
-A uniform background is used if ``background`` is not specified. The
-mean is particularly important, as its value is equal to the
-Kullback-Leibler divergence or relative entropy, and is a measure for
-the information content of the motif compared to the background. As in
-Biopython the base-2 logarithm is used in the calculation of the
-log-odds scores, the information content has units of bits.
+如果没有指定特定的背景，就会使用一个统一的背景。因为同KL散度或相对熵的值相同，所以平均值就显得特别重要，并且它也是同背景相比的模体信息含量的测量方法。由于在Biopython中用以2为底的对数来计算log-odds值，信息含量的的单位是bit。
 
-The ``.reverse_complement``, ``.consensus``, ``.anticonsensus``, and
-``.degenerate_consensus`` methods can be applied directly to PSSM
-objects.
+``.reverse_complement``, ``.consensus``, ``.anticonsensus`` 和``.degenerate_consensus`` 方法可以直接对PSSM使用。
 
-14.4  Searching for instances
+14.4  搜索实例
 -----------------------------
 
-The most frequent use for a motif is to find its instances in some
-sequence. For the sake of this section, we will use an artificial
-sequence like this:
+模体最常用的功能就是在一些序列中的查找它的实例。在这节，我们会用以下一个人造序列：
 
 .. code:: verbatim
 
@@ -943,11 +823,10 @@ sequence like this:
     >>> len(test_seq)
     26
 
-14.4.1  Searching for exact matches
+14.4.1  搜索准确匹配实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The simplest way to find instances, is to look for exact matches of the
-true instances of the motif:
+查找实例最简单的方法就是查找模体实例的准确匹配：
 
 .. code:: verbatim
 
@@ -958,8 +837,7 @@ true instances of the motif:
     10 TACAA
     13 AACCC
 
-We can do the same with the reverse complement (to find instances on the
-complementary strand):
+我们可获得反向互补序列（找到互补链的实例）：
 
 .. code:: verbatim
 
@@ -969,11 +847,10 @@ complementary strand):
     6 GCATT
     20 GCATT
 
-14.4.2  Searching for matches using the PSSM score
+14.4.2  用PSSM得分搜索匹配实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It’s just as easy to look for positions, giving rise to high log-odds
-scores against our motif:
+在模体中很容易找出相应的位置,引起对模体的高log-odds值：
 
 .. code:: verbatim
 
@@ -986,19 +863,9 @@ scores against our motif:
     Position 13: score = 5.738
     Position -6: score = 4.601
 
-The negative positions refer to instances of the motif found on the
-reverse strand of the test sequence, and follow the Python convention on
-negative indices. Therefore, the instance of the motif at ``pos`` is
-located at ``test_seq[pos:pos+len(m)]`` both for positive and for
-negative values of ``pos``.
+负值的位置是指在测试序列的反向链中找到的模体的实例，而且得力于Python的索引。在 ``pos`` 的模体实例可以用 ``test_seq[pos:pos+len(m)]`` 来定位，不管 ``pos`` 值是正还是负。
 
-You may notice the threshold parameter, here set arbitrarily to 3.0.
-This is in *log*\ :sub:`2`, so we are now looking only for words, which
-are eight times more likely to occur under the motif model than in the
-background. The default threshold is 0.0, which selects everything that
-looks more like the motif than the background.
-
-You can also calculate the scores at all positions along the sequence:
+你可能注意到阀值参数，在这里随意地设为3.0。这里是 *log*\ :sub:`2` ，所以我们现在开始寻找那些在模体中出现概率为背景中出现概率8倍序列。默认的阀值是0.0,在此阀值下，会把所有比背景中出现概率大的模体实例都找出来。
 
 .. code:: verbatim
 
@@ -1010,10 +877,7 @@ You can also calculate the scores at all positions along the sequence:
             -8.73414803,  -0.09919716,  -0.6016975 ,  -2.39429784,
            -10.84962463,  -3.65614533], dtype=float32)
 
-In general, this is the fastest way to calculate PSSM scores. The scores
-returned by ``pssm.calculate`` are for the forward strand only. To
-obtain the scores on the reverse strand, you can take the reverse
-complement of the PSSM:
+通常来说，上面是计算PSSM得分的最快方法。这些得分只能由前导链用 ``pssm.calculate`` 。为了得到互补链的PSSM值，你可以利用PSSM的互补矩阵：
 
 .. code:: verbatim
 
@@ -1026,23 +890,16 @@ complement of the PSSM:
             -5.64668512,  -8.73414803,  -4.15613794,  -5.6796999 ,
              4.60124254,  -4.2480607 ], dtype=float32)
 
-14.4.3  Selecting a score threshold
+14.4.3  选择一个得分阀值
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to use a less arbitrary way of selecting thresholds, you can
-explore the distribution of PSSM scores. Since the space for a score
-distribution grows exponentially with motif length, we are using an
-approximation with a given precision to keep computation cost
-manageable:
+如果不想那么随意设定一个阀值，你可以探究一下PSSM得分的分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于一个给定精度值来使计算成本可管理：
 
 .. code:: verbatim
 
     >>> distribution = pssm.distribution(background=background, precision=10**4)
 
-The ``distribution`` object can be used to determine a number of
-different thresholds. We can specify the requested false-positive rate
-(probability of “finding” a motif instance in background generated
-sequence):
+``distribution`` 对象可以用来决定许多不同的阀值。我们可以指定一个所要求的假阳性率（找到一个由这个序列在这个背景下产生的一个模体实例的概率）：
 
 .. code:: verbatim
 
@@ -1050,8 +907,7 @@ sequence):
     >>> print "%5.3f" % threshold
     4.009
 
-or the false-negative rate (probability of “not finding” an instance
-generated from the motif):
+或者假阴性率（找不到模体产生的实例概率）：
 
 .. code:: verbatim
 
@@ -1059,8 +915,7 @@ generated from the motif):
     >>> print "%5.3f" % threshold
     -0.510
 
-or a threshold (approximately) satisfying some relation between the
-false-positive rate and the false-negative rate (fnr/fpr≃ *t*):
+或者一个阀值（近似），满足假阳性率和假阴性率之间的关系（fnr/fpr≃ *t*)：
 
 .. code:: verbatim
 
@@ -1068,9 +923,7 @@ false-positive rate and the false-negative rate (fnr/fpr≃ *t*):
     >>> print "%5.3f" % threshold
     6.241
 
-or a threshold satisfying (roughly) the equality between the
-false-positive rate and the −\ *log* of the information content (as used
-in patser software by Hertz and Stormo):
+或者一个阀值能够大体满足假阳性率和信息含量的 −\ *log* 值之间的相等关系（像Hertz和Stormo的Patser软件所用的一样）：
 
 .. code:: verbatim
 
@@ -1078,9 +931,7 @@ in patser software by Hertz and Stormo):
     >>> print "%5.3f" % threshold
     0.346
 
-For example, in case of our motif, you can get the threshold giving you
-exactly the same results (for this sequence) as searching for instances
-with balanced threshold with rate of 1000.
+比如在我们这个模体中，当以1000比率的平衡阀值查找实例，你可以得到一个让你获得相同结果的阀值（对这个序列来说）。
 
 .. code:: verbatim
 
@@ -1095,12 +946,10 @@ with balanced threshold with rate of 1000.
     Position 13: score = 5.738
     Position -6: score = 4.601
 
-14.5  Each motif object has an associated Position-Specific Scoring Matrix
+14.5  模体对象自身相关的位置特异性得分矩阵
 --------------------------------------------------------------------------
 
-To facilitate searching for potential TFBSs using PSSMs, both the
-position-weight matrix and the position-specific scoring matrix are
-associated with each motif. Using the Arnt motif as an example:
+为了更好的利用PSSMs来查找潜在的TFBSs，每个模体都同位置权重矩阵和位置特异性得分矩阵相关联。用Arnt模体来举个例子：
 
 .. code:: verbatim
 
@@ -1132,9 +981,7 @@ associated with each motif. Using the Arnt motif as an example:
     T:   -inf   -inf   -inf   -inf   2.00   -inf
     <BLANKLINE>
 
-The negative infinities appear here because the corresponding entry in
-the frequency matrix is 0, and we are using zero pseudocounts by
-default:
+在这出现的负无穷大是由于在频率矩阵中相关项的值为0,并且我们默认使用为作为伪计数：
 
 .. code:: verbatim
 
@@ -1146,9 +993,7 @@ default:
     G: 0.00
     T: 0.00
 
-If you change the ``.pseudocounts`` attribute, the position-frequency
-matrix and the position-specific scoring matrix are recalculated
-automatically:
+如果你更改了 ``.pseudocouts`` 属性，那位置频率矩阵和位置特异性得分矩阵都会自动地重新计算：
 
 .. code:: verbatim
 
@@ -1181,13 +1026,9 @@ automatically:
     T:  -1.42  -1.42  -1.42  -1.42   1.52  -1.42
     <BLANKLINE>
 
-You can also set the ``.pseudocounts`` to a dictionary over the four
-nucleotides if you want to use different pseudocounts for them. Setting
-``motif.pseudocounts`` to ``None`` resets it to its default value of
-zero.
+如果你想对4个核苷酸使用不同的伪计数，可以使用字典来设定4个核苷酸的 ``pseudocounts`` 。把 ``motif.pseudocounts`` 设为 ``None`` 会让伪计数重置为0的默认值。
 
-The position-specific scoring matrix depends on the background
-distribution, which is uniform by default:
+位置特异性得分矩阵依赖于一个默认均一的背景分布：
 
 .. code:: verbatim
 
@@ -1199,8 +1040,7 @@ distribution, which is uniform by default:
     G: 0.25
     T: 0.25
 
-Again, if you modify the background distribution, the position-specific
-scoring matrix is recalculated:
+同样，如果你更改了背景分布，位置特异性得分矩阵也会重新计算：
 
 .. code:: verbatim
 
@@ -1213,8 +1053,7 @@ scoring matrix is recalculated:
     T:  -1.09  -1.09  -1.09  -1.09   1.85  -1.09
     <BLANKLINE>
 
-Setting ``motif.background`` to ``None`` resets it to a uniform
-distribution:
+把 ``motif.backgroud`` 设为 ``None`` 将重置为均一的分布。
 
 .. code:: verbatim
 
@@ -1227,8 +1066,7 @@ distribution:
     G: 0.25
     T: 0.25
 
-If you set ``motif.background`` equal to a single value, it will be
-interpreted as the GC content:
+如果你把 ``motif.background`` 设为一个单一值，这个值将会被看成是GC含量：
 
 .. code:: verbatim
 
@@ -1241,22 +1079,21 @@ interpreted as the GC content:
     G: 0.40
     T: 0.10
 
-Note that you can now calculate the mean of the PSSM scores over the
-background against which it was computed:
+应当注意到你能够在基于它计算的在背景下计算PSSM的平均值：
 
 .. code:: verbatim
 
     >>> print "%f" % motif.pssm.mean(motif.background)
     4.703928
 
-as well as its standard deviation:
+它的标准方差也是一样：
 
 .. code:: verbatim
 
     >>> print "%f" % motif.pssm.std(motif.background)
     3.290900
 
-and its distribution:
+和它的分布：
 
 .. code:: verbatim
 
@@ -1265,37 +1102,25 @@ and its distribution:
     >>> print "%f" % threshold
     3.854375
 
-Note that the position-weight matrix and the position-specific scoring
-matrix are recalculated each time you call ``motif.pwm`` or
-``motif.pssm``, respectively. If speed is an issue and you want to use
-the PWM or PSSM repeatedly, you can save them as a variable, as in
+请注意，每当你调用 ``motif.pwm`` 或 ``motif.pssm`` 时，位置仅重矩阵和位置特异性得分矩阵都会重新计算。如果看重速度并且你要重复用到PWM或PSSM时，你可以把他们保存成变量，像下面那样：
 
 .. code:: verbatim
 
     >>> pssm = motif.pssm
 
-14.6  Comparing motifs
+14.6  模体比较
 ----------------------
 
-Once we have more than one motif, we might want to compare them.
+当我们有多个模体的时候，我们就会想比较他们。
 
-Before we start comparing motifs, I should point out that motif
-boundaries are usually quite arbitrary. This means we often need to
-compare motifs of different lengths, so comparison needs to involve some
-kind of alignment. This means we have to take into account two things:
+在我们开始比较之前，应当要指出模体的边界通常相当模糊。这也就是说我们需要比较不同长度的模体，因此这些比较也要涉及到相关的比对。所以我们需要考虑两个东西：
 
--  alignment of motifs
--  some function to compare aligned motifs
+-   模体的比对
+-   比较比对后模体的相关函数
 
-To align the motifs, we use ungapped alignment of PSSMs and substitute
-zeros for any missing columns at the beginning and end of the matrices.
-This means that effectively we are using the background distribution for
-columns missing from the PSSM. The distance function then returns the
-minimal distance between motifs, as well as the corresponding offset in
-their alignment.
+为了比对模体，我们使用PSSMs的不含间隔的比对，并且用0来代替矩阵开始和结束位置缺失的列。这说明我们能够有效地利用利用背景分布来代替PSSM中缺失的列。距离函数然后可以返回模体间最小的距离，以及比对中相应的偏移量。
 
-To give an exmaple, let us first load another motif, which is similar to
-our test motif ``m``:
+让我们举个例子，先载入另外的模体，这个模体和我们的测试模体 ``m`` 相似：
 
 .. code:: verbatim
 
@@ -1310,8 +1135,7 @@ our test motif ``m``:
     T:  10.00 100.00 100.00   0.00   0.00   0.00   0.00  40.00  15.00
     <BLANKLINE>
 
-To make the motifs comparable, we choose the same values for the
-pseudocounts and the background distribution as our motif ``m``:
+为了让模体能够进行相互比较，我们选择和模体 ``m`` 相同伪计数和背景值：
 
 .. code:: verbatim
 
@@ -1326,9 +1150,7 @@ pseudocounts and the background distribution as our motif ``m``:
     T:  -1.53   1.72   1.72  -5.67  -5.67  -5.67  -5.67   0.41  -0.97
     <BLANKLINE>
 
-We’ll compare these motifs using the Pearson correlation. Since we want
-it to resemble a distance measure, we actually take 1−\ *r*, where *r*
-is the Pearson correlation coefficient (PCC):
+我们将用Pearson相关来比较这些模体。由于我们想要让它偏向于一个距离长度，我们实际上取1−\ *r* ，其中 *r* 是Pearson相关系数（PCC）：
 
 .. code:: verbatim
 
@@ -1338,32 +1160,25 @@ is the Pearson correlation coefficient (PCC):
     >>> print offset
     -2
 
-This means that the best PCC between motif ``m`` and ``m_reb1`` is
-obtained with the following alignment:
+这意味着模体 ``m`` 和 ``m_reb1`` 间最佳PCC可以从下面的比对中获得：
 
 .. code:: verbatim
 
     m:      bbTACGCbb
     m_reb1: GTTACCCGG
 
-where ``b`` stands for background distribution. The PCC itself is
-roughly 1−0.239=0.761.
+其中 ``b`` 代表背景分布。PCC值大概为1−0.239=0.761。
 
-14.7  *De novo* motif finding
+
+14.7  查找 *De novo* 模体
 -----------------------------
 
-Currently, Biopython has only limited support for *de novo* motif
-finding. Namely, we support running and parsing of AlignAce and MEME.
-Since the number of motif finding tools is growing rapidly,
-contributions of new parsers are welcome.
+如今，Biopython对 *De novo* 模体查找只有有限的支持。也就是说，我们支持AlignAce和MEME的运行和读取。由于模体查找工具如雨后春笋般出现，所以很欢迎新的分析程序加入进来。
 
 14.7.1  MEME
 ~~~~~~~~~~~~
 
-Let’s assume, you have run MEME on sequences of your choice with your
-favorite parameters and saved the output in the file ``meme.out``. You
-can retrieve the motifs reported by MEME by running the following piece
-of code:
+假设你用MEME以你喜欢的参数设置来跑序列，并把结果保存在文件 ``meme.out`` 。你可以用以下的命令来得到MEME输出的模体：
 
 .. code:: verbatim
 
@@ -1375,9 +1190,7 @@ of code:
     >>> motifsM
     [<Bio.motifs.meme.Motif object at 0xc356b0>]
 
-Besides the most wanted list of motifs, the result object contains more
-useful information, accessible through properties with self-explanatory
-names:
+除了最想要的一系列模体外，结果中还包含了很多有用的信息，可以通过那些一目了然的属性名获得：
 
 -  ``.alphabet``
 -  ``.datafile``
@@ -1385,9 +1198,7 @@ names:
 -  ``.version``
 -  ``.command``
 
-The motifs returned by the MEME Parser can be treated exactly like
-regular Motif objects (with instances), they also provide some extra
-functionality, by adding additional information about the instances.
+由MEME解析得到的模体可以像平常的模体对象（有实例）一样处理，它们也提供了一些额外的功能，可以为实例增加额外的信息。
 
 .. code:: verbatim
 
@@ -1408,34 +1219,28 @@ functionality, by adding additional information about the instances.
 14.7.2  AlignAce
 ~~~~~~~~~~~~~~~~
 
-We can do very similar things with the AlignACE program. Assume, you
-have your output in the file ``alignace.out``. You can parse your output
-with the following code:
+我们可以用AlignACE程序实现类似的效果。假如，你把结果保存在 ``alignace.out`` 文件中。你可以用下面的代码读取结果：
 
 .. code:: verbatim
 
     >>> from Bio import motifs
     >>> motifsA = motifs.parse(open("alignace.out"),"alignace")
 
-Again, your motifs behave as they should:
+同样，你的模体也和正常的模体对象有相同的属性：
 
 .. code:: verbatim
 
     >>> motifsA[0].consensus
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
 
-In fact you can even see, that AlignAce found a very similar motif as
-MEME. It is just a longer version of a reverse complement of the MEME
-motif:
+事实上，你甚至可以观察到，AlignAce找到了一个和MEME非常相似的模体。下面只是MEME模体互补链的一个较长版本：
 
 .. code:: verbatim
 
     >>> motifsM[0].reverse_complement().consensus
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
-If you have AlignAce installed on the same machine, you can also run it
-directly from Biopython. A short example of how this can be done is
-shown below (other parameters can be specified as keyword parameters):
+如果在你的机器上安装了AlignAce，你可以直接从Biopython中运行AlignAce。下面就是一个如何运行AlignAce的简单例子（其他参数可以用关键字参数来调用）：
 
 .. code:: verbatim
 
@@ -1445,14 +1250,13 @@ shown below (other parameters can be specified as keyword parameters):
     >>> cmd = AlignAceCommandline(cmd=command,input=input_file,gcback=0.6,numcols=10)
     >>> stdout,stderr= cmd()
 
-Since AlignAce prints all of its output to standard output, you can get
-to your motifs by parsing the first part of the result:
+由于AlignAce把所有的结果输出到标准输出，所以你可以通过读取结果的第一部分来获得模体：
 
 .. code:: verbatim
 
     >>> motifs = motifs.parse(stdout,"alignace")
 
-14.8  Useful links
+14.8  相关链接
 ------------------
 
 -  `Sequence motif <http://en.wikipedia.org/wiki/Sequence_motif>`__ in
@@ -1465,40 +1269,30 @@ to your motifs by parsing the first part of the result:
 -  `Comparison of different motif finding
    programs <http://bio.cs.washington.edu/assessment/>`__
 
-14.9  Obsolete Bio.Motif module
+14.9  旧版Bio.Motif模块
 -------------------------------
 
-The rest of this chapter above describes the ``Bio.motifs`` package
-included in Biopython 1.61 onwards, which is replacing the older
-``Bio.Motif`` package introduced with Biopython 1.50, which was in turn
-based on two older former Biopython modules, ``Bio.AlignAce`` and
-``Bio.MEME``.
+这章剩下的部分将介绍Biopython 1.61版本前的 ``Bio.Motifs`` 模块，该模块取代了Biopython 1.50版本中基于两个早期Biopython模块—— ``Bio.AlignAce`` 和 ``Bio.MEME`` 的 ``Bio.Motif`` 模块。
 
-To allow for a smooth transition, the older ``Bio.Motif`` package will
-be maintained in parallel with its replacement ``Bio.motifs`` at least
-two more releases, and at least one year.
+为了平滑的过渡，早期的 ``Bio.Motif`` 模块将会和它的取代者 ``Bio.Motifs`` 一同维护到至少发行两个版本，并且最少一年时间。
 
-14.9.1  Motif objects
+14.9.1  模体对象
 ~~~~~~~~~~~~~~~~~~~~~
 
-Since we are interested in motif analysis, we need to take a look at
-``Motif`` objects in the first place. For that we need to import the
-Motif library:
+由于我们对模体分析感兴趣，不过让我们首先看看 ``Motif`` 对象。第一步要先导入模体库：
 
 .. code:: verbatim
 
     >>> from Bio import Motif
 
-and we can start creating our first motif objects. Let’s create a DNA
-motif:
+然后我可以开始创建我们的第一个模体对象。让我们创建一个DNA模体：
 
 .. code:: verbatim
 
     >>> from Bio.Alphabet import IUPAC
     >>> m = Motif.Motif(alphabet=IUPAC.unambiguous_dna)
 
-This is for now just an empty container, so let’s add some sequences to
-our newly created motif:
+现在这里面什么也没有，让我往新建的模体加入一些序列：
 
 .. code:: verbatim
 
@@ -1508,8 +1302,7 @@ our newly created motif:
     >>> m.add_instance(Seq("TATAA",m.alphabet))
     >>> m.add_instance(Seq("TATAA",m.alphabet))
 
-Now we have a full ``Motif`` instance, so we can try to get some basic
-information about it. Let’s start with length and consensus sequence:
+现在我们有了一个完整的 ``Motif`` 实例，我们可以试着从中获取一些基本信息。先看看长度和一致序列：
 
 .. code:: verbatim
 
@@ -1518,7 +1311,7 @@ information about it. Let’s start with length and consensus sequence:
     >>> m.consensus()
     Seq('TATAA', IUPACUnambiguousDNA())
 
-In case of DNA motifs, we can also get a reverse complement of a motif:
+对于DNA模体，我们还可以获得一个模体的反向互补序列：
 
 .. code:: verbatim
 
@@ -1531,21 +1324,16 @@ In case of DNA motifs, we can also get a reverse complement of a motif:
     TTATA
     TTATA
 
-We can also calculate the information content of a motif with a simple
-call:
+我们也可以简单的调取模体的信息容量：
 
 .. code:: verbatim
 
     >>> print "%0.2f" % m.ic()
     5.27
 
-This gives us a number of bits of information provided by the motif,
-which tells us how much differs from background.
+这给我们提供了模体中信息容量的比特数，知道和背景有多少不同。
 
-The most common representation of a motif is a PWM (Position Weight
-Matrix). It summarizes the probabilities of finding any symbol (in this
-case nucleotide) in any position of a motif. It can be computed by
-calling the ``.pwm()`` method:
+展示模体最常用的就是PWM（位置仅重矩阵）。它概括了在模体上任意位置出现一个符号（这里指核苷酸）的概率。这个可以用 ``.pwm()`` 方法来计算：
 
 .. code:: verbatim
 
@@ -1556,40 +1344,25 @@ calling the ``.pwm()`` method:
      {'A': 0.65, 'C': 0.05, 'T': 0.25, 'G': 0.05}, 
      {'A': 0.85, 'C': 0.05, 'T': 0.05, 'G': 0.05}]
 
-The probabilities in the motif’s PWM are based on the counts in the
-instances, but we can see, that even though there were no Gs and no Cs
-in the instances, we still have non-zero probabilities assigned to them.
-These come from pseudo-counts which are, roughly speaking, a commonly
-used way to acknowledge the incompleteness of our knowledge and avoid
-technical problems with calculating logarithms of 0.
+模体的PWM中的概率是基于实例中的计数，但我们发现，虽然模体中没有出现G和C，可是它们的概率仍然是非0的。这主要是因为有伪计数的存在，简单地说，就是一种常用的方式来承认我们认知的不完备以及为了避免使用0进行对数运算而出现的技术问题。
 
-We can control the way that pseudo-counts are added with two properties
-of Motif objects ``.background`` is the probability distribution over
-all symbols in the alphabet that we assume represents background,
-non-motif sequences (usually based on the GC content of the respective
-genome). It is by default set to a uniform distribution upon creation of
-a motif:
+我可以调整伪计数添加到模体对象两个属性的方式。 ``.background`` 是我们假设代表背景分布的所有字符的概率分布，是非模体序列（通常基于各自基因组的GC含量）。在模体创建的时候，就默认的设置为一个统一的分布：
 
 .. code:: verbatim
 
     >>> m.background  
     {'A': 0.25, 'C': 0.25, 'T': 0.25, 'G': 0.25}
 
-The other parameter is ``.beta``, which states the amount of
-pseudo-counts we should add to the PWM. By default it is set to 1.0,
+另一个就是 ``.beta`` ，这个参数可以说明我们应该给伪计数设定为何值。默认设定为1.0。
 
 .. code:: verbatim
 
     >>> m.beta
     1.0
 
-so that the total input of pseudo-counts is equal to that of one
-instance.
+所以输入伪计数的总量等于一个实例的输入总量。
 
-Using the background distribution and pwm with pseudo-counts added, it’s
-easy to compute the log-odds ratios, telling us what are the log odds of
-a particular symbol to be coming from a motif against the background. We
-can use the ``.log_odds()`` method:
+使用背景分布和附加了伪计数的pwm，可以很容易的计算log-odd比率，告诉我们在背景下，一个来自模体特定碱基的log-odd值。我们可以使用 ``.log_odds()`` 方法：
 
 .. code:: verbatim
 
@@ -1616,37 +1389,25 @@ can use the ``.log_odds()`` method:
       'G': -2.3219280948873622}
     ]
 
-Here we can see positive values for symbols more frequent in the motif
-than in the background and negative for symbols more frequent in the
-background. 0.0 means that it’s equally likely to see a symbol in
-background and in the motif (e.g. ‘T’ in the second-last position).
+在这，我们可以看到如果模体中的碱基比背景中出现频率更高，其值为正值，反之则为负值。0.0说明在背景和模体中出现的概率是相同的（如第二个位置的“T”）。
 
-14.9.1.1  Reading and writing
+14.9.1.1  模体读写
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Creating motifs from instances by hand is a bit boring, so it’s useful
-to have some I/O functions for reading and writing motifs. There are no
-really well established standards for storing motifs, but there’s a
-couple of formats which are more used than others. The most important
-distinction is whether the motif representation is based on instances or
-on some version of PWM matrix. On of the most popular motif databases
-`JASPAR <http://jaspar.genereg.net>`__ stores motifs in both formats, so
-let’s look at how we can import JASPAR motifs from instances:
+手动从实例创建一个模体确实没什么技术含量，所以很有必要有一些读写功能来读取和写入模体。对于如何存储模体还没有一个固定的标准，但是有一些格式比其他格式更流行。这些格式的主要区别在于模体的创建是基于实例还是一些PWM矩阵。其中一个最流行的模体数据库就是 `JASPAR <http://jaspar.genereg.net>`__ ，该数据库保存了上面提到的两种类型的格式，所以让我看看我们是如何从实例中导入JASPAR模体：
 
 .. code:: verbatim
 
     >>> from Bio import Motif
     >>> arnt = Motif.read(open("Arnt.sites"),"jaspar-sites")
 
-and from a count matrix:
+从一个计数矩阵中导入：
 
 .. code:: verbatim
 
     >>> srf = Motif.read(open("SRF.pfm"),"jaspar-pfm")
 
-The ``arnt`` and ``srf`` motifs can both do the same things for us, but
-they use different internal representations of the motif. We can tell
-that by inspecting the ``has_counts`` and ``has_instances`` properties:
+``arnt`` 和 ``srf`` 模体可以为我们做相同的事情，但是它们使用不同的内部表现形式来展现模体。我们可以用 ``has_counts`` 和 ``has_instances`` 属性来区分它们：
 
 .. code:: verbatim
 
@@ -1665,8 +1426,7 @@ that by inspecting the ``has_counts`` and ``has_instances`` properties:
      'G': [39, 2, 1, 0, 0, 0, 0, 0, 0, 0, 44, 43],
      'T': [4, 2, 0, 0, 13, 42, 0, 45, 3, 30, 0, 0]}
 
-There are conversion functions, which can help us convert between
-different representations:
+对于模体的不同表现形式，可以用转换功能来实现相互转换：
 
 .. code:: verbatim
 
@@ -1682,16 +1442,9 @@ different representations:
      Seq('GACCAAATAAGG', IUPACUnambiguousDNA()),
     ....
 
-The important thing to remember here is that the method
-``make_instances_from_counts()`` creates fake instances, because usually
-there are very many possible sets of instances which give rise to the
-same pwm, and if we have only the count matrix, we cannot reconstruct
-the original one. This does not make any difference if we are using the
-PWM as the representation of the motif, but one should be careful with
-exporting instances from count-based motifs.
+在这里要注意的是 ``make_instances_from_counts()`` 方法创建的是假实例，因为按照相同的pwm能够得到许多不同的实例，所以不能够反过来重建原来的矩阵。不过这对我们利用PWM来展现模体没有什么影响，但从基于计数的模体中导出实例时要小心。
 
-Speaking of exporting, let’s look at export functions. We can export to
-fasta:
+说到导出，让我们看看导出函数。我们可以按fasta的格式导出：
 
 .. code:: verbatim
 
@@ -1705,8 +1458,7 @@ fasta:
     >instance3
     TATAA
 
-or to TRANSFAC-like matrix format (used by some motif processing
-software)
+或者是按TRANSFAC样的矩阵格式导出（能被一些处理软件识别）
 
 .. code:: verbatim
 
@@ -1723,28 +1475,24 @@ software)
     05 0 4 0 0
     XX
 
-Finally, if we have internet access, we can create a
-`weblogo <http://weblogo.berkeley.edu>`__:
+最后，如果我们能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
 
 .. code:: verbatim
 
     >>> arnt.weblogo("Arnt.png")
 
-We should get our logo saved as a png in the specified file.
+我们可以把得到的标识图以png的格式保存到特定的文件中。
 
-14.9.2  Searching for instances
+14.9.2  查找实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The most frequent use for a motif is to find its instances in some
-sequence. For the sake of this section, we will use an artificial
-sequence like this:
+模体中最常用的就是在一些序列中查找实例。为了说明这章，我们将手动创建一个下面一个序列：
 
 .. code:: verbatim
 
     test_seq=Seq("TATGATGTAGTATAATATAATTATAA",m.alphabet)
 
-The simplest way to find instances, is to look for exact matches of the
-true instances of the motif:
+查找实例最简单的方法就是在模体中查找具体匹配的实例：
 
 .. code:: verbatim
 
@@ -1755,8 +1503,7 @@ true instances of the motif:
     15 TATAA
     21 TATAA
 
-We can do the same with the reverse complement (to find instances on the
-complementary strand):
+对于互补序列，也可以用相同的方法（为了找到互补链上的实例）：
 
 .. code:: verbatim
 
@@ -1769,6 +1516,7 @@ complementary strand):
 It’s just as easy to look for positions, giving rise to high log-odds
 scores against our motif:
 
+
 .. code:: verbatim
 
     >>> for pos,score in m.search_pwm(test_seq,threshold=5.0):
@@ -1780,56 +1528,40 @@ scores against our motif:
     -20 8.44065060871
     21 8.44065060871
 
-You may notice the threshold parameter, here set arbitrarily to 5.0.
-This is in *log*\ :sub:`2`, so we are now looking only for words, which
-are 32 times more likely to occur under the motif model than in the
-background. The default threshold is 0.0, which selects everything that
-looks more like the motif than the background.
+你可能注意到阀值参数，在这里随意地设为5.0。按 *log*\ :sub:`2` 来算，我们应当查找那些在模体中出现概率为背景中出现概率32倍的序列。默认的阀值是0.0,在些阀值下，会把所有比背景中出现概率大的模体实例都找出来。
 
-If you want to use a less arbitrary way of selecting thresholds, you can
-explore the ``Motif.score_distribution`` class implementing an
-distribution of scores for a given motif. Since the space for a score
-distribution grows exponentially with motif length, we are using an
-approximation with a given precision to keep computation cost
-manageable:
+如果你不想那么随意的选择一个阀值，你可以研究一下 ``Motif.score_distribution`` 类，它为模体提供一个相应的得分分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于一个给定精度值来使计算成本变得可管理：
 
 .. code:: verbatim
 
     >>> sd = Motif.score_distribution(m,precision=10**4)
 
-The sd object can be used to determine a number of different thresholds.
+上面那个sd对象可以用来决定许多不同的阀值。
 
-We can specify the requested false-positive rate (probability of
-“finding” a motif instance in background generated sequence):
+我们可以设定一个需要的假阳性率（找到一个由这个序列在这个背景下产生的一个模体实例的概率）：
 
 .. code:: verbatim
 
     >>> sd.threshold_fpr(0.01)
     4.3535838726139886
 
-or the false-negative rate (probability of “not finding” an instance
-generated from the motif):
+或者假阴性率（找不到模体产生的实例的概率）：
 
 .. code:: verbatim
 
     >>> sd.threshold_fnr(0.1)
     0.26651713652234044
 
-or a threshold (approximately) satisfying some relation between fpr and
-fnr *fnr*/*fpr*\ ≃ *t*:
+或者一个阀值（近似），满足假阳性率和假阴性率之间的关系（fnr/fpr≃ *t*)：
 
 .. code:: verbatim
 
     >>> sd.threshold_balanced(1000)
     8.4406506087056368
 
-or a threshold satisfying (roughly) the equality between the
-false-positive rate and the −\ *log* of the information content (as used
-in patser software by Hertz and Stormo).
+或者一个阀值能够大体满足假阳性率和信息含量的 −\ *log* 值之间的相等关系（像Hertz和Stormo的Patser软件所用的一样）：
 
-For example, in case of our motif, you can get the threshold giving you
-exactly the same results (for this sequence) as searching for instances
-with balanced threshold with rate of 1000.
+在我们这个例子中，当以1000比率的平衡阀值查找实例时，你可以得到一个让你获得相同结果（对于这个序列来说）的阀值：
 
 .. code:: verbatim
 
@@ -1841,34 +1573,19 @@ with balanced threshold with rate of 1000.
     -20 8.44065060871
     21 8.44065060871
 
-14.9.3  Comparing motifs
+14.9.3  模体比较
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once we have more than one motif, we might want to compare them. For
-that, we have currently three different methods of ``Bio.Motif``
-objects.
+当我们有多个模体的时候，我们就会想比较他们。对此， ``Bio.Motif`` 有三种不同的方法来进行模体比较。
 
-Before we start comparing motifs, I should point out that motif
-boundaries are usually quite arbitrary. This means, that we often need
-to compare motifs of different lengths, so comparison needs to involve
-some kind of alignment. This means, that we have to take into account
-two things:
+在我们开始比较之前，应当指出模体的边界通常是相当模糊的。也就是说我们经常需要比较不同长度的模体，因此这些比较涉及到相关的比对。所以我们需要考虑两个要点：
 
--  alignment of motifs
--  some function to compare aligned motifs
+-   模体的比对
+-   比较比对后模体的相关函数
 
-In ``Bio.Motif`` we have 3 different functions for motif comparison,
-which are based on the same idea behind motif alignment, but use
-different functions to compare aligned motifs. Briefly speaking, we are
-using ungapped alignment of PWMs and substitute the missing columns at
-the beginning and end of the matrices with background distribution. All
-three comparison functions are written in such a way, that they can be
-interpreted as distance measures, however only one (``dist_dpq``)
-satisfies the triangle inequality. All of them return the minimal
-distance and the corresponding offset between motifs.
+在 ``Bio.Motif`` 中有三种比较方法，这些方法都是基于来源于模体比对的想法，而采用不同方式。简单来说，我们使用不含间隔的PSSMs比对，并且用0来代替矩阵同背景相比，在开始和结束位置出现缺失的列。这三种比较方法都可以解释成距离估量，但是只有一个（ ``dist——dpq`` ）满足三角不等式。这些方法都返回距离的最小值和模体相应的偏移量。
 
-To show how these functions work, let us first load another motif, which
-is similar to our test motif ``m``:
+为了展示这些比较功能是如何实现的，让我加载和测试模体 ``m`` 相似的其他模体：
 
 .. code:: verbatim
 
@@ -1877,73 +1594,57 @@ is similar to our test motif ``m``:
     >>> ubx.consensus()
     Seq('TAAT', IUPACUnambiguousDNA())
 
-The first function we’ll use to compare these motifs is based on Pearson
-correlation. Since we want it to resemble a distance measure, we
-actually take 1−\ *r*, where *r* is the Pearson correlation coefficient
-(PCC):
+我们第一个展示的功能是基于Pearson相关的。因为我们想让它类似于一个距离估量，所以我们实际上取 1−\ *r* ，其中的 *r* 是Pearson相关系数（PCC）：
 
 .. code:: verbatim
 
     >>> m.dist_pearson(ubx)
     (0.41740393308237722, 2)
 
-This means, that the best PCC between motif ``m`` and ``Ubx`` is
-obtained with the following alignment:
+这意味着模体 ``m`` 和 ``Ubx`` 间最佳的PCC可以从下面的比对中获得：
 
 .. code:: verbatim
 
     bbTAAT
     TATAAb
 
-where ``b`` stands for background distribution. The PCC itself is
-roughly 1−0.42=0.58. If we try the reverse complement of the Ubx motif:
+其中 ``b`` 代表背景分布。PCC值大概为 1-0.42=0.58.如果我们尝试计算Ubx模体的互补序列：
 
 .. code:: verbatim
 
     >>> m.dist_pearson(ubx.reverse_complement())
     (0.25784180151584823, 1)
 
-We can see that the PCC is better (almost 0.75), and the alignment is
-also different:
+我们可以发现更好的PCC值（大概为0.75），并且比对也是不同的：
 
 .. code:: verbatim
 
     bATTA
     TATAA
 
-There are two other functions: ``dist_dpq``, which is a true metric
-(satisfying traingle inequality) based on the Kullback-Leibler
-divergence
+还有两个其他的功能函数： ``dist_dpq`` ,这是基于Kullback-Leibler散度的真正度量（满足三角不等式）。
 
 .. code:: verbatim
 
     >>> m.dist_dpq(ubx.reverse_complement())
     (0.49292358382899853, 1)
 
-and the ``dist_product`` method, which is based on the product of
-probabilities which can be interpreted as the probability of
-independently generating the same instance by both motifs.
+还有 ``dist_product`` 方法，它是基于概率的产物，这概率可以看成是两个模体独立产生两个相同实例的概率。
 
 .. code:: verbatim
 
     >>> m.dist_product(ubx.reverse_complement())
     (0.16224587301064275, 1)
 
-14.9.4  *De novo* motif finding
+14.9.4  *De novo* 模体查找
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently, Biopython has only limited support for *de novo* motif
-finding. Namely, we support running and parsing of AlignAce and MEME.
-Since the number of motif finding tools is growing rapidly,
-contributions of new parsers are welcome.
+目前，Biopython对 *de novo* 模体查找只有一些有限的支持。也就是说，我们只支持AlignAce和MEME的运行和读取。由于现模体查找工具发展如雨后春笋般，我们很欢迎有新的贡献者加入。
 
 14.9.4.1  MEME
 ^^^^^^^^^^^^^^
 
-Let’s assume, you have run MEME on sequences of your choice with your
-favorite parameters and saved the output in the file ``meme.out``. You
-can retrieve the motifs reported by MEME by running the following piece
-of code:
+假如你以中意的参数用MEME来跑你自己的序列，并把得到的结果保存在 ``meme.out`` 文件中。你可以用以下代码读取MEME产生的文件获得那些模体：
 
 .. code:: verbatim
 
@@ -1951,9 +1652,7 @@ of code:
     >>> motifsM
     [<Bio.Motif.MEMEMotif.MEMEMotif object at 0xc356b0>]
 
-Besides the most wanted list of motifs, the result object contains more
-useful information, accessible through properties with self-explanatory
-names:
+除了那一系列想要的模体外，结果对象中还有很多有用的信息，可以那些一目了然的属性名来获取：
 
 -  ``.alphabet``
 -  ``.datafile``
@@ -1961,9 +1660,7 @@ names:
 -  ``.version``
 -  ``.command``
 
-The motifs returned by MEMEParser can be treated exactly like regular
-Motif objects (with instances), they also provide some extra
-functionality, by adding additional information about the instances.
+MEME解析器得到的模体可以像通常模体（含有实例）一样进行处理，它们也可以通过对实例添加附加信息而提供一些额外的功能。
 
 .. code:: verbatim
 
@@ -1982,32 +1679,27 @@ functionality, by adding additional information about the instances.
 14.9.4.2  AlignAce
 ^^^^^^^^^^^^^^^^^^
 
-We can do very similar things with AlignACE program. Assume, you have
-your output in the file ``alignace.out``. You can parse your output with
-the following code:
+对于AlignACE程序也可以做相同的事情。假如你把结果存储于文件 ``alignace.out`` 文件中。你可以用以下代码读取结果：
 
 .. code:: verbatim
 
     >>> motifsA=list(Motif.parse(open("alignace.out"),"AlignAce"))
 
-Again, your motifs behave as they should:
+同样，得到的模体也和平常的模体一样：
 
 .. code:: verbatim
 
     >>> motifsA[0].consensus()
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
 
-In fact you can even see, that AlignAce found a very similar motif as
-MEME, it is just a longer version of a reverse complement of MEME motif:
+事实上，你甚至可以发现AlignAce和MEME得到的模体十分相似，只不过AlignAce模体是MEME模体反向互补序列的加长版本而已：
 
 .. code:: verbatim
 
     >>> motifsM[0].reverse_complement().consensus()
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
-If you have AlignAce installed on the same machine, you can also run it
-directly from Biopython. Short example of how this can be done is shown
-below (other parameters can be specified as keyword parameters):
+如果在你的机器上安装了AlignAce，你也可以直接从Biopython中启动。下面就是一个如何启动的小例子（其他参数可以用关键字参数指定）：
 
 .. code:: verbatim
 
@@ -2017,8 +1709,7 @@ below (other parameters can be specified as keyword parameters):
     >>> cmd = AlignAceCommandline(cmd=command,input=input_file,gcback=0.6,numcols=10)
     >>> stdout,stderr= cmd()
 
-Since AlignAce prints all its output to standard output, you can get to
-your motifs by parsing the first part of the result:
+由于AlignAce把结果打印到标准输出，因此你可以通过读取结果的第一部分来获得你想要的模体：
 
 .. code:: verbatim
 
