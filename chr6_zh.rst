@@ -550,12 +550,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 6.2.2  Getting your alignment objects as formatted strings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``Bio.AlignIO`` interface is based on handles, which means if you
-want to get your alignment(s) into a string in a particular file format
-you need to do a little bit more work (see below). However, you will
-probably prefer to take advantage of the alignment object’s ``format()``
-method. This takes a single mandatory argument, a lower case string
-which is supported by ``Bio.AlignIO`` as an output format. For example:
+因为 ``Bio.AlignIO`` 模块是基于文件句柄的，因此你如果想将序列排列读入为一个字符串对象，你需要做一些额外的工作。然而，我们提供一个 ``format()`` 方法来帮助你实现这项任务。 ``format()`` 方法需要用户提供一个小写的格式参数（这可以是任何 ``AlignIO`` 支持的序列排列格式）。例如：
 
 .. code:: verbatim
 
@@ -563,14 +558,9 @@ which is supported by ``Bio.AlignIO`` as an output format. For example:
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
     print alignment.format("clustal")
 
-As described in Section \ `4.5 <#sec:SeqRecord-format>`__), the
-``SeqRecord`` object has a similar method using output formats supported
-by ``Bio.SeqIO``.
+我们在 `4.5 <#sec:SeqRecord-format>`__ 中讲到， ``Bio.SeqIO`` 也有一个对 ``SeqRecord`` 输出的方法。
 
-Internally the ``format()`` method is using the ``StringIO`` string
-based handle and calling ``Bio.AlignIO.write()``. You can do this in
-your own code if for example you are using an older version of
-Biopython:
+``format()`` 方法是利用 ``StringIO`` 以及 ``Bio.AlignIO.write()`` 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作。
 
 .. code:: verbatim
 
@@ -585,19 +575,15 @@ Biopython:
 
     print clustal_data
 
-6.3  Manipulating Alignments
-----------------------------
+6.3  序列排列的操纵
+-------------------
 
-Now that we’ve covered loading and saving alignments, we’ll look at what
-else you can do with them.
+现在我们已经了解了如何读入和写出序列排列。让我们继续看看如何对读入的序列排列进行操作。
 
-6.3.1  Slicing alignments
-~~~~~~~~~~~~~~~~~~~~~~~~~
+6.3.1  序列排列的切片（slice）操作
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First of all, in some senses the alignment objects act like a Python
-``list`` of ``SeqRecord`` objects (the rows). With this model in mind
-hopefully the actions of ``len()`` (the number of rows) and iteration
-(each row as a ``SeqRecord``) make sense:
+首先，用户可以认为读入的序列排列是一个由 ``SeqRecord`` 对象构成的Python列表（list）。有了这样一个印象以后，你可以使用 ``len()`` 方法来得到行数（序列排列的个数），你也可以对序列排列进行迭代。
 
 .. code:: verbatim
 
@@ -615,10 +601,7 @@ hopefully the actions of ``len()`` (the number of rows) and iteration
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73
 
-You can also use the list-like ``append`` and ``extend`` methods to add
-more rows to the alignment (as ``SeqRecord`` objects). Keeping the list
-metaphor in mind, simple slicing of the alignment should also make sense
-- it selects some of the rows giving back another alignment object:
+你可以使用列表所拥有的 ``append`` 和 ``extend`` 方法来给序列排列增加序列。请读者一定要正确理解序列排列与其包含的序列的关系，这样你就可以使用分片操作来获得其中某些序列排列。
 
 .. code:: verbatim
 
@@ -638,33 +621,28 @@ metaphor in mind, simple slicing of the alignment should also make sense
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73
 
-What if you wanted to select by column? Those of you who have used the
-NumPy matrix or array objects won’t be surprised at this - you use a
-double index.
+假如你需要获得特定的列该怎么办呢？如果你接触过Numpy矩阵那么一定对下面的语法非常熟悉，使用双切片：
 
 .. code:: verbatim
 
     >>> print alignment[2,6]
     T
 
-Using two integer indices pulls out a single letter, short hand for
-this:
+使用两个整数来获得序列排列中的一个字符，这其实是以下操作的简化方式：
 
 .. code:: verbatim
 
     >>> print alignment[2].seq[6]
     T
 
-You can pull out a single column as a string like this:
+你可以用下面的代码来或者整列：
 
 .. code:: verbatim
 
     >>> print alignment[:,6]
     TTT---T
 
-You can also select a range of columns. For example, to pick out those
-same three rows we extracted earlier, but take just their first six
-columns:
+你也可以同时选择特定的行和列。例如，以下代码将打印出第3到6行的前6列：
 
 .. code:: verbatim
 
@@ -674,7 +652,7 @@ columns:
     AEGDDP COATB_BPZJ2/1-49
     AEGDDP Q9T0Q9_BPFD/1-49
 
-Leaving the first index as ``:`` means take all the rows:
+使用 ``:`` 将打印出整列：
 
 .. code:: verbatim
 
@@ -688,8 +666,7 @@ Leaving the first index as ``:`` means take all the rows:
     AEGDDP Q9T0Q9_BPFD/1-49
     FAADDA COATB_BPIF1/22-73
 
-This brings us to a neat way to remove a section. Notice columns 7, 8
-and 9 which are gaps in three of the seven sequences:
+切片给我们提供了一个简单的方式来去除一部分序列排列。在以下例子中，有三个序列的7，8，9三列为间隔（-）。
 
 .. code:: verbatim
 
@@ -703,7 +680,7 @@ and 9 which are gaps in three of the seven sequences:
     --- Q9T0Q9_BPFD/1-49
     TSQ COATB_BPIF1/22-73
 
-Again, you can slice to get everything after the ninth column:
+你也可以通过分片来获得第9列以后的所有序列：
 
 .. code:: verbatim
 
@@ -717,8 +694,7 @@ Again, you can slice to get everything after the ninth column:
     AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49
     AKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
 
-Now, the interesting thing is that addition of alignment objects works
-by column. This lets you do this as a way to remove a block of columns:
+现在，你可以通过列来操纵序列排列。这也是你能够去除序列排列中的许多列。例如：
 
 .. code:: verbatim
 
@@ -733,12 +709,9 @@ by column. This lets you do this as a way to remove a block of columns:
     AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49
     FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
 
-Another common use of alignment addition would be to combine alignments
-for several different genes into a meta-alignment. Watch out though -
-the identifiers need to match up (see
-Section \ `4.7 <#sec:SeqRecord-addition>`__ for how adding ``SeqRecord``
-objects works). You may find it helpful to first sort the alignment rows
-alphabetically by id:
+另一个经常使用的序列排列操作是将多个基因的序列排列拼接成一个大的序列排列（meta-alignment）。
+在进行这种操作时一定要注意序列的ID需要匹配（具体请见 `4.7 <#sec:SeqRecord-addition>`__ 关于 ``SeqRecord``
+的说明)。为了达到这种目的，用 ``sort()`` 方法将序列ID按照字母顺序进行排列可能会有所帮助。
 
 .. code:: verbatim
 
@@ -753,15 +726,12 @@ alphabetically by id:
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
     AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49
 
-Note that you can only add two alignments together if they have the same
-number of rows.
+注意：只有当两个序列排列拥有相同的行的时候才能进行序列排列的拼接。
 
-6.3.2  Alignments as arrays
+6.3.2  序列排列作为数组
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Depending on what you are doing, it can be more useful to turn the
-alignment object into an array of letters – and you can do this with
-NumPy:
+根据你的需要，有时将序列排列转化为字符数组是非常方便的。你可以用 ``Numpy`` 来实现这一目的：
 
 .. code:: verbatim
 
@@ -772,43 +742,26 @@ NumPy:
     >>> align_array.shape
     (7, 52)
 
-If you will be working heavily with the columns, you can tell NumPy to
-store the array by column (as in Fortran) rather then its default of by
-row (as in C):
+如果你需要频繁地使用列操作，你可以让 ``Numpy`` 将序列排列以列的形式进行储存（与Fortran一样），而不是 ``Numpy`` 默认形式（与C一样以行储存）。
 
 .. code:: verbatim
 
     >>> align_array = np.array([list(rec) for rec in alignment], np.character, order="F")
 
-Note that this leaves the original Biopython alignment object and the
-NumPy array in memory as separate objects - editing one will not update
-the other!
+注意， ``Numpy`` 的数组和Biopython默认的序列排列对象是分别储存在内存中的，编辑其中的一个不会更新另一个的值。
 
-6.4  Alignment Tools
+6.4  构建序列排列的工具
 --------------------
 
-There are *lots* of algorithms out there for aligning sequences, both
-pairwise alignments and multiple sequence alignments. These calculations
-are relatively slow, and you generally wouldn’t want to write such an
-algorithm in Python. Instead, you can use Biopython to invoke a command
-line tool on your behalf. Normally you would:
+目前有非常多的算法来帮助你构建一个序列排列，包括两两间的排列和多序列排列。这些算法在计算上往往是非常慢的，你一定不会希望用Python来实现他们。然而，你可以使用Biopython来运行命令行程序。你需要：
 
-#. Prepare an input file of your unaligned sequences, typically this
-   will be a FASTA file which you might create using ``Bio.SeqIO`` (see
-   Chapter \ `5 <#chapter:Bio.SeqIO>`__).
-#. Call the command line tool to process this input file, typically via
-   one of Biopython’s command line wrappers (which we’ll discuss here).
-#. Read the output from the tool, i.e. your aligned sequences, typically
-   using ``Bio.AlignIO`` (see earlier in this chapter).
+#. 准备一个包含有未匹配好的输入文件，一般为FASTA格式的序列。是可以使用 ``Bio.SeqIO`` 来创建一个 (具体见第5章 <#chapter:Bio.SeqIO>`__).
+#. 在Biopython中运行一个命令行程序来构建序列排列（我们将在这里详细介绍）。这需要通过Biopython的包裹（wrapper）来实现。
+#. 读取通过以上软件的输出，也就是排列好的序列排列。这往往可以通过 ``Bio.AlignIO`` 来实现（请看本章前部分内容）。
 
-All the command line wrappers we’re going to talk about in this chapter
-follow the same style. You create a command line object specifying the
-options (e.g. the input filename and the output filename), then invoke
-this command line via a Python operating system call (e.g. using the
-``subprocess`` module).
+本章所介绍的所有的命令行包裹都将以同样的方式使用。你创造一个命令行对象来指定各种参数（例如：输入文件名，输出文件名等），然后通过Python的系统命令模块来运行这一程序（例如：使用 ``subprocess`` 进程）。
 
-Most of these wrappers are defined in the ``Bio.Align.Applications``
-module:
+大多数的包裹都在 ``Bio.Align.Applications`` 中定义：
 
 .. code:: verbatim
 
@@ -818,28 +771,14 @@ module:
     ['ClustalwCommandline', 'DialignCommandline', 'MafftCommandline', 'MuscleCommandline',
     'PrankCommandline', 'ProbconsCommandline', 'TCoffeeCommandline' ...]
 
-(Ignore the entries starting with an underscore – these have special
-meaning in Python.) The module ``Bio.Emboss.Applications`` has wrappers
-for some of the `EMBOSS suite <http://emboss.sourceforge.net/>`__,
-including ``needle`` and ``water``, which are described below in
-Section \ `6.4.5 <#seq:emboss-needle-water>`__, and wrappers for the
-EMBOSS packaged versions of the PHYLIP tools (which EMBOSS refer to as
-one of their EMBASSY packages - third party tools with an EMBOSS style
-interface). We won’t explore all these alignment tools here in the
-section, just a sample, but the same principles apply.
+（以下划线开头的记录不是Biopython包裹，这些变量在Python中有特殊的含义。） ``Bio.Emboss.Applications`` 中包含对 `EMBOSS  <http://emboss.sourceforge.net/>`__ 的包裹（包括 ``needle`` 和 ``water`` ）。EMBOSS和PHYLIP的包裹将在 `6.4.5 <#seq:emboss-needle-water>`__ 节中详细介绍。在本章中，我们并不打算将所有的序列排列程序都予以介绍，但是Biopython中各种序列排列程序都具有相同的使用方式。
 
 6.4.1  ClustalW
 ~~~~~~~~~~~~~~~
 
-ClustalW is a popular command line tool for multiple sequence alignment
-(there is also a graphical interface called ClustalX). Biopython’s
-``Bio.Align.Applications`` module has a wrapper for this alignment tool
-(and several others).
+ClustalW是一个非常流行的进行多序列排列的命令行程序（其还有一个图形化的版本称之为ClustalX）。Biopython的 ``Bio.Align.Applications`` 模块包含这一多序列排列程序的包裹。
 
-Before trying to use ClustalW from within Python, you should first try
-running the ClustalW tool yourself by hand at the command line, to
-familiarise yourself the other options. You’ll find the Biopython
-wrapper is very faithful to the actual command line API:
+我们建议你在Python中使用ClustalW之前在命令行界面下手动使用ClustalW，这样能使你更清楚这一程序的参数。你会发现Biopython包裹是非常严格地命令行API。
 
 .. code:: verbatim
 
@@ -847,16 +786,9 @@ wrapper is very faithful to the actual command line API:
     >>> help(ClustalwCommandline)
     ...
 
-For the most basic usage, all you need is to have a FASTA input file,
-such as
-`opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__
-(available online or in the Doc/examples subdirectory of the Biopython
-source code). This is a small FASTA file containing seven prickly-pear
-DNA sequences (from the cactus family *Opuntia*).
+作为最简单的一个例子，你仅仅需要一个FASTA格式的序列文件作为输入，例如： `opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__ （你可以在线或者在Biopython/Doc/examples文件夹中找到该序列）。 `opuntia.fasta` 包含着7个prickly-pear的DNA序列（来自仙人掌科）。
 
-By default ClustalW will generate an alignment and guide tree file with
-names based on the input FASTA file, in this case ``opuntia.aln`` and
-``opuntia.dnd``, but you can override this or make it explicit:
+ClustalW在默认情况下会产生一个包括所有输入序列的序列排列以及一个由输入序列名字构成的指导树（guide tree）。例如，用上述文件作为输入，ClustalW将会输出 ``opuntia.aln`` 和 ``opuntia.dnd`` 两个文件。
 
 .. code:: verbatim
 
@@ -865,19 +797,9 @@ names based on the input FASTA file, in this case ``opuntia.aln`` and
     >>> print cline
     clustalw2 -infile=opuntia.fasta
 
-Notice here we have given the executable name as ``clustalw2``,
-indicating we have version two installed, which has a different filename
-to version one (``clustalw``, the default). Fortunately both versions
-support the same set of arguments at the command line (and indeed,
-should be functionally identical).
+注意这里我们给出的执行文件名是 ``clustalw2`` ，这是ClustalW的第二个版本（第一个版本的文件名为 ``clustalw`` ）。ClustalW的这两个版本具有相同的参数，并且在功能上也是一致的。
 
-You may find that even though you have ClustalW installed, the above
-command doesn’t work – you may get a message about “command not found”
-(especially on Windows). This indicated that the ClustalW executable is
-not on your PATH (an environment variable, a list of directories to be
-searched). You can either update your PATH setting to include the
-location of your copy of ClustalW tools (how you do this will depend on
-your OS), or simply type in the full path of the tool. For example:
+你可能会发现，尽管你安装了ClustalW，以上的命令行却无法正确运行。你可能会得到“command not found”的错误信息（尤其是在Windows上）。这往往是由于ClustalW的运行程序并不在系统的工作目录PATH下（一个包含着运行程序路径的环境变量）。你既可以修改PATH，使其包括ClustalW的运行程序（不同系统需要以不同的方式修改），或者你也可以直接指定程序的绝对路径。例如：
 
 .. code:: verbatim
 
@@ -891,39 +813,17 @@ your OS), or simply type in the full path of the tool. For example:
     >>> assert os.path.isfile(clustalw_exe), "Clustal W executable missing"
     >>> stdout, stderr = clustalw_cline()
 
-Remember, in Python strings ``\n`` and ``\t`` are by default interpreted
-as a new line and a tab – which is why we’re put a letter “r” at the
-start for a raw string that isn’t translated in this way. This is
-generally good practice when specifying a Windows style file name.
+注意，Python中 ``\n`` 和 ``\t`` 会被认为是换行符而不是一个制表符（tab）。然而，如果你将一个小写的“r”放在字符串的前面，这一字符串就将是一种raw格式（ ``\n`` 和 ``\t`` 指带他们本来的意思）。我们建议Windows用户使用这种方式表示字符串以避免歧义。
 
-Internally this uses the ``subprocess`` module which is now the
-recommended way to run another program in Python. This replaces older
-options like the ``os.system()`` and the ``os.popen*`` functions.
+Biopython在内部使用较新的 ``subprocess`` 模块来实现包裹，而不是 ``os.system()`` 和 ``os.popen*`` 。
 
-Now, at this point it helps to know about how command line tools “work”.
-When you run a tool at the command line, it will often print text output
-directly to screen. This text can be captured or redirected, via two
-“pipes”, called standard output (the normal results) and standard error
-(for error messages and debug messages). There is also standard input,
-which is any text fed into the tool. These names get shortened to stdin,
-stdout and stderr. When the tool finishes, it has a return code (an
-integer), which by convention is zero for success.
+现在，我们有必要去了解命令行工具是如何工作的。当你使用一个命令行时，它往往会在屏幕上输出一些内容。这一输出可以被保存或重定向。在系统输出中，有两种管道（pipe）来区分不同的输出信息--标准输出（standard output）包含正常的输出内容，标准错误（standard error）显示错误和调试信息。同时，系统也接受标准输入（standard input）。这也是命令行工具如何读取数据文件的。当程序运行结束以后，它往往会返回一个整数。一般返回值为0意味着程序正常结束。
 
-When you run the command line tool like this via the Biopython wrapper,
-it will wait for it to finish, and check the return code. If this is non
-zero (indicating an error), an exception is raised. The wrapper then
-returns two strings, stdout and stderr.
+当你使用Biopython包裹来调用命令行工具的时候，它将会等待程序结束，并检查程序的返回值。如果返回值不为0，Biopython将会提示一个错误信息。Biopython包裹将会输出两个字符串，标准输出和标准错误。
 
-In the case of ClustalW, when run at the command line all the important
-output is written directly to the output files. Everything normally
-printed to screen while you wait (via stdout or stderr) is boring and
-can be ignored (assuming it worked).
+在ClustalW的例子中，当你使用程序时，所有重要的输出都被保存到输出文件中。所有答应在屏幕上的内容将被忽略掉。
 
-What we care about are the two output files, the alignment and the guide
-tree. We didn’t tell ClustalW what filenames to use, but it defaults to
-picking names based on the input file. In this case the output should be
-in the file ``opuntia.aln``. You should be able to work out how to read
-in the alignment using ``Bio.AlignIO`` by now:
+当运行ClustalW的时候，我们所关心的往往是输出的序列排列文件和指导树文件。ClustalW会自动根据输入数据的文件名来命名输出文件。在本例中，输出文件将是 ``opuntia.aln`` 。当你成功运行完ClustalW以后，你可以使用 ``Bio.AlignIO`` 来读取输出结果。
 
 .. code:: verbatim
 
@@ -939,9 +839,7 @@ in the alignment using ``Bio.AlignIO`` by now:
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191
 
-In case you are interested (and this is an aside from the main thrust of
-this chapter), the ``opuntia.dnd`` file ClustalW creates is just a
-standard Newick tree file, and ``Bio.Phylo`` can parse these:
+另一个输出文件 ``opuntia.dnd`` 中包含有一个newick格式的指导树，你可以使用Biopython中的 ``Bio.Phylo`` 来读取它：
 
 .. code:: verbatim
 
@@ -962,17 +860,12 @@ standard Newick tree file, and ``Bio.Phylo`` can parse these:
      |___|
          | gi|6273284|gb|AF191658.1|AF191658
 
-Chapter `13 <#sec:Phylo>`__ covers Biopython’s support for phylogenetic
-trees in more depth.
+`13 <#sec:Phylo>`__  章中详细介绍了如何使用Biopython对进化树数据进行处理。
 
 6.4.2  MUSCLE
 ~~~~~~~~~~~~~
 
-MUSCLE is a more recent multiple sequence alignment tool than ClustalW,
-and Biopython also has a wrapper for it under the
-``Bio.Align.Applications`` module. As before, we recommend you try using
-MUSCLE from the command line before trying it from within Python, as the
-Biopython wrapper is very faithful to the actual command line API:
+MUSCLE是另一个较新的序列排列工具，Biopython的 ``Bio.Align.Applications`` 中也有针对Muscle的包裹。与ClustalW一样，我们也建议你先在命令行界面下使用MUSCLE以后再使用Biopython包裹。你会发现，Biopython的包裹非常严格地包括了所有命令行输入参数。
 
 .. code:: verbatim
 
@@ -980,12 +873,7 @@ Biopython wrapper is very faithful to the actual command line API:
     >>> help(MuscleCommandline)
     ...
 
-For the most basic usage, all you need is to have a FASTA input file,
-such as
-`opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__
-(available online or in the Doc/examples subdirectory of the Biopython
-source code). You can then tell MUSCLE to read in this FASTA file, and
-write the alignment to an output file:
+作为最简单的例子，你只需要一个Fasta格式的数据文件作为输入。例如： `opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__ 然后你可以告诉MUSCLE来读取该FASTA文件，并将序列排列写出。
 
 .. code:: verbatim
 
@@ -994,14 +882,9 @@ write the alignment to an output file:
     >>> print cline
     muscle -in opuntia.fasta -out opuntia.txt
 
-Note that MUSCLE uses “-in” and “-out” but in Biopython we have to use
-“input” and “out” as the keyword arguments or property names. This is
-because “in” is a reserved word in Python.
+注意，MUSCLE使用“-in”和“-out”来指定输入和输出文件，而在Biopython中，我们使用“input”和“out”作为关键字来指定输入输出。这是由于“in”是Python的一个关键词而被保留。
 
-By default MUSCLE will output the alignment as a FASTA file (using
-gapped sequences). The ``Bio.AlignIO`` module should be able to read
-this alignment using ``format="fasta"``. You can also ask for
-ClustalW-like output:
+默认情况下，MUSCLE的输出文件将是包含间隔（gap）的FASTA格式文件。 当你指定 ``format=fasta`` 时， ``Bio.AlignIO`` 能够读取该FASTA文件。你也可以告诉MUSCLE来输出ClustalW-like的文件结果。
 
 .. code:: verbatim
 
@@ -1010,8 +893,7 @@ ClustalW-like output:
     >>> print cline
     muscle -in opuntia.fasta -out opuntia.aln -clw
 
-Or, strict ClustalW output where the original ClustalW header line is
-used for maximum compatibility:
+或者，严格的ClustalW的输出文件（这将输出原始的ClustalW的文件标签）。例如：
 
 .. code:: verbatim
 
@@ -1020,29 +902,16 @@ used for maximum compatibility:
     >>> print cline
     muscle -in opuntia.fasta -out opuntia.aln -clwstrict
 
-The ``Bio.AlignIO`` module should be able to read these alignments using
-``format="clustal"``.
+你可以使用 ``Bio.AlignIO`` 的 ``format="clustal"`` 参数来读取这些序列排列输出。
 
-MUSCLE can also output in GCG MSF format (using the ``msf`` argument),
-but Biopython can’t currently parse that, or using HTML which would give
-a human readable web page (not suitable for parsing).
+MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但是目前Biopython并不能读取它们。
 
-You can also set the other optional parameters, for example the maximum
-number of iterations. See the built in help for details.
+你也可以设置MUSCLE其它的可选参数，例如最大数目的迭代数。具体信息请查阅Biopython的内部帮助文档。
 
-You would then run MUSCLE command line string as described above for
-ClustalW, and parse the output using ``Bio.AlignIO`` to get an alignment
-object.
-
-6.4.3  MUSCLE using stdout
+6.4.3  MUSCLE标准输出
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using a MUSCLE command line as in the examples above will write the
-alignment to a file. This means there will be no important information
-written to the standard out (stdout) or standard error (stderr) handles.
-However, by default MUSCLE will write the alignment to standard output
-(stdout). We can take advantage of this to avoid having a temporary
-output file! For example:
+使用以上的MUSCLE命令行将会把序列排列结果写出到一个文件中。然而MUSCLE也允许你将序列排列结果作为系统的标准输出。Biopython包裹可以利用这一特性来避免创建一个临时文件。例如：
 
 .. code:: verbatim
 
@@ -1051,9 +920,7 @@ output file! For example:
     >>> print muscle_cline
     muscle -in opuntia.fasta
 
-If we run this via the wrapper, we get back the output as a string. In
-order to parse this we can use ``StringIO`` to turn it into a handle.
-Remember that MUSCLE defaults to using FASTA as the output format:
+如果你使用包裹运行上述命令，程序将返回一个字符串对象。为了读取它，我们可以使用 ``StringIO`` 模块。记住MUSCLE将默认以FASTA格式输出序列排列。
 
 .. code:: verbatim
 
@@ -1073,10 +940,7 @@ Remember that MUSCLE defaults to using FASTA as the output format:
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658
 
-The above approach is fairly simple, but if you are dealing with very
-large output text the fact that all of stdout and stderr is loaded into
-memory as a string can be a potential drawback. Using the ``subprocess``
-module we can work directly with handles instead:
+以上是一个非常简单的例子，如果你希望处理较大的输出数据，我们并不建议你将它们全部读入内存中。对于这种情况， ``subprocess`` 模块可以非常方便地处理。例如：
 
 .. code:: verbatim
 
@@ -1099,27 +963,19 @@ module we can work directly with handles instead:
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658
 
-6.4.4  MUSCLE using stdin and stdout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+6.4.4  以标准输入和标准输出使用MUSCLE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We don’t actually *need* to have our FASTA input sequences prepared in a
-file, because by default MUSCLE will read in the input sequence from
-standard input! Note this is a bit more advanced and fiddly, so don’t
-bother with this technique unless you need to.
+事实上，我们并不需要将序列放在一个文件里来使用MUSCLE。MUSCLE可以读取系统标准输入的内容。注意，这是一种比较高级的技术，请不要轻易使用它。
 
-First, we’ll need some unaligned sequences in memory as ``SeqRecord``
-objects. For this demonstration I’m going to use a filtered version of
-the original FASTA file (using a generator expression), taking just six
-of the seven sequences:
+为了让MUSCLE读取标准输入的内容，我们首先需要将未排列的序列以 ``SeqRecord`` 对象的形式储存在内存里。在这里，我们将以一个规则来选择特定的序列（序列长度小于900bp的）。
 
 .. code:: verbatim
 
     >>> from Bio import SeqIO
     >>> records = (r for r in SeqIO.parse("opuntia.fasta", "fasta") if len(r) < 900)
 
-Then we create the MUSCLE command line, leaving the input and output to
-their defaults (stdin and stdout). I’m also going to ask for strict
-ClustalW format as for the output.
+随后，我们需要建立一个MUSCLE命令行，但是不指定输入和输出（MUSCLE默认为标准输入和标准输出）。这里，我们将指定输出格式为严格的Clustal格式。
 
 .. code:: verbatim
 
@@ -1128,8 +984,7 @@ ClustalW format as for the output.
     >>> print muscle_cline
     muscle -clwstrict
 
-Now for the fiddly bits using the ``subprocess`` module, stdin and
-stdout:
+我们使用Python的内置模块 ``subprocess`` 来实现这一目的：
 
 .. code:: verbatim
 
@@ -1141,8 +996,7 @@ stdout:
     ...                          stderr=subprocess.PIPE,
     ...                          shell=(sys.platform!="win32"))                     
 
-That should start MUSCLE, but it will be sitting waiting for its FASTA
-input sequences, which we must supply via its stdin handle:
+这一命令将启动MUSCLE，但是它将会等待FASTA格式的输入数据。我们可以通过标准输入句柄来提供给它：
 
 .. code:: verbatim
 
@@ -1150,10 +1004,7 @@ input sequences, which we must supply via its stdin handle:
     6
     >>> child.stdin.close()
 
-After writing the six sequences to the handle, MUSCLE will still be
-waiting to see if that is all the FASTA sequences or not – so we must
-signal that this is all the input data by closing the handle. At that
-point MUSCLE should start to run, and we can ask for the output:
+在将6条序列写入句柄后，MUSCLE仍将会等待，判断是否所有的FASTA序列全部输入完毕了。我们可以关闭句柄来提示给MUSCLE。这时，MUSCLE将开始运行。最后，我们可以在标准输出中获得结果。
 
 .. code:: verbatim
 
@@ -1168,24 +1019,9 @@ point MUSCLE should start to run, and we can ask for the output:
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF19165
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF19165
 
-Wow! There we are with a new alignment of just the six records, without
-having created a temporary FASTA input file, or a temporary alignment
-output file. However, a word of caution: Dealing with errors with this
-style of calling external programs is much more complicated. It also
-becomes far harder to diagnose problems, because you can’t try running
-MUSCLE manually outside of Biopython (because you don’t have the input
-file to supply). There can also be subtle cross platform issues (e.g.
-Windows versus Linux), and how you run your script can have an impact
-(e.g. at the command line, from IDLE or an IDE, or as a GUI script).
-These are all generic Python issues though, and not specific to
-Biopython.
+现在我们在买有创造一个FASTA文件的情况下获得了一个序列排列。然而，由于你没有在Biopython外运行MUSCLE，这会使调试程序的难度增大，而且存在程序跨平台使用的问题（Windows和Linux）。
 
-If you find working directly with ``subprocess`` like this scary, there
-is an alternative. If you execute the tool with ``muscle_cline()`` you
-can supply any standard input as a big string,
-``muscle_cline(stdin=...)``. So, provided your data isn’t very big, you
-can prepare the FASTA input in memory as a string using ``StringIO``
-(see Section \ `22.1 <#sec:appendix-handles>`__):
+如果你觉得 ``subprocess`` 不方便使用，Biopython提供了另一种方式。如果你用 ``muscle_cline()`` 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： ``muscle_cline(stdin=...)`` 。假如你的序列文件不大，你可以将其储存为 ``StringIO`` 对象（具体见 `22.1 <#sec:appendix-handles>`__)：
 
 .. code:: verbatim
 
@@ -1197,7 +1033,7 @@ can prepare the FASTA input in memory as a string using ``StringIO``
     6
     >>> data = handle.getvalue()
 
-You can then run the tool and parse the alignment as follows:
+你可以以下方式运行外部程序和读取结果：
 
 .. code:: verbatim
 
@@ -1213,20 +1049,15 @@ You can then run the tool and parse the alignment as follows:
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF19165
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF19165
 
-You might find this easier, but it does require more memory (RAM) for
-the strings used for the input FASTA and output Clustal formatted data.
+你可能觉得这种方式更便捷，但它需要更多的内存（这是由于我们是以字符串对象来储存输入的FASTA文件和输出的Clustal排列）。
 
-6.4.5  EMBOSS needle and water
+6.4.5  EMBOSS包的序列排列工具——needle和water
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `EMBOSS <http://emboss.sourceforge.net/>`__ suite includes the
-``water`` and ``needle`` tools for Smith-Waterman algorithm local
-alignment, and Needleman-Wunsch global alignment. The tools share the
-same style interface, so switching between the two is trivial – we’ll
-just use ``needle`` here.
 
-Suppose you want to do a global pairwise alignment between two
-sequences, prepared in FASTA format as follows:
+`EMBOSS <http://emboss.sourceforge.net/>`__ 包有两个序列排列程序—— ``water`` 和 ``needle`` 来实现Smith-Waterman做局部序列排列（local alignment）和Needleman-Wunsch算法来做全局排列（global alignment）。这两个程序具有相同的使用方式，因此我们仅以 ``needle`` 为例。
+
+假设你希望做全局的序列两两排列，你可以将FASTA格式序列以如下方式储存：
 
 .. code:: verbatim
 
@@ -1235,7 +1066,7 @@ sequences, prepared in FASTA format as follows:
     KKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTP
     AVHASLDKFLASVSTVLTSKYR
 
-in a file ``alpha.fasta``, and secondly in a file ``beta.fasta``:
+以上内容在 ``alpha.fasta`` 文件中，另一个在 ``beta.fasta`` 中如下：
 
 .. code:: verbatim
 
@@ -1244,8 +1075,7 @@ in a file ``alpha.fasta``, and secondly in a file ``beta.fasta``:
     VKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFG
     KEFTPPVQAAYQKVVAGVANALAHKYH
 
-Let’s start by creating a complete ``needle`` command line object in one
-go:
+让我们开始使用一个完整的 ``needle`` 命令行对象：
 
 .. code:: verbatim
 
@@ -1255,15 +1085,9 @@ go:
     >>> print needle_cline
     needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5
 
-Why not try running this by hand at the command prompt? You should see
-it does a pairwise comparison and records the output in the file
-``needle.txt`` (in the default EMBOSS alignment file format).
+你可能会疑问，为什么不直接在终端里运行这一程序呢？你会发现，它将进行一个序列两两见的排列，并把结果记录在 ``needle.txt`` 中（以EMBOSS默认的序列排列格式）。
 
-Even if you have EMBOSS installed, running this command may not work –
-you might get a message about “command not found” (especially on
-Windows). This probably means that the EMBOSS tools are not on your PATH
-environment variable. You can either update your PATH setting, or simply
-tell Biopython the full path to the tool, for example:
+即使你安装了EMBOSS，使用以上命令仍可能会出错，你可能获得一个错误消息“command not found”，尤其是在Windows环境中。这很可能是由于EMBOSS工具的安装目录并不在系统的PATH中。遇到这种情况，你既可以更新系统的环境变量，也可以在Biopython中指定EMBOSS的安装路径。例如：
 
 .. code:: verbatim
 
@@ -1272,13 +1096,9 @@ tell Biopython the full path to the tool, for example:
     ...                                  asequence="alpha.faa", bsequence="beta.faa",
     ...                                  gapopen=10, gapextend=0.5, outfile="needle.txt")
 
-Remember in Python that for a default string ``\n`` or ``\t`` means a
-new line or a tab – which is why we’re put a letter “r” at the start for
-a raw string.
+在Python中， ``\n`` 和 ``\t`` 分别意味着换行符和制表符。而在字符串前有一个“r”代表着raw字符串（ ``\n`` 和 ``\t`` 将保持它们本来的意义）。
 
-At this point it might help to try running the EMBOSS tools yourself by
-hand at the command line, to familiarise yourself the other options and
-compare them to the Biopython help text:
+现在你可以自己尝试着手动运行EMBOSS工具箱中的程序，比较一下各个参数以及其对应的Biopython包裹。
 
 .. code:: verbatim
 
@@ -1286,8 +1106,7 @@ compare them to the Biopython help text:
     >>> help(NeedleCommandline)
     ...
 
-Note that you can also specify (or change or look at) the settings like
-this:
+提示：你也可以指定特定的参数设置。例如：
 
 .. code:: verbatim
 
@@ -1303,10 +1122,7 @@ this:
     >>> print needle_cline.outfile
     needle.txt
 
-Next we want to use Python to run this command for us. As explained
-above, for full control, we recommend you use the built in Python
-``subprocess`` module, but for simple usage the wrapper object usually
-suffices:
+现在我们获得了一个 ``needle`` 命令行，并希望在Python中运行它。我们在之前解释过，如果你希望完全地控制这一过程， ``subprocess`` 是最好的选择，但是如果你只是想尝试使用包裹，以下命令足以达到目的。
 
 .. code:: verbatim
 
@@ -1314,8 +1130,7 @@ suffices:
     >>> print stdout + stderr
     Needleman-Wunsch global alignment of two sequences
 
-Next we can load the output file with ``Bio.AlignIO`` as discussed
-earlier in this chapter, as the ``emboss`` format:
+随后，我们需要载入 ``Bio.AlignIO`` 模块来读取needle输出（ ``emboss`` 格式）。
 
 .. code:: verbatim
 
@@ -1326,20 +1141,8 @@ earlier in this chapter, as the ``emboss`` format:
     MV-LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTY...KYR HBA_HUMAN
     MVHLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRF...KYH HBB_HUMAN
 
-In this example, we told EMBOSS to write the output to a file, but you
-*can* tell it to write the output to stdout instead (useful if you don’t
-want a temporary output file to get rid of – use ``stdout=True`` rather
-than the ``outfile`` argument), and also to read *one* of the one of the
-inputs from stdin (e.g. ``asequence="stdin"``, much like in the MUSCLE
-example in the section above).
+在这个例子中，我们让EMBOSS将结果保存到一个输出文件中，但是你也可以让其写入标准输出中（这往往是在不需要临时文件的情况下的选择，你可以使用 ``stdout=True`` 参数而不是 ``outfile`` 参数）。与MUSCLE的例子一样，你也可以从标准输入里读取序列（ ``asequence="stdin"`` 参数）。
 
-This has only scratched the surface of what you can do with ``needle``
-and ``water``. One useful trick is that the second file can contain
-multiple sequences (say five), and then EMBOSS will do five pairwise
-alignments.
+以上例子仅仅介绍了 ``needle`` 和 ``water`` 最简单的使用。一个有用的小技巧是，第二个序列文件可以包含有多个序列，EMBOSS工具将将每一个序列与第一个文件进行两两序列比对。
 
-Note - Biopython includes its own pairwise alignment code in the
-``Bio.pairwise2`` module (written in C for speed, but with a pure Python
-fallback available too). This doesn’t work with alignment objects, so we
-have not covered it within this chapter. See the module’s docstring
-(built in help) for details.
+注意，Biopython有它自己的两两比对模块 ``Bio.pairwise2`` （用C语言编写）。但是它无法与序列排列对象一起工作，因此我们不再本章讨论它。具体信息请查阅模块的docstring（内部帮助文档）。
