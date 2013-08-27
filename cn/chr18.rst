@@ -1,22 +1,17 @@
-Chapter 18  Cookbook – Cool things to do with it
+第18章  Cookbook – 用它做一些很酷的事情
 ================================================
 
-Biopython now has two collections of “cookbook” examples – this chapter
-(which has been included in this tutorial for many years and has
-gradually grown), and
-```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__
-which is a user contributed collection on our wiki.
+Biopython目前有两个“cookbook”示例集合——本章（本章包含在教程中许多年，并渐渐成长），和
+在我们的维基上的由用户贡献的集合： ```http://biopython.org/wiki/Category:Cookbook``
+ <http://biopython.org/wiki/Category:Cookbook>`__ 。
 
-We’re trying to encourage Biopython users to contribute their own
-examples to the wiki. In addition to helping the community, one direct
-benefit of sharing an example like this is that you could also get some
-feedback on the code from other Biopython users and developers - which
-could help you improve all your Python code.
+我们在试着鼓励Biopython用户贡献他们自己的示例到维基上。除了能帮助社区之外，分享像这样的
+示例的一个直接的好处是，你也能从其他Biopython用户和开发者中获得一些关于代码的反馈——这或许
+能帮助你改进自己的Python代码。
 
-In the long term, we may end up moving all of the examples in this
-chapter to the wiki, or elsewhere within the tutorial.
+长期来说，我们可能最终会将这一章所有的示例都转移到维基上，或者本教程其他的地方。
 
-18.1  Working with sequence files
+18.1  操作序列文件
 ---------------------------------
 
 This section shows some more examples of sequence input/output, using
