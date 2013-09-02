@@ -1,63 +1,45 @@
-﻿Chapter 2  Quick Start – What can you do with Biopython?
+﻿第二章 快速开始 —— 你能用Biopython做什么？
 ========================================================
 
-This section is designed to get you started quickly with Biopython, and
-to give a general overview of what is available and how to use it. All
-of the examples in this section assume that you have some general
-working knowledge of Python, and that you have successfully installed
-Biopython on your system. If you think you need to brush up on your
-Python, the main Python web site provides quite a bit of free
-documentation to get started with
-(```http://www.python.org/doc/`` <http://www.python.org/doc/>`__).
+此部分旨在能让你快速开始Biopython，并给你一个大概的了解什么能用以及如何使用它。
+此部分的所有例子都会假设你有个大致的Python使用知识，并且前提是你已经在你系统上
+安装了Biopython。如果你认为你需要认真复习Python，主流的Python网站提供了相当多
+的免费文档，你可以从以下网站开始(```http://www.python.org/doc/`` <http://www.python.org/doc/>`__)。
 
-Since much biological work on the computer involves connecting with
-databases on the internet, some of the examples will also require a
-working internet connection in order to run.
+由于计算机上大量的生物学工作涉及到网上的数据库，某些例子也会需要联网操作才能
+完成。
 
-Now that that is all out of the way, let’s get into what we can do with
-Biopython.
+OK了，这就是所有的了，让我们看看我们能用Biopython做什么吧。
 
-2.1  General overview of what Biopython provides
+2.1  Biopython提供概览
 ------------------------------------------------
 
-As mentioned in the introduction, Biopython is a set of libraries to
-provide the ability to deal with “things” of interest to biologists
-working on the computer. In general this means that you will need to
-have at least some programming experience (in Python, of course!) or at
-least an interest in learning to program. Biopython’s job is to make
-your job easier as a programmer by supplying reusable libraries so that
-you can focus on answering your specific question of interest, instead
-of focusing on the internals of parsing a particular file format (of
-course, if you want to help by writing a parser that doesn’t exist and
-contributing it to Biopython, please go ahead!). So Biopython’s job is
-to make you happy!
+正如介绍中提到的，Biopython是一个库的集合，这个库能给在计算机上解决生物学家
+感兴趣的事情。基本上这意味着你需要至少一点编程经验（当然是Python！）或至少
+有兴趣学习编程。Biopython的任务就是通过提供可重复利用的库，让你作为程序员，
+从而使得你的工作变得更加容易，以便于你能集中回答你所感兴趣的问题，而不必去
+关注解析特殊文件格式的内部问题（当然，如果你想帮我们写一个原本不存在的解析
+器并把它贡献给Biopython，请继续！）。所以Biopython的职责是让你更加轻松！
 
-One thing to note about Biopython is that it often provides multiple
-ways of “doing the same thing.” Things have improved in recent releases,
-but this can still be frustrating as in Python there should ideally be
-one right way to do something. However, this can also be a real benefit
-because it gives you lots of flexibility and control over the libraries.
-The tutorial helps to show you the common or easy ways to do things so
-that you can just make things work. To learn more about the alternative
-possibilities, look in the Cookbook (Chapter `18 <#chapter:cookbook>`__,
-this has some cools tricks and tips), the Advanced section
-(Chapter `20 <#chapter:advanced>`__), the built in “docstrings” (via the
-Python help command, or the `API
-documentation <http://biopython.org/DIST/docs/api/>`__) or ultimately
-the code itself.
+值得一提的是，Biopython通常能给出多种方式来解决“相同的事情”。在最近的版本中，
+情况有所改善，但这仍可让人沮丧，因为在理想的Python中应该只有一种正确的方式
+去解决问题。但是，这也可以成为一个真正的好处，因为它给了你很多灵活性和对库的
+控制。本教程给你展示普通的或简单的方式去处理问题以便于你能自己处理事情。想要
+学习更多替代的可能性，请查看Cookbook（Chapter `18 <#chapter:cookbook>`__,
+这里有一些很酷的技巧和提示），进阶部分(Chapter `20 <#chapter:advanced>`__)，
+内建“文档”（通过Python help命令），或者`API 文档 <http://biopython.org/DIST/docs/api/>`__)
+或者最根本上代码本身。
 
-2.2  Working with sequences
+2.2  处理序列
 ---------------------------
 
-Disputably (of course!), the central object in bioinformatics is the
-sequence. Thus, we’ll start with a quick introduction to the Biopython
-mechanisms for dealing with sequences, the ``Seq`` object, which we’ll
-discuss in more detail in Chapter \ `3 <#chapter:Bio.Seq>`__.
+有讨论余地的（理所当然！），生物信息学的中心对象是序列。因此，我们先快速开始介绍
+一下Biopython处理序列的机制，主要是``Seq``对象，这个我们也将会在第三章中详细讨论 
+\ `3 <#chapter:Bio.Seq>`__。
 
-Most of the time when we think about sequences we have in my mind a
-string of letters like ‘\ ``AGTACACTGGT``\ ’. You can create such
-``Seq`` object with this sequence as follows - the “\ ``>>>``\ ”
-represents the Python prompt followed by what you would type in:
+大多数时候当我们想到一条序列时，在我们脑海中都会有一串类似于‘\ ``AGTACACTGGT``\ ’的
+字母串。你可以按以下步骤创建一个``Seq``对象——“\ ``>>>``\表示Python提示符后紧跟你要
+输入的内容：
 
 .. code:: verbatim
 
@@ -70,15 +52,12 @@ represents the Python prompt followed by what you would type in:
     >>> my_seq.alphabet
     Alphabet()
 
-What we have here is a sequence object with a *generic* alphabet -
-reflecting the fact we have *not* specified if this is a DNA or protein
-sequence (okay, a protein with a lot of Alanines, Glycines, Cysteines
-and Threonines!). We’ll talk more about alphabets in
-Chapter \ `3 <#chapter:Bio.Seq>`__.
+我们这里是一个带有*通用*字母的序列对象——说明我们还*没有*指定其为一条DNA还是蛋白质
+序列（OK，一个蛋白质序列应该有很多的Ala，Gly，Cys和Thr！）。在第三章我们将讨论更
+多关于字母的\ `3 <#chapter:Bio.Seq>`__。
 
-In addition to having an alphabet, the ``Seq`` object differs from the
-Python string in the methods it supports. You can’t do this with a plain
-string:
+除了有一个字母，``Seq``对象支持不同于Python的字符串方法。你不能对一个纯字符串做以
+下处理：
 
 .. code:: verbatim
 
@@ -89,101 +68,66 @@ string:
     >>> my_seq.reverse_complement()
     Seq('ACCAGTGTACT', Alphabet())
 
-The next most important class is the ``SeqRecord`` or Sequence Record.
-This holds a sequence (as a ``Seq`` object) with additional annotation
-including an identifier, name and description. The ``Bio.SeqIO`` module
-for reading and writing sequence file formats works with ``SeqRecord``
-objects, which will be introduced below and covered in more detail by
-Chapter \ `5 <#chapter:Bio.SeqIO>`__.
+另一个最重要的类是``SeqRecord``或Sequence Record。它保留了一条序列（作为``Seq``对象）
+额外的注释信息，包括ID，name和description。用于读写序列文件格式的``Bio.SeqIO``模块
+能与``SeqRecord``对象一起工作，稍后我们将会介绍，详细内容在第五章也有\ `5 <#chapter:Bio.SeqIO>`__。
 
-This covers the basic features and uses of the Biopython sequence class.
-Now that you’ve got some idea of what it is like to interact with the
-Biopython libraries, it’s time to delve into the fun, fun world of
-dealing with biological file formats!
+这涵盖了基本的功能和Biopython序列类的使用。现在你应该有一些想法像怎么和Biopython库互动，
+是时候去钻研它的乐趣，探讨处理生物学文件格式的有趣世界了！
 
-2.3  A usage example
+2.3  用法示例
 --------------------
 
-Before we jump right into parsers and everything else to do with
-Biopython, let’s set up an example to motivate everything we do and make
-life more interesting. After all, if there wasn’t any biology in this
-tutorial, why would you want you read it?
+在我们跳到语法解析器和Biopython处理的其他所有事之前，让我们先建立一个例子来激励我们
+所做的每一件事情并让生活变得更加有趣。毕竟，如果没有任何生物学在这篇教程里，那你为
+什么还要读它呢？
 
-Since I love plants, I think we’re just going to have to have a plant
-based example (sorry to all the fans of other organisms out there!).
-Having just completed a recent trip to our local greenhouse, we’ve
-suddenly developed an incredible obsession with Lady Slipper Orchids (if
-you wonder why, have a look at some `Lady Slipper Orchids photos on
-Flickr <http://www.flickr.com/search/?q=lady+slipper+orchid&s=int&z=t>`__,
-or try a `Google Image
-Search <http://images.google.com/images?q=lady%20slipper%20orchid>`__).
+因为我喜欢植物，我想我们就来一个基于植物的例子吧（对其他生物的爱好者对不起了！）。
+刚刚结束了去我们当地的一个温室的旅程，我们对Lady Slipper Orchids突然有一个难以置信
+的观念（如果你想知道为什么，请看看一些Lady Slipper Orchids的照片<http://www.flickr.com/search/?q=lady+slipper+orchid&s=int&z=t>`__，
+并试试Google图片搜索<http://images.google.com/images?q=lady%20slipper%20orchid>`__）。
 
-Of course, orchids are not only beautiful to look at, they are also
-extremely interesting for people studying evolution and systematics. So
-let’s suppose we’re thinking about writing a funding proposal to do a
-molecular study of Lady Slipper evolution, and would like to see what
-kind of research has already been done and how we can add to that.
+当然，兰花不仅仅只有外观好看，它们也极力吸引着人们研究其进化和系统分类学。
+假设我们正在考虑写一份关于Lady Slipper Orchids进化研究的基金方案，我们就会想
+看看别人已经做了什么样的研究，然后我们能够增加一些什么内容。
 
-After a little bit of reading up we discover that the Lady Slipper
-Orchids are in the Orchidaceae family and the Cypripedioideae sub-family
-and are made up of 5 genera: *Cypripedium*, *Paphiopedilum*,
-*Phragmipedium*, *Selenipedium* and *Mexipedium*.
+经过一些阅读之后，我们发现Lady Slipper Orchids属于兰科拖鞋兰亚科并且由5个属组成：
+*Cypripedium*，*Paphiopedilum*，*Phragmipedium*，*Selenipedium*和*Mexipedium*。
 
-That gives us enough to get started delving for more information. So,
-let’s look at how the Biopython tools can help us. We’ll start with
-sequence parsing in Section \ `2.4 <#sec:sequence-parsing>`__, but the
-orchids will be back later on as well - for example we’ll search PubMed
-for papers about orchids and extract sequence data from GenBank in
-Chapter \ `9 <#chapter:entrez>`__, extract data from Swiss-Prot from
-certain orchid proteins in Chapter \ `10 <#chapter:swiss_prot>`__, and
-work with ClustalW multiple sequence alignments of orchid proteins in
-Section \ `6.4.1 <#sec:align_clustal>`__.
+这已经给了我们足够多的信息来探究更多的东西。现在，让我们看看Biopython工具能起到怎样的作用。
+我们从一条2.4部分解析出来的序列开始\ `2.4 <#sec:sequence-parsing>`__， 但是我们稍后还是回到
+兰花上来——比如我们将在PubMed上搜索有关兰花的文章然后在第九章中提取GenBank上的序列\ `9 <#chapter:entrez>`__，
+第十章中从Swiss-Prot上从特定的兰花蛋白中提取数据\ `10 <#chapter:swiss_prot>`__，最后在6.4.1
+部分我们用ClustalW对兰花蛋白进行多序列比对\ `6.4.1 <#sec:align_clustal>`__。 
 
-2.4  Parsing sequence file formats
+2.4  解析序列文件格式
 ----------------------------------
 
-A large part of much bioinformatics work involves dealing with the many
-types of file formats designed to hold biological data. These files are
-loaded with interesting biological data, and a special challenge is
-parsing these files into a format so that you can manipulate them with
-some kind of programming language. However the task of parsing these
-files can be frustrated by the fact that the formats can change quite
-regularly, and that formats may contain small subtleties which can break
-even the most well designed parsers.
+很多生物信息学工作的一大部分都会涉及到处理各种包含有生物学数据的文件格式类型。这些文件加载了
+有趣的生物学数据，因而一个特殊的挑战是需要将这些文件解析成你能使用某种编程语言操作的格式。然而
+这些解析工作有时会让人感到失望，因为这些格式有可能经常改变，而一个细微的改变也有可能打破甚至是
+设计得最好的解析器。
 
-We are now going to briefly introduce the ``Bio.SeqIO`` module – you can
-find out more in Chapter \ `5 <#chapter:Bio.SeqIO>`__. We’ll start with
-an online search for our friends, the lady slipper orchids. To keep this
-introduction simple, we’re just using the NCBI website by hand. Let’s
-just take a look through the nucleotide databases at NCBI, using an
-Entrez online search
+我们现在开始简明的介绍``Bio.SeqIO``模块——你可以在第五章中查看更多\ `5 <#chapter:Bio.SeqIO>`__。
+我们从在线搜索我们的朋友——Lady Slipper Orchids——开始。为保持这篇介绍简单一点，我们仅仅手动使用
+NCBI网站。我们先看看NCBI上的nucleotide库，使用在线的Entrez搜索
 (```http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide`` <http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide>`__)
-for everything mentioning the text Cypripedioideae (this is the
-subfamily of lady slipper orchids).
+包含Cypripedioideae所有东西（这是Lady Slipper Orchids的亚科）。
 
-When this tutorial was originally written, this search gave us only 94
-hits, which we saved as a FASTA formatted text file and as a GenBank
-formatted text file (files
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
-and
-```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__,
-also included with the Biopython source code under
-``docs/tutorial/examples/``).
+当本教程最初编写时，这个搜索仅给我们找到了94条匹配的信息，我们将结果保存为FASTA格式文本文件和
+GenBank格式文本文件（文件```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+和```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__，
+也包含在Biopython源代码包下``docs/tutorial/examples/``）。
 
-If you run the search today, you’ll get hundreds of results! When
-following the tutorial, if you want to see the same list of genes, just
-download the two files above or copy them from ``docs/examples/`` in the
-Biopython source code. In
-Section \ `2.5 <#sec:connecting-with-biological-databases>`__ we will
-look at how to do a search like this from within Python.
+如果你今天搜索，你将会获得几百个的匹配结果，跟随者此教程，如果你想要看看包含基因的相同的列表，
+请下载这两个文件或者从Biopython源代码中拷贝 ``docs/examples/`` 。在2.5部分\ `2.5 <#sec:connecting-with-biological-databases>`__
+我们将会看到怎样使用Python做类似的搜索。
 
-2.4.1  Simple FASTA parsing example
+2.4.1  简单的FASTA解析示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you open the lady slipper orchids FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
-in your favourite text editor, you’ll see that the file starts like
-this:
+如果你用你喜好的文本编辑器打开了lady slipper orchids的FASTA文件```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__，
+你会看到文件开头类似这样：
 
 .. code:: verbatim
 
@@ -192,9 +136,8 @@ this:
     AATCCGGAGGACCGGTGTACTCAGCTCACCGGGGGCATTGCTCCCGTGGTGACCCTGATTTGTTGTTGGG
     ...
 
-It contains 94 records, each has a line starting with “\ ``>``\ ”
-(greater-than symbol) followed by the sequence on one or more lines. Now
-try this in Python:
+它包含有94条查询记录，每一行都以“\ ``>``\ ”开头，（大于符号）紧随其后的是一行或多行序列。现在
+试试以下Python代码：
 
 .. code:: verbatim
 
@@ -204,7 +147,7 @@ try this in Python:
         print repr(seq_record.seq)
         print len(seq_record)
 
-You should get something like this on your screen:
+你应该会得到类似这样的一些东西出现在屏幕上：
 
 .. code:: verbatim
 
@@ -216,18 +159,13 @@ You should get something like this on your screen:
     Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', SingleLetterAlphabet())
     592
 
-Notice that the FASTA format does not specify the alphabet, so
-``Bio.SeqIO`` has defaulted to the rather generic
-``SingleLetterAlphabet()`` rather than something DNA specific.
+注意FASTA文件并没有指定字母表，因此``Bio.SeqIO``被默认为一般的``SingleLetterAlphabet()``而不是特定的DNA序列。
 
-2.4.2  Simple GenBank parsing example
+2.4.2  简单的GenBank解析示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now let’s load the GenBank file
-```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
-instead - notice that the code to do this is almost identical to the
-snippet used above for the FASTA file - the only difference is we change
-the filename and the format string:
+现在我们来加载一个GenBank文件```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+来代替——注意此次的代码与上面处理FASTA文件的一小段几乎完全相同——仅有的不同之处是我们改变了文件名和格式的字符串：
 
 .. code:: verbatim
 
@@ -237,7 +175,7 @@ the filename and the format string:
         print repr(seq_record.seq)
         print len(seq_record)
 
-This should give:
+这段代码应该会给出：
 
 .. code:: verbatim
 
@@ -249,80 +187,50 @@ This should give:
     Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', IUPACAmbiguousDNA())
     592
 
-This time ``Bio.SeqIO`` has been able to choose a sensible alphabet,
-IUPAC Ambiguous DNA. You’ll also notice that a shorter string has been
-used as the ``seq_record.id`` in this case.
+这一次``Bio.SeqIO``能够明智的选择一个字母表，IUPAC Ambiguous DNA。你也应该注意到了这个例子中有一个较短的字符串
+被用作``seq_record.id``。
 
-2.4.3  I love parsing – please don’t stop talking about it!
+2.4.3  我爱解析——请别停止讨论它！
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Biopython has a lot of parsers, and each has its own little special
-niches based on the sequence format it is parsing and all of that.
-Chapter \ `5 <#chapter:Bio.SeqIO>`__ covers ``Bio.SeqIO`` in more
-detail, while Chapter \ `6 <#chapter:Bio.AlignIO>`__ introduces
-``Bio.AlignIO`` for sequence alignments.
+Biopython有很多的解析器，基于它们所解析的文件格式，每一个都有自己独特的地位。第五章\ `5 <#chapter:Bio.SeqIO>`__ covers ``Bio.SeqIO``
+将详细探讨，而第六章\ `6 <#chapter:Bio.AlignIO>`__将介绍用于序列比对的``Bio.AlignIO``。
 
-While the most popular file formats have parsers integrated into
-``Bio.SeqIO`` and/or ``Bio.AlignIO``, for some of the rarer and unloved
-file formats there is either no parser at all, or an old parser which
-has not been linked in yet. Please also check the wiki pages
-```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
-and
-```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
-for the latest information, or ask on the mailing list. The wiki pages
-should include an up to date list of supported file types, and some
-additional examples.
+由于最主流的文件格式都有解析器整合在``Bio.SeqIO``和/或 ``Bio.AlignIO``中，对于一些比较罕见的或者不被人们喜爱的
+文件格式，要么根本就没有解析器，要么就是一些没有链接的老的解析器。请也到wiki页面```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
+以及```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__查看最新信息，或者咨询邮件列
+表。wiki页面上应该包含了支持文件类型的最新列表，还有一些附加的例子。
 
-The next place to look for information about specific parsers and how to
-do cool things with them is in the Cookbook
-(Chapter `18 <#chapter:cookbook>`__ of this Tutorial). If you don’t find
-the information you are looking for, please consider helping out your
-poor overworked documentors and submitting a cookbook entry about it!
-(once you figure out how to do it, that is!)
+另一个查找特定解析器信息和如何处理它们的地就是Cookbook（本教程的第十八章 `18 <#chapter:cookbook>`__）。如果你
+没有找到你要的信息，请考虑及时帮帮你那可怜的过劳的文档机，并提交一份关于它的cookbook的entry号！（一旦你知道怎
+么做了，那就是了！）
 
-2.5  Connecting with biological databases
+2.5  与生物学数据库结合
 -----------------------------------------
 
-One of the very common things that you need to do in bioinformatics is
-extract information from biological databases. It can be quite tedious
-to access these databases manually, especially if you have a lot of
-repetitive work to do. Biopython attempts to save you time and energy by
-making some on-line databases available from Python scripts. Currently,
-Biopython has code to extract information from the following databases:
+在生物信息学中你需要做的很普通的事情之一是从生物学数据库中提取信息。手动访问这些数据库可能会非常枯燥乏味，尤其
+是当你有很多重复的工作要做的时候。Biopython试图通过用Python脚本做一些可用的在线数据库来节省你的时间和精力。当前，
+Biopython拥有从以下数据库中获取信息的代码：
 
--  `Entrez <http://www.ncbi.nlm.nih.gov/Entrez/>`__ (and
-   `PubMed <http://www.ncbi.nlm.nih.gov/PubMed/>`__) from the NCBI – See
-   Chapter \ `9 <#chapter:entrez>`__.
--  `ExPASy <http://www.expasy.org/>`__ – See
-   Chapter \ `10 <#chapter:swiss_prot>`__.
--  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__ – See the
-   ``Bio.SCOP.search()`` function.
+-  NCBI的`Entrez <http://www.ncbi.nlm.nih.gov/Entrez/>`__ （和 `PubMed <http://www.ncbi.nlm.nih.gov/PubMed/>`__）
+   ——见第九章\ `9 <#chapter:entrez>`__。
+-  `ExPASy <http://www.expasy.org/>`__ ——见第十章\ `10 <#chapter:swiss_prot>`__。
+-  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__——见``Bio.SCOP.search()``函数。
 
-The code in these modules basically makes it easy to write Python code
-that interact with the CGI scripts on these pages, so that you can get
-results in an easy to deal with format. In some cases, the results can
-be tightly integrated with the Biopython parsers to make it even easier
-to extract information.
+这些模块里的代码基本上使很容易地写出与这些页面中CGI脚本交互的Python代码，因此你能很方便的获得需要处理的格式。在某些
+情况下，结果可能会紧密结合到Biopython解析器中从而使得提取信息更加简单。
 
-2.6  What to do next
+2.6  下一步该做什么
 --------------------
 
-Now that you’ve made it this far, you hopefully have a good
-understanding of the basics of Biopython and are ready to start using it
-for doing useful work. The best thing to do now is finish reading this
-tutorial, and then if you want start snooping around in the source code,
-and looking at the automatically generated documentation.
+现在你已经做到这一步，你应该对基本的Biopython有一个很好的了解了，并准备好开始用它完成一些有用的工作。现在最好先完成
+阅读本教程，然后如果你想开始看看源代码，并看看自动生成文档。
 
-Once you get a picture of what you want to do, and what libraries in
-Biopython will do it, you should take a peak at the Cookbook
-(Chapter `18 <#chapter:cookbook>`__), which may have example code to do
-something similar to what you want to do.
+一旦你有一份你要做的工作的蓝图，以及Biopython能完成它的库，你应该看看Cookbook（第十八章`18 <#chapter:cookbook>`__），
+在这里可能会有一些类似你工作的示例代码。
 
-If you know what you want to do, but can’t figure out how to do it,
-please feel free to post questions to the main Biopython list (see
-```http://biopython.org/wiki/Mailing_lists`` <http://biopython.org/wiki/Mailing_lists>`__).
-This will not only help us answer your question, it will also allow us
-to improve the documentation so it can help the next person do what you
-want to do.
+如果你知道你想要做什么，但是还没弄明白怎么去做，请随时将你的问题贴出到主要的Biopython列表中（见
+```http://biopython.org/wiki/Mailing_lists`` <http://biopython.org/wiki/Mailing_lists>`__）。这不仅方便我们回答你的
+问题，也有助于我们改进文档以便于它能帮到下一个做你工作的人。
 
-Enjoy the code!
+请享受代码吧！
