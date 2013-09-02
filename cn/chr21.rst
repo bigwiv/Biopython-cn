@@ -1,184 +1,96 @@
-Chapter 21  Where to go from here – contributing to Biopython
+第 21 章 Contributing to Biopython
 =============================================================
 
-21.1  Bug Reports + Feature Requests
+21.1  错误报告
 ------------------------------------
 
-Getting feedback on the Biopython modules is very important to us.
-Open-source projects like this benefit greatly from feedback,
-bug-reports (and patches!) from a wide variety of contributors.
+对于biopython的开发者来说，从使用者得到反馈是非常重要的；来自于众多使用者的问题反馈、错误报告对于biopython这样的开源项目有着莫大的帮助。
 
-The main forums for discussing feature requests and potential bugs are
-the `Biopython mailing
-lists <http://biopython.org/wiki/Mailing_lists>`__:
+Biopython邮件列表是一个讨论和交流重要功能和潜bugs的主要论坛:
+ <http://biopython.org/wiki/Mailing_lists>__:
 
--  `biopython@biopython.org <mailto:biopython@biopython.org>`__ – An
-   unmoderated list for discussion of anything to do with Biopython.
+-  `biopython@biopython.org <mailto:biopython@biopython.org>`__ – 讨论任何跟biopython有关的问题。
 -  `biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__
-   – A more development oriented list that is mainly used by developers
-   (but anyone is free to contribute!).
+   – 开发者用于讨论biopython开发的邮件列表（其他人员同样可以做出贡献）
 
-Additionally, if you think you’ve found a bug, you can submit it to our
-bug-tracking page at
-```http://redmine.open-bio.org/projects/biopython`` <http://redmine.open-bio.org/projects/biopython>`__.
-This way, it won’t get buried in anyone’s Inbox and forgotten about.
+除此之外，如果你觉得你发现了一个bug， 你可以提交到我们的bug监控页面（http://redmine.open-bio.org/projects/biopython）
+这样，这些bug才不至于淹没于用户浩如烟海的邮件中，进而被遗忘。
 
-21.2  Mailing lists and helping newcomers
+21.2  邮件列表与新手帮助
 -----------------------------------------
 
-We encourage all our uses to sign up to the main Biopython mailing list.
-Once you’ve got the hang of an area of Biopython, we’d encourage you to
-help answer questions from beginners. After all, you were a beginner
-once.
+我们希望所有的biopython使用者都在biopython主邮件列表注册并订阅相关邮件。同时使用者在对某一领域有一定了解之后，也希望他们能够帮助入门者并对他们的问题进行解答，毕竟每个人开始的时候都是菜鸟。
 
-21.3  Contributing Documentation
+21.3  文档贡献
 --------------------------------
 
-We’re happy to take feedback or contributions - either via a bug-report
-or on the Mailing List. While reading this tutorial, perhaps you noticed
-some topics you were interested in which were missing, or not clearly
-explained. There is also Biopython’s built in documentation (the
-docstrings, these are also
-`online <http://biopython.org/DIST/docs/api>`__), where again, you may
-be able to help fill in any blanks.
+我们很高兴能从用户那里收到反馈，不论是通过bug报告还是邮件列表的形式。或许在你阅读这一教程的时候，你可能会发现某些你所感兴趣的话题没被涉及或者没有解释清楚。甚至biopython的内建文档（docstrings）以及一些在线文档（http://biopython.org/DIST/docs/api）有所缺失，有能力的用户都可以帮助我们填补这些空白。
 
-21.4  Contributing cookbook examples
+21.4  学习手册互助
 ------------------------------------
 
-As explained in Chapter \ `18 <#chapter:cookbook>`__, Biopython now has
-a wiki collection of user contributed “cookbook” examples,
-```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__
-– maybe you can add to this?
+如18章中用户手册解释的那样，如今biopython有一个汇集用户贡献的使用文档的wiki文库（http://biopython.org/wiki/Category:Cookbook），也许你也可以把做的一些使用说明放在这里？
 
-21.5  Maintaining a distribution for a platform
+
+21.5  不同操作系统使用版本的维护
 -----------------------------------------------
 
-We currently provide source code archives (suitable for any OS, if you
-have the right build tools installed), and Windows Installers which are
-just click and run. This covers all the major operating systems.
+目前我们提供biopython的源代码安装（适用于任何操作系统，如果你安装了正确的编译工具的话），同时还提供有点击运行的windows安装工具。这涵盖了当今当多数操作系统。
 
-Most major Linux distributions have volunteers who take these source
-code releases, and compile them into packages for Linux users to easily
-install (taking care of dependencies etc). This is really great and we
-are of course very grateful. If you would like to contribute to this
-work, please find out more about how your Linux distribution handles
-this.
+对于大多数linux操作系统来说，都有志愿者将源代码进行编译成包，同时也解决了包依赖等相关问题，linux用户可以很容易的安装。对于这些工作，我们非常感激。如果你想要对于这一工作有所贡献的话，请阅读你的linux发行版关于这一事项的详细说明。
 
-Below are some tips for certain platforms to maybe get people started
-with helping out:
+对于想要从事这一工作的用户，以下是一些关于主要操作系统平台的建议：
 
 **Windows**
-    – Windows products typically have a nice graphical installer that
-    installs all of the essential components in the right place. We use
-    Distutils to create a installer of this type fairly easily.
+    – Windows 产品通常有一个图形安装工具，能够将biopython所有的基本组建安装到相应的目录。我们使用
+    Distutils 工具来创建能完成这一任务的installer。
 
-    You must first make sure you have a C compiler on your Windows
-    computer, and that you can compile and install things (this is the
-    hard bit - see the Biopython installation instructions for info on
-    how to do this).
+    首先，你要确定你的Windows操作系统中安装了C编译器，而且你能够正确编译并安装（通常这是困难的地方），可以参考Biopython安装说明。
 
-    Once you are setup with a C compiler, making the installer just
-    requires doing:
+    在你配置好C编译器之后，安装工作就很简答：
 
     .. code:: verbatim
 
         python setup.py bdist_wininst
 
-    Now you’ve got a Windows installer. Congrats! At the moment we have
-    no trouble shipping installers built on 32 bit windows. If anyone
-    would like to look into supporting 64 bit Windows that would be
-    great.
+    目前，在32位windows操作系统上安装biopython没有任何问题。只是64位操作系统的安装还没能实现，要是谁能在这方面做点贡献，真是太好了。
 
 **RPMs**
-    – RPMs are pretty popular package systems on some Linux platforms.
-    There is lots of documentation on RPMs available at
-    ```http://www.rpm.org`` <http://www.rpm.org>`__ to help you get
-    started with them. To create an RPM for your platform is really
-    easy. You just need to be able to build the package from source
-    (having a C compiler that works is thus essential) – see the
-    Biopython installation instructions for more info on this.
-
-    To make the RPM, you just need to do:
+    – RPMs在一些linux发行版中是非常流行的包管理系统，在RPMs主页（http://www.rpm.org）有很多关于RPMs的文档说明帮助你快速的开始。为你的系统创建一个RMP是很容易的一件事。你仅仅需要将源代码编译成包（需要一个能正常工作的C编译器），更多信息可以参考Biopython安装说明。
+	
+    创建一个RPM,仅需做以下工作：
 
     .. code:: verbatim
 
         python setup.py bdist_rpm
 
-    This will create an RPM for your specific platform and a source RPM
-    in the directory ``dist``. This RPM should be good and ready to go,
-    so this is all you need to do! Nice and easy.
+    在终端运行以上命令后，会在‘dist’目录下创建一个跟你使用的操作系统相关的RPM，以及一个源RPM。一般情况下，这个RPM能无误的使用。
 
 **Macintosh**
-    – Since Apple moved to Mac OS X, things have become much easier on
-    the Mac. We generally treat it as just another Unix variant, and
-    installing Biopython from source is just as easy as on Linux. The
-    easiest way to get all the GCC compilers etc installed is to install
-    Apple’s X-Code. We might be able to provide click and run installers
-    for Mac OS X, but to date there hasn’t been any demand.
+    – 由于Apple迁移到Mac OS X, 很多工作就简单多了。 一般来说，Mac操作系统相当于一个Unix变体，Biopython源码的安装同在linux上一样容易。安装Apple's X-code是安装所有GCC编译器最简易的方法。
+	我们或许会为Mac操作系统提供点击-安装的工具，但目前为止还没必要。
 
-Once you’ve got a package, please test it on your system to make sure it
-installs everything in a good way and seems to work properly. Once you
-feel good about it, send it off to one of the Biopython developers
-(write to our main mailing list at biopython@biopython.org if you’re not
-sure who to send it to) and you’ve done it. Thanks!
+
+一旦得到一个安装包，务必在你的系统上检测并确保所有文件能够正确安装并能正常工作。在这一工作完成之后，你的工作就结束了，剩下的就是Biopython开发者的事了（如果不确定该发送给谁，可以给Biopython主邮件列表发送邮件），谢谢您呦！
 
 21.6  Contributing Unit Tests
 -----------------------------
 
-Even if you don’t have any new functionality to add to Biopython, but
-you want to write some code, please consider extending our unit test
-coverage. We’ve devoted all of Chapter \ `19 <#sec:regr_test>`__ to this
-topic.
+关于源码的Unit Test。
 
-21.7  Contributing Code
+21.7  源码贡献
 -----------------------
 
-There are no barriers to joining Biopython code development other than
-an interest in creating biology-related code in Python. The best place
-to express an interest is on the Biopython mailing lists – just let us
-know you are interested in coding and what kind of stuff you want to
-work on. Normally, we try to have some discussion on modules before
-coding them, since that helps generate good ideas – then just feel free
-to jump right in and start coding!
+除了使用Python语言开发生物学相关的程序外，任何人都可以加入Biopython源码的开发，没有限制。任何人若对某方面的编程感性，Biopython邮件列表是讨论此事最合适的地方——只需告知我们你的兴趣所在。通常来讲，在开发某个模块之前，我们会在邮件列表里讨论此事，因为这样做会有助于产生好的想法，讨论完成之后，就剩下编程了！
 
-The main Biopython release tries to be fairly uniform and interworkable,
-to make it easier for users. You can read about some of (fairly
-informal) coding style guidelines we try to use in Biopython in the
-contributing documentation at
-```http://biopython.org/wiki/Contributing`` <http://biopython.org/wiki/Contributing>`__.
-We also try to add code to the distribution along with tests (see
-Chapter \ `19 <#sec:regr_test>`__ for more info on the regression
-testing framework) and documentation, so that everything can stay as
-workable and well documented as possible (including docstrings). This
-is, of course, the most ideal situation, under many situations you’ll be
-able to find other people on the list who will be willing to help add
-documentation or more tests for your code once you make it available.
-So, to end this paragraph like the last, feel free to start working!
+主要的Biopython发布版本会尽量做到统一和通用，以方便用户的使用。在附带文档（http://biopython.org/wiki/Contributing）中，你可以获取在Biopython中用到的编程方式的原则。同时，我们也尽量在发行版和文档中加入源码和测试（关于regression tesing framework详见19章#sec:regr_test小节），以使得各方面能保持一致并正常工作。
 
-Please note that to make a code contribution you must have the legal
-right to contribute it and license it under the Biopython license. If
-you wrote it all yourself, and it is not based on any other code, this
-shouldn’t be a problem. However, there are issues if you want to
-contribute a derivative work - for example something based on GPL or
-LPGL licenced code would not be compatible with our license. If you have
-any queries on this, please discuss the issue on the biopython-dev
-mailing list.
+值得注意的是，要想创建一个code contribution,你需要有合法的权利去贡献并且在Biopython发行许可下发布。当然了，要是你的程序完全是由你自己编写，没有任何其他的代码，就不要为此担心了。另外，在贡献衍生版本的时候，会有些问题——比如说一些给予GPL或者LPGL的程序与Biopython许可不相容。如果你有什么疑问，请在biopython—dev邮件列表里讨论。
 
-Another point of concern for any additions to Biopython regards any
-build time or run time dependencies. Generally speaking, writing code to
-interact with a standalone tool (like BLAST, EMBOSS or ClustalW) doesn’t
-present a big problem. However, any dependency on another library - even
-a Python library (especially one needed in order to compile and install
-Biopython like NumPy) would need further discussion.
+另外一个关于向Biopython贡献源码的问题涉及到开发和运行时依赖问题。一般来讲，编写程序调用像BLAST、EMBOSS或者ClustalW这样的独立程序没什么问题。但是，任何依赖于其他文库的程序——即使是Python文库（尤其是像NumPy这样用于编译和安装Biopython的文库）就需要做进一步的讨论。
 
-Additionally, if you have code that you don’t think fits in the
-distribution, but that you want to make available, we maintain Script
-Central
-(```http://biopython.org/wiki/Scriptcentral`` <http://biopython.org/wiki/Scriptcentral>`__)
-which has pointers to freely available code in Python for
-bioinformatics.
+除此之外，如果你手头有某些代码，而你又觉得不适合发行版，却又想共享出来，你可以将它们放在一个专门收集关于生物信息学的Python代码的地方（http://biopython.org/wiki/Scriptcentral），
 
-Hopefully this documentation has got you excited enough about Biopython
-to try it out (and most importantly, contribute!). Thanks for reading
-all the way through!
+希望这个文档能在你使用Biopython的过程中带给你想要的信息，当然了最重要的就是，要多多贡献。啰嗦了一大通，希望你还没厌倦。O(∩_∩)O！
+
 

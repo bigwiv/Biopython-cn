@@ -1,44 +1,22 @@
-Chapter 22  Appendix: Useful stuff about Python
+第 22 章 附录：Python之外
 ===============================================
 
-If you haven’t spent a lot of time programming in Python, many questions
-and problems that come up in using Biopython are often related to Python
-itself. This section tries to present some ideas and code that come up
-often (at least for us!) while using the Biopython libraries. If you
-have any suggestions for useful pointers that could go here, please
-contribute!
+如果你对于Python编程还不是非常熟练，那么你在使用Biopython过程中遇到的问题都跟Python有关。本章节主要向读者提供一些使用Biopython文库的过程中有用的建议和一些常用代码。关于这一章的内容，你要是有什么好的建议的话，请一定告诉我们。
 
-22.1  What the heck is a handle?
+22.1  到底什么是句柄（handle）？
 --------------------------------
 
-Handles are mentioned quite frequently throughout this documentation,
-and are also fairly confusing (at least to me!). Basically, you can
-think of a handle as being a “wrapper” around text information.
+这个文档中，句柄常被提及，而且也比较难理解（至少对我来说）。一般说来，你可以把句柄想象成一个对文本信息的“封装”。
 
+对于普通文本信息的处理，使用句柄至少有两个好处：
 Handles provide (at least) two benefits over plain text information:
 
-#. They provide a standard way to deal with information stored in
-   different ways. The text information can be in a file, or in a string
-   stored in memory, or the output from a command line program, or at
-   some remote website, but the handle provides a common way of dealing
-   with information in all of these formats.
-#. They allow text information to be read incrementally, instead of all
-   at once. This is really important when you are dealing with huge text
-   files which would use up all of your memory if you had to load them
-   all.
+#. 对于以不同方式存储的信息，句柄提供了一个标准的处理方法。这些文本信息可能来自文件、内存中的一个字符串、命令行指令的输出或者来自于远端网站信息，但是句柄提供了一种通用的方式处理这些不同格式和来源的文本信息。
+#. 句柄可以依次读取文本信息，而不是一次读取所有信息。这点在处理数据比较大的文件时尤为有用，因为一次载入一个很大的文件可能会占去你所有的内存。
 
-Handles can deal with text information that is being read (e. g. reading
-from a file) or written (e. g. writing information to a file). In the
-case of a “read” handle, commonly used functions are ``read()``, which
-reads the entire text information from the handle, and ``readline()``,
-which reads information one line at a time. For “write” handles, the
-function ``write()`` is regularly used.
+不论是从文件读取文本信息还是将文本信息写入文件，句柄都能胜任。在读取文件时，常用的函数有read()和readline(), 前者可以通过句柄读取所有文本信息，而后者则每次读取一行；对于文本信息的写入，则通常使用write()函数。
 
-The most common usage for handles is reading information from a file,
-which is done using the built-in Python function ``open``. Here, we open
-a handle to the file `m\_cold.fasta <examples/m_cold.fasta>`__ (also
-available online
-`here <http://biopython.org/DIST/docs/tutorial/examples/m_cold.fasta>`__):
+句柄最常见的使用就是从文件读取信息，这可以通过Python内置函数open来完成。 下面示例中，我们打开一个指向文件m_cold.fasta（可通过网址http://biopython.org/DIST/docs/tutorial/examples/m_cold.fasta获取）的句柄：
 
 .. code:: verbatim
 
@@ -46,10 +24,7 @@ available online
     >>> handle.readline()
     ">gi|8332116|gb|BE037100.1|BE037100 MP14H09 MP Mesembryanthemum ...\n"
 
-Handles are regularly used in Biopython for passing information to
-parsers. For example, since Biopython 1.54 the main functions in
-``Bio.SeqIO`` and ``Bio.AlignIO`` have allowed you to use a filename
-instead of a handle:
+Biopython中句柄常用来向解析器（parsers）传递信息。比如说，自从Biopython1.54以来，Bio.SeqIO和Bio.AlignIO模块中的主要函数都可以使用文件名来代替句柄使用：
 
 .. code:: verbatim
 
@@ -57,7 +32,7 @@ instead of a handle:
     for record in SeqIO.parse("m_cold.fasta", "fasta"):
         print record.id, len(record)
 
-On older versions of Biopython you had to use a handle, e.g.
+在比较早的BioPython版本中，必须使用句柄。
 
 .. code:: verbatim
 
@@ -67,8 +42,7 @@ On older versions of Biopython you had to use a handle, e.g.
         print record.id, len(record)
     handle.close()
 
-This pattern is still useful - for example suppose you have a gzip
-compressed FASTA file you want to parse:
+这种操作方式仍有其用武之地，比如在解析一个gzip压缩的FASTA文件中：
 
 .. code:: verbatim
 
@@ -79,15 +53,12 @@ compressed FASTA file you want to parse:
         print record.id, len(record)
     handle.close()
 
-See Section \ `5.2 <#sec:SeqIO_compressed>`__ for more examples like
-this, including reading bzip2 compressed files.
+在5.2章节中SeqIO_compressed部分有更多此类示例可供参考，其中包括,bzip2压缩文件的读取。
 
-22.1.1  Creating a handle from a string
+22.1.1  从字符串创建句柄Creating a handle from a string
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One useful thing is to be able to turn information contained in a string
-into a handle. The following example shows how to do this using
-``cStringIO`` from the Python standard library:
+一个比较有用的工具是将字符串中包含的文本信息传递给一个句柄。以下示例中通过Python标准文库cStringIO来完成：
 
 .. code:: verbatim
 
