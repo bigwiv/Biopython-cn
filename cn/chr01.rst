@@ -1,102 +1,70 @@
-﻿Chapter 1  Introduction
+﻿第一章 介绍
 =======================
 
-1.1  What is Biopython?
+1.1  什么是Biopython？
 -----------------------
 
-The Biopython Project is an international association of developers of
-freely available Python
-(```http://www.python.org`` <http://www.python.org>`__) tools for
-computational molecular biology. Python is an object oriented,
-interpreted, flexible language that is becoming increasingly popular for
-scientific computing. Python is easy to learn, has a very clear syntax
-and can easily be extended with modules written in C, C++ or FORTRAN.
+Biopython工程是一个使用Python来开发计算分子生物学工具的国际团体。(```http://www.python.org`` <http://www.python.org>`__)
+Python是一种面向对象的、解释型的、灵活的语言，在计算机科学中日益流行。Python易学，语法明晰，并且能很容易的使用以C，C++或
+者FORTRAN编写的模块实现扩展。
 
-The Biopython web site
-(```http://www.biopython.org`` <http://www.biopython.org>`__) provides
-an online resource for modules, scripts, and web links for developers of
-Python-based software for bioinformatics use and research. Basically,
-the goal of Biopython is to make it as easy as possible to use Python
-for bioinformatics by creating high-quality, reusable modules and
-classes. Biopython features include parsers for various Bioinformatics
-file formats (BLAST, Clustalw, FASTA, Genbank,...), access to online
-services (NCBI, Expasy,...), interfaces to common and not-so-common
-programs (Clustalw, DSSP, MSMS...), a standard sequence class, various
-clustering modules, a KD tree data structure etc. and even
-documentation.
+Biopython官网(```http://www.biopython.org`` <http://www.biopython.org>`__)为使用和研究生物信息学的开发者提供了一个在线的
+资源库，包括模块、脚本以及一些基于Python的软件的网站链接。一般来讲，Biopython致力于通过创造高质量的和可重复利用的模块及
+类，从而使得Python在生物信息学中的应用变得更加容易。Biopython的特点包括解析各种生物信息学格式的文件(BLAST, Clustalw, FASTA,
+Genbank,...)，访问在线的服务器(NCBI, Expasy,...)，常见和不那么常见程序的接口(Clustalw, DSSP, MSMS...)，标准的序列类，各
+种收集的模块，KD树状的数据结构，等等，还包含一些文档。
 
-Basically, we just like to program in Python and want to make it as easy
-as possible to use Python for bioinformatics by creating high-quality,
-reusable modules and scripts.
+基本来说，我们喜欢使用Python来编程，并且希望通过创建高质量、可重用的模块和脚本来使得Python在生物信息学中的应用变得尽量容易。
 
-1.2  What can I find in the Biopython package
+1.2  在Biopython包中我能发现什么？
 ---------------------------------------------
 
-The main Biopython releases have lots of functionality, including:
+主要的Biopython发行版本有很多种功能，包括：
 
--  The ability to parse bioinformatics files into Python utilizable data
-   structures, including support for the following formats:
+-  将生物信息学文件解析为Python可利用的数据结构，包含以下支持的格式：
 
-   -  Blast output – both from standalone and WWW Blast
+   -  Blast输出结果 – standalone和在线Blast
    -  Clustalw
    -  FASTA
    -  GenBank
-   -  PubMed and Medline
-   -  ExPASy files, like Enzyme and Prosite
-   -  SCOP, including ‘dom’ and ‘lin’ files
+   -  PubMed和Medline
+   -  ExPASy文件, 如Enzyme和Prosite
+   -  SCOP, 包括‘dom’和‘lin’文件
    -  UniGene
    -  SwissProt
 
--  Files in the supported formats can be iterated over record by record
-   or indexed and accessed via a Dictionary interface.
--  Code to deal with popular on-line bioinformatics destinations such
-   as:
+-  被支持格式的文件可以通过记录来重复或者通过字典界面来索引。
+-  处理常见的生物信息学在线数据库的代码：
 
-   -  NCBI – Blast, Entrez and PubMed services
-   -  ExPASy – Swiss-Prot and Prosite entries, as well as Prosite
-      searches
+   -  NCBI – Blast, Entrez和PubMed服务
+   -  ExPASy – Swiss-Prot和Prosite条目, 包括Prosite搜索
 
--  Interfaces to common bioinformatics programs such as:
+-  常见生物信息学程序的接口，例如：
 
-   -  Standalone Blast from NCBI
-   -  Clustalw alignment program
-   -  EMBOSS command line tools
+   -  NCBI的Standalone Blast
+   -  Clustalw比对程序
+   -  EMBOSS命令行工具
 
--  A standard sequence class that deals with sequences, ids on
-   sequences, and sequence features.
--  Tools for performing common operations on sequences, such as
-   translation, transcription and weight calculations.
--  Code to perform classification of data using k Nearest Neighbors,
-   Naive Bayes or Support Vector Machines.
--  Code for dealing with alignments, including a standard way to create
-   and deal with substitution matrices.
--  Code making it easy to split up parallelizable tasks into separate
-   processes.
--  GUI-based programs to do basic sequence manipulations, translations,
-   BLASTing, etc.
--  Extensive documentation and help with using the modules, including
-   this file, on-line wiki documentation, the web site, and the mailing
-   list.
--  Integration with BioSQL, a sequence database schema also supported by
-   the BioPerl and BioJava projects.
+-  一个能处理序列、ID和序列特征的标准序列类。
+-  对序列实现常规操作的工具，如翻译，转录和比重计算。
+-  利用k最近邻接、Bayes或SVM对数据进行分类的代码。
+-  处理比对的代码，包括创建和处理替代矩阵的标准方法。
+-  分割平行任务到不同进程的代码。
+-  GUI程序实现序列的基本操作，翻译以及BLAST等。
+-  使用这些模块的扩展文档和帮助，包括此文件，在线的wiki文档，网站和邮件列表。
+-  通过与BioSQL的整合，一个序列数据库中的表也被BioPerl和BioJava项目支持。
 
-We hope this gives you plenty of reasons to download and start using
-Biopython!
+我们希望这些能给你足够的理由去下载并开始使用Biopython！
 
-1.3  Installing Biopython
+1.3  安装Biopython
 -------------------------
 
-All of the installation information for Biopython was separated from
-this document to make it easier to keep updated.
+Biopython的所有安装信息在此文档中分开，以便于更容易保持更新。
 
-The short version is go to our downloads page
-(```http://biopython.org/wiki/Download`` <http://biopython.org/wiki/Download>`__),
-download and install the listed dependencies, then download and install
-Biopython. Biopython runs on many platforms (Windows, Mac, and on the
-various flavors of Linux and Unix). For Windows we provide pre-compiled
-click-and-run installers, while for Unix and other operating systems you
-must install from source as described in the included README file. This
-is usually as simple as the standard commands:
+简短的版本去我们的下载页面(```http://biopython.org/wiki/Download`` <http://biopython.org/wiki/Download>`__),
+下载并安装所列的依赖的服务，最后下载并安装Biopython。Biopython能在多种平台上运行（Windows，Mac，各种版本的Linux和Unix）。
+对于Windows我们提供预编译的一键式安装程序，而对Unix和其他操作系统，你必须按照附带的README文件从源开始安装。这通常
+是很简单的，只要标准命令：
 
 .. code:: verbatim
 
@@ -104,45 +72,41 @@ is usually as simple as the standard commands:
     python setup.py test
     sudo python setup.py install
 
-(You can in fact skip the build and test, and go straight to the install
-– but its better to make sure everything seems to be working.)
+（事实上你可以跳过build和test，直接install。但最好是确保所有的东西看起来都没问题。）
 
-The longer version of our installation instructions covers installation
-of Python, Biopython dependencies and Biopython itself. It is available
-in PDF
+我们的安装说明的更长版本包括了Python的安装，Biopython依赖服务的安装以及Biopython本身的安装。可从PDF
 (```http://biopython.org/DIST/docs/install/Installation.pdf`` <http://biopython.org/DIST/docs/install/Installation.pdf>`__)
-and HTML formats
+和HTML格式获得。
 (```http://biopython.org/DIST/docs/install/Installation.html`` <http://biopython.org/DIST/docs/install/Installation.html>`__).
 
-1.4  Frequently Asked Questions (FAQ)
+1.4  常见问答（FAQ）
 -------------------------------------
 
-#. *How do I cite Biopython in a scientific publication?*
-    Please cite our application note [`1 <#cock2009>`__, Cock *et al.*,
-   2009] as the main Biopython reference. In addition, please cite any
-   publications from the following list if appropriate, in particular as
-   a reference for specific modules within Biopython (more information
-   can be found on our website):
+#. *在科学出版中我怎样引用Biopython？*
+    请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.*,
+   2009] 作为主要的Biopython参考文献。另外，如果适当的话，请
+   引用以下任意出版物，特别是作为Biopython内特定模块的参考文献的话。
+   （更多信息可在我们网站上获得）：
 
-   -  For the official project announcement: [`13 <#chapman2000>`__,
+   -  对于正式项目公布: [`13 <#chapman2000>`__,
       Chapman and Chang, 2000];
-   -  For ``Bio.PDB``: [`18 <#hamelryck2003a>`__, Hamelryck and
+   -  对于 ``Bio.PDB``: [`18 <#hamelryck2003a>`__, Hamelryck and
       Manderick, 2003];
-   -  For ``Bio.Cluster``: [`14 <#dehoon2004>`__, De Hoon *et al.*,
+   -  对于 ``Bio.Cluster``: [`14 <#dehoon2004>`__, De Hoon *et al.*,
       2004];
-   -  For ``Bio.Graphics.GenomeDiagram``: [`2 <#pritchard2006>`__,
+   -  对于 ``Bio.Graphics.GenomeDiagram``: [`2 <#pritchard2006>`__,
       Pritchard *et al.*, 2006];
-   -  For ``Bio.Phylo`` and ``Bio.Phylo.PAML``: [`9 <#talevich2012>`__,
+   -  对于 ``Bio.Phylo``和``Bio.Phylo.PAML``: [`9 <#talevich2012>`__,
       Talevich *et al.*, 2012];
-   -  For the FASTQ file format as supported in Biopython, BioPerl,
-      BioRuby, BioJava, and EMBOSS: [`7 <#cock2010>`__, Cock *et al.*,
-      2010].
+   -  对于在Biopython，BioPerl，BioRuby，BioJava和EMBOSS支持的FASTQ格
+      式文件：[`7 <#cock2010>`__, Cock *et al.*, 2010].
 
-#. *How should I capitalize “Biopython”? Is “BioPython” OK?*
-    The correct capitalization is “Biopython”, not “BioPython” (even
-   though that would have matched BioPerl, BioJava and BioRuby).
-#. | *How do I find out what version of Biopython I have installed?*
-   |  Use this:
+#. *我该怎样以大写字母写“Biopython”？写成“BioPython”可以吗？*
+    正确的大写是“Biopython”而不是“BioPython”（虽然对于BioPerl，BioRuby
+    和BioJava是这样）。
+
+#. | *我怎样查看自己安装的Biopython的版本？*
+   |  使用以下代码：
 
    .. code:: verbatim
 
@@ -151,156 +115,108 @@ and HTML formats
          ...
          
 
-   If the “\ ``import Bio``\ ” line fails, Biopython is not installed.
-   If the second line fails, your version is very out of date. If the
-   version string ends with a plus, you don’t have an official release,
-   but a snapshot of the in development code.
+   如果 “\ ``import Bio``\ ” 这行报错, 说明Biopython未被安装。如果第二行报错，
+   你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
+   是开发代码的快照。
 
-#. *Where is the latest version of this document?*
-    If you download a Biopython source code archive, it will include the
-   relevant version in both HTML and PDF formats. The latest published
-   version of this document (updated at each release) is online:
+#. *此文档的最新版本在哪里？*
+    如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
+    的相应版本。此文档最新出版的版本可通过在线获得（每个版本的更新）：
 
    -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
    -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
 
-   If you are using the very latest unreleased code from our repository
-   you can find copies of the in-progress tutorial here:
+   如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这儿找到还在开发中
+   的教程的拷贝：
 
    -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
    -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
-#. *Which “Numerical Python” do I need?*
-    For Biopython 1.48 or earlier, you needed the old Numeric module.
-   For Biopython 1.49 onwards, you need the newer NumPy instead. Both
-   Numeric and NumPy can be installed on the same machine fine. See
-   also: ```http://numpy.scipy.org/`` <http://numpy.scipy.org/>`__
-#. *Why is the* ``Seq`` *object missing the (back) transcription &
-   translation methods described in this Tutorial?*
-    You need Biopython 1.49 or later. Alternatively, use the ``Bio.Seq``
-   module functions described in
-   Section \ `3.14 <#sec:seq-module-functions>`__.
-#. *Why is the* ``Seq`` *object missing the upper & lower methods
-   described in this Tutorial?*
-    You need Biopython 1.53 or later. Alternatively, use
-   ``str(my_seq).upper()`` to get an upper case string. If you need a
-   Seq object, try ``Seq(str(my_seq).upper())`` but be careful about
-   blindly re-using the same alphabet.
-#. *Why doesn’t the* ``Seq`` *object translation method support the*
-   ``cds`` *option described in this Tutorial?*
-    You need Biopython 1.51 or later.
-#. *Why doesn’t* ``Bio.SeqIO`` *work? It imports fine but there is no
-   parse function etc.*
-    You need Biopython 1.43 or later. Older versions did contain some
-   related code under the ``Bio.SeqIO`` name which has since been
-   removed - and this is why the import “works”.
-#. *Why doesn’t* ``Bio.SeqIO.read()`` *work? The module imports fine but
-   there is no read function!*
-    You need Biopython 1.45 or later. Or, use
-   ``Bio.SeqIO.parse(...).next()`` instead.
-#. *Why isn’t* ``Bio.AlignIO`` *present? The module import fails!*
-    You need Biopython 1.46 or later.
-#. *What file formats do* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *read and
-   write?*
-    Check the built in docstrings (``from Bio import SeqIO``, then
-   ``help(SeqIO)``), or see
+#. *我需要哪一个“Numerical Python”？*
+    对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
+   及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
+   装好。也可以见： ```http://numpy.scipy.org/`` <http://numpy.scipy.org/>`__
+#. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation
+    方法？*
+    你需要Biopython 1.49或更新的版本。或者，使用以下3.14部分中的``Bio.Seq``模块
+    功能。<#sec:seq-module-functions>`__.
+#. *为什么* ``Seq`` *对象缺少了这篇教程中的upper和lower方法？*
+    你需要Biopython 1.53或更新版本。或者，使用``str(my_seq).upper()`` 来获得
+    大写字符串。如果你需要一个Seq对象，试试``Seq(str(my_seq).upper())`` ，但是
+    要小心盲目的重用相同的字母。
+#. *为什么* ``Seq`` *对象的translation方法不支持本教程中描述的* ``cds`` *选项？*
+    你需要Biopython 1.51或更新版本。
+#. *为什么* ``Bio.SeqIO`` *不能正常工作？它导入正常但是没有解析函数等。*
+    你需要Biopython 1.43或更新版本。较老的版本确实包含了一些相关的代码在``Bio.SeqIO``
+    下面但是后来就被移除了——这就是为什么import是正常的。
+#. *为什么* ``Bio.SeqIO.read()`` *不能正常工作？该模块导入正常但是并没有read函数！*
+    你需要Biopython 1.45或更新的版本。或者，使用``Bio.SeqIO.parse(...).next()``来代替。
+#. *为什么没有* ``Bio.AlignIO`` *？模块导入失败！*
+    你需要Biopython 1.46或更新的版本。 
+#. ** ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
+    请检查内建文档（``from Bio import SeqIO``，然后``help(SeqIO)``），或见wiki上的最
+    新条目：
    ```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
-   and
+   以及
    ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
-   on the wiki for the latest listing.
-#. *Why don’t the* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *input functions
-   let me provide a sequence alphabet?*
-    You need Biopython 1.49 or later.
-#. *Why won’t the* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *functions*
-   ``parse``\ *,* ``read`` *and* ``write`` *take filenames? They insist
-   on handles!*
-    You need Biopython 1.54 or later, or just use handles explicitly
-   (see Section \ `22.1 <#sec:appendix-handles>`__). It is especially
-   important to remember to close output handles explicitly after
-   writing your data.
-#. *Why won’t the* ``Bio.SeqIO.write()`` *and* ``Bio.AlignIO.write()``
-   *functions accept a single record or alignment? They insist on a list
-   or iterator!*
-    You need Biopython 1.54 or later, or just wrap the item with
-   ``[...]`` to create a list of one element.
-#. *Why doesn’t* ``str(...)`` *give me the full sequence of a* ``Seq``
-   *object?*
-    You need Biopython 1.45 or later. Alternatively, rather than
-   ``str(my_seq)``, use ``my_seq.tostring()`` (which will also work on
-   recent versions of Biopython).
-#. *Why doesn’t* ``Bio.Blast`` *work with the latest plain text NCBI
-   blast output?*
-    The NCBI keep tweaking the plain text output from the BLAST tools,
-   and keeping our parser up to date is/was an ongoing struggle. If you
-   aren’t using the latest version of Biopython, you could try
-   upgrading. However, we (and the NCBI) recommend you use the XML
-   output instead, which is designed to be read by a computer program.
-#. *Why doesn’t* ``Bio.Entrez.read()`` *work? The module imports fine
-   but there is no read function!*
-    You need Biopython 1.46 or later.
-#. *Why doesn’t* ``Bio.Entrez.parse()`` *work? The module imports fine
-   but there is no parse function!*
-    You need Biopython 1.52 or later.
-#. *Why has my script using* ``Bio.Entrez.efetch()`` *stopped working?*
-    This could be due to NCBI changes in February 2012 introducing
-   EFetch 2.0. First, they changed the default return modes - you
-   probably want to add ``retmode="text"`` to your call. Second, they
-   are now stricter about how to provide a list of IDs – Biopython 1.59
-   onwards turns a list into a comma separated string automatically.
-#. *Why doesn’t* ``Bio.Blast.NCBIWWW.qblast()`` *give the same results
-   as the NCBI BLAST website?*
-    You need to specify the same options – the NCBI often adjust the
-   default settings on the website, and they do not match the QBLAST
-   defaults anymore. Check things like the gap penalties and expectation
-   threshold.
-#. *Why doesn’t* ``Bio.Blast.NCBIXML.read()`` *work? The module imports
-   but there is no read function!*
-    You need Biopython 1.50 or later. Or, use
-   ``Bio.Blast.NCBIXML.parse(...).next()`` instead.
-#. *Why doesn’t my* ``SeqRecord`` *object have a* ``letter_annotations``
-   *attribute?*
-    Per-letter-annotation support was added in Biopython 1.50.
-#. *Why can’t I slice my* ``SeqRecord`` *to get a sub-record?*
-    You need Biopython 1.50 or later.
-#. *Why can’t I add* ``SeqRecord`` *objects together?*
-    You need Biopython 1.53 or later.
-#. *Why doesn’t* ``Bio.SeqIO.convert()`` *or* ``Bio.AlignIO.convert()``
-   *work? The modules import fine but there is no convert function!*
-    You need Biopython 1.52 or later. Alternatively, combine the
-   ``parse`` and ``write`` functions as described in this tutorial (see
-   Sections \ `5.5.2 <#sec:SeqIO-conversion>`__
-   and \ `6.2.1 <#sec:converting-alignments>`__).
-#. *Why doesn’t* ``Bio.SeqIO.index()`` *work? The module imports fine
-   but there is no index function!*
-    You need Biopython 1.52 or later.
-#. *Why doesn’t* ``Bio.SeqIO.index_db()`` *work? The module imports fine
-   but there is no*\ *``index_db``*\ *function!*
-    You need Biopython 1.57 or later (and a Python with SQLite3
-   support).
-#. *Where is the* ``MultipleSeqAlignment`` *object? The* ``Bio.Align``
-   *module imports fine but this class isn’t there!*
-    You need Biopython 1.54 or later. Alternatively, the older
-   ``Bio.Align.Generic.Alignment`` class supports some of its
-   functionality, but using this is now discouraged.
-#. *Why can’t I run command line tools directly from the application
-   wrappers?*
-    You need Biopython 1.55 or later. Alternatively, use the Python
-   ``subprocess`` module directly.
-#. *I looked in a directory for code, but I couldn’t find the code that
-   does something. Where’s it hidden?*
-    One thing to know is that we put code in ``__init__.py`` files. If
-   you are not used to looking for code in this file this can be
-   confusing. The reason we do this is to make the imports easier for
-   users. For instance, instead of having to do a “repetitive” import
-   like ``from Bio.GenBank import GenBank``, you can just use
-   ``from Bio import GenBank``.
-#. *Why does the code from CVS seem out of date?*
-    In late September 2009, just after the release of Biopython 1.52, we
-   switched from using CVS to git, a distributed version control system.
-   The old CVS server will remain available as a static and read only
-   backup, but if you want to grab the latest code, you’ll need to use
-   git instead. See our website for more details.
+#. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *的input函数不让我提供一个序列字母？*
+    你需要Biopython 1.49或更新版本。
+#. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse``\ *，* ``read`` *和
+   * ``write`` *不能使用文件名？它们坚持句柄！*
+    你需要Biopython 1.54或更新的版本。或者明确使用句柄。
+   (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
+   出句柄。
+#. *为什么* ``Bio.SeqIO.write()`` *和* ``Bio.AlignIO.write()`` *函数不接受单个记录
+   或比对？它们坚持需要一个列表或迭代器！*
+    你需要Biopython 1.54或更新版本，或将该条目以``[...]``包起来形成一个单元素的列表。
+#. *为什么* ``str(...)`` *不给我一个* ``Seq`` *对象的全序列？*
+    你需要Biopython 1.45或更新的版本。或者，与其使用``str(my_seq)``，不如试试``my_seq.tostring()``
+    （这也能在最近的Biopython版本上工作）。
+#. *为什么* ``Bio.Blast`` *不能处理最新的NCBI blast输出文本文件结果？*
+    NCBI在不断的调整BLAST工具的纯文本输出，导致我们的解析要一直最新是一个持续的挣扎。
+    如果你没使用最新版本的Biopython，你可以试试升级。但是，我们（还有NCBI）推荐你使用
+    HTML格式输出来代替，因为HTML是设计给电脑程序读取的。
+#. *为什么* ``Bio.Entrez.read()`` *不能正常工作？模块导入正常但是没有read函数！*
+    你需要Biopython 1.46或更新的版本。
+#. *为什么* ``Bio.Entrez.parse()`` *不能正常工作？模块导入正常但是没有parse函数！*
+    你需要Biopython 1.52或更新的版本。
+#. *为什么我的脚本使用了* ``Bio.Entrez.efetch()`` *便停止工作了？*
+    这可能是由于NCBI在2012年2月引进EFetch 2.0后发生了改变。首先，他们改变了默认的返回方式——
+    你可能想添加``retmode="text"``到你的call。其次，他们对于怎么提供一个ID列表变得更加严格——
+    Biopython 1.59及之后版本或自动将一个列表转换成逗号分隔的字符串。
+#. *为什么* ``Bio.Blast.NCBIWWW.qblast()`` *没有给出与NCBI BLAST网站上相同的结果？*
+    你需要指定相同的选项——NCBI经常调整网站上的默认设置，并且他们不再匹配QBLAST的默认设置了。
+    请检查gap罚分和期望值阈值。
+#. *为什么* ``Bio.Blast.NCBIXML.read()`` *不正常工作？模块导入了但是没有read函数！*
+    你需要Biopython 1.50或更新的版本。或者，使用``Bio.Blast.NCBIXML.parse(...).next()``代替。
+#. *为什么我的* ``SeqRecord`` *对象没有一个* ``letter_annotations`` *的属性？*
+    Per-letter-annotation已经被加入到Biopython 1.50中。
+#. *为什么我无法分割我的* ``SeqRecord`` *来获取一个子记录？*
+    你需要Biopython 1.50或更新版本。
+#. *为什么我无法一起添加* ``SeqRecord`` *对象？*
+    你需要Biopython 1.53或更新版本。
+#. *为什么* ``Bio.SeqIO.convert()`` *或* ``Bio.AlignIO.convert()`` *不能正常工作？模块导入
+    正常但是没有convert函数！*
+    你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合``parse``和``write``函数。
+    （见 Sections \ `5.5.2 <#sec:SeqIO-conversion>`__
+   和 \ `6.2.1 <#sec:converting-alignments>`__）。
+#. *为什么* ``Bio.SeqIO.index()`` *不能正常工作？模块导入正常但是没有index函数！*
+    你需要Biopython 1.52或更新版本。
+#. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有*\ *``index_db``*\ *函数！*
+    你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）
+#. ** ``MultipleSeqAlignment`` *对象在哪里？* ``Bio.Align`` *模块导入正常但是这个类不在那里！*
+    你需要Biopython 1.54或更新版本。或者，较早的``Bio.Align.Generic.Alignment``类支持它的一些功能，
+    但是现在不推荐使用这个。
+#. *为什么我不能直接从应用程序包装器上运行命令行工具？*
+    你需要Biopython 1.55或更新版本。或者，直接使用Python的``subprocess``模块。
+#. *我看到过一个代码的目录，但是我找不到那个能干嘛的代码了。它藏在哪儿了？*
+    我们知道，我们的代码存放在``__init__.py``文件里。如果你此前没有在这个文件里寻找代码那么这可能会
+    让人困惑。我们这样做的原因是为了让用户更容易导入。比如，不一定要像 ``from Bio.GenBank import GenBank``
+    来导入一个“repetitive”，你仅需使用``from Bio import GenBank``就行。
+#. *为什么从CVS来的代码貌似过期了？*
+    2009年9月下旬，在Biopython 1.52发布之后，我们从使用CVS转变为使用git，git是一个分散式的版本控制系统。
+    旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
+    信息：
 
-For more general questions, the Python FAQ pages
-```http://www.python.org/doc/faq/`` <http://www.python.org/doc/faq/>`__
-may be useful.
+对于更一般的问题，Python FAQ页面```http://www.python.org/doc/faq/`` <http://www.python.org/doc/faq/>`__
+可能会有帮助。
