@@ -4,7 +4,7 @@
 10.1  解析Swiss-Prot文件
 ------------------------------
 
-	Swiss-Prot
+Swiss-Prot
 ( ```http://www.expasy.org/sprot`` <http://www.expasy.org/sprot>`__ )是一个
 人工管理的蛋白质序列数据库。 Biopython能够解析纯文本的Swiss-Prot文件格式,
 这种格式也被联接Swiss-Prot，TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
@@ -13,13 +13,13 @@
 10.1.1  Parsing Swiss-Prot records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	在 \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中, 我们描述过怎样将一个
+在 \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中, 我们描述过怎样将一个
 Swiss-Prot记录中的序列提出来作为一个 ``SeqRecord`` 对象。 此外，你可以将
 Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Swiss-Prot记录
 中所包含的的全部信息。在这部分我们将介绍怎样从一个Swiss-Prot文件中提
 取  ``Bio.SwissProt.Record`` 对象。
 
-	为了解析Swiss-Prot记录，我们首先需要得到一个Swiss-Prot记录文件。根据该Swiss-Prot
+为了解析Swiss-Prot记录，我们首先需要得到一个Swiss-Prot记录文件。根据该Swiss-Prot
 记录的储存地方和储存方式，取得该记录文件的方式也有所不同：
 
 -  本地打开Swiss-Prot记录文件：
@@ -46,23 +46,23 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
        >>> from Bio import ExPASy
        >>> handle = ExPASy.get_sprot_raw(myaccessionnumber)
 
-	对于解析来说，关键点在于只要Swiss-Prot格式的数据，而不是获取它的方式。
+对于解析来说，关键点在于只要Swiss-Prot格式的数据，而不是获取它的方式。
 
-	我们可以用\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
+我们可以用\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
 通过 ``Bio.SeqIO`` 来获取格式未知的``SeqRecord``对象。此外，我们也可以
 用 ``Bio.SwissProt`` 来获取更加匹配基本文件格式的 ``Bio.SwissProt.Record``对象。
 
-	我们使用``read()``函数来从得到的文件中读取一个Swiss-Prot记录：
+我们使用``read()``函数来从得到的文件中读取一个Swiss-Prot记录：
 
 .. code:: verbatim
 
     >>> from Bio import SwissProt
     >>> record = SwissProt.read(handle)
 
-	该函数只适用于仅存储了一个Swiss-Prot记录的文件，而当文件中没有或存在
+该函数只适用于仅存储了一个Swiss-Prot记录的文件，而当文件中没有或存在
 多个记录时使用该函数，会出现 ``ValueError`` 提示。
 
-	现在我们可以输出一些与这些记录相关的信息：
+现在我们可以输出一些与这些记录相关的信息：
 
 .. code:: verbatim
 
@@ -78,16 +78,16 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
     >>> print record.organism_classification
     ['Eukaryota', 'Viridiplantae', 'Streptophyta', 'Embryophyta', ..., 'Bromheadia']
 
-	为了解析包含多个Swiss-Prot记录的文件，我们使用 ``parse`` 函数。这个函数能够让我们对
+为了解析包含多个Swiss-Prot记录的文件，我们使用 ``parse`` 函数。这个函数能够让我们对
 文件中的记录进行循环迭代操作。
 
-	比如，我们要解析整个Swiss-Prot数据库并且收集所有的描述。你可以从
+比如，我们要解析整个Swiss-Prot数据库并且收集所有的描述。你可以从
 `ExPAYs FTP
 site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__ 
 下载这些数据的gzip压缩文件 ``uniprot_sprot.dat.gz`` (大约 300MB)。文件中含有
 仅含有 ``uniprot_sprot.dat`` 一个文件(至少1.5GB)。
 
-	如同这一部分刚开始所描述的，你可以按照如下所示的方法使用python
+如同这一部分刚开始所描述的，你可以按照如下所示的方法使用python
 的``gzip``模块打开并解压``.gz`` 文件:
 
 .. code:: verbatim
@@ -95,7 +95,7 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
     >>> import gzip
     >>> handle = gzip.open("uniprot_sprot.dat.gz")
 
-	然而，解压一个大文件总是耗时的，而且每次用这种方式打开一个
+然而，解压一个大文件总是耗时的，而且每次用这种方式打开一个
 文件都是比较忙忙碌碌的。所以，如果你有空闲的硬盘空间并且在
 最开始就在硬盘里通过解压到来得到 ``uniprot_sprot.dat`` ，这样能够一劳永逸地像平常那样来打开文件：
 
@@ -103,7 +103,7 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
 
     >>> handle = open("uniprot_sprot.dat")
 
-	直到2009年6月，从ExPASy下载下来的整个Swiss-Prot数据库一共
+直到2009年6月，从ExPASy下载下来的整个Swiss-Prot数据库一共
 有468851个Swiss-Prot记录，一种建立关于这些记录的描述列表的
 间接方式就是使用一种列表解析：
 
@@ -121,7 +121,7 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
      'RecName: Full=Protein MGF 100-1R;',
      'RecName: Full=Protein MGF 100-2L;']
 
-	或者对记录迭代器使用for循环：
+或者对记录迭代器使用for循环：
 
 .. code:: verbatim
 
@@ -134,10 +134,10 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
     >>> len(descriptions)
     468851
 
-	由于输入文件太大，这两种方法在我的新台式机上花费大约十一分钟（用解压好的
+由于输入文件太大，这两种方法在我的新台式机上花费大约十一分钟（用解压好的
  ``uniprot_sprot.dat`` 作为输入文件）。
 
-	从Swiss-Prot记录中提取你想要的任何信息也同样简单。比如你想看看一个
+从Swiss-Prot记录中提取你想要的任何信息也同样简单。比如你想看看一个
 Swiss-Prot记录中的成员，就输入：
 
 .. code:: verbatim
@@ -153,7 +153,7 @@ Swiss-Prot记录中的成员，就输入：
 10.1.2  解析Swiss-Prot关键词和分类列表
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	Swiss-Prot也会提供一个 ``keywlist.txt`` 文件，该文件列出了Swiss-Prot中所用到
+Swiss-Prot也会提供一个 ``keywlist.txt`` 文件，该文件列出了Swiss-Prot中所用到
 的关键词和分类。其中所包含的词条形式如下：
 
 .. code:: verbatim
@@ -182,7 +182,7 @@ Swiss-Prot记录中的成员，就输入：
     ID   3Fe-4S.
     ...
 
-	文件中的词条可以通过使用 ``Bio.SwissProt.KeyWList`` 模块中的 ``parse`` 函数
+文件中的词条可以通过使用 ``Bio.SwissProt.KeyWList`` 模块中的 ``parse`` 函数
 来解析，并且每一个词条都会被存储在名为 ``Bio.SwissProt.KeyWList.Record`` 的
 python字典里。
 
@@ -196,7 +196,7 @@ python字典里。
     ...     print record['ID']
     ...     print record['DE']
 
-	这些命令行将会输出：
+这些命令行将会输出：
 
 .. code:: verbatim
 
@@ -209,12 +209,12 @@ python字典里。
 10.2  解析Prosite记录
 -----------------------------
 
-	Prosite是一个包含了蛋白质结构域、蛋白家族、功能位点以及识别它们的模式和图
+Prosite是一个包含了蛋白质结构域、蛋白家族、功能位点以及识别它们的模式和图
 谱，而且它是和Swiss-Prot同时开发出来的。
 在Biopython中，Prosite记录是由 ``Bio.ExPASy.Prosite.Record`` 类来表示的，
 其中的成员与该Prosite记录中的不同区域相对应。
 
-	一般来说，一个Prosite文件可以包含多个Prosite记录。比如，从 `ExPASy FTP
+一般来说，一个Prosite文件可以包含多个Prosite记录。比如，从 `ExPASy FTP
 site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 下来的、容纳了整个Prosite记录的``prosite.dat``文件，含有2073条记录（2007年12月发布的第20.24版本）。
 为了解析这样一个文件，我们再次使用一个迭代器：
@@ -225,7 +225,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     >>> handle = open("myprositefile.dat")
     >>> records = Prosite.parse(handle)
 
-	现在我们可以逐个提取这些记录并输出其中一些信息。比如，使用包含整个Prosite数据库的
+现在我们可以逐个提取这些记录并输出其中一些信息。比如，使用包含整个Prosite数据库的
 文件将会使我们找到如下等信息：
 
 .. code:: verbatim
@@ -255,7 +255,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     >>> record.pdoc
     'PDOC00005'
 
-	如果你想知道有多少条Prosite记录，你可以输入：
+如果你想知道有多少条Prosite记录，你可以输入：
 
 .. code:: verbatim
 
@@ -267,7 +267,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     ...
     >>> print n
     2073
-	为了从这些数据中读取某一条特定的记录，你可以使用``read``函数：
+为了从这些数据中读取某一条特定的记录，你可以使用``read``函数：
 
 
 .. code:: verbatim
@@ -276,16 +276,16 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     >>> handle = open("mysingleprositerecord.dat")
     >>> record = Prosite.read(handle)
 
-	如果并不存在或存在多个你想要找的Prosite记录时，这个函数将会输出一个ValueError提示。
+如果并不存在或存在多个你想要找的Prosite记录时，这个函数将会输出一个ValueError提示。
 
 10.3  解析Prosite文件记录
 -------------------------------------------
 
-	在上述的Prosite示例中，像 ``'PDOC00001'`` 、 ``'PDOC00004'`` 、 ``'PDOC00005'`` 等这样的编号指的就
+在上述的Prosite示例中，像 ``'PDOC00001'`` 、 ``'PDOC00004'`` 、 ``'PDOC00005'`` 等这样的编号指的就
 是Prosite文件。Prosite文件记录可以以单个文件（ ``prosite.doc`` ）的形式从ExPASy获取，并
 且该文件包含了所有Prosite文档记录。
 
-	我们使用 ``Bio.ExPASy.Prodoc`` 中的解析器来解析这些Prosite文档记录。比如，为了生成一个包含所有
+我们使用 ``Bio.ExPASy.Prodoc`` 中的解析器来解析这些Prosite文档记录。比如，为了生成一个包含所有
 Prosite文档记录的编号列表，你可以使用：
 
 .. code:: verbatim
@@ -295,12 +295,12 @@ Prosite文档记录的编号列表，你可以使用：
     >>> records = Prodoc.parse(handle)
     >>> accessions = [record.accession for record in records]
 
-	进一步可以使用 ``read()`` 函数来对这些数据中具体某一条文档记录来进行查询阅读。
+进一步可以使用 ``read()`` 函数来对这些数据中具体某一条文档记录来进行查询阅读。
 
 10.4  解析酶记录
 ----------------------------
 
-	ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如下所示是一个比较典型的酶的记录
+ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如下所示是一个比较典型的酶的记录
 
 .. code:: verbatim
 
@@ -320,13 +320,13 @@ Prosite文档记录的编号列表，你可以使用：
     DR   Q06000, LIPL_RAT   ;  Q29524, LIPL_SHEEP ;
     //
 
-	在这个例子中，第一行显示了脂蛋白脂肪酶（第二行）的酶编号(EC, Enzyme Commission)。
+在这个例子中，第一行显示了脂蛋白脂肪酶（第二行）的酶编号(EC, Enzyme Commission)。
 脂蛋白脂肪酶其他的名称有“清除因子脂肪酶”和“甘油二脂脂肪酶”（第三行至第五行）。
 开头为“CA”的那一行显示了该酶的催化活性。评论行开头为“CC”。“PR”行显示了对应Prosite
 文档记录的参考，以及“DR”行显示了Swiss-Prot记录的参考。
 然而并不是所有的词条都必需出现在酶记录当中。
 
-	在Biopython中，一个酶记录由 ``Bio.ExPASy.Enzyme.Record`` 类来代表。这个记录源于对应
+在Biopython中，一个酶记录由 ``Bio.ExPASy.Enzyme.Record`` 类来代表。这个记录源于对应
 于酶相关文件中所用到的双字母编码的python字典和哈希键。为了阅读含有一个酶记录的酶文件，
 你可以使用 ``Bio.ExPASy.Enzyme`` 中的 ``read`` 函数：
 
@@ -357,9 +357,9 @@ Prosite文档记录的编号列表，你可以使用：
     ['O46647', 'LIPL_MUSVI'], ['P49060', 'LIPL_PAPAN'], ['P49923', 'LIPL_PIG'],
     ['Q06000', 'LIPL_RAT'], ['Q29524', 'LIPL_SHEEP']]
 
-	如果没有找到或者找到多个酶记录时，``read``函数会反馈一个ValueError提示。
+如果没有找到或者找到多个酶记录时，``read``函数会反馈一个ValueError提示。
 
-	所有酶记录都可以从 `ExPASy FTP site <ftp://ftp.expasy.org/databases/enzyme/enzyme.dat>`__ 网站下载
+所有酶记录都可以从 `ExPASy FTP site <ftp://ftp.expasy.org/databases/enzyme/enzyme.dat>`__ 网站下载
 为单个文件（ ``enzyme.dat`` ），该文件包含了4877个记录（2009年3月发布的第三版）。为了接卸含有多个
 酶记录的文件，你可以使用 ``Bio.ExPASy.Enzyme`` 中的 ``parse`` 函数来获得一个迭代器：
 
@@ -369,7 +369,7 @@ Prosite文档记录的编号列表，你可以使用：
     >>> handle = open("enzyme.dat")
     >>> records = Enzyme.parse(handle)
 
-	我们现在每次都可以对这些记录进行迭代。比如我们可以对那些已有的酶记录做一个EC编号列表：
+我们现在每次都可以对这些记录进行迭代。比如我们可以对那些已有的酶记录做一个EC编号列表：
 
 .. code:: verbatim
 
@@ -378,7 +378,7 @@ Prosite文档记录的编号列表，你可以使用：
 10.5  Accessing the ExPASy server
 ---------------------------------
 
-	Swiss-Prot、Prosite和Prosite文档记录可以从
+Swiss-Prot、Prosite和Prosite文档记录可以从
  ```http://www.expasy.org`` <http://www.expasy.org>`__ 的ExPASy网络服务器下载到。在ExPASy服
 务器上可以进行六种查询：
 
@@ -395,20 +395,20 @@ Prosite文档记录的编号列表，你可以使用：
 **sprot\_search\_de**
     搜索一个Swiss-Prot记录
 
-	为了从python脚本来访问该网络服务器，我们可以使用 ``Bio.ExPASy`` 模块。
+为了从python脚本来访问该网络服务器，我们可以使用 ``Bio.ExPASy`` 模块。
 
 10.5.1  获取一个Swiss-Prot记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	现在让我们来寻找一个关于兰花的查儿酮合酶（对于寻找和兰花相关的有趣东西的理由
+现在让我们来寻找一个关于兰花的查儿酮合酶（对于寻找和兰花相关的有趣东西的理由
 请看 \ `2.3 <#sec:orchids>`__ 章节）。查儿酮合酶参与了植物中类黄酮的生物合成，
 类黄酮能够合成包含色素和UV保护分子等很酷的东西。
 
-	如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合酶的兰花蛋白，id编号
+如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合酶的兰花蛋白，id编号
 为O23729, O23730, O23731。现在我们要写一个能够攫取这些蛋白并能够找到一些有趣
 的信息的脚本。
 
-	首先，我们使用 ``Bio.ExPASy`` 中的 ``get_sprot_raw()`` 函数来攫取这些记录。这个函
+首先，我们使用 ``Bio.ExPASy`` 中的 ``get_sprot_raw()`` 函数来攫取这些记录。这个函
 数非常棒，因为你可以给它提供一个id然后得到一个原始文本记录（不会受到HTML的干扰）。
 然后我们可以使用 ``Bio.SwissProt.read`` 来提取对应的Swiss-Prot记录，也可以使用 ``Bio.SeqIO.read`` 来
 得到一个序列记录SeqRecord。下列代码能够实现我刚刚提到的任务：
@@ -426,7 +426,7 @@ Prosite文档记录的编号列表，你可以使用：
     ...     record = SwissProt.read(handle)
     ...     records.append(record)
 
-	如果你提供给 ``ExPASy.get_sprot_raw`` 的编号并不存在，那么 ``SwissProt.read(handle)`` 会反
+如果你提供给 ``ExPASy.get_sprot_raw`` 的编号并不存在，那么 ``SwissProt.read(handle)`` 会反
 馈一个 ``ValueError`` 提示。你可以根据 ``ValueException`` 异常来找到无效的编号：
 
 .. code:: verbatim
@@ -442,7 +442,7 @@ Prosite文档记录的编号列表，你可以使用：
 10.5.2  搜索Swiss-Prot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	现在，你可以察觉到我已经提前知道了这个记录的编号。的确， ``get_sprot_raw()`` 需要一个词条或者编号。
+现在，你可以察觉到我已经提前知道了这个记录的编号。的确， ``get_sprot_raw()`` 需要一个词条或者编号。
 当你并没有编号或者词条的时候，你可使用 ``sprot_search_de()`` 或者 ``sprot_search_ful()`` 函数来解决问题。
 
 ``sprot_search_de()`` 在ID, DE, GN, OS和OG行进行搜索；
@@ -469,10 +469,10 @@ Prosite文档记录的编号列表，你可以使用：
 10.5.3  获取Prosite和Prosite文档记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	我们可以得到HTML格式和原始格式的Prosite和Prosite文档记录。为了用biopython解析Prosite和Prosite文档记录，
+我们可以得到HTML格式和原始格式的Prosite和Prosite文档记录。为了用biopython解析Prosite和Prosite文档记录，
 你应该使用原始格式的记录。而对于其他的目的，你或许会对HTML格式感兴趣。
 
-	为了获取一个原始格式的Prosite或者Prosite文档的记录，请使用 ``get_prosite_raw()`` 。
+为了获取一个原始格式的Prosite或者Prosite文档的记录，请使用 ``get_prosite_raw()`` 。
 例如，为了下载一个prosite记录并以原始格式输出，你可以使用：
 
 .. code:: verbatim
@@ -482,7 +482,7 @@ Prosite文档记录的编号列表，你可以使用：
     >>> text = handle.read()
     >>> print text
 
-	为了获取一个Prosite记录并将其解析成一个 ``Bio.Prosite.Record`` 对象，请使用：
+为了获取一个Prosite记录并将其解析成一个 ``Bio.Prosite.Record`` 对象，请使用：
 
 .. code:: verbatim
 
@@ -491,7 +491,7 @@ Prosite文档记录的编号列表，你可以使用：
     >>> handle = ExPASy.get_prosite_raw('PS00001')
     >>> record = Prosite.read(handle)
 
-	该函数也可以用于获取Prosite文档记录并解析到一个 ``Bio.ExPASy.Prodoc.Record``对象：
+该函数也可以用于获取Prosite文档记录并解析到一个 ``Bio.ExPASy.Prodoc.Record``对象：
 
 .. code:: verbatim
 
@@ -500,11 +500,11 @@ Prosite文档记录的编号列表，你可以使用：
     >>> handle = ExPASy.get_prosite_raw('PDOC00001')
     >>> record = Prodoc.read(handle)
 
-	对于不存在的编号， ``ExPASy.get_prosite_raw`` 返回一个空字符串。当遇到空字符
+对于不存在的编号， ``ExPASy.get_prosite_raw`` 返回一个空字符串。当遇到空字符
 串， ``Prosite.read`` 和 ``Prodoc.read`` 会反馈一个ValueError错误。你可以
 根据这些错误异常提示来找到无效的编号。
 
-	``get_prosite_entry()`` 和 ``get_prodoc_entry()`` 函数可用于下载HTML格式的Prosite和Prosite文档记录。
+``get_prosite_entry()`` 和 ``get_prodoc_entry()`` 函数可用于下载HTML格式的Prosite和Prosite文档记录。
 为了生成展示单个Prosite记录的网页，你可以使用：
 
 .. code:: verbatim
@@ -516,7 +516,7 @@ Prosite文档记录的编号列表，你可以使用：
     >>> output.write(html)
     >>> output.close()
 
-	类似地，Prosite文档文本的网页展示如下：
+类似地，Prosite文档文本的网页展示如下：
 
 .. code:: verbatim
 
@@ -527,17 +527,17 @@ Prosite文档记录的编号列表，你可以使用：
     >>> output.write(html)
     >>> output.close()
 
-	对于这些函数，无效的编号会返回一个HTML格式的错误信息。
+对于这些函数，无效的编号会返回一个HTML格式的错误信息。
 
 10.6  浏览Prosite数据库
 -----------------------------------
 
-	`ScanProsite <http://www.expasy.org/tools/scanprosite/>`__  允许你通过向Prosite数据库提供一个
+`ScanProsite <http://www.expasy.org/tools/scanprosite/>`__  允许你通过向Prosite数据库提供一个
 Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanProsite更多的信息，请阅
 读`ScanProsite文档 <http://www.expasy.org/tools/scanprosite/scanprosite-doc.html>`__ 以及
 `程序性访问ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
 
-	你也可以使用Biopython的 ``Bio.ExPASy.ScanProsite`` 模块来从python浏览Prosite数据库，这个模块既
+你也可以使用Biopython的 ``Bio.ExPASy.ScanProsite`` 模块来从python浏览Prosite数据库，这个模块既
 能够帮你安全访问ScanProsite，也可以对ScanProsite返回的结果进行解析。为了查看下边序列中
 的Prosite模式（pattern）：
 
@@ -546,7 +546,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     MEHKEVVLLLLLFLKSGQGEPLDDYVNTQGASLFSVTKKQLGAGSIEECAAKCEEDEEFT
     CRAFQYHSKEQQCVIMAENRKSSIIIRMRDVVLFEKKVYLSECKTGNGKNYRGTMSKTKN
 
-	你可以使用下边的代码：
+你可以使用下边的代码：
 
 .. code:: verbatim
 
@@ -555,7 +555,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     >>> from Bio.ExPASy import ScanProsite
     >>> handle = ScanProsite.scan(seq=sequence)
 
-	你可以通过执行 ``handle.read()`` 获取原始XML格式 的搜索结果。此外，我们可以使用 ``Bio.ExPASy.ScanProsite.read``
+你可以通过执行 ``handle.read()`` 获取原始XML格式 的搜索结果。此外，我们可以使用 ``Bio.ExPASy.ScanProsite.read``
 来将原始的XML数据解析到一个python对象：
 
 .. code:: verbatim
@@ -564,7 +564,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     >>> type(result)
     <class 'Bio.ExPASy.ScanProsite.Record'>
 
-	 ``Bio.ExPASy.ScanProsite.Record`` 对象源自一个由ScanProsite返回的包含了ScanProsite hits的列表，这个对象也能够存储hits的数量以及所找到序列的数量。本次ScanProsite搜索找到了6个hits：
+ ``Bio.ExPASy.ScanProsite.Record`` 对象源自一个由ScanProsite返回的包含了ScanProsite hits的列表，这个对象也能够存储hits的数量以及所找到序列的数量。本次ScanProsite搜索找到了6个hits：
 
 .. code:: verbatim
 
@@ -587,7 +587,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     >>> result[5]
     {'start': 106, 'stop': 111, 'sequence_ac': u'USERSEQ1', 'signature_ac': u'PS00008'}
 
-	其他的ScanProsite参数可以以关键词参数的形式被传递，更多的信息详见`程序性访问
+其他的ScanProsite参数可以以关键词参数的形式被传递，更多的信息详见`程序性访问
 ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
 比如，传递``lowscore=1``可以帮我们找到一个新的低分值hit：
 
