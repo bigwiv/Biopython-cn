@@ -14,21 +14,17 @@ Biopython目前有两个“cookbook”示例集合——本章（本章包含在
 18.1  操作序列文件
 ---------------------------------
 
-This section shows some more examples of sequence input/output, using
-the ``Bio.SeqIO`` module described in
-Chapter \ `5 <#chapter:Bio.SeqIO>`__.
+这部分将展示更多使用第 \ `5 <#chapter:Bio.SeqIO>`__ 章所描述的 ``Bio.SeqIO`` 模块来进行序列
+输入/输出操作的例子。
 
-18.1.1  Filtering a sequence file
+18.1.1  过滤文件中的序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Often you’ll have a large file with many sequences in it (e.g. FASTA
-file or genes, or a FASTQ or SFF file of reads), a separate shorter list
-of the IDs for a subset of sequences of interest, and want to make a new
-sequence file for this subset.
+通常你会拥有一个包含许多序列的大文件（例如，FASTA基因文件，或者FASTQ或SFF读长文件），和一个
+单独的包含你所感兴趣的序列子集合的序列ID列表，而你希望为这个子集合创建一个新的序列文件。
 
-Let’s say the list of IDs is in a simple text file, as the first word on
-each line. This could be a tabular file where the first column is the
-ID. Try something like this:
+让我们假设这个ID列表在一个简单的文本文件中，作为每一行的第一个词。这可能是一个表格文件，其中
+第一列是ID。尝试下面的代码：
 
 .. code:: verbatim
 
@@ -44,37 +40,28 @@ ID. Try something like this:
     if count < len(wanted):
         print "Warning %i IDs not found in %s" % (len(wanted)-count, input_file)
 
-Note that we use a Python ``set`` rather than a ``list``, this makes
-testing membership faster.
+注意，我们使用Python的 ``set`` 类型而不是 ``list``，这会使得检测元素的成员与否更快。
 
-18.1.2  Producing randomised genomes
+18.1.2  生成随机化基因组
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let’s suppose you are looking at genome sequence, hunting for some
-sequence feature – maybe extreme local GC% bias, or possible restriction
-digest sites. Once you’ve got your Python code working on the real
-genome it may be sensible to try running the same search on randomised
-versions of the same genome for statistical analysis (after all, any
-“features” you’ve found could just be there just by chance).
+假设你在检视一个基因组序列，寻找一些序列特征——或许是极端局部GC含量偏差，或者可能的限制性酶切
+位点。一旦你使你的Python代码在真实的基因组上运行后，试着在相同基因组的随机化版本上运行相同的
+查询来进行统计分析或许是明智的选择（毕竟，任何你发现的“特性”都可能只是偶然事件）。
 
-For this discussion, we’ll use the GenBank file for the pPCP1 plasmid
-from *Yersinia pestis biovar Microtus*. The file is included with the
-Biopython unit tests under the GenBank folder, or you can get it from
-our website,
+在这个讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文
+件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到，
 ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__.
-This file contains one and only one record, so we can read it in as a
-``SeqRecord`` using the ``Bio.SeqIO.read()`` function:
+该文件一个且仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
 
 .. code:: verbatim
 
     >>> from Bio import SeqIO
     >>> original_rec = SeqIO.read("NC_005816.gb","genbank")
 
-So, how can we generate a shuffled versions of the original sequence? I
-would use the built in Python ``random`` module for this, in particular
-the function ``random.shuffle`` – but this works on a Python list. Our
-sequence is a ``Seq`` object, so in order to shuffle it we need to turn
-it into a list:
+那么，我们怎么生成一个原始序列重排后的版本能？我会使用Python内置的 ``random`` 模块来做这个，特别
+是 ``random.shuffle`` 函数——但是这个只作用于Python列表。我们的序列是一个 ``Seq`` 对象，所以为了重排
+它，我们需要将它转换为一个列表：
 
 .. code:: verbatim
 
@@ -82,11 +69,9 @@ it into a list:
     >>> nuc_list = list(original_rec.seq)
     >>> random.shuffle(nuc_list) #acts in situ!
 
-Now, in order to use ``Bio.SeqIO`` to output the shuffled sequence, we
-need to construct a new ``SeqRecord`` with a new ``Seq`` object using
-this shuffled list. In order to do this, we need to turn the list of
-nucleotides (single letter strings) into a long string – the standard
-Python way to do this is with the string object’s join method.
+现在，为了使用 ``Bio.SeqIO`` 输出重排的序列，我们需要使用重排后的列表重新创建包含一个新的 ``Seq``
+的新的 ``SeqRecord``。要实现这个，我们需要将核苷酸（单字母字符串）列表转换为长字符串——标准的Python方式
+是使用字符串对象的join方法来实现。
 
 .. code:: verbatim
 
@@ -95,13 +80,11 @@ Python way to do this is with the string object’s join method.
     >>> shuffled_rec = SeqRecord(Seq("".join(nuc_list), original_rec.seq.alphabet),
     ...                          id="Shuffled", description="Based on %s" % original_rec.id)
 
-Let’s put all these pieces together to make a complete Python script
-which generates a single FASTA file containing 30 randomly shuffled
-versions of the original sequence.
+让我们将所有这些片段放到一起来组成一个完整的Python脚本，这个脚本将生成一个包含30个原始序列的随机重排版本的
+单独的FASTA文件。
 
-This first version just uses a big for loop and writes out the records
-one by one (using the ``SeqRecord``\ ’s format method described in
-Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
+第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__ 
+描述的``SeqRecord`` 的格式化方法）：
 
 .. code:: verbatim
 
@@ -122,8 +105,7 @@ Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
         handle.write(shuffled_rec.format("fasta"))
     handle.close()
 
-Personally I prefer the following version using a function to shuffle
-the record and a generator expression instead of the for loop:
+我个人更喜欢下面的版本，使用一个函数来重排记录，和一个生成表达式，而非for循环：
 
 .. code:: verbatim
 
