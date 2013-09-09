@@ -1,138 +1,92 @@
-﻿hapter 9  Accessing NCBI’s Entrez databases
+Chapter 9  Accessing NCBI Entrez databases
 ============================================
 
 Entrez
 (```http://www.ncbi.nlm.nih.gov/Entrez`` <http://www.ncbi.nlm.nih.gov/Entrez>`__)
-is a data retrieval system that provides users access to NCBI’s
-databases such as PubMed, GenBank, GEO, and many others. You can access
-Entrez from a web browser to manually enter queries, or you can use
-Biopython’s ``Bio.Entrez`` module for programmatic access to Entrez. The
-latter allows you for example to search PubMed or download GenBank
-records from within a Python script.
+是一个提供给客户的可以检索NCBI各个数据库（如PubMed, GeneBank, GEO等等）的系统。
+用户可以通过浏览器手动输入查询条目访问Entrez，也可以使用Biopython的 ``Bio.Entrez`` 模块来访问Entrez。
+如果使用第二种方法，用户用一个Python脚本就可以实现在PubMed里面搜索或者从GenBank下载数据。
 
-The ``Bio.Entrez`` module makes use of the Entrez Programming Utilities
-(also known as EUtils), consisting of eight tools that are described in
-detail on NCBI’s page at
+``Bio.Entrez`` 模块利用了Entrez Programming Utilities（也称作EUtils），EUtils八个工具，详情请见NCBI的网站：
 ```http://www.ncbi.nlm.nih.gov/entrez/utils/`` <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
-Each of these tools corresponds to one Python function in the
-``Bio.Entrez`` module, as described in the sections below. This module
-makes sure that the correct URL is used for the queries, and that not
-more than one request is made every three seconds, as required by NCBI.
+每个工具都能在Python的 ``Bio.Entrez`` 模块中找到对应函数，后面会详细讲到。这个模块可以保证用来查询的URL
+的正确性，并且向NCBI要求的一样，每三秒钟查询的次数不超过一。
 
-The output returned by the Entrez Programming Utilities is typically in
-XML format. To parse such output, you have several options:
+EUtils返回的输出结果通常是XML格式，我们有一下不同的方法来处理这种类型的输入文件：
 
-#. Use ``Bio.Entrez``\ ’s parser to parse the XML output into a Python
-   object;
-#. Use the DOM (Document Object Model) parser in Python’s standard
-   library;
-#. Use the SAX (Simple API for XML) parser in Python’s standard library;
-#. Read the XML output as raw text, and parse it by string searching and
-   manipulation.
+#. 使用 ``Bio.Entrez``\ 语义分析讲XML的输出转成一种Python的对象;
+#. 使用Python标准库中的DOM (Document Object Model)语义分析器;
+#. 使用Python标准库中的SAX (Simple API for XML)语义分析器;
+#. 把XML输出当做原始的文本文件，通过字符串查找和处理来进行；
 
-For the DOM and SAX parsers, see the Python documentation. The parser in
-``Bio.Entrez`` is discussed below.
+对于DOM和SAX语义分析器可以看Python的文档. ``Bio.Entrez`` 中使用到的语义分析器将会在下面讨论.
 
-NCBI uses DTD (Document Type Definition) files to describe the structure
-of the information contained in XML files. Most of the DTD files used by
-NCBI are included in the Biopython distribution. The ``Bio.Entrez``
-parser makes use of the DTD files when parsing an XML file returned by
-NCBI Entrez.
+NCBI使用DTD (Document Type Definition)文件来描述XML文件中所包含信息的结构. 大多数NCBI使用的DTD文件
+格式都包含在了Biopython distribution里。当NCBI Entrez读入一个XML格式的文件的时候，``Bio.Entrez``
+将会使用DTD文件。
 
-Occasionally, you may find that the DTD file associated with a specific
-XML file is missing in the Biopython distribution. In particular, this
-may happen when NCBI updates its DTD files. If this happens,
-``Entrez.read`` will show a warning message with the name and URL of the
-missing DTD file. The parser will proceed to access the missing DTD file
-through the internet, allowing the parsing of the XML file to continue.
-However, the parser is much faster if the DTD file is available locally.
-For this purpose, please download the DTD file from the URL in the
-warning message and place it in the directory
-``...site-packages/Bio/Entrez/DTDs``, containing the other DTD files. If
-you don’t have write access to this directory, you can also place the
-DTD file in ``~/.biopython/Bio/Entrez/DTDs``, where ``~`` represents
-your home directory. Since this directory is read before the directory
-``...site-packages/Bio/Entrez/DTDs``, you can also put newer versions of
-DTD files there if the ones in ``...site-packages/Bio/Entrez/DTDs``
-become outdated. Alternatively, if you installed Biopython from source,
-you can add the DTD file to the source code’s ``Bio/Entrez/DTDs``
-directory, and reinstall Biopython. This will install the new DTD file
-in the correct location together with the other DTD files.
+有时候，你可能会发现与某种特殊的XML相关的DTD文件在Biopython distribution里面不存在。当NCBI升级她的
+DTD文件的时候，这种情况会发生。如果发生这种情况，``Entrez.read`` 将会显示包含丢失的DTD文件名字和URL的
+警示信息。语义分析器会通过互联网获取却是的DTD文件，让XML的分析继续正常进行。如果本地存在对应的DTD文件的
+话，处理起来会更快。因此，为了更快的处理，我们可以通过警示信息里面的URL来下载对应的DTD文件，将文件放在DTD
+文件默认存放的文件夹 ``...site-packages/Bio/Entrez/DTDs`` 。如果你没有权限进入这个文件夹，你也可以把
+DTD文件放到 ``~/.biopython/Bio/Entrez/DTDs`` 这个目录，``~`` 表示的是你的家目录。因为这个目录会先于
+ ``...site-packages/Bio/Entrez/DTDs`` 被语义分析器读取，所以当 ``...site-packages/Bio/Entrez/DTDs`` 
+下面的DTD文件过时的时候，你也可以将最新版本的DTD文件放到家目录的那个文件夹下面。当然也有其他方案，如果你
+是通过源码来安装的Biopython，你可以将DTD文件放到源码的 ``Bio/Entrez/DTDs`` 文件夹下，然后重新安装Biopython。
+这样会将新的DTD文件和之前的一样地安装到正确的位置。
 
-The Entrez Programming Utilities can also generate output in other
-formats, such as the Fasta or GenBank file formats for sequence
-databases, or the MedLine format for the literature database, discussed
-in Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
+Entrez Programming Utilities也可以生成其他格式的输出文件，比如Fasta、序列数据库里面的GenBank文件格式
+或者文献数据库里面的MedLine格式，更多内容将会在`9.12 <#sec:entrez-specialized-parsers>`中讨论。
 
+9.1  Entrez 简介
 9.1  Entrez Guidelines
 ----------------------
+在我们通过Biopython访问NCBI的线上资源（通过 ``Bio.Entrez`` 或者其他模块）的时候，请先阅读 `NCBI的Entrez
+用户规范<http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
+如果NCBI发现你在瞎倒腾他们的系统，他们会禁止你的访问。
 
-Before using Biopython to access the NCBI’s online resources (via
-``Bio.Entrez`` or some of the other modules), please read the `NCBI’s
-Entrez User
-Requirements <http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
-If the NCBI finds you are abusing their systems, they can and will ban
-your access!
-
-To paraphrase:
-
--  For any series of more than 100 requests, do this at weekends or
-   outside USA peak times. This is up to you to obey.
--  Use the
-   ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__
-   address, not the standard NCBI Web address. Biopython uses this web
-   address.
--  Make no more than three requests every seconds (relaxed from at most
-   one request every three seconds in early 2009). This is automatically
-   enforced by Biopython.
--  Use the optional email parameter so the NCBI can contact you if there
-   is a problem. You can either explicitly set this as a parameter with
-   each call to Entrez (e.g. include ``email="A.N.Other@example.com"``
-   in the argument list), or you can set a global email address:
+详细规范如下：
+-  对任何连续超过100次的访问请求，请在周末时间或者避开美国的使用高峰时间。这个取决于你是否遵从。
+-  使用这个网址 ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__，, 
+   而不是通常的NCBI网址。Biopython使用的是这个网址。
+-  每秒钟不要超过三次请求（比2009年年初的没三秒钟最多一次请求要宽松）。这个有Biopython自动强制实行。
+-  使用email参数，这样如果遇到什么问题，NCBI可以通过邮件联系到你。你可以在每次请求Entrez的时候明确的设置
+   这个参数（例如，在参数列表中包含 ``email="A.N.Other@example.com"`` ），或者你也可以设置一个全局的email
+   地址：
 
    .. code:: verbatim
 
        >>> from Bio import Entrez
        >>> Entrez.email = "A.N.Other@example.com"
 
-   ``Bio.Entrez`` will then use this email address with each call to
-   Entrez. The ``example.com`` address is a reserved domain name
-   specifically for documentation (RFC 2606). Please DO NOT use a random
-   email – it’s better not to give an email at all. The email parameter
-   will be mandatory from June 1, 2010. In case of excessive usage, NCBI
-   will attempt to contact a user at the e-mail address provided prior
-   to blocking access to the E-utilities.
+   ``Bio.Entrez`` 将会在每次想Entrez请求的时候使用这个邮件地址。请千万不要胡乱的填写邮件地址，不填写都比
+   这要好。邮件的参数将从2010年6月1日开始执行。为了防止滥用，NCBI会在封锁用户访问E-utilities之前尝试通过
+   用户提供的邮件地址联系。
 
--  If you are using Biopython within some larger software suite, use the
-   tool parameter to specify this. You can either explicitly set the
-   tool name as a parameter with each call to Entrez (e.g. include
-   ``tool="MyLocalScript"`` in the argument list), or you can set a
-   global tool name:
+-  如果你是在一个大的软件包里面使用Biopython的，请通过tool这个参数明确说明。你既可以在每次请求访问Entrez
+   的时候通过参数明确地指明使用的工具（例如，在参数列表中包含 ``tool="MyLocalScript"`` ），或者你也可以
+   设置一个全局的tool名称：
 
    .. code:: verbatim
 
        >>> from Bio import Entrez
        >>> Entrez.tool = "MyLocalScript"
 
-   The tool parameter will default to Biopython.
+   默认的tool名称是Biopython。
 
--  For large queries, the NCBI also recommend using their session
-   history feature (the WebEnv session cookie string, see
-   Section \ `9.15 <#sec:entrez-webenv>`__). This is only slightly more
-   complicated.
+-  对于大规模的查询请求，NCBI也推荐使用他们的session history feature (the WebEnv session cookie string, see
+   Section \ `9.15 <#sec:entrez-webenv>`__). 只是这个稍微有点复杂。
+   
 
-In conclusion, be sensible with your usage levels. If you plan to
-download lots of data, consider other options. For example, if you want
-easy access to all the human genes, consider fetching each chromosome by
-FTP as a GenBank file, and importing these into your own BioSQL database
-(see Section \ `18.5 <#sec:BioSQL>`__).
+最后，根据你的使用情况选择不同的策略。如果你打算下载大量的数据，最好使用其他的方法。比如，你想得到所有人的
+基因的数据，那么考虑通过FTP得到每个染色体的GenBank文件，然后将这些文件导入到你自己的BioSQL数据库里面去。
+(请见Section \ `18.5 <#sec:BioSQL>`__).
 
-9.2  EInfo: Obtaining information about the Entrez databases
+9.2  EInfo: 获取Entrez数据库的信息
 ------------------------------------------------------------
-
-EInfo provides field index term counts, last update, and available links
-for each of NCBI’s databases. In addition, you can use EInfo to obtain a
-list of all database names accessible through the Entrez utilities:
+EInfo为每个NCBI的数据库提供了条目索引，最近更新的时间以及可用的链接。此外，你可以很容易的使用EInfo通过
+Entrez获取所有数据库名字的列表：
 
 .. code:: verbatim
 
@@ -140,8 +94,8 @@ list of all database names accessible through the Entrez utilities:
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
     >>> handle = Entrez.einfo()
     >>> result = handle.read()
-
-The variable ``result`` now contains a list of databases in XML format:
+    
+变量 ``result`` 现在包含了XML格式的数据库列表：
 
 .. code:: verbatim
 
@@ -191,9 +145,8 @@ The variable ``result`` now contains a list of databases in XML format:
     </DbList>
     </eInfoResult>
 
-Since this is a fairly simple XML file, we could extract the information
-it contains simply by string searching. Using ``Bio.Entrez``\ ’s parser
-instead, we can directly parse this XML file into a Python object:
+因为这是一个相当简单的XML文件，我们可以简单的通过字符串查找提取里面所包含的信息。使用 ``Bio.Entrez`` 的语义
+分析软件，我们可以直接将这个XML读入到一个Python对象里面去：
 
 .. code:: verbatim
 
@@ -201,15 +154,14 @@ instead, we can directly parse this XML file into a Python object:
     >>> handle = Entrez.einfo()
     >>> record = Entrez.read(handle)
 
-Now ``record`` is a dictionary with exactly one key:
+现在 ``record`` 是拥有一个确定键值的字典：
 
 .. code:: verbatim
 
     >>> record.keys()
     [u'DbList']
 
-The values stored in this key is the list of database names shown in the
-XML above:
+这个键对应的值存储了上面XML文件里面包含的数据库名字的列表：
 
 .. code:: verbatim
 
@@ -221,8 +173,7 @@ XML above:
      'popset', 'probe', 'proteinclusters', 'pcassay', 'pccompound',
      'pcsubstance', 'snp', 'taxonomy', 'toolkit', 'unigene', 'unists']
 
-For each of these databases, we can use EInfo again to obtain more
-information:
+对于这些数据库，我们可以使用EInfo获得更多的信息：
 
 .. code:: verbatim
 
@@ -235,9 +186,8 @@ information:
     >>> record["DbInfo"]["LastUpdate"]
     '2008/05/24 06:45'
 
-Try ``record["DbInfo"].keys()`` for other information stored in this
-record. One of the most useful is a list of possible search fields for
-use with ESearch:
+通过 ``record["DbInfo"].keys()`` 可以获取存储在这个记录里面的其他信息。使用ESearch的可能搜索领域列表是
+最有用的信息之一：
 
 .. code:: verbatim
 
@@ -255,17 +205,12 @@ use with ESearch:
     AFFL, Affiliation, Author's institutional affiliation and address
     ...
 
-That’s a long list, but indirectly this tells you that for the PubMed
-database, you can do things like ``Jones[AUTH]`` to search the author
-field, or ``Sanger[AFFL]`` to restrict to authors at the Sanger Centre.
-This can be very handy - especially if you are not so familiar with a
-particular database.
+这是一个很长的列表，但是间接的告诉你在使用PubMed的时候，你可以通过 ``Jones[AUTH]`` 搜索作者，或者通过
+ ``Sanger[AFFL]`` 讲作者限制在Sanger Centre。这个会非常方便，特别是在你对某个数据库不太熟悉的时候。
 
-9.3  ESearch: Searching the Entrez databases
+9.3  ESearch: 搜索Entrez数据库
 --------------------------------------------
-
-To search any of these databases, we use ``Bio.Entrez.esearch()``. For
-example, let’s search in PubMed for publications related to Biopython:
+我们可以使用 ``Bio.Entrez.esearch()`` 来搜索任意的数据库。例如，我们在PubMed中搜索跟Biopython相关的文献：
 
 .. code:: verbatim
 
@@ -276,14 +221,11 @@ example, let’s search in PubMed for publications related to Biopython:
     >>> record["IdList"]
     ['19304878', '18606172', '16403221', '16377612', '14871861', '14630660', '12230038']
 
-In this output, you see seven PubMed IDs (including 19304878 which is
-the PMID for the Biopython application note), which can be retrieved by
-EFetch (see section `9.6 <#sec:efetch>`__).
+在输出的结果中，我们可以看到七个PubMed IDs（包括19304878，这个是Biopython应用笔记的PMID），你可以通过
+EFetch来获取这些文献（请见Section `9.6 <#sec:efetch>`__）。
 
-You can also use ESearch to search GenBank. Here we’ll do a quick search
-for the *matK* gene in *Cypripedioideae* orchids (see
-Section \ `9.2 <#sec:entrez-einfo>`__ about EInfo for one way to find
-out which fields you can search in each Entrez database):
+你也可以通过ESearch来搜索GenBank。我们讲以在*Cypripedioideae* orchids中搜索*matK*基因为例，快速展示
+一下（请见Section `9.2 <#sec:entrez-einfo>`__ 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。
 
 .. code:: verbatim
 
@@ -294,19 +236,15 @@ out which fields you can search in each Entrez database):
     >>> record["IdList"]
     ['126789333', '37222967', '37222966', '37222965', ..., '61585492']
 
-Each of the IDs (126789333, 37222967, 37222966, …) is a GenBank
-identifier. See section \ `9.6 <#sec:efetch>`__ for information on how
-to actually download these GenBank records.
+每个IDs(126789333, 37222967, 37222966, …)是GenBank的一个标识。请见Section `9.6 <#sec:efetch>`__
+此章包含了怎样下载这些GenBank的记录的信息。
 
-Note that instead of a species name like ``Cypripedioideae[Orgn]``, you
-can restrict the search using an NCBI taxon identifier, here this would
-be ``txid158330[Orgn]``. This isn’t currently documented on the ESearch
-help page - the NCBI explained this in reply to an email query. You can
-often deduce the search term formatting by playing with the Entrez web
-interface. For example, including ``complete[prop]`` in a genome search
-restricts to just completed genomes.
+注意，不是像 ``Cypripedioideae[Orgn]`` 这样在搜索的时候加上特定的物种名字，而是需要在搜索的时候使用NCBI的
+taxon ID，像 ``txid158330[Orgn]`` 这样。这个并没有记录在ESearch的帮助页面上，NCBI通过邮件回复解释了这个
+问题。你可以通过经常和Entrez的网站接口互动，来推断搜索条目的格式。例如，在基因组搜索的时候加上 ``complete[prop]`` 
+可以把结果限制在完成的基因组上。
 
-As a final example, let’s get a list of computational journal titles:
+作为最后一个例子，让我们获取一个computational journal名字的列表：
 
 .. code:: verbatim
 
@@ -319,37 +257,27 @@ As a final example, let’s get a list of computational journal titles:
      '34502', '8799', '22857', '32675', '20258', '33859', '32534',
      '32357', '32249']
 
-Again, we could use EFetch to obtain more information for each of these
-journal IDs.
+同样，我们可以通过EFetch来获得关于每个journal IDs更多的消息。
 
-ESearch has many useful options — see the `ESearch help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
-for more information.
+ESearch有很多用用的参数——参见 `ESearch 帮助页面
+ <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
+来获取更多信息.
 
-9.4  EPost: Uploading a list of identifiers
+9.4  EPost: 上传identifiers的列表
 -------------------------------------------
+EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助页面
+<http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html>`__
+来获取更多信息. 通过 ``Bio.Entrez.epost()`` 函数可以在Biopython中实现。
 
-EPost uploads a list of UIs for use in subsequent search strategies; see
-the `EPost help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html>`__
-for more information. It is available from Biopython through the
-``Bio.Entrez.epost()`` function.
+为了举一个关于此用法的例子，假设你有一个想通过EFetch下载的IDs的长长的列表（可能是序列，也有可能是引用的
+其他内容）。当你通过EFetch发出下载请求的时候，你的IDs列表、数据库等，将会被转变成一个长的URL，然后被发送
+到服务器。如果IDs列表很长，URL也会很长，长的URL可能会断掉（比如，一些代理不能复制全部的内容）。
 
-To give an example of when this is useful, suppose you have a long list
-of IDs you want to download using EFetch (maybe sequences, maybe
-citations – anything). When you make a request with EFetch your list of
-IDs, the database etc, are all turned into a long URL sent to the
-server. If your list of IDs is long, this URL gets long, and long URLs
-can break (e.g. some proxies don’t cope well).
+另外，你也可以把以上分成两步来完成，首先用EPost来上传IDs的列表（这个使用了一个内部的 “HTML post” ，而不是
+ “HTML get” ， 避开了long URL可能产生的问题）。由于历史记录的支持，你可以使用EFetch来指向这个长的IDs列表，
+并且下载相关的数据。
 
-Instead, you can break this up into two steps, first uploading the list
-of IDs using EPost (this uses an “HTML post” internally, rather than an
-“HTML get”, getting round the long URL problem). With the history
-support, you can then refer to this long list of IDs, and download the
-associated data with EFetch.
-
-Let’s look at a simple example to see how EPost works – uploading some
-PubMed identifiers:
+让我们通过下面一个简单的例子来看看EPost是如何工作的 ®C 上传了一些PubMed的IDs：
 
 .. code:: verbatim
 
@@ -365,9 +293,8 @@ PubMed identifiers:
      <WebEnv>NCID_01_206841095_130.14.22.101_9001_1242061629</WebEnv>
     </ePostResult>
 
-The returned XML includes two important strings, ``QueryKey`` and
-``WebEnv`` which together define your history session. You would extract
-these values for use with another Entrez call such as EFetch:
+返回的XML包含了两个重要的字符串， ``QueryKey`` 和 ``WebEnv`` ，两个字符串一起确定了之前的历史记录。你可以
+使用其他的Entrez工具，例如EFetch，来提取这些值：
 
 .. code:: verbatim
 
@@ -378,18 +305,13 @@ these values for use with another Entrez call such as EFetch:
     >>> webenv = search_results["WebEnv"]
     >>> query_key = search_results["QueryKey"] 
 
-Section \ `9.15 <#sec:entrez-webenv>`__ shows how to use the history
-feature.
+第 \ `9.15 <#sec:entrez-webenv>`__ 章节讲述了如何使用历史的特性。
 
-9.5  ESummary: Retrieving summaries from primary IDs
+9.5  ESummary: 通过主要的IDs来获取摘要
 ----------------------------------------------------
-
-ESummary retrieves document summaries from a list of primary IDs (see
-the `ESummary help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/esummary_help.html>`__
-for more information). In Biopython, ESummary is available as
-``Bio.Entrez.esummary()``. Using the search result above, we can for
-example find out more about the journal with ID 30367:
+ESummary可以通过一个primary IDs来获取文章的摘要（参见 `ESummary 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/esummary_help.html>`__
+来获取更多信息）。在Biopython中，ESummary以 ``Bio.Entrez.esummary()`` 的形式出现。根据上面的搜索结果，
+我们可以获得ID为30367杂志相关的更多信息：
 
 .. code:: verbatim
 
@@ -404,31 +326,24 @@ example find out more about the journal with ID 30367:
     >>> record[0]["Publisher"]
     'Pergamon,'
 
-9.6  EFetch: Downloading full records from Entrez
+9.6  EFetch: 从Entrez下载更多的记录
 -------------------------------------------------
+当你想要从Entrez中提取完整的记录的时候，你可以使用EFetch。 在 `EFetch的帮助页面<http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
+可以查到EFetch可以起作用的数据库。
 
-EFetch is what you use when you want to retrieve a full record from
-Entrez. This covers several possible databases, as described on the main
-`EFetch Help
-page <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
-
-For most of their databases, the NCBI support several different file
-formats. Requesting a specific file format from Entrez using
-``Bio.Entrez.efetch()`` requires specifying the ``rettype`` and/or
-``retmode`` optional arguments. The different combinations are described
-for each database type on the pages linked to on `NCBI efetch
+NCBI大部分的数据库都支持多种不同的文件格式。当使用 ``Bio.Entrez.efetch()`` 从Entrez下载特定的某种格式的时候，
+需要 ``rettype`` 和或者 ``retmode`` 这些可选的参数。对于不同数据库类型不同的搭配在下面的网页中有描述：
+`NCBI efetch
 webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
-(e.g.
+(例如：
 `literature <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchlit_help.html>`__,
 `sequences <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchseq_help.html>`__
 and
 `taxonomy <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchtax_help.html>`__).
 
-One common usage is downloading sequences in the FASTA or
-GenBank/GenPept plain text formats (which can then be parsed with
-``Bio.SeqIO``, see Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-and \ `9.6 <#sec:efetch>`__). From the *Cypripedioideae* example above,
-we can download GenBank record 186972394 using ``Bio.Entrez.efetch``:
+一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式(可以使用 ``Bio.SeqIO`` 来处理, 参见 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+and \ `9.6 <#sec:efetch>`__). 从上面 *Cypripedioideae* 的例子,我们可以通过 ``Bio.Entrez.efetch`` 
+从GenBank下载记录186972394。
 
 .. code:: verbatim
 
@@ -507,25 +422,18 @@ we can download GenBank record 186972394 using ``Bio.Entrez.efetch``:
          1261 ttaggttcgg gattattaga agaattcttt atggaagaag aa
     //
 
-The arguments ``rettype="gb"`` and ``retmode="text"`` let us download
-this record in the GenBank format.
+参数 ``rettype="gb"`` 和 ``retmode="text"`` 让我们下载的数据为GenBank格式。
 
-Note that until Easter 2009, the Entrez EFetch API let you use “genbank”
-as the return type, however the NCBI now insist on using the official
-return types of “gb” or “gbwithparts” (or “gp” for proteins) as
-described on online. Also not that until Feb 2012, the Entrez EFetch API
-would default to returning plain text files, but now defaults to XML.
+需要注意的是直到2009年，Entrez EFetch API要求使用 “genbank” 作为返回类型，然而现在NCBI坚持使用官方的
+“gb” or “gbwithparts” (or “gp” for proteins) 返回类型。同样需要注意的是，直到2012年2月，
+Entrez EFetch API默认的范围格式为纯文本格式文件，现在默认的为XML格式。
 
-Alternatively, you could for example use ``rettype="fasta"`` to get the
-Fasta-format; see the `EFetch Sequences Help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__
-for other options. Remember – the available formats depend on which
-database you are downloading from - see the main `EFetch Help
-page <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+作为另外的选择，你也可以使用 ``rettype="fasta"`` 来获取Fasta格式的文件；参见 `EFetch Sequences 帮助页面
+ <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 记住，根据你要下载的
+ 数据库 ®C 也是一种可选的格式 - 请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
-If you fetch the record in one of the formats accepted by ``Bio.SeqIO``
-(see Chapter \ `5 <#chapter:Bio.SeqIO>`__), you could directly parse it
-into a ``SeqRecord``:
+如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(see Chapter \ `5 <#chapter:Bio.SeqIO>`__),
+你可以直接通过 ``SeqRecord`` 来处理：
 
 .. code:: verbatim
 
@@ -541,10 +449,8 @@ into a ``SeqRecord``:
     ...
     Seq('ATTTTTTACGAACCTGTGGAAATTTTTGGTTATGACAATAAATCTAGTTTAGTA...GAA', IUPACAmbiguousDNA())
 
-Note that a more typical use would be to save the sequence data to a
-local file, and *then* parse it with ``Bio.SeqIO``. This can save you
-having to re-download the same file repeatedly while working on your
-script, and places less load on the NCBI’s servers. For example:
+需要注意的是，一种典型的用法是先把序列数据保存到一个本地文件，*然后*使用 ``Bio.SeqIO`` 来处理。这样就避免了
+在运行脚本的时候需要重复的下载同样的文件，和NCBI服务器的负载。例如：
 
 .. code:: verbatim
 
@@ -566,8 +472,7 @@ script, and places less load on the NCBI’s servers. For example:
     record = SeqIO.read(filename, "genbank")
     print record
 
-To get the output in XML format, which you can parse using the
-``Bio.Entrez.read()`` function, use ``retmode="xml"``:
+为了得到XML格式的输出，你可以使用 ``Bio.Entrez.read()`` 函数，使用 ``retmode="xml"`` :
 
 .. code:: verbatim
 
@@ -580,25 +485,18 @@ To get the output in XML format, which you can parse using the
     >>> record[0]["GBSeq_source"] 
     'chloroplast Selenipedium aequinoctiale'
 
-So, that dealt with sequences. For examples of parsing file formats
-specific to the other databases (e.g. the ``MEDLINE`` format used in
-PubMed), see Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
+就像这样处理数据。例如处理其他数据库特异的文件格式（例如，PubMed中用到的 ``MEDLINE`` 格式），请参见Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
 
-If you want to perform a search with ``Bio.Entrez.esearch()``, and then
-download the records with ``Bio.Entrez.efetch()``, you should use the
-WebEnv history feature – see Section \ `9.15 <#sec:entrez-webenv>`__.
+如果你想使用 ``Bio.Entrez.esearch()`` 进行搜索，然后用 ``Bio.Entrez.efetch()`` 下载数据，那么你需要用到
+WebEnv的历史特征®C，请见 Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.7  ELink: Searching for related items in NCBI Entrez
+9.7  ELink: 在NCBI Entrez中搜索相关的条目
 ------------------------------------------------------
+ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez数据库中寻找相关的条目。例如，你
+可以使用它在gene数据库中寻找核苷酸条目或者而其他很酷的事情。
 
-ELink, available from Biopython as ``Bio.Entrez.elink()``, can be used
-to find related items in the NCBI Entrez databases. For example, you can
-us this to find nucleotide entries for an entry in the gene database,
-and other cool stuff.
-
-Let’s use ELink to find articles related to the Biopython application
-note published in *Bioinformatics* in 2009. The PubMed ID of this
-article is 19304878:
+让我们使用ELink来在2009年的 *Bioinformatics* 杂志中寻找与Biopython应用相关的文章。这篇文章的PubMed ID
+是19304878：
 
 .. code:: verbatim
 
@@ -607,11 +505,9 @@ article is 19304878:
     >>> pmid = "19304878"
     >>> record = Entrez.read(Entrez.elink(dbfrom="pubmed", id=pmid))
 
-The ``record`` variable consists of a Python list, one for each database
-in which we searched. Since we specified only one PubMed ID to search
-for, ``record`` contains only one item. This item is a dictionary
-containing information about our search term, as well as all the related
-items that were found:
+变量 ``record`` 包含了了一个Python列表，列出了已经搜索过的数据库。因为我们特指了一个PubMed ID来搜索，所以
+ ``record`` 只包含了一个条目。这个条目是一个字典变量，包含了我们需要寻找的条目的信息，以及能搜索到的所有相关
+的内容：
 
 .. code:: verbatim
 
@@ -620,10 +516,8 @@ items that were found:
     >>> record[0]["IdList"]
     ['19304878']
 
-The ``"LinkSetDb"`` key contains the search results, stored as a list
-consisting of one item for each target database. In our search results,
-we only find hits in the PubMed database (although sub-divided into
-categories):
+键 ``"LinkSetDb"`` 包含了搜索结果，将每个目标数据库保存为一个列表。在我们这个搜索中，我们只在PubMed数据库
+中找到了结果（尽管已经被分到了不同的分类）：
 
 .. code:: verbatim
 
@@ -638,26 +532,24 @@ categories):
     pubmed pubmed_pubmed_reviews 5
     pubmed pubmed_pubmed_reviews_five 5
 
-The actual search results are stored as under the ``"Link"`` key. In
-total, 110 items were found under standard search. Let’s now at the
-first search result:
+实际的搜索结果被保存在键值为 ``"Link"`` 的字典下。在标准搜索下，总共找到了110个条目。让我们现在看看我们第一个
+搜索结果：
 
 .. code:: verbatim
 
     >>> record[0]["LinkSetDb"][0]["Link"][0]
     {u'Id': '19304878'}
 
-This is the article we searched for, which doesn’t help us much, so
-let’s look at the second search result:
+这个就是我们搜索的文章，从中并不能看到更多的结果，所以让我们来看看我们的第二个搜索结果：
 
 .. code:: verbatim
 
     >>> record[0]["LinkSetDb"][0]["Link"][1]
     {u'Id': '14630660'}
 
-This paper, with PubMed ID 14630660, is about the Biopython PDB parser.
+这个PubMed为14530660的文章是关于Biopython PDB parser的。
 
-We can use a loop to print out all PubMed IDs:
+我们通过一个循环来打印出所有的PubMed IDs：
 
 .. code:: verbatim
 
@@ -670,28 +562,19 @@ We can use a loop to print out all PubMed IDs:
     12368254
     ......
 
-Now that was nice, but personally I am often more interested to find out
-if a paper has been cited. Well, ELink can do that too – at least for
-journals in Pubmed Central (see
-Section \ `9.15.3 <#sec:elink-citations>`__).
+现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个 ®C 至少对PubMed
+Central的杂志来所是这样的（请见 Section \ `9.15.3 <#sec:elink-citations>`__）。
 
-For help on ELink, see the `ELink help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__.
-There is an entire sub-page just for the `link
-names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__,
-describing how different databases can be cross referenced.
+关于ELink的帮助，请见`ELink 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__.
+这是一个关于`link names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__
+整个的子页面， 描述了不同的数据库可以怎样交叉的索引。
 
-9.8  EGQuery: Global Query - counts for search terms
+9.8  EGQuery: 全局搜索- 统计搜索的条目
 ----------------------------------------------------
+EGQuery提供在每个Entrez数据库中的数目。这个非常的有用，当我们只需要知道在每个数据库中能找到的条目的个数，
+而不需要知道具体搜索结果的时候（请见例子`9.14.2 <#subsec:entrez_example_genbank>`__ below）。
 
-EGQuery provides counts for a search term in each of the Entrez
-databases (i.e. a global query). This is particularly useful to find out
-how many items your search terms would find in each database without
-actually performing lots of separate searches with ESearch (see the
-example in `9.14.2 <#subsec:entrez_example_genbank>`__ below).
-
-In this example, we use ``Bio.Entrez.egquery()`` to obtain the counts
-for “Biopython”:
+在这个例子中，我们使用 ``Bio.Entrez.egquery()`` 来获取跟 “Biopython” 相关的数目：
 
 .. code:: verbatim
 
@@ -706,15 +589,12 @@ for “Biopython”:
     journals 0
     ...
 
-See the `EGQuery help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/egquery_help.html>`__
-for more information.
+请见 `EGQuery 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/egquery_help.html>`__
+获得更多信息.
 
-9.9  ESpell: Obtaining spelling suggestions
+9.9  ESpell: 获得拼写建议
 -------------------------------------------
-
-ESpell retrieves spelling suggestions. In this example, we use
-``Bio.Entrez.espell()`` to obtain the correct spelling of Biopython:
+ESpell可以检索拼写建议。在这个例子中，我们使用 ``Bio.Entrez.espell()`` 来获得Biopython正确的拼写：
 
 .. code:: verbatim
 
@@ -727,43 +607,30 @@ ESpell retrieves spelling suggestions. In this example, we use
     >>> record["CorrectedQuery"]
     'biopython'
 
-See the `ESpell help
-page <http://www.ncbi.nlm.nih.gov/entrez/query/static/espell_help.html>`__
-for more information. The main use of this is for GUI tools to provide
-automatic suggestions for search terms.
+请见 `ESpell 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/espell_help.html>`__
+获得更多信息. 这个的主要用法是在使用GUI工具的时候为搜索的条目自动的提供拼写建议。
 
-9.10  Parsing huge Entrez XML files
+9.10  处理大的Entrez XML文件
 -----------------------------------
+``Entrez.read``函数将Entrez返回的结果读取到一个Python对象里面去，这个对象被保存在内存中。对于处理太大的
+XML文件而内存不够时，可以使用 ``Entrez.parse`` 这个函数。这个函数将一个一个的读取XML文件里面的内容。只有XML
+文件是一个列表对象的时候，这个函数才有用（换句话说，如果在一个内存无限的计算机上 ``Entrez.parse`` 将返回一个
+Python列表）。
 
-The ``Entrez.read`` function reads the entire XML file returned by
-Entrez into a single Python object, which is kept in memory. To parse
-Entrez XML files too large to fit in memory, you can use the function
-``Entrez.parse``. This is a generator function that reads records in the
-XML file one by one. This function is only useful if the XML file
-reflects a Python list object (in other words, if ``Entrez.read`` on a
-computer with infinite memory resources would return a Python list).
-
-For example, you can download the entire Entrez Gene database for a
-given organism as a file from NCBI’s ftp site. These files can be very
-large. As an example, on September 4, 2009, the file
-``Homo_sapiens.ags.gz``, containing the Entrez Gene database for human,
-had a size of 116576 kB. This file, which is in the ``ASN`` format, can
-be converted into an XML file using NCBI’s ``gene2xml`` program (see
-NCBI’s ftp site for more information):
+例如，你可以通过NCBI的FTP站点从Entrez Gene 数据库中下载某个物种全部的条目作为一个文件。这个文件可能很大。
+作为一个例子，在2009年9月4日，文件 ``Homo_sapiens.ags.gz`` 包含了Entrez Gene数据库中人的序列，文件大小
+有116576kB。这个文件是 ``ASN`` 格式，可以通过NCBI的 ``gene2xml`` 程序转成XML格式（请到NCBI的FTP站点获取
+更多的信息）：
 
 .. code:: verbatim
 
     gene2xml -b T -i Homo_sapiens.ags -o Homo_sapiens.xml
 
-The resulting XML file has a size of 6.1 GB. Attempting ``Entrez.read``
-on this file will result in a ``MemoryError`` on many computers.
+XML结果文件有6.1GB. 在大多数电脑上尝试 ``Entrez.read`` 都会导致 ``MemoryError`` 。
 
-The XML file ``Homo_sapiens.xml`` consists of a list of Entrez gene
-records, each corresponding to one Entrez gene in human.
-``Entrez.parse`` retrieves these gene records one by one. You can then
-print out or store the relevant information in each record by iterating
-over the records. For example, this script iterates over the Entrez gene
-records and prints out the gene numbers and names for all current genes:
+XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每个对应与人的一个Entrez基因信息。 ``Entrez.parse`` 
+将一个一个的读取这些记录。这样你可以通过遍历每个记录的方式打印或者存储每个记录相关的信息。例如，下面这个脚本
+遍历了Entrez基因里面的记录，打印了每个基因的数目和名字：
 
 .. code:: verbatim
 
@@ -779,7 +646,7 @@ records and prints out the gene numbers and names for all current genes:
     ...     genename = record['Entrezgene_gene']['Gene-ref']['Gene-ref_locus']
     ...     print geneid, genename
 
-This will print:
+将会打印以下内容:
 
 .. code:: verbatim
 
@@ -798,18 +665,15 @@ This will print:
     17 AAVS1
     ...
 
-9.11  Handling errors
+9.11  错误处理
 ---------------------
+当处理 ZXML 文件的时候，可能出现一下三个错误：
 
-Three things can go wrong when parsing an XML file:
+-  这个文件可能不是以常规的 XML 文件格式开头；
+-  这个文件可能不完整或者包含一些非 XML 格式的内容；
+-  这个文件是正常的 XML 文件，但是包含和相关 DTD 文件无关的内容。
 
--  The file may not be an XML file to begin with;
--  The file may end prematurely or otherwise be corrupted;
--  The file may be correct XML, but contain items that are not
-   represented in the associated DTD.
-
-The first case occurs if, for example, you try to parse a Fasta file as
-if it were an XML file:
+第一种情况会发生，例如，你尝试把一个 Fasta 文件当做 XML 文件来处理：
 
 .. code:: verbatim
 
@@ -824,13 +688,10 @@ if it were an XML file:
         raise NotXMLError(e)
     Bio.Entrez.Parser.NotXMLError: Failed to parse the XML data (syntax error: line 1, column 0). Please make sure that the input data are in XML format.
 
-Here, the parser didn’t find the ``<?xml ...`` tag with which an XML
-file is supposed to start, and therefore decides (correctly) that the
-file is not an XML file.
+这时候，语义分析器找不到 ``<?xml ...`` 标签，而这是是一个 XML 文件开始的标志，那么可以确定这个文件不是 XML 文件。
 
-When your file is in the XML format but is corrupted (for example, by
-ending prematurely), the parser will raise a CorruptedXMLError. Here is
-an example of an XML file that ends prematurely:
+当你的文件是XML格式，但是是不完整的（例如，提前结束了），那么语义分析器会报CorruptedXMLError错误。下面
+这个是一个XML文件提前结束的例子：
 
 .. code:: verbatim
 
@@ -850,7 +711,7 @@ an example of an XML file that ends prematurely:
             <DbName>cancerchromosomes</DbName>
             <DbName>cdd</DbName>
 
-which will generate the following traceback:
+这个会生成一下的日志文件：
 
 .. code:: verbatim
 
@@ -865,12 +726,9 @@ which will generate the following traceback:
 
     >>>
 
-Note that the error message tells you at what point in the XML file the
-error was detected.
+注意，报错信息告诉你在XML文件的什么位置检测到了错误。
 
-The third type of error occurs if the XML file contains tags that do not
-have a description in the corresponding DTD file. This is an example of
-such an XML file:
+如果XML文件当中包含有对应DTD文件中没有描述的标签的时候，会发生第三类错误。以下是这样一个XML文件的例子：
 
 .. code:: verbatim
 
@@ -900,11 +758,9 @@ such an XML file:
             </DbInfo>
     </eInfoResult>
 
-In this file, for some reason the tag ``<DocsumList>`` (and several
-others) are not listed in the DTD file ``eInfo_020511.dtd``, which is
-specified on the second line as the DTD for this XML file. By default,
-the parser will stop and raise a ValidationError if it cannot find some
-tag in the DTD:
+在这个文件里面，因为一些原因，``<DocsumList>``（还有一些其他的）标签没有在DTD文件 ``eInfo_020511.dtd`` 
+中列出来，XML文件对应DTD文件的第二行会特别的描述出来。默认情况下，如果没有找到DTD文件中的标签，语义
+分析器会中止并报ValidationError错误。
 
 .. code:: verbatim
 
@@ -921,9 +777,8 @@ tag in the DTD:
         raise ValidationError(name)
     Bio.Entrez.Parser.ValidationError: Failed to find tag 'DocsumList' in the DTD. To skip all tags that are not represented in the DTD, please call Bio.Entrez.read or Bio.Entrez.parse with validate=False.
 
-Optionally, you can instruct the parser to skip such tags instead of
-raising a ValidationError. This is done by calling ``Entrez.read`` or
-``Entrez.parse`` with the argument ``validate`` equal to False:
+可选地，你可以让语义分析器跳过这样的标签，而不是报ValidationError错误。通过调用 ``Entrez.read`` 或者
+``Entrez.parse`` 并使参数 ``validate`` 等于False可以实现这个功能：
 
 .. code:: verbatim
 
@@ -932,36 +787,25 @@ raising a ValidationError. This is done by calling ``Entrez.read`` or
     >>> record = Entrez.read(handle,validate=False)
     >>>
 
-Of course, the information contained in the XML tags that are not in the
-DTD are not present in the record returned by ``Entrez.read``.
+当然，XML文件中的tag没有出现在对应DTD文件中的信息将在 ``Entrez.read`` 的返回记录中包含。
 
-9.12  Specialized parsers
+9.12  专用的语义分析器
 -------------------------
+函数 ``Bio.Entrez.read()`` 可以处理啊大部分（如果不是所有的话）Entrez返回的XML文件。Entrez也可以
+允许你通过其他格式来获取数据，有时候，这种方式比XML文件格式更具有可比性（或者下载文件的大小）。
 
-The ``Bio.Entrez.read()`` function can parse most (if not all) XML
-output returned by Entrez. Entrez typically allows you to retrieve
-records in other formats, which may have some advantages compared to the
-XML format in terms of readability (or download size).
+为了使用 ``Bio.Entrez.efetch()`` 函数从Entrez中提取一种特有的文件格式，需要指明 ``rettype`` 和或者或 ``retmode`` 
+等可选参数。不同的组合在`NCBI efetch的页面<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+有对不同数据库的描述。
 
-To request a specific file format from Entrez using
-``Bio.Entrez.efetch()`` requires specifying the ``rettype`` and/or
-``retmode`` optional arguments. The different combinations are described
-for each database type on the `NCBI efetch
-webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept (这些可以通过 ``Bio.SeqIO`` 来处理, 请见 Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+和 \ `9.6 <#sec:efetch>`__).纯文本形式下载序列书。对于文献数据库，Biopython包含了一个处理PubMed中
+使用的 ``MEDLINE`` 格式的语义分析器。
 
-One obvious case is you may prefer to download sequences in the FASTA or
-GenBank/GenPept plain text formats (which can then be parsed with
-``Bio.SeqIO``, see Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-and \ `9.6 <#sec:efetch>`__). For the literature databases, Biopython
-contains a parser for the ``MEDLINE`` format used in PubMed.
-
-9.12.1  Parsing Medline records
+9.12.1  处理Medline记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-You can find the Medline parser in ``Bio.Medline``. Suppose we want to
-parse the file ``pubmed_result1.txt``, containing one Medline record.
-You can find this file in Biopython’s ``Tests\Medline`` directory. The
-file looks like this:
+你可以在 ``Bio.Medline`` 中找到Medline的语义分析器。假设你想处理包含一个Medline记录的 ``pubmed_result1.txt`` 
+文件。你可以在Biopython的 ``Tests\Medline`` 目录下找到这个文件，这个文件内容如下所示：
 
 .. code:: verbatim
 
@@ -982,7 +826,7 @@ file looks like this:
           Open Source BioPerl, BioPython and Biojava projects provide toolkits with
     ...
 
-We first open the file and then parse it:
+我们首先打开文件，然后处理它：
 
 .. code:: verbatim
 
@@ -990,7 +834,8 @@ We first open the file and then parse it:
     >>> input = open("pubmed_result1.txt")
     >>> record = Medline.read(input)
 
-The ``record`` now contains the Medline record as a Python dictionary:
+
+现在 ``record`` 将 Medline记录以Python字典的形式保存起来：
 
 .. code:: verbatim
 
@@ -1008,16 +853,15 @@ The ``record`` now contains the Medline record as a Python dictionary:
     Bio counterparts, particularly from the point of view of the beginning
     biologist programmer.'
 
-The key names used in a Medline record can be rather obscure; use
+用于Medline记录的键值可以相当模糊，使用
 
 .. code:: verbatim
 
     >>> help(record)
 
-for a brief summary.
+可以做一个简单的总结。
 
-To parse a file containing multiple Medline records, you can use the
-``parse`` function instead:
+为了处理包含多个Medline记录的文件，你可以使用 ``parse`` 函数来代替：
 
 .. code:: verbatim
 
@@ -1031,9 +875,8 @@ To parse a file containing multiple Medline records, you can use the
     Open source clustering software.
     PDB file parser and structure class implemented in Python.
 
-Instead of parsing Medline records stored in files, you can also parse
-Medline records downloaded by ``Bio.Entrez.efetch``. For example, let’s
-look at all Medline records in PubMed related to Biopython:
+你可以通过 ``Bio.Entrez.efetch`` 来下载Medline记录，而不是保存在某个文件里。例如，让我们来查看PubMed
+里面跟Biopython相关的所有所有Medline记录：
 
 .. code:: verbatim
 
@@ -1044,16 +887,15 @@ look at all Medline records in PubMed related to Biopython:
     >>> record["IdList"]
     ['19304878', '18606172', '16403221', '16377612', '14871861', '14630660', '12230038']
 
-We now use ``Bio.Entrez.efetch`` to download these Medline records:
+现在我们使用 ``Bio.Entrez.efetch`` 来现在这些Medline记录:
 
 .. code:: verbatim
 
     >>> idlist = record["IdList"]
     >>> handle = Entrez.efetch(db="pubmed",id=idlist,rettype="medline",retmode="text")
 
-Here, we specify ``rettype="medline", retmode="text"`` to obtain the
-Medline records in plain-text Medline format. Now we use ``Bio.Medline``
-to parse these records:
+这里，我们使 ``rettype="medline", retmode="text"`` 来以纯文本形式的Medline格式来的到这些记录。现在
+我们使用 ``Bio.Medline`` 来处理这些记录：
 
 .. code:: verbatim
 
@@ -1069,7 +911,7 @@ to parse these records:
     ['Hamelryck T', 'Manderick B']
     ['Mangalam H']
 
-For comparison, here we show an example using the XML format:
+为了比对，我们展示了一个XML格式的例子：
 
 .. code:: verbatim
 
@@ -1088,21 +930,16 @@ For comparison, here we show an example using the XML format:
     PDB file parser and structure class implemented in Python.
     The Bio* toolkits--a brief overview.
 
-Note that in both of these examples, for simplicity we have naively
-combined ESearch and EFetch. In this situation, the NCBI would expect
-you to use their history feature, as illustrated in
-Section \ `9.15 <#sec:entrez-webenv>`__.
+需要注意的是，在上面这两个例子当中，为了简便我们混合使用了 ESearch 和 EFetch。在这种情形下，NCBI 希望你
+使用他们的历史特征，在下面章节中会讲到Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.12.2  Parsing GEO records
+9.12.2  处理GEO记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GEO (`Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__) is
-a data repository of high-throughput gene expression and hybridization
-array data. The ``Bio.Geo`` module can be used to parse GEO-formatted
-data.
+GEO ( `Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__ ) 是高通量基因表达和杂交芯片
+数据的数据库。 ``Bio.Geo`` 模块可以用来处理GEO格式的数据。
 
-The following code fragment shows how to parse the example GEO file
-``GSE16.txt`` into a record and print the record:
+下面的代码展示了怎样将一个名称为 ``GSE16.txt`` 的GEO文件存进一个记录，并打印该记录：
 
 .. code:: verbatim
 
@@ -1112,7 +949,7 @@ The following code fragment shows how to parse the example GEO file
     >>> for record in records:
     ...     print record
 
-You can search the “gds” database (GEO datasets) with ESearch:
+你可以使用 ESearch 来搜索 “gds” 数据库 (GEO 数据集) :
 
 .. code:: verbatim
 
@@ -1125,26 +962,17 @@ You can search the “gds” database (GEO datasets) with ESearch:
     >>> record["IdList"]
     ['200000016', '100000028']
 
-From the Entrez website, UID “200000016” is GDS16 while the other hit
-“100000028” is for the associated platform, GPL28. Unfortunately, at the
-time of writing the NCBI don’t seem to support downloading GEO files
-using Entrez (not as XML, nor in the *Simple Omnibus Format in Text*
-(SOFT) format).
+通过Entrez网站，UID “200000016” 是GDS16，其他的hit “100000028” 是相关的平台。不幸的是，在写
+这份指南的时候，NCBI貌似还不支持通过Entrez下载GEO文件（不论XML文件，还是SOFT格式的文件）。
 
-However, it is actually pretty straight forward to download the GEO
-files by FTP from
-```ftp://ftp.ncbi.nih.gov/pub/geo/`` <ftp://ftp.ncbi.nih.gov/pub/geo/>`__
-instead. In this case you might want
-```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
-(a compressed file, see the Python module gzip).
+然而，可以相当直接的通过 FTP ```ftp://ftp.ncbi.nih.gov/pub/geo/`` <ftp://ftp.ncbi.nih.gov/pub/geo/>`__ 来下载 GEO 文件。
+在这个例子当中，你需要的文件应该是 ```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
+（一个压缩文件，参见Python的gzip 模块）。
 
-9.12.3  Parsing UniGene records
+9.12.3  处理UniGene记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-UniGene is an NCBI database of the transcriptome, with each UniGene
-record showing the set of transcripts that are associated with a
-particular gene in a specific organism. A typical UniGene record looks
-like this:
+UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本在某个特定物种中相关的基因。一个典型的UniGene
+记录如下所示：
 
 .. code:: verbatim
 
@@ -1181,23 +1009,18 @@ like this:
     SEQUENCE    ACC=AU099534.1; NID=g13550663; CLONE=HSI08034; END=5'; LID=8800; SEQTYPE=EST
     //
 
-This particular record shows the set of transcripts (shown in the
-``SEQUENCE`` lines) that originate from the human gene NAT2, encoding en
-N-acetyltransferase. The ``PROTSIM`` lines show proteins with
-significant similarity to NAT2, whereas the ``STS`` lines show the
-corresponding sequence-tagged sites in the genome.
+这个记录展示了这个转录本（如 ``SEQUENCE`` 行展示）是来自人的NAT2基因，编码en N-acetyltransferase。
+ ``PROTSIM`` 显示的是和NAT2显著相似的蛋白质， ``STS`` 展示的是基因组当中的STS位点。
 
-To parse UniGene files, use the ``Bio.UniGene`` module:
+我们使用 ``Bio.UniGene`` 模块来处理UniGene文件：
 
 .. code:: verbatim
 
     >>> from Bio import UniGene
     >>> input = open("myunigenefile.data")
     >>> record = UniGene.read(input)
-
-The ``record`` returned by ``UniGene.read`` is a Python object with
-attributes corresponding to the fields in the UniGene record. For
-example,
+    
+``UniGene.read`` 返回的是一个和UniGene记录相关的Python对象。例如，
 
 .. code:: verbatim
 
@@ -1206,15 +1029,14 @@ example,
     >>> record.title
     "N-acetyltransferase 2 (arylamine N-acetyltransferase)"
 
-The ``EXPRESS`` and ``RESTR_EXPR`` lines are stored as Python lists of
-strings:
+
+``EXPRESS`` 和 ``RESTR_EXPR`` 两行被存储为字符串的Python列表：
 
 .. code:: verbatim
 
     ['bone', 'connective tissue', 'intestine', 'liver', 'liver tumor', 'normal', 'soft tissue/muscle tissue tumor', 'adult']
 
-Specialized objects are returned for the ``STS``, ``PROTSIM``, and
-``SEQUENCE`` lines, storing the keys shown in each line as attributes:
+跟 ``STS`` , ``PROTSIM`` , 和 ``SEQUENCE`` 相关的特有的对象被保存在如下键所对应的字典中：
 
 .. code:: verbatim
 
@@ -1223,10 +1045,9 @@ Specialized objects are returned for the ``STS``, ``PROTSIM``, and
     >>> record.sts[0].unists
     '272646'
 
-and similarly for the ``PROTSIM`` and ``SEQUENCE`` lines.
+和 ``PROTSIM`` 、 ``SEQUENCE`` 这两行相似。
 
-To parse a file containing more than one UniGene record, use the
-``parse`` function in ``Bio.UniGene``:
+我们使用 ``Bio.UniGene`` 中的 ``parse`` 函数来处理一个文件中包含多个UniGene记录的情况：
 
 .. code:: verbatim
 
@@ -1236,46 +1057,32 @@ To parse a file containing more than one UniGene record, use the
     >>> for record in records:
     ...     print record.ID
 
-9.13  Using a proxy
+9.13  使用代理
 -------------------
+通常状况下，你不需要使用代理，但是如果你的网络有问题的时候，我们有以下应对方法。在内部， ``Bio.Entrez`` 使用
+一个标准的 Python 库 ``urllib`` 来访问 NCBI的服务器。这个将检查叫做 ``http_proxy`` 的环境变量来自动配置简单
+的代理服务。不幸的是，这个模块不支持需要认真的代理。
 
-Normally you won’t have to worry about using a proxy, but if this is an
-issue on your network here is how to deal with it. Internally,
-``Bio.Entrez`` uses the standard Python library ``urllib`` for accessing
-the NCBI servers. This will check an environment variable called
-``http_proxy`` to configure any simple proxy automatically.
-Unfortunately this module does not support the use of proxies which
-require authentication.
-
-You may choose to set the ``http_proxy`` environment variable once (how
-you do this will depend on your operating system). Alternatively you can
-set this within Python at the start of your script, for example:
+你可以选择设定环境变量 ``http_proxy`` 。同样，你可以再Python脚本开头的地方设置这个参数，例如：
 
 .. code:: verbatim
 
     import os
     os.environ["http_proxy"] = "http://proxyhost.example.com:8080"
 
-See the `urllib
-documentation <http://www.python.org/doc/lib/module-urllib.html>`__ for
-more details.
+参见 `urllib
+文档 <http://www.python.org/doc/lib/module-urllib.html>`__ 获得更多信息。
 
-9.14  Examples
+9.14  实例
 --------------
 
-9.14.1  PubMed and Medline
+9.14.1  PubMed和Medline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+如果你是在医药领域或者对人类的问题（可能大多数情况下你不感兴趣!）感兴趣，PubMed(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
+是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。
 
-If you are in the medical field or interested in human issues (and many
-times even if you are not!), PubMed
-(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
-is an excellent source of all kinds of goodies. So like other things,
-we’d like to be able to grab information from it and use it in Python
-scripts.
-
-In this example, we will query PubMed for all articles having to do with
-orchids (see section \ `2.3 <#sec:orchids>`__ for our motivation). We
-first check how many of such articles there are:
+在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(see section \ `2.3 <#sec:orchids>`__ for our motivation)。
+我们首先看看又多少这样的文章：
 
 .. code:: verbatim
 
@@ -1288,8 +1095,7 @@ first check how many of such articles there are:
     ...         print row["Count"]
     463
 
-Now we use the ``Bio.Entrez.efetch`` function to download the PubMed IDs
-of these 463 articles:
+现在我们使用 ``Bio.Entrez.efetch`` 这个函数来下载这463篇文章的PubMed IDs：
 
 .. code:: verbatim
 
@@ -1298,8 +1104,7 @@ of these 463 articles:
     >>> idlist = record["IdList"]
     >>> print idlist
 
-This returns a Python list containing all of the PubMed IDs of articles
-related to orchids:
+返回值是一个Python列表，包含了所有和orchids相关文章的PubMed IDs：
 
 .. code:: verbatim
 
@@ -1307,10 +1112,8 @@ related to orchids:
     '18594007', '18591784', '18589523', '18579475', '18575811', '18575690',
     ...
 
-Now that we’ve got them, we obviously want to get the corresponding
-Medline records and extract the information from them. Here, we’ll
-download the Medline records in the Medline flat-file format, and use
-the ``Bio.Medline`` module to parse them:
+这样我们就得到了这些信息，显然我们想要得到对应的Medline records和更多额外的信息。这里，我们将以纯文本的
+形式下载和Medline records相关的信息，然后使用 ``Bio.Medline`` 模块来处理他们：
 
 .. code:: verbatim
 
@@ -1319,20 +1122,15 @@ the ``Bio.Medline`` module to parse them:
                                retmode="text")
     >>> records = Medline.parse(handle)
 
-NOTE - We’ve just done a separate search and fetch here, the NCBI much
-prefer you to take advantage of their history support in this situation.
-See Section \ `9.15 <#sec:entrez-webenv>`__.
+注意 - 我们完成了一次搜索和提取，NCBI更希望你在这种情况下使用他们的history support。请见Section \ `9.15 <#sec:entrez-webenv>`__.
 
-Keep in mind that ``records`` is an iterator, so you can iterate through
-the records only once. If you want to save the records, you can convert
-them to a list:
+请记住 ``records`` 是一个迭代器，所以你只能访问这些records一次。如果你想保存这些records，你需要把他们转成列表：
 
 .. code:: verbatim
 
     >>> records = list(records)
 
-Let’s now iterate over the records to print out some information about
-each record:
+现在让我们迭代这些records，然后分别打印每一个record的信息：
 
 .. code:: verbatim
 
@@ -1342,7 +1140,7 @@ each record:
     ...     print "source:", record.get("SO", "?")
     ...     print
 
-The output for this looks like:
+这个的输出结果是这样的:
 
 .. code:: verbatim
 
@@ -1353,11 +1151,8 @@ The output for this looks like:
     'Ibarra F', 'Francke W']
     source: J Comp Physiol [A] 2000 Jun;186(6):567-74
 
-Especially interesting to note is the list of authors, which is returned
-as a standard Python list. This makes it easy to manipulate and search
-using standard Python tools. For instance, we could loop through a whole
-bunch of entries searching for a particular author with code like the
-following:
+特别有意思的是作者的列表，作者的列表会作为一个标准的Python列表返回。这是用标准的Python工具处理和搜索
+变得简单。例如，我们可以想下面的代码这样循环读取所有条目来所有跟某个作者相关的信息：
 
 .. code:: verbatim
 
@@ -1369,24 +1164,16 @@ following:
     ...     if search_author in record["AU"]:
     ...         print "Author %s found: %s" % (search_author, record["SO"])
 
-Hopefully this section gave you an idea of the power and flexibility of
-the Entrez and Medline interfaces and how they can be used together.
+希望这个章节可以让你知道Entrez和Medline借口的能力和便利性和怎样同时使用他们。
 
-9.14.2  Searching, downloading, and parsing Entrez Nucleotide records
+9.14.2  搜索，下载，和处理Entrez核酸记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+这里我们将展示一个关于远程Entrez查询的简单例子。在 \ `2.3 <#sec:orchids>`__ 章节，我们讲到了使用NCBI
+的Entrez网站来搜索 NCBI 的核酸数据库来获得关于Cypripedioideae的信息。现在我们看看如何使用Python脚本
+自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，处理他们。
 
-Here we’ll show a simple example of performing a remote Entrez query. In
-section \ `2.3 <#sec:orchids>`__ of the parsing examples, we talked
-about using NCBI’s Entrez website to search the NCBI nucleotide
-databases for info on Cypripedioideae, our friends the lady slipper
-orchids. Now, we’ll look at how to automate that process using a Python
-script. In this example, we’ll just show how to connect, get the
-results, and parse them, with the Entrez module doing all of the work.
-
-First, we use EGQuery to find out the number of results we will get
-before actually downloading them. EGQuery will tell us how many search
-results were found in each of the databases, but for this example we are
-only interested in nucleotides:
+首先，我们在下载这些结果之前，使用EGQuery来计算结果的数目。EGQuery 将会告诉我们在每个数据库中分别有多少
+搜索结果，但在我们这个例子当中，我们只对核苷酸感兴趣：
 
 .. code:: verbatim
 
@@ -1399,10 +1186,8 @@ only interested in nucleotides:
     ...         print row["Count"]
     814
 
-So, we expect to find 814 Entrez Nucleotide records (this is the number
-I obtained in 2008; it is likely to increase in the future). If you find
-some ridiculously high number of hits, you may want to reconsider if you
-really want to download all of them, which is our next step:
+所以，我们预期能找到814个 Entrez 核酸记录（这是我在2008年得到的结果；在未来这个结果应该会增加）。如果你得
+到了高的不可思议的结果数目时，你可能得重新考试是否需要下载所有的这些结果，下载是我们的下一步：
 
 .. code:: verbatim
 
@@ -1410,42 +1195,37 @@ really want to download all of them, which is our next step:
     >>> handle = Entrez.esearch(db="nucleotide", term="Cypripedioideae", retmax=814)
     >>> record = Entrez.read(handle)
 
-Here, ``record`` is a Python dictionary containing the search results
-and some auxiliary information. Just for information, let’s look at what
-is stored in this dictionary:
+在这里, ``record`` 是一个包含了搜索结果和一些辅助信息的Python字典。为了这些信息，让我们看看在这些字典当中
+究竟存储了些什么内容： 
 
 .. code:: verbatim
 
     >>> print record.keys()
     [u'Count', u'RetMax', u'IdList', u'TranslationSet', u'RetStart', u'QueryTranslation']
 
-First, let’s check how many results were found:
+首先, 让我们检查看看我们得到了多少个结果:
 
 .. code:: verbatim
 
     >>> print record["Count"]
     '814'
 
-which is the number we expected. The 814 results are stored in
-``record['IdList']``:
+这个结果是我们所期望的。这814个结果被存在了 ``record['IdList']`` 中:
 
 .. code:: verbatim
 
     >>> print len(record["IdList"])
     814
 
-Let’s look at the first five results:
+让我们看看前五个结果:
 
 .. code:: verbatim
 
     >>> print record["IdList"][:5]
     ['187237168', '187372713', '187372690', '187372688', '187372686']
 
-We can download these records using ``efetch``. While you could download
-these records one by one, to reduce the load on NCBI’s servers, it is
-better to fetch a bunch of records at the same time, shown below.
-However, in this situation you should ideally be using the history
-feature described later in Section \ `9.15 <#sec:entrez-webenv>`__.
+我们可以使用 ``efetch`` 来下载这些结果. 为了减少 NCBI 服务器的负载，你可以一个一个的下载这些记录，最好呢还是
+一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节中会要讲到的 history feature Section \ `9.15 <#sec:entrez-webenv>`__.
 
 .. code:: verbatim
 
@@ -1457,7 +1237,7 @@ feature described later in Section \ `9.15 <#sec:entrez-webenv>`__.
     >>> print len(records)
     5
 
-Each of these records corresponds to one GenBank record.
+每个这样的records对应一个GenBank record.
 
 .. code:: verbatim
 
@@ -1482,29 +1262,19 @@ Each of these records corresponds to one GenBank record.
     >>> print records[0]["GBSeq_organism"]
     Cypripedium calceolus
 
-You could use this to quickly set up searches – but for heavy usage, see
-Section \ `9.15 <#sec:entrez-webenv>`__.
+你可以这些来快速的开始搜索 ®C 但是更高深的用法请见  \ `9.15 <#sec:entrez-webenv>`__.
 
-9.14.3  Searching, downloading, and parsing GenBank records
+9.14.3  搜索、下载和处理GenBank record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GenBank record 格式是包含序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库获取
+信息非常好的一种方法 ```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
 
-The GenBank record format is a very popular method of holding
-information about sequences, sequence features, and other associated
-sequence information. The format is a good way to get information from
-the NCBI databases at
-```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
+在这个例子当中，我们讲展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 处理他们 -
+在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__.中提到过这些。简单起见，这个例子*不会*使用 WebEnv history feature
+ ®C 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
 
-In this example we’ll show how to query the NCBI databases,to retrieve
-the records from the query, and then parse them using ``Bio.SeqIO`` -
-something touched on in Section \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__.
-For simplicity, this example *does not* take advantage of the WebEnv
-history feature – see Section \ `9.15 <#sec:entrez-webenv>`__ for this.
-
-First, we want to make a query and find out the ids of the records to
-retrieve. Here we’ll do a quick search for one of our favorite
-organisms, *Opuntia* (prickly-pear cacti). We can do quick search and
-get back the GIs (GenBank identifiers) for all of the corresponding
-records. First we check how many records there are:
+首先，我们想要查询找出要检索的记录。这里我们快速的检索我们最喜欢的一个物种 *Opuntia* (多刺的梨型仙人掌).我们
+可以做一个快速的检索来获得所有满足要求的GIs（GenBank标志符）。首先我们看看有多少个记录：
 
 .. code:: verbatim
 
@@ -1518,7 +1288,7 @@ records. First we check how many records there are:
     ...
     9
 
-Now we download the list of GenBank identifiers:
+现在我们下载GenBank identifiers的列表：
 
 .. code:: verbatim
 
@@ -1529,18 +1299,15 @@ Now we download the list of GenBank identifiers:
     ['57240072', '57240071', '6273287', '6273291', '6273290', '6273289', '6273286',
     '6273285', '6273284']
 
-Now we use these GIs to download the GenBank records - note that with
-older versions of Biopython you had to supply a comma separated list of
-GI numbers to Entrez, as of Biopython 1.59 you can pass a list and this
-is converted for you:
+现在我们使用这些GIs来下载GenBank records - 注意在老的Biopython版本中，你必须将GI号用逗号隔开，例如
+在 Biopython 1.59中，你可以传递一个列表，下面的内容会为你做转换：
 
 .. code:: verbatim
 
     >>> gi_str = ",".join(gi_list)
     >>> handle = Entrez.efetch(db="nuccore", id=gi_str, rettype="gb", retmode="text")
 
-If you want to look at the raw GenBank files, you can read from this
-handle and print out the result:
+如果你想看原始的 GenBank 文件，你可以从这个句柄中读取并打印结果：
 
 .. code:: verbatim
 
@@ -1560,10 +1327,8 @@ handle and print out the result:
       AUTHORS   Butterworth,C.A. and Wallace,R.S.
     ...
 
-In this case, we are just getting the raw records. To get the records in
-a more Python-friendly form, we can use ``Bio.SeqIO`` to parse the
-GenBank data into ``SeqRecord`` objects, including ``SeqFeature``
-objects (see Chapter \ `5 <#chapter:Bio.SeqIO>`__):
+在这个例子当中，我们只是得到了原始的记录。为了得到对Python友好的格式，我们可以使用 ``Bio.SeqIO`` 将GenBank
+数据转化成 ``SeqRecord`` 对象，包括 ``SeqFeature`` 对象 (请见 Chapter \ `5 <#chapter:Bio.SeqIO>`__):
 
 .. code:: verbatim
 
@@ -1571,8 +1336,7 @@ objects (see Chapter \ `5 <#chapter:Bio.SeqIO>`__):
     >>> handle = Entrez.efetch(db="nuccore", id=gi_str, rettype="gb", retmode="text")
     >>> records = SeqIO.parse(handle, "gb")
 
-We can now step through the records and look at the information we are
-interested in:
+我们现在可以逐个查看这些record来寻找我们感兴趣的信息：
 
 .. code:: verbatim
 
@@ -1589,25 +1353,17 @@ interested in:
     AF191659, length 894, with 3 features
     AF191658, length 896, with 3 features
 
-Using these automated query retrieval functionality is a big plus over
-doing things by hand. Although the module should obey the NCBI’s max
-three queries per second rule, the NCBI have other recommendations like
-avoiding peak hours. See Section \ `9.1 <#sec:entrez-guidelines>`__. In
-particular, please note that for simplicity, this example does not use
-the WebEnv history feature. You should use this for any non-trivial
-search and download work, see Section \ `9.15 <#sec:entrez-webenv>`__.
+使用这些自动的查询提取功能相对于手动处理是一个很大的进步。尽管这些模块需要遵守NCBI每秒钟最多三次的规则，NCBI
+有向避开高峰时刻的建议。请见Section \ `9.1 <#sec:entrez-guidelines>`__. 尤其需要注意的是，这个例子没有
+用到 WebEnv history feature。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见Section \ `9.15 <#sec:entrez-webenv>`__.
 
-Finally, if plan to repeat your analysis, rather than downloading the
-files from the NCBI and parsing them immediately (as shown in this
-example), you should just download the records *once* and save them to
-your hard disk, and then parse the local file.
+最后，如果你计划重复你的分析，你应该下载这些record *一次* ，然后将他们保存在你的硬盘你，在本地进行分析；而不是
+从 NCBI 下载之后就马上进行分析（像这个例子一样）。
 
-9.14.4  Finding the lineage of an organism
+9.14.4  查看物种直接的谱系关系
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Staying with a plant example, let’s now find the lineage of the
-Cypripedioideae orchid family. First, we search the Taxonomy database
-for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:
+仍然以植物为例子，让我们找出Cyripedioideae兰花家族的谱系。首先让我们在Taxonomy数据库中查找跟Cypripedioideae
+相关的记录，确实找到了一个确切的NCBI taxonomy identifier：
 
 .. code:: verbatim
 
@@ -1620,15 +1376,14 @@ for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:
     >>> record["IdList"][0]
     '158330'
 
-Now, we use ``efetch`` to download this entry in the Taxonomy database,
-and then parse it:
+现在，我们使用 ``efetch`` 从 Taxonomy 数据库中下载这些条目，然后处理它：
 
 .. code:: verbatim
 
     >>> handle = Entrez.efetch(db="Taxonomy", id="158330", retmode="xml")
     >>> records = Entrez.read(handle)
 
-Again, this record stores lots of information:
+再次，这个record保存了许多的信息：
 
 .. code:: verbatim
 
@@ -1637,7 +1392,7 @@ Again, this record stores lots of information:
      u'CreateDate', u'TaxId', u'Rank', u'GeneticCode', u'ScientificName',
      u'MitoGeneticCode', u'UpdateDate']
 
-We can get the lineage directly from this record:
+我们可以直接从这个record获得谱系信息：
 
 .. code:: verbatim
 
@@ -1646,39 +1401,29 @@ We can get the lineage directly from this record:
      Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta;
      Liliopsida; Asparagales; Orchidaceae'
 
-The record data contains much more than just the information shown here
-- for example look under ``"LineageEx"`` instead of ``"Lineage"`` and
-you’ll get the NCBI taxon identifiers of the lineage entries too.
+这个record数据包含的信息远远超过在这里显示的-例如查看 ``"LineageEx"`` 而不是 ``"Lineage"`` 相关的
+信息，你也可以得到谱系里面的NCBI taxon identifiers信息。
 
-9.15  Using the history and WebEnv
+9.15  使用历史和WebEnv
 ----------------------------------
+通常，你想做一系列相关的查询。最典型的是，进行一个搜索，精炼搜索，然后提取详细的搜索结果。你 *可以* 通过一系列
+独立的调用Entrez来完成这些工作。然而，NCBI更希望你利用 histroy support 的优势来完成这个 - 例如将ESearch
+和EFetch结合起来。
 
-Often you will want to make a series of linked queries. Most typically,
-running a search, perhaps refining the search, and then retrieving
-detailed search results. You *can* do this by making a series of
-separate calls to Entrez. However, the NCBI prefer you to take advantage
-of their history support - for example combining ESearch and EFetch.
+另外一个关于history support典型的使用是结合EPost和EFetch。你可以使用EPost来上传一个identifiers的
+列表，这样就开始一些新的history session。接下来你就可以用EFetch指向这个session来下载这些数据（而不是那些
+identifiers）。
 
-Another typical use of the history support would be to combine EPost and
-EFetch. You use EPost to upload a list of identifiers, which starts a
-new history session. You then download the records with EFetch by
-referring to the session (instead of the identifiers).
-
-9.15.1  Searching for and downloading sequences using the history
+9.15.1  利用 history 来搜索和下载序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像Section \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__
+里一样, 我们可以简单的用 ``Bio.Entrez.esearch()`` 得到一个GI号的列表，然后调用 ``Bio.Entrez.efetch()`` 
+来下载他们。
 
-Suppose we want to search and download all the *Opuntia* rpl16
-nucleotide sequences, and store them in a FASTA file. As shown in
-Section \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__, we can naively
-combine ``Bio.Entrez.esearch()`` to get a list of GI numbers, and then
-call ``Bio.Entrez.efetch()`` to download them all.
+然而，被认同的方法是使用history feature来进行搜索。然后，我们可以通过指向这些搜索结果就可以提取他们 - 
+NCBI 将会提前进行缓冲。
 
-However, the approved approach is to run the search with the history
-feature. Then, we can fetch the results by reference to the search
-results - which the NCBI can anticipate and cache.
-
-To do this, call ``Bio.Entrez.esearch()`` as normal, but with the
-additional argument of ``usehistory="y"``,
+为此，调用 ``Bio.Entrez.esearch()`` 是正常的，但是需要额外的 ``usehistory="y"`` 参数，
 
 .. code:: verbatim
 
@@ -1689,8 +1434,7 @@ additional argument of ``usehistory="y"``,
     >>> search_results = Entrez.read(search_handle)
     >>> search_handle.close()
 
-When you get the XML output back, it will still include the usual search
-results:
+当你得到XML输出的时候，它仍然包括了常见的搜索结果：
 
 .. code:: verbatim
 
@@ -1698,23 +1442,18 @@ results:
     >>> count = int(search_results["Count"])
     >>> assert count == len(gi_list)
 
-However, you also get given two additional pieces of information, the
-``WebEnv`` session cookie, and the ``QueryKey``:
+然而，你将得到两个额外的信息， ``WebEnv`` session cookie 和 ``QueryKey`` :
 
 .. code:: verbatim
 
     >>> webenv = search_results["WebEnv"]
     >>> query_key = search_results["QueryKey"] 
 
-Having stored these values in variables ``session_cookie`` and
-``query_key`` we can use them as parameters to ``Bio.Entrez.efetch()``
-instead of giving the GI numbers as identifiers.
+将这些值保存到 ``session_cookie`` 和 ``query_key`` 后，我们可以使用它们作为 ``Bio.Entrez.efetch()`` 的
+参数，而不用提供GI numbers的identifiers。
 
-While for small searches you might be OK downloading everything at once,
-it is better to download in batches. You use the ``retstart`` and
-``retmax`` parameters to specify which range of search results you want
-returned (starting entry using zero-based counting, and maximum number
-of results to return). For example,
+对于小数据量你一次下载所有的数据也没有关系，但是最好能够分批下载。你可以使用 ``restart`` 和 ``retmax`` 来说明
+哪一部分搜索结果是你想得到的（条目以0开始计算，返回结果的最大数目）。例如：
 
 .. code:: verbatim
 
@@ -1731,16 +1470,12 @@ of results to return). For example,
         out_handle.write(data)
     out_handle.close()
 
-For illustrative purposes, this example downloaded the FASTA records in
-batches of three. Unless you are downloading genomes or chromosomes, you
-would normally pick a larger batch size.
+我们以此为例来说明，这个例子分三次来下载FASTA records。除非你是要下载基因组或者染色体数目，你最好选取一个
+比较大的batch大小。
 
-9.15.2  Searching for and downloading abstracts using the history
+9.15.2  利用history来搜索和下载综述
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Here is another history example, searching for papers published in the
-last year about the *Opuntia*, and then downloading them into a file in
-MedLine format:
+这是另外一个history的例子，搜索过去几年当中发表的关于 *Opuntia* 的文章，然后下载到一个MedLine格式的文件里：
 
 .. code:: verbatim
 
@@ -1768,19 +1503,15 @@ MedLine format:
         out_handle.write(data)
     out_handle.close()
 
-At the time of writing, this gave 28 matches - but because this is a
-date dependent search, this will of course vary. As described in
-Section \ `9.12.1 <#subsec:entrez-and-medline>`__ above, you can then
-use ``Bio.Medline`` to parse the saved records.
+在写这份文档的时候，这个搜索返回了28个匹配结果 - 但是因为这个是跟时间相关的搜索，因此返回结果会发生变化。
+像在上面 \ `9.12.1 <#subsec:entrez-and-medline>`__ 讲到的一样, 你可以使用 ``Bio.Medline`` 来处理
+保存下来的records。
 
-9.15.3  Searching for citations
+9.15.3  搜索引用文章
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Back in Section \ `9.7 <#sec:elink>`__ we mentioned ELink can be used to
-search for citations of a given paper. Unfortunately this only covers
-journals indexed for PubMed Central (doing it for all the journals in
-PubMed would mean a lot more work for the NIH). Let’s try this for the
-Biopython PDB parser paper, PubMed ID 14630660:
+回到 Section \ `9.7 <#sec:elink>`__ 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
+PubMed Central（为PubMed中所有文献来做这个事情，意味这NIH将要付出更多的工作）包含的那些杂志。让我们以
+Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
 
 .. code:: verbatim
 
@@ -1793,19 +1524,14 @@ Biopython PDB parser paper, PubMed ID 14630660:
     >>> pmc_ids
     ['2744707', '2705363', '2682512', ..., '1190160']
 
-Great - eleven articles. But why hasn’t the Biopython application note
-been found (PubMed ID 19304878)? Well, as you might have guessed from
-the variable names, there are not actually PubMed IDs, but PubMed
-Central IDs. Our application note is the third citing paper in that
-list, PMCID 2682512.
+好极了 - 11篇文章。但是为什么没有Biopython应用笔记（PubMed ID 19304878）呢？好吧，你可能已经从变量的
+名称中猜到了，实际上他们不是PubMed IDs，而是PubMed Central IDs。我们的应用笔记是列表当中第三个引用的
+文章， PMCID 2682512。
 
-So, what if (like me) you’d rather get back a list of PubMed IDs? Well
-we can call ELink again to translate them. This becomes a two step
-process, so by now you should expect to use the history feature to
-accomplish it (Section `9.15 <#sec:entrez-webenv>`__).
+那么，如果（像我）你希望得到的是PubMed IDs的列表的话，该怎么做呢？好吧，你可以使用再次使用ELink来更改他们。
+这将成为两步处理，所以你应该使用history feature来完成这个工作（Section `9.15 <#sec:entrez-webenv>`__）。
 
-But first, taking the more straightforward approach of making a second
-(separate) call to ELink:
+但是首先，让我们使用更直接的方法来进行第二次调用ELink：
 
 .. code:: verbatim
 
@@ -1815,10 +1541,8 @@ But first, taking the more straightforward approach of making a second
     >>> pubmed_ids
     ['19698094', '19450287', '19304878', ..., '15985178']
 
-This time you can immediately spot the Biopython application note as the
-third hit (PubMed ID 19304878).
+这次，你可以立即的看到Biopython应用笔记作为第三个hit（PubMed ID 19304878）。
 
-Now, let’s do that all again but with the history … *TODO*.
+现在，让我们重新使用history再试一遍 … *TODO*.
 
-And finally, don’t forget to include your *own* email address in the
-Entrez calls.
+最终，不要忘记在Entrez调用的时候，加上你 *自己* 的电子邮箱地址。
