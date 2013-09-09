@@ -40,8 +40,8 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
 或者文献数据库里面的MedLine格式，更多内容将会在`9.12 <#sec:entrez-specialized-parsers>`中讨论。
 
 9.1  Entrez 简介
-9.1  Entrez Guidelines
 ----------------------
+
 在我们通过Biopython访问NCBI的线上资源（通过 ``Bio.Entrez`` 或者其他模块）的时候，请先阅读 `NCBI的Entrez
 用户规范<http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
 如果NCBI发现你在瞎倒腾他们的系统，他们会禁止你的访问。
@@ -85,6 +85,7 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
 
 9.2  EInfo: 获取Entrez数据库的信息
 ------------------------------------------------------------
+
 EInfo为每个NCBI的数据库提供了条目索引，最近更新的时间以及可用的链接。此外，你可以很容易的使用EInfo通过
 Entrez获取所有数据库名字的列表：
 
@@ -210,6 +211,7 @@ Entrez获取所有数据库名字的列表：
 
 9.3  ESearch: 搜索Entrez数据库
 --------------------------------------------
+
 我们可以使用 ``Bio.Entrez.esearch()`` 来搜索任意的数据库。例如，我们在PubMed中搜索跟Biopython相关的文献：
 
 .. code:: verbatim
@@ -265,6 +267,7 @@ ESearch有很多用用的参数——参见 `ESearch 帮助页面
 
 9.4  EPost: 上传identifiers的列表
 -------------------------------------------
+
 EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助页面
 <http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html>`__
 来获取更多信息. 通过 ``Bio.Entrez.epost()`` 函数可以在Biopython中实现。
@@ -309,6 +312,7 @@ EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助�
 
 9.5  ESummary: 通过主要的IDs来获取摘要
 ----------------------------------------------------
+
 ESummary可以通过一个primary IDs来获取文章的摘要（参见 `ESummary 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/esummary_help.html>`__
 来获取更多信息）。在Biopython中，ESummary以 ``Bio.Entrez.esummary()`` 的形式出现。根据上面的搜索结果，
 我们可以获得ID为30367杂志相关的更多信息：
@@ -328,6 +332,7 @@ ESummary可以通过一个primary IDs来获取文章的摘要（参见 `ESummary
 
 9.6  EFetch: 从Entrez下载更多的记录
 -------------------------------------------------
+
 当你想要从Entrez中提取完整的记录的时候，你可以使用EFetch。 在 `EFetch的帮助页面<http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
 可以查到EFetch可以起作用的数据库。
 
@@ -492,6 +497,7 @@ WebEnv的历史特征®C，请见 Section \ `9.15 <#sec:entrez-webenv>`__.
 
 9.7  ELink: 在NCBI Entrez中搜索相关的条目
 ------------------------------------------------------
+
 ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez数据库中寻找相关的条目。例如，你
 可以使用它在gene数据库中寻找核苷酸条目或者而其他很酷的事情。
 
@@ -571,6 +577,7 @@ Central的杂志来所是这样的（请见 Section \ `9.15.3 <#sec:elink-citati
 
 9.8  EGQuery: 全局搜索- 统计搜索的条目
 ----------------------------------------------------
+
 EGQuery提供在每个Entrez数据库中的数目。这个非常的有用，当我们只需要知道在每个数据库中能找到的条目的个数，
 而不需要知道具体搜索结果的时候（请见例子`9.14.2 <#subsec:entrez_example_genbank>`__ below）。
 
@@ -594,6 +601,7 @@ EGQuery提供在每个Entrez数据库中的数目。这个非常的有用，当�
 
 9.9  ESpell: 获得拼写建议
 -------------------------------------------
+
 ESpell可以检索拼写建议。在这个例子中，我们使用 ``Bio.Entrez.espell()`` 来获得Biopython正确的拼写：
 
 .. code:: verbatim
@@ -612,6 +620,7 @@ ESpell可以检索拼写建议。在这个例子中，我们使用 ``Bio.Entrez.
 
 9.10  处理大的Entrez XML文件
 -----------------------------------
+
 ``Entrez.read``函数将Entrez返回的结果读取到一个Python对象里面去，这个对象被保存在内存中。对于处理太大的
 XML文件而内存不够时，可以使用 ``Entrez.parse`` 这个函数。这个函数将一个一个的读取XML文件里面的内容。只有XML
 文件是一个列表对象的时候，这个函数才有用（换句话说，如果在一个内存无限的计算机上 ``Entrez.parse`` 将返回一个
@@ -667,6 +676,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 
 9.11  错误处理
 ---------------------
+
 当处理 ZXML 文件的时候，可能出现一下三个错误：
 
 -  这个文件可能不是以常规的 XML 文件格式开头；
@@ -791,6 +801,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 
 9.12  专用的语义分析器
 -------------------------
+
 函数 ``Bio.Entrez.read()`` 可以处理啊大部分（如果不是所有的话）Entrez返回的XML文件。Entrez也可以
 允许你通过其他格式来获取数据，有时候，这种方式比XML文件格式更具有可比性（或者下载文件的大小）。
 
@@ -804,6 +815,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 
 9.12.1  处理Medline记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 你可以在 ``Bio.Medline`` 中找到Medline的语义分析器。假设你想处理包含一个Medline记录的 ``pubmed_result1.txt`` 
 文件。你可以在Biopython的 ``Tests\Medline`` 目录下找到这个文件，这个文件内容如下所示：
 
@@ -971,6 +983,7 @@ GEO ( `Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__ ) 是高通
 
 9.12.3  处理UniGene记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本在某个特定物种中相关的基因。一个典型的UniGene
 记录如下所示：
 
@@ -1059,6 +1072,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 9.13  使用代理
 -------------------
+
 通常状况下，你不需要使用代理，但是如果你的网络有问题的时候，我们有以下应对方法。在内部， ``Bio.Entrez`` 使用
 一个标准的 Python 库 ``urllib`` 来访问 NCBI的服务器。这个将检查叫做 ``http_proxy`` 的环境变量来自动配置简单
 的代理服务。不幸的是，这个模块不支持需要认真的代理。
@@ -1078,6 +1092,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 9.14.1  PubMed和Medline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 如果你是在医药领域或者对人类的问题（可能大多数情况下你不感兴趣!）感兴趣，PubMed(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。
 
@@ -1168,6 +1183,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 9.14.2  搜索，下载，和处理Entrez核酸记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 这里我们将展示一个关于远程Entrez查询的简单例子。在 \ `2.3 <#sec:orchids>`__ 章节，我们讲到了使用NCBI
 的Entrez网站来搜索 NCBI 的核酸数据库来获得关于Cypripedioideae的信息。现在我们看看如何使用Python脚本
 自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，处理他们。
@@ -1266,6 +1282,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 9.14.3  搜索、下载和处理GenBank record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 GenBank record 格式是包含序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库获取
 信息非常好的一种方法 ```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
 
@@ -1362,6 +1379,7 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
 
 9.14.4  查看物种直接的谱系关系
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 仍然以植物为例子，让我们找出Cyripedioideae兰花家族的谱系。首先让我们在Taxonomy数据库中查找跟Cypripedioideae
 相关的记录，确实找到了一个确切的NCBI taxonomy identifier：
 
@@ -1406,6 +1424,7 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
 
 9.15  使用历史和WebEnv
 ----------------------------------
+
 通常，你想做一系列相关的查询。最典型的是，进行一个搜索，精炼搜索，然后提取详细的搜索结果。你 *可以* 通过一系列
 独立的调用Entrez来完成这些工作。然而，NCBI更希望你利用 histroy support 的优势来完成这个 - 例如将ESearch
 和EFetch结合起来。
@@ -1416,6 +1435,7 @@ identifiers）。
 
 9.15.1  利用 history 来搜索和下载序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像Section \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__
 里一样, 我们可以简单的用 ``Bio.Entrez.esearch()`` 得到一个GI号的列表，然后调用 ``Bio.Entrez.efetch()`` 
 来下载他们。
@@ -1475,6 +1495,7 @@ NCBI 将会提前进行缓冲。
 
 9.15.2  利用history来搜索和下载综述
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 这是另外一个history的例子，搜索过去几年当中发表的关于 *Opuntia* 的文章，然后下载到一个MedLine格式的文件里：
 
 .. code:: verbatim
@@ -1509,6 +1530,7 @@ NCBI 将会提前进行缓冲。
 
 9.15.3  搜索引用文章
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 回到 Section \ `9.7 <#sec:elink>`__ 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
 PubMed Central（为PubMed中所有文献来做这个事情，意味这NIH将要付出更多的工作）包含的那些杂志。让我们以
 Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
