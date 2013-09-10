@@ -36,7 +36,7 @@
 
 - 下载项目文件：
    - git下载方法：`git clone https://github.com/bigwiv`；
-   - 压缩包下载：https://github.com/bigwiv/Biopython-cn/archive/master.zip；
+   - 压缩包下载：https://github.com/bigwiv/Biopython-cn/archive/master.zip ；
 - 直接修改cn文件夹下面对应的rst文件，用文本编辑器（windows推荐notepad++\ultraedit\sublimetext）打开即可；
 - 只将文件里面的英文改为中文，不要更改特殊格式或符号，包括（无法详尽，你觉得和普通书写不一样的格式符号即是）：
    - 缩进保留；
