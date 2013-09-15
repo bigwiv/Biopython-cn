@@ -1,27 +1,11 @@
-Chapter 4  Sequence annotation objects
+Chapter 4  序列注释对象
 ======================================
 
-Chapter \ `3 <#chapter:Bio.Seq>`__ introduced the sequence classes.
-Immediately ��above�� the ``Seq`` class is the Sequence Record or
-``SeqRecord`` class, defined in the ``Bio.SeqRecord`` module. This class
-allows higher level features such as identifiers and features (as
-``SeqFeature`` objects) to be associated with the sequence, and is used
-throughout the sequence input/output interface ``Bio.SeqIO`` described
-fully in Chapter \ `5 <#chapter:Bio.SeqIO>`__.
+Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。¡°上章¡± 所述类/对象（``Seq`` 或``SeqRecord`` 类）, 在 ``Bio.SeqRecord``模块中有定义。 该类（见``SeqFeature``对象）可使序列与高级属性（如identifiers 和 features）关联起来 。其应用贯穿序列输入/输出界面 ``Bio.SeqIO`` （详见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。
 
-If you are only going to be working with simple data like FASTA files,
-you can probably skip this chapter for now. If on the other hand you are
-going to be using richly annotated sequence data, say from GenBank or
-EMBL files, this information is quite important.
+如读者只需处理FASTA等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。
 
-While this chapter should cover most things to do with the ``SeqRecord``
-and ``SeqFeature`` objects in this chapter, you may also want to read
-the ``SeqRecord`` wiki page
-(```http://biopython.org/wiki/SeqRecord`` <http://biopython.org/wiki/SeqRecord>`__),
-and the built in documentation (also online �C
-`SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__
-and
-`SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__):
+尽管本章内容包括了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容读者也可自行查阅``SeqRecord`` wiki (```http://biopython.org/wiki/SeqRecord`` <http://biopython.org/wiki/SeqRecord>`__),和内置帮助文档 (或在线文档 šC`SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__和`SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__)，获取更多信息:
 
 .. code:: verbatim
 
@@ -29,69 +13,39 @@ and
     >>> help(SeqRecord)
     ...
 
-4.1  The SeqRecord object
+4.1  SeqRecord对象
 -------------------------
 
-The ``SeqRecord`` (Sequence Record) class is defined in the
-``Bio.SeqRecord`` module. This class allows higher level features such
-as identifiers and features to be associated with a sequence (see
-Chapter \ `3 <#chapter:Bio.Seq>`__), and is the basic data type for the
-``Bio.SeqIO`` sequence input/output interface (see
-Chapter \ `5 <#chapter:Bio.SeqIO>`__).
+``SeqRecord`` (Sequence Record) 类包含在``Bio.SeqRecord`` 模块中。该类是``Bio.SeqIO``序列输入/输出交互界面 (详见Chapter \ `5 <#chapter:Bio.SeqIO>`__)的基本数据类型。``SeqRecord``将identifiers 和features等高级属性与序列关联起来 (参见Chapter \ `3 <#chapter:Bio.Seq>`__)。
 
-The ``SeqRecord`` class itself is quite simple, and offers the following
-information as attributes:
+``SeqRecord`` 类非常简单,包括下例属性:
 
  **.seq**
-    �C The sequence itself, typically a ``Seq`` object.
+    šC 序列（ ``Seq`` 对象）。
 **.id**
-    �C The primary ID used to identify the sequence �C a string. In most
-    cases this is something like an accession number.
+    šC 序列主ID（šC 字符串）。通常类同于accession number。
 **.name**
-    �C A ��common�� name/id for the sequence �C a string. In some cases this
-    will be the same as the accession number, but it could also be a
-    clone name. I think of this as being analogous to the LOCUS id in a
-    GenBank record.
+    šC ¡°序列¡± 名俗名/id （šC 字符串）。 可以是accession number, 也可是clone名（类似GenBank record中的LOCUS id）。
 **.description**
-    �C A human readable description or expressive name for the sequence �C
-    a string.
+    šC 序列描述（šC字符串）。
 **.letter\_annotations**
-    �C Holds per-letter-annotations using a (restricted) dictionary of
-    additional information about the letters in the sequence. The keys
-    are the name of the information, and the information is contained in
-    the value as a Python sequence (i.e. a list, tuple or string) with
-    the same length as the sequence itself. This is often used for
-    quality scores (e.g.
-    Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) or secondary
-    structure information (e.g. from Stockholm/PFAM alignment files).
+    šC  每字母逐字注释（per-letter-annotations），是以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter\_annotations用于质量分数(如    Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) 或二级结构信息 (如 Stockholm/PFAM 比对文件)。
 **.annotations**
-    �C A dictionary of additional information about the sequence. The
-    keys are the name of the information, and the information is
-    contained in the value. This allows the addition of more
-    ��unstructured�� information to the sequence.
+    šC 用于储存附加信息的字典。信息名为键（keys），信息内容为值（value）。用于保存序列的零散信息（¡°unstructured¡± information）。
 **.features**
-    �C A list of ``SeqFeature`` objects with more structured information
-    about the features on a sequence (e.g. position of genes on a
-    genome, or domains on a protein sequence). The structure of sequence
-    features is described below in
-    Section \ `4.3 <#sec:seq_features>`__.
+    šC ``SeqFeature`` 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ Section \ `4.3 <#sec:seq_features>`__）。
 **.dbxrefs**
-    - A list of database cross-references as strings.
+    - 储存 交叉文献（cross-references）的字符串列表。
 
-4.2  Creating a SeqRecord
+4.2  创建 SeqRecord
 -------------------------
 
-Using a ``SeqRecord`` object is not very complicated, since all of the
-information is presented as attributes of the class. Usually you won��t
-create a ``SeqRecord`` ��by hand��, but instead use ``Bio.SeqIO`` to read
-in a sequence file for you (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ and
-the examples below). However, creating ``SeqRecord`` can be quite
-simple.
+创建 ``SeqRecord`` 对象非常简单；通常不必手动新建，用``Bio.SeqIO``从序列文件读取即可（见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。 当然新建``SeqRecord`` 也不复杂。
 
-4.2.1  SeqRecord objects from scratch
+4.2.1  从头新建SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To create a ``SeqRecord`` at a minimum you just need a ``Seq`` object:
+``SeqRecord`` 最少只需包含``Seq`` 对象:
 
 .. code:: verbatim
 
@@ -100,9 +54,7 @@ To create a ``SeqRecord`` at a minimum you just need a ``Seq`` object:
     >>> from Bio.SeqRecord import SeqRecord
     >>> simple_seq_r = SeqRecord(simple_seq)
 
-Additionally, you can also pass the id, name and description to the
-initialization function, but if not they will be set as strings
-indicating they are unknown, and can be modified subsequently:
+还可以通过初始化函数给 id, name和description赋值；反之，它们被设为默认值“unknown”（可随后编辑）:
 
 .. code:: verbatim
 
@@ -115,9 +67,7 @@ indicating they are unknown, and can be modified subsequently:
     >>> simple_seq_r.seq
     Seq('GATC', Alphabet())
 
-Including an identifier is very important if you want to output your
-``SeqRecord`` to a file. You would normally include this when creating
-the object:
+标识符对输出``SeqRecord``内容到文件很重要，可随SeqRecord同时建立:
 
 .. code:: verbatim
 
@@ -126,11 +76,7 @@ the object:
     >>> from Bio.SeqRecord import SeqRecord
     >>> simple_seq_r = SeqRecord(simple_seq, id="AC12345")
 
-As mentioned above, the ``SeqRecord`` has an dictionary attribute
-``annotations``. This is used for any miscellaneous annotations that
-doesn��t fit under one of the other more specific attributes. Adding
-annotations is easy, and just involves dealing directly with the
-annotation dictionary:
+上述章节已提到，``annotations``是用于储存各种杂乱注释的字典。添加annotations示例如下:
 
 .. code:: verbatim
 
@@ -140,10 +86,7 @@ annotation dictionary:
     >>> print simple_seq_r.annotations["evidence"]
     None. I just made it up.
 
-Working with per-letter-annotations is similar, ``letter_annotations``
-is a dictionary like attribute which will let you assign any Python
-sequence (i.e. a string, list or tuple) which has the same length as the
-sequence:
+``letter_annotations``也是字典，其值为与序列等长的内置Python字符串、列表或元组:
 
 .. code:: verbatim
 
@@ -153,22 +96,14 @@ sequence:
     >>> print simple_seq_r.letter_annotations["phred_quality"]
     [40, 40, 38, 30]
 
-The ``dbxrefs`` and ``features`` attributes are just Python lists, and
-should be used to store strings and ``SeqFeature`` objects (discussed
-later in this chapter) respectively.
+``dbxrefs`` 和 ``features``分别是字符串和 ``SeqFeature`` 对象的Python列表，将在后续章节讨论。
 
-4.2.2  SeqRecord objects from FASTA files
+4.2.2  根据FASTA文件创建SeqRecord对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This example uses a fairly large FASTA file containing the whole
-sequence for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
-originally downloaded from the NCBI. This file is included with the
-Biopython unit tests under the GenBank folder, or online
-```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__
-from our website.
+以鼠疫耶尔森菌株（*Yersinia pestis biovar Microtus* str. 91001 ）的pPCP1质粒全长序列为例,说明从FASTA文件创建SeqRecord的过程。该序列原始文件来自NCBI，可在Biopython单元测试GenBank文件夹下找到，也可点击```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__下载。
 
-The file starts like this - and you can check there is only one record
-present (i.e. only one line starting with a greater than symbol):
+序列以大于号开头，该文件只包含一条序列:
 
 .. code:: verbatim
 
@@ -176,11 +111,7 @@ present (i.e. only one line starting with a greater than symbol):
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
     ...
 
-Back in Chapter \ `2 <#chapter:quick-start>`__ you will have seen the
-function ``Bio.SeqIO.parse(...)`` used to loop over all the records in a
-file as ``SeqRecord`` objects. The ``Bio.SeqIO`` module has a sister
-function for use on files which contain just one record which we��ll use
-here (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
+回顾 Chapter \ `2 <#chapter:quick-start>`__ 的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历``SeqRecord``中的所有序列。 此处，我们介绍``Bio.SeqIO``模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter \ `5 <#chapter:Bio.SeqIO>`__）:
 
 .. code:: verbatim
 
@@ -192,21 +123,16 @@ here (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
     description='gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... sequence',
     dbxrefs=[])
 
-Now, let��s have a look at the key attributes of this ``SeqRecord``
-individually �C starting with the ``seq`` attribute which gives you a
-``Seq`` object:
+从 ``seq`` 开始介绍``SeqRecord``对象中的主要属性:
 
 .. code:: verbatim
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
 
-Here ``Bio.SeqIO`` has defaulted to a generic alphabet, rather than
-guessing that this is DNA. If you know in advance what kind of sequence
-your FASTA file contains, you can tell ``Bio.SeqIO`` which alphabet to
-use (see Chapter \ `5 <#chapter:Bio.SeqIO>`__).
+此处``Bio.SeqIO``默认为任意序列类型（generic alphabet）, 而非DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__用法)。
 
-Next, the identifiers and description:
+接下来介绍 identifiers和description:
 
 .. code:: verbatim
 
@@ -217,12 +143,7 @@ Next, the identifiers and description:
     >>> record.description
     'gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... pPCP1, complete sequence'
 
-As you can see above, the first word of the FASTA record��s title line
-(after removing the greater than symbol) is used for both the ``id`` and
-``name`` attributes. The whole title line (after removing the greater
-than symbol) is used for the record description. This is deliberate,
-partly for backwards compatibility reasons, but it also makes sense if
-you have a FASTA file like this:
+FASTA文件中序列名所在行的第一个单词(去除大于号后) 被当作``id`` 和``name``；而将整行 (去除大于号后) 作为 description。这样设定是为了向后兼容，同时也为了便于处理如下序列:
 
 .. code:: verbatim
 
@@ -230,8 +151,7 @@ you have a FASTA file like this:
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
     ...
 
-Note that none of the other annotation attributes get populated when
-reading a FASTA file:
+Note: 读取FASTA 文件时其他注释属性为空:
 
 .. code:: verbatim
 
@@ -244,25 +164,15 @@ reading a FASTA file:
     >>> record.features
     []
 
-In this case our example FASTA file was from the NCBI, and they have a
-fairly well defined set of conventions for formatting their FASTA lines.
-This means it would be possible to parse this information and extract
-the GI number and accession for example. However, FASTA files from other
-sources vary, so this isn��t possible in general.
+本例中FASTA文件源于NCBI，其格式规范，意味着我们可以方便的解析GI和accession number等信息。然后，对于从其他来源获得的FASTA文件，并不能确保能获得这些信息。
 
-4.2.3  SeqRecord objects from GenBank files
+4.2.3  依 GenBank文件创建 SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As in the previous example, we��re going to look at the whole sequence
-for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
-originally downloaded from the NCBI, but this time as a GenBank file.
-Again, this file is included with the Biopython unit tests under the
-GenBank folder, or online
-```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
-from our website.
+仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，同样的该文件包含在Biopython单元测试/GenBank文件夹下, 也可点击```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+下载。
 
-This file contains a single record (i.e. only one LOCUS line) and
-starts:
+该文件只含一条序列 (只有一个 LOCUS 行):
 
 .. code:: verbatim
 
@@ -274,8 +184,7 @@ starts:
     PROJECT     GenomeProject:10638
     ...
 
-Again, we��ll use ``Bio.SeqIO`` to read this file in, and the code is
-almost identical to that for used above for the FASTA file (see
+同样使用``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见
 Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 .. code:: verbatim
@@ -288,19 +197,14 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-You should be able to spot some differences already! But taking the
-attributes individually, the sequence string is the same as before, but
-this time ``Bio.SeqIO`` has been able to automatically assign a more
-specific alphabet (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for
-details):
+你可能已经发现了一些不同之处，此处``Bio.SeqIO``可自动识别序列类型 (详见chapter \ `5 <#chapter:Bio.SeqIO>`__):
 
 .. code:: verbatim
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', IUPACAmbiguousDNA())
 
-The ``name`` comes from the LOCUS line, while the ``id`` includes the
-version suffix. The description comes from the DEFINITION line:
+``name`` 源于 LOCUS行, ``id`` 附加了版本后缀。description源于DEFINITION 行:
 
 .. code:: verbatim
 
@@ -311,15 +215,14 @@ version suffix. The description comes from the DEFINITION line:
     >>> record.description
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
-GenBank files don��t have any per-letter annotations:
+GenBank 文件中per-letter annotations为空:
 
 .. code:: verbatim
 
     >>> record.letter_annotations
     {}
 
-Most of the annotations information gets recorded in the ``annotations``
-dictionary, for example:
+多数注释信息储存在``annotations``字典中:
 
 .. code:: verbatim
 
@@ -328,184 +231,104 @@ dictionary, for example:
     >>> record.annotations["source"]
     'Yersinia pestis biovar Microtus str. 91001'
 
-The ``dbxrefs`` list gets populated from any PROJECT or DBLINK lines:
+``dbxrefs``列表中的数据来自 PROJECT 或DBLINK行:
 
 .. code:: verbatim
 
     >>> record.dbxrefs
     ['Project:10638']
 
-Finally, and perhaps most interestingly, all the entries in the features
-table (e.g. the genes or CDS features) get recorded as ``SeqFeature``
-objects in the ``features`` list.
+最后也许也是最有意思的是，``features``列表以``SeqFeature``对象的形式保存了features table中的所有entries（如genes和CDS等）。
 
 .. code:: verbatim
 
     >>> len(record.features)
     29
 
-We��ll talk about ``SeqFeature`` objects next, in
-Section \ `4.3 <#sec:seq_features>`__.
+接下来，Section \ `4.3 <#sec:seq_features>`__介绍``SeqFeature``对象。
 
-4.3  Feature, location and position objects
+4.3  Feature, location 和 position对象
 -------------------------------------------
 
-4.3.1  SeqFeature objects
+4.3.1  SeqFeature对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sequence features are an essential part of describing a sequence. Once
-you get beyond the sequence itself, you need some way to organize and
-easily get at the more ��abstract�� information that is known about the
-sequence. While it is probably impossible to develop a general sequence
-feature class that will cover everything, the Biopython ``SeqFeature``
-class attempts to encapsulate as much of the information about the
-sequence as possible. The design is heavily based on the GenBank/EMBL
-feature tables, so if you understand how they look, you��ll probably have
-an easier time grasping the structure of the Biopython classes.
+序列特征是描述一条序列不可或缺的部分。抛开序列本身，你需要一种方式去组织和获取关于这条序列的 ¡°抽象¡± 信息。 尽管Biopython ``SeqFeature``
+类试图囊括序列的所有特征，却无法实现。Biopython主要根据GenBank/EMBL特征表来设计相应的对象，认识到这一点，将有助于你更快更好的理解Biopython ``SeqFeature``对象。
 
-The key idea about each ``SeqFeature`` object is to describe a region on
-a parent sequence, typically a ``SeqRecord`` object. That region is
-described with a location object, typically a range between two
-positions (see Section \ `4.3.2 <#sec:locations>`__ below).
+``SeqFeature`` 对象的关键目的在于描述其相对于父序列（parent sequence，通常为``SeqRecord``对象）所处的位置（location）, 通常是介于两个positions间的一个区域（region），后续Section \ `4.3.2 <#sec:locations>`__ 将详细说明。
 
-The ``SeqFeature`` class has a number of attributes, so first we��ll list
-them and their general features, and then later in the chapter work
-through examples to show how this applies to a real life example. The
-attributes of a SeqFeature are:
+``SeqFeature`` 对象含大量属性，首先一一例出，然后在后续章节举例说明其用法:
 
  **.type**
-    �C This is a textual description of the type of feature (for
-    instance, this will be something like ��CDS�� or ��gene��).
+    šC feature类型 (如 ¡®CDS¡¯ 或 ¡®gene¡¯).
 **.location**
-    �C The location of the ``SeqFeature`` on the sequence that you are
-    dealing with, see Section \ `4.3.2 <#sec:locations>`__ below. The
-    ``SeqFeature`` delegates much of its functionality to the location
-    object, and includes a number of shortcut attributes for properties
-    of the location:
+    šC ``SeqFeature`` 在序列中所处的位置。见Section \ `4.3.2 <#sec:locations>`__。``SeqFeature`` 主要由location对象表示:
 
      **.ref**
-        �C shorthand for ``.location.ref`` �C any (different) reference
-        sequence the location is referring to. Usually just None.
+        šC ``.location.ref``简写 šC location对象相关的参考序列。通常为空（None）。
     **.ref\_db**
-        �C shorthand for ``.location.ref_db`` �C specifies the database
-        any identifier in ``.ref`` refers to. Usually just None.
+        šC ``.location.ref_db``简写 šC ``.ref``相关数据库名称。通常为空（None）。
     **.strand**
-        �C shorthand for ``.location.strand`` �C the strand on the
-        sequence that the feature is located on. For double stranded
-        nucleotide sequence this may either be 1 for the top strand, ?1
-        for the bottom strand, 0 if the strand is important but is
-        unknown, or ``None`` if it doesn��t matter. This is None for
-        proteins, or single stranded sequences.
+        šC ``.location.strand``简写 šC 表示feature所处序列的strand。在双链核酸序列中，1表示正链, ?1表示负链, 0 表示strand信息很重要但未知, None表示strand信息未知且不重要。蛋白和单链核酸序列为None。 
 
 **.qualifiers**
-    �C This is a Python dictionary of additional information about the
-    feature. The key is some kind of terse one-word description of what
-    the information contained in the value is about, and the value is
-    the actual information. For example, a common key for a qualifier
-    might be ��evidence�� and the value might be ��computational
-    (non-experimental).�� This is just a way to let the person who is
-    looking at the feature know that it has not be experimentally
-    (i. e. in a wet lab) confirmed. Note that other the value will be a
-    list of strings (even when there is only one string). This is a
-    reflection of the feature tables in GenBank/EMBL files.
+    šC feature附加信息（Python字典）。键（key）为值（value）所存信息的单字简要描述，值为实际信息。比如，键为 ¡°evidence¡± ，而值为¡°computational (non-experimental).¡± 这只是为了提醒人们注意，该feature没有被实验所证实。Note：Note：为与GenBank/EMBL文件中的feature tables对应，规定.qualifiers中值为字符串数组（即使只有一个字符串）。
 **.sub\_features**
-    �C This used to be used to represent features with complicated
-    locations like ��joins�� in GenBank/EMBL files. This has been
-    deprecated with the introduction of the ``CompoundLocation`` object,
-    and should now be ignored.
-
-4.3.2  Positions and locations
+    šC 只有在描述复杂位置时才使用，如 GenBank/EMBL文件中的¡®joins¡¯ 位置。 已被 ``CompoundLocation`` 对象取代，因此略过不提。
+    
+4.3.2  Positions和locations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The key idea about each ``SeqFeature`` object is to describe a region on
-a parent sequence, for which we use a location object, typically
-describing a range between two positions. Two try to clarify the
-terminology we��re using:
+``SeqFeature``对象主要用于描述相对于父序列中的位置（region）信息。Region用location对象表示，通常是两个position间的范围。为了区分location和position，我们定义如下:
 
  **position**
-    �C This refers to a single position on a sequence, which may be fuzzy
-    or not. For instance, 5, 20, ``<100`` and ``>200`` are all
-    positions.
+    šC 表示位于序列中的单一位置, 可以是精确的也可以是不确定的位置（如5, 20, ``<100``和 ``>200``）。
 **location**
-    �C A location is region of sequence bounded by some positions. For
-    instance 5..20 (i. e. 5 to 20) is a location.
+    šC 介于两个positions间的区域。比如5..20 (5到20)。
 
-I just mention this because sometimes I get confused between the two.
+之所以特意提及这两个概念是因为我经常混淆两者。
 
-4.3.2.1  FeatureLocation object
+4.3.2.1  FeatureLocation 对象
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Unless you work with eukaryotic genes, most ``SeqFeature`` locations are
-extremely simple - you just need start and end coordinates and a strand.
-That��s essentially all the basic ``FeatureLocation`` object does.
+多数``SeqFeature`` 特别简单（真核基因例外），只需起点、终点以及strand信息。最基本的``FeatureLocation``对象中通常包括上述三点信息。
 
-In practise of course, things can be more complicated. First of all we
-have to handle compound locations made up of several regions. Secondly,
-the positions themselves may be fuzzy (inexact).
+但实际情况未必如此简单，因为我们还需处理包含几个区域的复合locations，而且position本身很可能是不精确的。
 
-4.3.2.2  CompoundLocation object
+4.3.2.2  CompoundLocation 对象
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Biopython 1.62 introduced the ``CompoundLocation`` as part of a
-restructuring of how complex locations made up of multiple regions are
-represented. The main usage is for handling ��join�� locations in
-EMBL/GenBank files.
+为了更方便的处理EMBL/GenBank文件中的¡®join¡¯ locations，Biopython 1.62引入 ``CompoundLocation``表示。
 
-4.3.2.3  Fuzzy Positions
+4.3.2.3  模糊Positions
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-So far we��ve only used simple positions. One complication in dealing
-with feature locations comes in the positions themselves. In biology
-many times things aren��t entirely certain (as much as us wet lab
-biologists try to make them certain!). For instance, you might do a
-dinucleotide priming experiment and discover that the start of mRNA
-transcript starts at one of two sites. This is very useful information,
-but the complication comes in how to represent this as a position. To
-help us deal with this, we have the concept of fuzzy positions.
-Basically there are several types of fuzzy positions, so we have five
-classes do deal with them:
+目前，我们只处理过简单position，feature location复杂因素之一就是由position本身
+不准确所致。生物学中许多问题都是不确定的，比如：你通过双核苷酸priming证明了mRNA
+的转录起始位点是这两个位点中的一个。这是十分有价值的发现，但困难来自于怎样表述这
+个位点信息。为了处理类似情况，我们用模糊位点（fuzzy position）表示。根据fuzzy 
+position的不同，我们用5个类分别描述:
 
  **ExactPosition**
-    �C As its name suggests, this class represents a position which is
-    specified as exact along the sequence. This is represented as just a
-    number, and you can get the position by looking at the ``position``
-    attribute of the object.
+    šC 精确位点，用一个数字表示。从该对象的``position``属性可得知精确位点信息。
 **BeforePosition**
-    �C This class represents a fuzzy position that occurs prior to some
-    specified site. In GenBank/EMBL notation, this is represented as
-    something like ```<13'``, signifying that the real position is
-    located somewhere less than 13. To get the specified upper boundary,
-    look at the ``position`` attribute of the object.
+    šC 位于某个特定位点前。如```<13'``, 在GenBank/EMBL中代表实际位点位于13之前。
+从该对象的``position``属性可得知上边界信息。 
 **AfterPosition**
-    �C Contrary to ``BeforePosition``, this class represents a position
-    that occurs after some specified site. This is represented in
-    GenBank as ```>13'``, and like ``BeforePosition``, you get the
-    boundary number by looking at the ``position`` attribute of the
-    object.
+    šC 与``BeforePosition``相反,如```>13'``, 在GenBank/EMBL中代表实际位点位于13以
+后。从该对象的``position``属性可获知下边界信息。
 **WithinPosition**
-    �C Occasionally used for GenBank/EMBL locations, this class models a
-    position which occurs somewhere between two specified nucleotides.
-    In GenBank/EMBL notation, this would be represented as ��(1.5)��, to
-    represent that the position is somewhere within the range 1 to 5. To
-    get the information in this class you have to look at two
-    attributes. The ``position`` attribute specifies the lower boundary
-    of the range we are looking at, so in our example case this would be
-    one. The ``extension`` attribute specifies the range to the higher
-    boundary, so in this case it would be 4. So ``object.position`` is
-    the lower boundary and ``object.position + object.extension`` is the
-    upper boundary.
+    šC 位于两个特定位点之间。如 ¡®(1.5)¡¯, GenBank/EMBL中代表实际位点位于1到5之间。
+该对象需要两个position属性表示，第一个``position``表示下边界（本例为1），
+``extension``表示上边界与下边界的差值（本例为4）。因此在WithinPosition中，`
+`object.position``表示下边界， ``object.position + object.extension``表示上边界。
 **OneOfPosition**
-    �C Occasionally used for GenBank/EMBL locations, this class deals
-    with a position where several possible values exist, for instance
-    you could use this if the start codon was unclear and there where
-    two candidates for the start of the gene. Alternatively, that might
-    be handled explicitly as two related gene features.
+    šC 表示几个位点中的一个（GenBank/EMBL文件中偶尔能看到）。
 **UnknownPosition**
-    �C This class deals with a position of unknown location. This is not
-    used in GenBank/EMBL, but corresponds to the ��?�� feature coordinate
-    used in UniProt.
+    šC T代表未知位点。在GenBank/EMBL文件中没有，对应 UniProt中的 ¡®?¡¯ feature。
 
-Here��s an example where we create a location with fuzzy end points:
+举例说明fuzzy positions:
 
 .. code:: verbatim
 
@@ -514,23 +337,17 @@ Here��s an example where we create a location with fuzzy end points:
     >>> end_pos = SeqFeature.BetweenPosition(9, left=8, right=9)
     >>> my_location = SeqFeature.FeatureLocation(start_pos, end_pos)
 
-Note that the details of some of the fuzzy-locations changed in
-Biopython 1.59, in particular for BetweenPosition and WithinPosition you
-must now make it explicit which integer position should be used for
-slicing etc. For a start position this is generally the lower (left)
-value, while for an end position this would generally be the higher
-(right) value.
+Note：Biopython 1.59以后，fuzzy-locations有修改, 特别是BetweenPosition和
+WithinPosition，现在必须显示用整数表示。起点为较小值，终点则为较大值。
 
-If you print out a ``FeatureLocation`` object, you can get a nice
-representation of the information:
+print输出``FeatureLocation`` 对象，可看到简洁的结果:
 
 .. code:: verbatim
 
     >>> print my_location
     [>5:(8^9)]
 
-We can access the fuzzy start and end positions using the start and end
-attributes of the location:
+也可通过start和end属性得到fuzzy position的起始/终止位点:
 
 .. code:: verbatim
 
@@ -543,8 +360,7 @@ attributes of the location:
     >>> print my_location.end
     (8^9)
 
-If you don��t want to deal with fuzzy positions and just want numbers,
-they are actually subclasses of integers so should work like integers:
+还可将fuzzy position强制转换成一个整数:
 
 .. code:: verbatim
 
@@ -553,9 +369,7 @@ they are actually subclasses of integers so should work like integers:
     >>> int(my_location.end)
     9
 
-For compatibility with older versions of Biopython you can ask for the
-``nofuzzy_start`` and ``nofuzzy_end`` attributes of the location which
-are plain integers:
+为了兼容旧版Biopython，保留了整数形式的``nofuzzy_start`` and ``nofuzzy_end``:
 
 .. code:: verbatim
 
@@ -564,12 +378,10 @@ are plain integers:
     >>> my_location.nofuzzy_end
     9
 
-Notice that this just gives you back the position attributes of the
-fuzzy locations.
+Notice：上述例子只是为了帮助你理解fuzzy locations。
 
-Similarly, to make it easy to create a position without worrying about
-fuzzy positions, you can just pass in numbers to the ``FeaturePosition``
-constructors, and you��ll get back out ``ExactPosition`` objects:
+相似的，如果要建立一个精确location，只需将整数传递给``FeaturePosition``
+构造函数, 即可建立``ExactPosition`` 对象:
 
 .. code:: verbatim
 
@@ -583,22 +395,15 @@ constructors, and you��ll get back out ``ExactPosition`` objects:
     >>> exact_location.nofuzzy_start
     5
 
-That is most of the nitty gritty about dealing with fuzzy positions in
-Biopython. It has been designed so that dealing with fuzziness is not
-that much more complicated than dealing with exact positions, and
-hopefully you find that true!
+以上是Biopython处理fuzzy position的实现方法。希望读者能体会之所以这样设计，都是为了使用上的方便（至少不比精确位点复杂）
 
 4.3.2.4  Location testing
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can use the Python keyword ``in`` with a ``SeqFeature`` or location
-object to see if the base/residue for a parent coordinate is within the
-feature/location or not.
+可用Python关键词``in`` 检验某个碱基或氨基酸残基的父坐标是否位于
+feature/location中。
 
-For example, suppose you have a SNP of interest and you want to know
-which features this SNP is within, and lets suppose this SNP is at index
-4350 (Python counting!). Here is a simple brute force solution where we
-just check all the features one by one in a loop:
+假定你想知道某个SNP位于哪个feature里，并知道该SNP的索引位置是4350（Python 计数）。一个简单的实现方案是用循环遍历所有features:
 
 .. code:: verbatim
 
@@ -613,18 +418,12 @@ just check all the features one by one in a loop:
     gene ['GeneID:2767712']
     CDS ['GI:45478716', 'GeneID:2767712']
 
-Note that gene and CDS features from GenBank or EMBL files defined with
-joins are the union of the exons �C they do not cover any introns.
+Note： GenBank /EMBL 文件中的 gene 和CDS features（``join``） 只包含外显子，不含内含子。
 
-4.3.3  Sequence described by a feature or location
+4.3.3  feature 或 location描述序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A ``SeqFeature`` or location object doesn��t directly contain a sequence,
-instead the location (see Section \ `4.3.2 <#sec:locations>`__)
-describes how to get this from the parent sequence. For example consider
-a (short) gene sequence with location 5:18 on the reverse strand, which
-in GenBank/EMBL notation using 1-based counting would be
-``complement(6..18)``, like this:
+``SeqFeature``或 location object对象并没有直接包含任何序列，只是可根据储存的location (见Section \ `4.3.2 <#sec:locations>`__)，从父序列中取得。例如：某基因位于负链5:18，由于GenBank/EMBL文件以1开始计数，Biopytho中表示为``complement(6..18)``:
 
 .. code:: verbatim
 
@@ -633,9 +432,7 @@ in GenBank/EMBL notation using 1-based counting would be
     >>> example_parent = Seq("ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC")
     >>> example_feature = SeqFeature(FeatureLocation(5, 18), type="gene", strand=-1)
 
-You could take the parent sequence, slice it to extract 5:18, and then
-take the reverse complement. If you are using Biopython 1.59 or later,
-the feature location��s start and end are integer like so this works:
+你可以用切片从父序列截取5:18,然后取反向互补序列。如果是Biopython 1.59或以后版本，可使用如下方法:
 
 .. code:: verbatim
 
@@ -643,10 +440,7 @@ the feature location��s start and end are integer like so this works:
     >>> print feature_seq
     AGCCTTTGCCGTC
 
-This is a simple example so this isn��t too bad �C however once you have
-to deal with compound features (joins) this is rather messy. Instead,
-the ``SeqFeature`` object has an ``extract`` method to take care of all
-this:
+不过在处理复合 features (joins)时，此法相当繁琐。此时可以使用``SeqFeature`` 对象的``extract``方法处理:
 
 .. code:: verbatim
 
@@ -654,8 +448,7 @@ this:
     >>> print feature_seq
     AGCCTTTGCCGTC
 
-The length of a ``SeqFeature`` or location matches that of the region of
-sequence it describes.
+``SeqFeature`` 或 location对象的长度等同于所表示序列的长度。
 
 .. code:: verbatim
 
@@ -668,43 +461,24 @@ sequence it describes.
     >>> print len(example_feature.location)
     13
 
-For simple ``FeatureLocation`` objects the length is just the difference
-between the start and end positions. However, for a ``CompoundLocation``
-the length is the sum of the constituent regions.
+简单``FeatureLocation``对象的长度等于终止osition减去起始position的差值；而``CompoundLocation``的长度则为各片段长度之和。
 
 4.4  References
 ---------------
 
-Another common annotation related to a sequence is a reference to a
-journal or other published work dealing with the sequence. We have a
-fairly simple way of representing a Reference in Biopython �C we have a
-``Bio.SeqFeature.Reference`` class that stores the relevant information
-about a reference as attributes of an object.
+对一条序列的注释还包括参考文献（reference），Biopython通过
+``Bio.SeqFeature.Reference``对象来储存相关的文献信息。
 
-The attributes include things that you would expect to see in a
-reference like ``journal``, ``title`` and ``authors``. Additionally, it
-also can hold the ``medline_id`` and ``pubmed_id`` and a ``comment``
-about the reference. These are all accessed simply as attributes of the
-object.
+References储存了``期刊名``、 ``题名``、 ``作者``等信息。还包括``medline_id`` 、``pubmed_id`` 以及 ``comment``。
 
-A reference also has a ``location`` object so that it can specify a
-particular location on the sequence that the reference refers to. For
-instance, you might have a journal that is dealing with a particular
-gene located on a BAC, and want to specify that it only refers to this
-position exactly. The ``location`` is a potentially fuzzy location, as
-described in section \ `4.3.2 <#sec:locations>`__.
+通常reference 也有 ``location`` 对象，便于文献涉及研究对象在序列中的定位。该 ``location`` 有可能是一个fuzzy location（见section \ `4.3.2 <#sec:locations>`__）。
 
-Any reference objects are stored as a list in the ``SeqRecord`` object��s
-``annotations`` dictionary under the key ��references��. That��s all there
-is too it. References are meant to be easy to deal with, and hopefully
-general enough to cover lots of usage cases.
+文献对象都以列表储存在``SeqRecord`` 对象的``annotations`` 字典中。 字典的键为¡°references¡±。reference对象也是为了方便处理文献而设计，希望能满足各种使用需求。
 
-4.5  The format method
+4.5  格式化方法
 ----------------------
 
-The ``format()`` method of the ``SeqRecord`` class gives a string
-containing your record formatted using one of the output file formats
-supported by ``Bio.SeqIO``, such as FASTA:
+``SeqRecord``类中的``format()`` 能将字符串转换成被``Bio.SeqIO``支持的格式，如FASTA:
 
 .. code:: verbatim
 
@@ -721,7 +495,7 @@ supported by ``Bio.SeqIO``, such as FASTA:
                        
     print record.format("fasta")
 
-which should give:
+输出为:
 
 .. code:: verbatim
 
@@ -731,23 +505,14 @@ which should give:
     NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
     SSAC
 
-This ``format`` method takes a single mandatory argument, a lower case
-string which is supported by ``Bio.SeqIO`` as an output format (see
-Chapter \ `5 <#chapter:Bio.SeqIO>`__). However, some of the file formats
-``Bio.SeqIO`` can write to *require* more than one record (typically the
-case for multiple sequence alignment formats), and thus won��t work via
-this ``format()`` method. See also
-Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__.
+``format`` 方法接收单个必选参数（小写字母字符串）, 该参数是``Bio.SeqIO`` 模块支持的输出格式 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__)。然而，此``format()``方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__）。
 
-4.6  Slicing a SeqRecord
+4.6  SeqRecord切片
 ------------------------
 
-You can slice a ``SeqRecord``, to give you a new ``SeqRecord`` covering
-just part of the sequence. What is important here is that any per-letter
-annotations are also sliced, and any features which fall completely
-within the new sequence are preserved (with their locations adjusted).
+通过切片截取``SeqRecord``的部分序列可得到一条新的``SeqRecord``。此处需引起注意的是per-letter annotations也被取切片, 但新序列中的features保持不变 (locations有变化)。
 
-For example, taking the same GenBank file used earlier:
+以前述Genbank文件为例:
 
 .. code:: verbatim
 
@@ -769,12 +534,7 @@ For example, taking the same GenBank file used earlier:
     >>> len(record.features)
     41
 
-For this example we��re going to focus in on the ``pim`` gene,
-``YP_pPCP05``. If you have a look at the GenBank file directly you��ll
-find this gene/CDS has location string ``4343..4780``, or in Python
-counting ``4342:4780``. From looking at the file you can work out that
-these are the twelfth and thirteenth entries in the file, so in Python
-zero-based counting they are entries 11 and 12 in the ``features`` list:
+本例中，我们关注``YP_pPCP05``质粒上的``pim``基因。从GenBank文件可直接看出``pim``gene/CDS location是``4343..4780``（相应的Python 位置是``4342:4780``）。Location信息位于GenBank文件第12和13 entries中, 由于python以0开始计数，因此python中，它们是``features``列表中的 entries 11和12:
 
 .. code:: verbatim
 
@@ -803,8 +563,7 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
 
-Let��s slice this parent record from 4300 to 4800 (enough to include the
-``pim`` gene/CDS), and see how many features we get:
+从父记录中取切片（4300 到 4800），观测所得到的features数量:
 
 .. code:: verbatim
 
@@ -825,8 +584,7 @@ Let��s slice this parent record from 4300 to 4800 (enough to include the
     >>> len(sub_record.features)
     2
 
-Our sub-record just has two features, the gene and CDS entries for
-``YP_pPCP05``:
+子记录（sub_record）只包括两个features, 分别是``YP_pPCP05``质粒的gene和CDS:
 
 .. code:: verbatim
 
@@ -855,15 +613,9 @@ Our sub-record just has two features, the gene and CDS entries for
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
 
-Notice that their locations have been adjusted to reflect the new parent
-sequence!
+注意：locations已被调整至对应新的父序列!
 
-While Biopython has done something sensible and hopefully intuitive with
-the features (and any per-letter annotation), for the other annotation
-it is impossible to know if this still applies to the sub-sequence or
-not. To avoid guessing, the ``annotations`` and ``dbxrefs`` are omitted
-from the sub-record, and it is up to you to transfer any relevant
-information as appropriate.
+子记录忽略了``annotations`` 和``dbxrefs``以避免引起歧义。
 
 .. code:: verbatim
 
@@ -872,8 +624,7 @@ information as appropriate.
     >>> sub_record.dbxrefs
     []
 
-The same point could be made about the record ``id``, ``name`` and
-``description``, but for practicality these are preserved:
+为了便于实际操作，子记录保留了``id``, ``name`` 和``description``:
 
 .. code:: verbatim
 
@@ -884,11 +635,8 @@ The same point could be made about the record ``id``, ``name`` and
     >>> sub_record.description
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
-This illustrates the problem nicely though, our new sub-record is *not*
-the complete sequence of the plasmid, so the description is wrong! Let��s
-fix this and then view the sub-record as a reduced GenBank file using
-the ``format`` method described above in
-Section \ `4.5 <#sec:SeqRecord-format>`__:
+尽管上述例子很好的展示了问题，但由于子记录不包括完整的质粒序列，因description是错的。我们将子记录看做是截短版的GenBank文件，可用Section \ `4.5 <#sec:SeqRecord-format>`__中所述``format``方法纠正：
+:
 
 .. code:: verbatim
 
@@ -896,23 +644,15 @@ Section \ `4.5 <#sec:SeqRecord-format>`__:
     >>> print sub_record.format("genbank")
     ...
 
-See Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
-and \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__ for some FASTQ
-examples where the per-letter annotations (the read quality scores) are
-also sliced.
+FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
+和 \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__（此例中per-letter annotations (read质量分数) 也被取切片）。
 
-4.7  Adding SeqRecord objects
+4.7  SeqRecord对象相加
 -----------------------------
 
-You can add ``SeqRecord`` objects together, giving a new ``SeqRecord``.
-What is important here is that any common per-letter annotations are
-also added, all the features are preserved (with their locations
-adjusted), and any other common annotation is also kept (like the id,
-name and description).
+``SeqRecord`` 对象可相加得到一个新的 ``SeqRecord``。注意：per-letter annotations也相加, features (locations 调整)；而其它annotation 保持不变(如id、name和description)。
 
-For an example with per-letter annotation, we��ll use the first record in
-a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
-``SeqIO`` functions:
+以FASTQ 文件中的第一条记录为例说明per-letter annotation （Chapter \ `5 <#chapter:Bio.SeqIO>`__ 详细介绍``SeqIO``）:
 
 .. code:: verbatim
 
@@ -929,10 +669,7 @@ a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 26, 23, 23]
 
-Let��s suppose this was Roche 454 data, and that from other information
-you think the ``TTT`` should be only ``TT``. We can make a new edited
-record by first slicing the ``SeqRecord`` before and after the ��extra��
-third ``T``:
+假设上述序列数据来自Roche 454测序, 你根据其它信息得知 ``TTT``应该是``TT``。此时可分别用切片提取第三个``T``前后的序列（``SeqRecord``）:
 
 .. code:: verbatim
 
@@ -947,7 +684,7 @@ third ``T``:
     >>> print right.letter_annotations["phred_quality"]
     [26, 26, 23, 23]
 
-Now add the two parts together:
+两部分相加:
 
 .. code:: verbatim
 
@@ -963,14 +700,13 @@ Now add the two parts together:
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 23, 23]
 
-Easy and intuitive? We hope so! You can make this shorter with just:
+上述两步可合并:
 
 .. code:: verbatim
 
     >>> edited = record[:20] + record[21:]
 
-Now, for an example with features, we��ll use a GenBank file. Suppose you
-have a circular genome:
+以GenBank文件（假定是环状基因组）为例说明features:
 
 .. code:: verbatim
 
@@ -1000,7 +736,7 @@ have a circular genome:
     ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
     'accessions', 'data_file_division', 'date', 'organism', 'gi']
 
-You can shift the origin like this:
+可改变起点:
 
 .. code:: verbatim
 
@@ -1019,9 +755,7 @@ You can shift the origin like this:
     >>> len(shifted)
     9609
 
-Note that this isn��t perfect in that some annotation like the database
-cross references and one of the features (the source feature) have been
-lost:
+Note: 上述方法并不完美（丢失了dbxrefs 和源feature）:
 
 .. code:: verbatim
 
@@ -1032,10 +766,7 @@ lost:
     >>> shifted.annotations.keys()
     []
 
-This is because the ``SeqRecord`` slicing step is cautious in what
-annotation it preserves (erroneously propagating annotation can cause
-major problems). If you want to keep the database cross references or
-the annotations dictionary, this must be done explicitly:
+这是因为``SeqRecord``切片对annotation保留非常谨慎 (错误复制annotation可能引起大问题)。dbxrefs和annotations 字典必须显示说明，才能得以保留:
 
 .. code:: verbatim
 
@@ -1047,38 +778,21 @@ the annotations dictionary, this must be done explicitly:
     ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
     'accessions', 'data_file_division', 'date', 'organism', 'gi']
 
-Also note that in an example like this, you should probably change the
-record identifiers since the NCBI references refer to the *original*
-unmodified sequence.
+Note: 此例中序列record的identifiers也应调整（因为NCBI的reference链接的是未经修改的*原始*序列）。
 
-4.8  Reverse-complementing SeqRecord objects
+4.8  反向互补SeqRecord对象
 --------------------------------------------
 
-One of the new features in Biopython 1.57 was the ``SeqRecord`` object��s
-``reverse_complement`` method. This tries to balance easy of use with
-worries about what to do with the annotation in the reverse complemented
-record.
+为消除序列反向互补后annotation改变带来的困难，Biopython 1.57 ``SeqRecord``对象加入了``reverse_complement``方法。这也成为Biopython 1.57的新特性之一。
 
-For the sequence, this uses the Seq object��s reverse complement method.
-Any features are transferred with the location and strand recalculated.
-Likewise any per-letter-annotation is also copied but reversed (which
-makes sense for typical examples like quality scores). However, transfer
-of most annotation is problematical.
+序列用Seq对象中的reverse_complement方法反向互补。Features随location而改变，strand也被重新计算。复制并反转per-letter-annotation（通常情况下这种做法比较合适，如对质量分数注释的反转）。然而多数annotation的转变却存有问题。
 
-For instance, if the record ID was an accession, that accession should
-not really apply to the reverse complemented sequence, and transferring
-the identifier by default could easily cause subtle data corruption in
-downstream analysis. Therefore by default, the ``SeqRecord``\ ��s id,
-name, description, annotations and database cross references are all
-*not* transferred by default.
+比如record ID是accession号，该accession不应被用于反向互补序列。默认identifier转换可导致后续分析中的轻度数据损坏。因此 ``SeqRecord``的id、
+name、description、annotations和dbxrefs默认不变。
 
-The ``SeqRecord`` object��s ``reverse_complement`` method takes a number
-of optional arguments corresponding to properties of the record. Setting
-these arguments to ``True`` means copy the old values, while ``False``
-means drop the old values and use the default value. You can
-alternatively provide the new desired value instead.
+``SeqRecord``对象的``reverse_complement``法用多个可选参数以对应record的属性。将这些参数设为``True``表示复制旧值；而``False``意为用缺省值替换旧值。当然也可自定义新值。
 
-Consider this example record:
+举例:
 
 .. code:: verbatim
 
@@ -1087,8 +801,7 @@ Consider this example record:
     >>> print record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)
     NC_005816.1 9609 41 1 11
 
-Here we take the reverse complement and specify a new identifier �C but
-notice how most of the annotation is dropped (but not the features):
+反向互补该record并给ID赋予新值 šC 注意：多数annotation丢失，而features仍在:
 
 .. code:: verbatim
 
