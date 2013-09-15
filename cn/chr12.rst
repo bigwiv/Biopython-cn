@@ -1,34 +1,17 @@
-﻿Chapter 12  Bio.PopGen: Population genetics
+﻿第12章  Bio.PopGen：群体遗传学
 ===========================================
 
-Bio.PopGen is a Biopython module supporting population genetics,
-available in Biopython 1.44 onwards.
+Bio.PopGen是一个群体遗传学相关的模块，在Biopython 1.44及以后的版本中可用。
 
-The medium term objective for the module is to support widely used data
-formats, applications and databases. This module is currently under
-intense development and support for new features should appear at a
-rather fast pace. Unfortunately this might also entail some instability
-on the API, especially if you are using a development version. APIs that
-are made available on our official public releases should be much more
-stable.
+该模块的中期目标是支持各种类型的数据格式、应用程序和数据库。目前，正在紧张的开发中，并会快速实现对新特征的支持。这可能会带来一些不稳定的API，尤其是当你使用的是开发版。不过，我们正式公开发行的API应该更加稳定。
+
 
 12.1  GenePop
 -------------
 
-GenePop
-(```http://genepop.curtin.edu.au/`` <http://genepop.curtin.edu.au/>`__)
-is a popular population genetics software package supporting
-Hardy-Weinberg tests, linkage desiquilibrium, population diferentiation,
-basic statistics, *F*\ :sub:`*st*` and migration estimates, among
-others. GenePop does not supply sequence based statistics as it doesn’t
-handle sequence data. The GenePop file format is supported by a wide
-range of other population genetic software applications, thus making it
-a relevant format in the population genetics field.
+GenePop（ `http://genepop.curtin.edu.au/ <http://genepop.curtin.edu.au/>`__）是一款主流的群体遗传学软件包，支持Hardy-Weinberg检验、谱系不均衡、群体分化、基础统计计算、 *F*\ :sub:`*st*` 和迁移率估计等等。GenePop并不支持基于序列的统计计算，因为它并不能处理序列数据。GenePop文件格式广泛用于多种其它的群体遗传学应用软件，因此成为群体遗传学领域重要格式。
 
-Bio.PopGen provides a parser and generator of GenePop file format.
-Utilities to manipulate the content of a record are also provided. Here
-is an example on how to read a GenePop file (you can find example
-GenePop data files in the Test/PopGen directory of Biopython):
+Bio.PopGen提供GenePop文件格式解析器和生成器，同时也提供操作记录（record）的小工具。此处有个关于怎样读取GenePop文件的示例（你可以在Biopython的Test/PopGen文件夹下找到GenePop示例文件）：
 
 .. code:: verbatim
 
@@ -38,16 +21,9 @@ GenePop data files in the Test/PopGen directory of Biopython):
     rec = GenePop.read(handle)
     handle.close()
 
-This will read a file called example.gen and parse it. If you do print
-rec, the record will be output again, in GenePop format.
+它将读取名为example.gen的文件并解析。如果你输出rec，将会以GenePop格式输出该记录。
 
-The most important information in rec will be the loci names and
-population information (but there is more – use help(GenePop.Record) to
-check the API documentation). Loci names can be found on rec.loci\_list.
-Population information can be found on rec.populations. Populations is a
-list with one element per population. Each element is itself a list of
-individuals, each individual is a pair composed by individual name and a
-list of alleles (2 per marker), here is an example for rec.populations:
+在rec中最重要的信息是座位（loci）名和群体信息（当然不止这些，请使用help(GenePop.Record)获得API帮助文档）。座位名可以在rec.loci\_list中找到，群体信息可以在rec.populations中找到。群体信息是一个列表，每个群体（population）作为其中一个元素。每个元素本身又是包含个体（individual）的列表，每个个体包含个体名和等位基因列表（每个marker两个元素），rec.populations示例：
 
 .. code:: verbatim
 
@@ -61,14 +37,9 @@ list of alleles (2 per marker), here is an example for rec.populations:
         ]
     ]
 
-So we have two populations, the first with two individuals, the second
-with only one. The first individual of the first population is called
-Ind1, allelic information for each of the 3 loci follows. Please note
-that for any locus, information might be missing (see as an example,
-Ind2 above).
+在上面的例子中，我们有两个群体，第一个群体包含两个个体，第二个群体只包含一个个体。第一个群体的第一个个体是Ind1，紧接着是3个座位的等位基因信息。请注意，对于任何的座位，信息可以缺失（如上述个体Ind2）。
 
-A few utility functions to manipulate GenePop records are made
-available, here is an example:
+有几个可用的工具函数可以处理GenePop记录，如下例：
 
 .. code:: verbatim
 
@@ -108,100 +79,47 @@ available, here is an example:
     #  The value of each dictionary entry is the GenePop record.
     #  rec is not altered.
 
-GenePop does not support population names, a limitation which can be
-cumbersome at times. Functionality to enable population names is
-currently being planned for Biopython. These extensions won’t break
-compatibility in any way with the standard format. In the medium term,
-we would also like to support the GenePop web service.
+GenePop不支持群体名，这种限制有时会很麻烦，Biopython对群体名的支持正在规划中，这些功能扩展仍会保持对标准格式的兼容性。同时，中期目标是对GenePop网络服务的支持。
 
-12.2  Coalescent simulation
+12.2  溯祖模拟（Coalescent simulation）
 ---------------------------
 
-A coalescent simulation is a backward model of population genetics with
-relation to time. A simulation of ancestry is done until the Most Recent
-Common Ancestor (MRCA) is found. This ancestry relationship starting on
-the MRCA and ending on the current generation sample is sometimes called
-a genealogy. Simple cases assume a population of constant size in time,
-haploidy, no population structure, and simulate the alleles of a single
-locus under no selection pressure.
+溯祖模拟是一种对群体遗传学信息根据时间向后推算的模型（backward model）。对祖先的模拟是通过寻找到最近共同祖先（Most Recent Common Ancestor，MRCA）完成。从MRCA到目前这一代样本间的血统关系有时称为家系（genealogy）。简单的情况是：群体大小固定，单倍型，无群体结构，无选择压的单个座位的等位基因。
 
-Coalescent theory is used in many fields like selection detection,
-estimation of demographic parameters of real populations or disease gene
-mapping.
+溯祖理论被广泛用于多种领域，如选择压力检测、真实群体的群体参数估计以及疾病基因图谱。
 
-The strategy followed in the Biopython implementation of the coalescent
-was not to create a new, built-in, simulator from scratch but to use an
-existing one, SIMCOAL2
-(```http://cmpg.unibe.ch/software/simcoal2/`` <http://cmpg.unibe.ch/software/simcoal2/>`__).
-SIMCOAL2 allows for, among others, population structure, multiple
-demographic events, simulation of multiple types of loci (SNPs,
-sequences, STRs/microsatellites and RFLPs) with recombination, diploidy
-multiple chromosomes or ascertainment bias. Notably SIMCOAL2 doesn’t
-support any selection model. We recommend reading SIMCOAL2’s
-documentation, available in the link above.
+Biopython对溯祖的实现不是去创建一个新的内置模拟器，而是利用现有的SIMCOAL2（ `http://cmpg.unibe.ch/software/simcoal2/ <http://cmpg.unibe.ch/software/simcoal2/>`__ ）。与其他相比，SIMCOAL2允许存在群体结构，多群体事件，多种类型的可发生重组的座位（SNPs，序列，STRs/微卫星和RFLPs），具有多染色体的二倍体和测量偏倚（ascertainment bias）。注意，SIMCOAL2并不支持所有的选择模型。建议阅读上述链接中的SIMCOAL2帮助文档。
 
-The input for SIMCOAL2 is a file specifying the desired demography and
-genome, the output is a set of files (typically around 1000) with the
-simulated genomes of a sample of individuals per subpopulation. This set
-of files can be used in many ways, like to compute confidence intervals
-where which certain statistics (e.g., *F*\ :sub:`*st*` or Tajima D) are
-expected to lie. Real population genetics datasets statistics can then
-be compared to those confidence intervals.
+SIMCOAL2的输入是一个指定所需的群体和基因组的文件，输出是一系列文件（通常在1000个左右），它们包括每个亚群（subpopulation）中模拟的个体基因组。这些文件有多种途径，如计算某些统计数据（e.g. *F*\ :sub:`*st*` 或Tajima D）的置信区间以得到可信的范围。然后将真实的群体遗传数据统计结果与这些置信区间相比较。
 
-Biopython coalescent code allows to create demographic scenarios and
-genomes and to run SIMCOAL2.
+Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基因组，然后运行SIMCOAL2。
 
-12.2.1  Creating scenarios
+12.2.1  创建场景（scenario）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Creating a scenario involves both creating a demography and a chromosome
-structure. In many cases (e.g. when doing Approximate Bayesian
-Computations – ABC) it is important to test many parameter variations
-(e.g. vary the effective population size, *N*\ :sub:`*e*`, between 10,
-50, 500 and 1000 individuals). The code provided allows for the
-simulation of scenarios with different demographic parameters very
-easily.
+创建场景包括创建群体及其染色体构成。多数情况下（如计算近似贝斯估计量（Approximate Bayesian Computations – ABC）），测试不同参数很重要（如不同的有效群体大小 *N*\ :sub:`*e*` ， 从10，50，500到1000个体）。提供的代码可以很容易地模拟具有不同群体参数的场景。
 
-Below we see how we can create scenarios and then how simulate them.
+下面我们将学习怎样创建场景，然后是怎样进行模拟。
 
-12.2.1.1  Demography
+12.2.1.1  群体
 ^^^^^^^^^^^^^^^^^^^^
 
-A few predefined demographies are built-in, all have two shared
-parameters: sample size (called sample\_size on the template, see below
-for its use) per deme and deme size, i.e. subpopulation size
-(pop\_size). All demographies are available as templates where all
-parameters can be varied, each template has a system name. The
-prefedined demographies/templates are:
+有一些内置的预定义群体，均包含两个共同的参数：同群种（deme）的样本大小（在模板中称为 sample\_size ，其使用请见下文）和同群种大小（pop\_size），如亚群大小。所有的群体都可以作为模板，所有的参数也可以变化，每个模板都有自己的系统名称。这些预定义的群体/模板（template）包括：
 
- **Single population, constant size**
-    The standard parameters are enough to specify it. Template name:
-    simple.
+**Single population, constant size**
+	单一种群固定群体大小。标准的参数即可满足它，模板名称：simple.
 **Single population, bottleneck**
-    As seen on figure `12.2.1.1 <#fig:bottle>`__. The parameters are
-    current population size (pop\_size on template ne3 on figure), time
-    of expansion, given as the generation in the past when it occurred
-    (expand\_gen), effective population size during bottleneck (ne2),
-    time of contraction (contract\_gen) and original size in the remote
-    past (ne3). Template name: bottle.
+	单一群体瓶颈效应，如图 `12.2.1.1 <#fig:bottle>`__ 所示。参数有当前种群大小（图中ne3模板的pop\_size）、种群扩张时间 - 扩张发生后代数（expand\_gen），瓶颈发生时的有效群体大小（ne2），种群收缩时间（contract\_gen）以及原始种群大小（ne3）。模板名：bottle。
 **Island model**
-    The typical island model. The total number of demes is specified by
-    total\_demes and the migration rate by mig. Template name island.
+	岛屿模型。同群种（deme）总数表示为total\_demes，迁移率表示为mig。模板名：island。
 **Stepping stone model - 1 dimension**
-    The stepping stone model in 1 dimension, extremes disconnected. The
-    total number of demes is total\_demes, migration rate is mig.
-    Template name is ssm\_1d.
+	一维脚踏石模型（Stepping stone model），极端状态下种群分布不连续。同群种（deme）总数表示为total\_demes，迁移率表示为mig。模板名：ssm\_1d。
 **Stepping stone model - 2 dimensions**
-    The stepping stone model in 2 dimensions, extremes disconnected. The
-    parameters are x for the horizontal dimension and y for the vertical
-    (being the total number of demes x times y), migration rate is mig.
-    Template name is ssm\_2d.
+	二维脚踏石模型，极端状态下种群分布不连续。参数有表示水平维度的x和表示垂直维度的y（同群种总数即为x × y），以及表示迁移率的mig。模板名：ssm\_2d。
 
 |image4|
 
-In our first example, we will generate a template for a single
-population, constant size model with a sample size of 30 and a deme size
-of 500. The code for this is:
+在我们的第一个示例中，将生成一个单一种群固定群体大小（Single population, constant size）模板，样本大小（sample size）为30，同群种大小（deme size）为500。代码如下：
 
 .. code:: verbatim
 
@@ -212,29 +130,17 @@ of 500. The code for this is:
         [('sample_size', [30]),
         ('pop_size', [100])])
 
-Executing this code snippet will generate a file on the current
-directory called simple\_100\_300.par this file can be given as input to
-SIMCOAL2 to simulate the demography (below we will see how Biopython can
-take care of calling SIMCOAL2).
+执行该段代码将会在当前目录生成一个名为simple\_100\_300.par的文件，该文件可作为SIMCOAL2的输入文件，用于模拟群体（下面将会展示Biopython是如何调用SIMCOAL2）。
 
-This code consists of a single function call, let’s discuss it parameter
-by parameter.
+这段代码仅由一个函数调用组成，让我们一个参数一个参数地讨论。
 
-The first parameter is the template id (from the list above). We are
-using the id ’simple’ which is the template for a single population of
-constant size along time.
+第一个参数是模板id（从上面的模板列表中选择）。我们使用 ’simple’，表示的是单一群体固定种群大小模板。
 
-The second parameter is the chromosome structure. Please ignore it for
-now, it will be explained in the next section.
+第二个参数是染色体结构，将在下一节详细阐述。
 
-The third parameter is a list of all required parameters (recall that
-the simple model only needs sample\_size and pop\_size) and possible
-values (in this case each parameter only has a possible value).
+第三个参数是所有需要的参数列表及其所有可能的值（此列中所有的参数都只含有一个可能值）。
 
-Now, let’s consider an example where we want to generate several island
-models, and we are interested in varying the number of demes: 10, 50 and
-100 with a migration rate of 1%. Sample size and deme size will be the
-same as before. Here is the code:
+现在让我们看看岛屿模型示例。我们希望生成几个岛屿模型，并对不同大小的同群种感兴趣：10、50和100，迁移率为1%。样本大小和同群种大小与上一个示例一致，代码如下： 
 
 .. code:: verbatim
 
@@ -247,51 +153,26 @@ same as before. Here is the code:
         ('mig', [0.01]),
         ('total_demes', [10, 50, 100])])
 
-In this case, 3 files will be generated: island\_100\_0.01\_100\_30.par,
-island\_10\_0.01\_100\_30.par and island\_50\_0.01\_100\_30.par. Notice
-the rule to make file names: template name, followed by parameter values
-in reverse order.
+此例将会生成3个文件：island\_100\_0.01\_100\_30.par，island\_10\_0.01\_100\_30.par 和 island\_50\_0.01\_100\_30.par。注意，生成文件名的规律是：模板名，然后是参数值逆序排列。
 
-A few, arguably more esoteric template demographies exist (please check
-the Bio/PopGen/SimCoal/data directory on Biopython source tree).
-Furthermore it is possible for the user to create new templates. That
-functionality will be discussed in a future version of this document.
+还有一些存在较多争议的群体模板（请见Biopython源代码中Bio/PopGen/SimCoal/data文件夹）。同时，允许用户创建新的模板，该功能将在以后的文档中讨论。
 
-12.2.1.2  Chromosome structure
+12.2.1.2  染色体结构
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We strongly recommend reading SIMCOAL2 documentation to understand the
-full potential available in modeling chromosome structures. In this
-subsection we only discuss how to implement chromosome structures using
-the Biopython interface, not the underlying SIMCOAL2 capabilities.
+我们强烈建议你阅读SIMCOAL2文档，以完整理解染色体结构建模的各种使用。在本小节，我们只讨论如何使用Biopython接口实现指定的染色体结构，不会涉及SIMCOAL2可实现哪些染色体结构。
 
-We will start by implementing a single chromosome, with 24 SNPs with a
-recombination rate immediately on the right of each locus of 0.0005 and
-a minimum frequency of the minor allele of 0. This will be specified by
-the following list (to be passed as second parameter to the function
-generate\_simcoal\_from\_template):
+我们首先实现一条染色体，包含24个SNPs，每个相邻座位的重组率为0.0005，次等位基因的最小频率为0。这些由以下列表指定（作为第二个参数传递给generate\_simcoal\_from\_template函数）：
 
 .. code:: verbatim
 
     [(1, [('SNP', [24, 0.0005, 0.0])])]
 
-This is actually the chromosome structure used in the above examples.
+这实际上是上一个示例使用的染色体结构。
 
-The chromosome structure is represented by a list of chromosomes, each
-chromosome (i.e., each element in the list) is composed by a tuple (a
-pair): the first element is the number of times the chromosome is to be
-repeated (as there might be interest in repeating the same chromosome
-many times). The second element is a list of the actual components of
-the chromosome. Each element is again a pair, the first member is the
-locus type and the second element the parameters for that locus type.
-Confused? Before showing more examples let’s review the example above:
-We have a list with one element (thus one chromosome), the chromosome is
-a single instance (therefore not to be repeated), it is composed of 24
-SNPs, with a recombination rate of 0.0005 between each consecutive SNP,
-the minimum frequency of the minor allele is 0.0 (i.e, it can be absent
-from a certain population).
+染色体结构表示为一个包含所有染色体的列表，每条染色体（即列表中的每个元素）由一个元组（tuple）组成，元组包括一对元素组成。元组的第一个元素是染色体被重复的次数（因为有可能需要多次重复同一条染色体）。元组的第二个元素是一个表示该染色体的实际组成的列表，每个列表元素又包括一对元素，第一个是座位类型，第二个是该座位的参数列表。是否有点混淆了呢？在我们展示示例之前，先让我们回顾下上一个示例：我们有一个列表（表示一条染色体），该染色体只有一个实例（因此不会被重复），它由24个SNPs组成，每个相邻SNP间的重组率为0.0005，次等位基因的最小频率为0.0（即它可以在某些染色体中缺失）。
 
-Let’s see a more complicated example:
+现在让我们看看更复杂的示例：
 
 .. code:: verbatim
 
@@ -308,33 +189,14 @@ Let’s see a more complicated example:
       )
     ]
 
-We start by having 5 chromosomes with the same structure as above (i.e.,
-24 SNPs). We then have 2 chromosomes which have a DNA sequence with 10
-nucleotides, 0.0 recombination rate, 0.0005 mutation rate, and a
-transition rate of 0.33. Then we have an RFLP with 0.0 recombination
-rate to the next locus and a 0.0001 mutation rate. Finally we have a
-microsatellite (or STR), with 0.0 recombination rate to the next locus
-(note, that as this is a single microsatellite which has no loci
-following, this recombination rate here is irrelevant), with a mutation
-rate of 0.001, geometric parameter of 0.0 and a range constraint of 0.0
-(for information about this parameters please consult the SIMCOAL2
-documentation, you can use them to simulate various mutation models,
-including the typical – for microsatellites – stepwise mutation model
-among others).
+首先，我们有5条与上一示例具有相同结构组成的染色体（即24SNPs）。然后是2条这样的染色体：包含一段具有重组率为0.0、突变率为0.0005及置换率为0.33的10个核苷酸长度的DNA序列，一段具有重组率为0.0、突变率为0.0001的RFLP，一段具有重组率为0.0、突变率为0.001、几何参数为0.0、范围限制参数为0.0的微卫星（microsatellite，STR）序列（注意，因为这是单个微卫星，接下来没有基因座位，因此这里的重组率没有任何影响，更多关于这些参数的信息请查阅SIMCOAL2文档，你可以使用它们模拟各种突变模型，包括典型的微卫星渐变突变模型）。
 
-12.2.2  Running SIMCOAL2
+12.2.2  运行SIMCOAL2
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-We now discuss how to run SIMCOAL2 from inside Biopython. It is required
-that the binary for SIMCOAL2 is called simcoal2 (or simcoal2.exe on
-Windows based platforms), please note that the typical name when
-downloading the program is in the format simcoal2\_x\_y. As such, when
-installing SIMCOAL2 you will need to rename of the downloaded executable
-so that Biopython can find it.
+现在我们讨论如何从Biopython内部运行SIMCOAL2。这需要SIMCOAL2的可执行二进制文件名为simcoal2（在Windows平台下为simcoal2.exe），请注意，从官网下载的程序命名格式通常为simcoal2\_x\_y。因此，当安装SIMCOAL2时，需要重命名可执行文件，这样Biopython才能正确调用。
 
-It is possible to run SIMCOAL2 on files that were not generated using
-the method above (e.g., writing a parameter file by hand), but we will
-show an example by creating a model using the framework presented above.
+SIMCOAL2可以处理不是使用上诉方法生成的文件（如手动配置的参数文件），但是我们将使用上述方法得到的文件创建模型：
 
 .. code:: verbatim
 
@@ -361,67 +223,33 @@ show an example by creating a model using the framework presented above.
     ctrl = SimCoalController('.')
     ctrl.run_simcoal('simple_100_30.par', 50)
 
-The lines of interest are the last two (plus the new import). Firstly a
-controller for the application is created. The directory where the
-binary is located has to be specified.
+需要注意的是最后两行（以及新增的import行）。首先是创建一个应用程序控制器对象，需要指定二进制可执行文件所在路径。
 
-The simulator is then run on the last line: we know, from the rules
-explained above, that the input file name is simple\_100\_30.par for the
-simulation parameter file created. We then specify that we want to run
-50 independent simulations, by default Biopython requests a simulation
-of diploid data, but a third parameter can be added to simulate haploid
-data (adding as a parameter the string ’0’). SIMCOAL2 will now run
-(please note that this can take quite a lot of time) and will create a
-directory with the simulation results. The results can now be analysed
-(typically studying the data with Arlequin3). In the future Biopython
-might support reading the Arlequin3 format and thus allowing for the
-analysis of SIMCOAL2 data inside Biopython.
+模拟器在最后一行运行：从上述阐述的规律可知，文件名为simple\_100\_30.par的输入文件是我们创建的模拟参数文件，然后我们指定了希望运行50次独立模拟。默认情况下，Biopython模拟二倍体数据，但是可以添加第三个参数用于模拟单倍体数据（字符串'0'）。然后，SIMCOAL2将会执行（这需要运行很长时间），并创建一个包含模拟结果的文件夹，结果文件可便可用于分析（尤其是研究Arlequin3数据）。在未来的Biopython版本中，可能会支持Arlequin3格式文件的读取，从而在Biopython中便能分析SIMCOAL2结果。
 
-12.3  Other applications
+12.3  其它应用程序
 ------------------------
 
-Here we discuss interfaces and utilities to deal with population
-genetics’ applications which arguably have a smaller user base.
+这里我们讨论一些处理其它的群体遗传学中应用程序的接口和小工具，这些应用程序具有争议，使用得较少。
 
-12.3.1  FDist: Detecting selection and molecular adaptation
+12.3.1  FDist：检测选择压力和分子适应
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FDist is a selection detection application suite based on computing
-(i.e. simulating) a “neutral” confidence interval based on
-*F*\ :sub:`*st*` and heterozygosity. Markers (which can be SNPs,
-microsatellites, AFLPs among others) which lie outside the “neutral”
-interval are to be considered as possible candidates for being under
-selection.
+FDist是一个选择压力检测的应用程序包，基于通过 *F*\ :sub:`*st*` 和杂合度计算（即模拟）得到的“中性”（“neutral”）置信区间。“中性”置信区间外的Markers（可以是SNPs，微卫星，AFLPs等等）可以被认为是候选的受选择marker。
 
-FDist is mainly used when the number of markers is considered enough to
-estimate an average *F*\ :sub:`*st*`, but not enough to either have
-outliers calculated from the dataset directly or, with even more markers
-for which the relative positions in the genome are known, to use
-approaches based on, e.g., Extended Haplotype Heterozygosity (EHH).
+FDist主要运用在当marker数量足够用于估计平均 *F*\ :sub:`*st*` ，而不足以从数据集中计算出离群点 - 直接地或者在知道大多数marker在基因组中的相对位置的情况下使用基于如Extended Haplotype Heterozygosity （EHH）的方法。
 
-The typical usage pattern for FDist is as follows:
+典型的FDist的使用如下：
 
-#. Import a dataset from an external format into FDist format.
-#. Compute average *F*\ :sub:`*st*`. This is done by datacal inside
-   FDist.
-#. Simulate “neutral” markers based on the average *F*\ :sub:`*st*` and
-   expected number of total populations. This is the core operation,
-   done by fdist inside FDist.
-#. Calculate the confidence interval, based on the desired confidence
-   boundaries (typically 95% or 99%). This is done by cplot and is
-   mainly used to plot the interval.
-#. Assess each marker status against the simulation “neutral” confidence
-   interval. Done by pv. This is used to detect the outlier status of
-   each marker against the simulation.
+#. 从其它格式读取数据为FDist格式；
+#. 计算平均 *F*\ :sub:`*st*` ，由FDist的datacal完成；
+#. 根据平均 *F*\ :sub:`*st*` 和期望的总群体数模拟“中性”markers，这是核心部分，由FDist的fdist完成；
+#. 根据指定的置信范围（通常是95%或者是99%）计算置信区间，由cplot完成，主要用于对区间作图；
+#. 用模拟的“中性”置信区间评估每个Marker的状态，由pv完成，用于检测每个marker与模拟的相比的离群状态；
 
-We will now discuss each step with illustrating example code (for this
-example to work FDist binaries have to be on the executable PATH).
+我们将以示例代码讨论每一步（FDist可执行二进制文件需要在PATH环境变量中）。
 
-The FDist data format is application specific and is not used at all by
-other applications, as such you will probably have to convert your data
-for use with FDist. Biopython can help you do this. Here is an example
-converting from GenePop format to FDist format (along with imports that
-will be needed on examples further below):
+FDist数据格式是该应用程序特有的，不被其它应用程序使用。因此你需要转化你的数据格式到FDist可使用的格式。Biopython可以帮助你完成这个过程。这里有一个将GenePop格式转换为FDist格式的示例（同时包括后面示例将用到的import语句）：
 
 .. code:: verbatim
 
@@ -436,146 +264,81 @@ will be needed on examples further below):
     in_file.write(str(fd_rec))
     in_file.close()
 
-In this code we simply parse a GenePop file and convert it to a FDist
-record.
+在该段代码中，我们解析GenePop文件并转化为FDist记录（record）。
 
-Printing an FDist record will generate a string that can be directly
-saved to a file and supplied to FDist. FDist requires the input file to
-be called infile, therefore we save the record on a file with that name.
+输出FDist记录将得到可以直接保存到可用于FDist的文件的字符串。FDist需要输入文件名为infile，因此我们将记录保存到文件名为infile的文件。
 
-The most important fields on a FDist record are: num\_pops, the number
-of populations; num\_loci, the number of loci and loci\_data with the
-marker data itself. Most probably the details of the record are of no
-interest to the user, as the record only purpose is to be passed to
-FDist.
+FDist记录最重要的字段（field）是：num\_pops，群体数量；num\_loci，座位数量和loci\_data，marker数据。记录的许多信息对用户来说可能没有用处，仅用于传递给FDist。
 
-The next step is to calculate the average *F*\ :sub:`*st*` of the
-dataset (along with the sample size):
+下一步是计算平均数据集的 *F*\ :sub:`*st*` （以及样本大小）：
 
 .. code:: verbatim
 
     ctrl = Controller.FDistController()
     fst, samp_size = ctrl.run_datacal()
 
-On the first line we create an object to control the call of FDist
-suite, this object will be used further on in order to call other suite
-applications.
+第一行我们创建了一个控制调用FDist软件包的对象，该对象被用于调用该包的其它应用程序。
 
-On the second line we call the datacal application which computes the
-average *F*\ :sub:`*st*` and the sample size. It is worth noting that
-the *F*\ :sub:`*st*` computed by datacal is a *variation* of Weir and
-Cockerham’s θ.
+第二行我们调用datacal应用程序，它用于计算 *F*\ :sub:`*st*` 和样本大小。值得注意的是，用datacal计算得到的 *F*\ :sub:`*st*` 是 Weir-Cockerham θ的“变种”（ *variation* ）。
 
-We can now call the main fdist application in order to simulate neutral
-markers.
+现在我们可以调用主程序fdist模拟中性Markers。
 
 .. code:: verbatim
 
     sim_fst = ctrl.run_fdist(npops = 15, nsamples = fd_rec.num_pops, fst = fst,
         sample_size = samp_size, mut = 0, num_sims = 40000)
 
- **npops**
-    Number of populations existing in nature. This is really a
-    “guestimate”. Has to be lower than 100.
+**npops**
+	现存自然群体数量，完全是一个“瞎猜值”（“guestimate”），必须小于100。
 **nsamples**
-    Number of populations sampled, has to be lower than npops.
+	抽样群体数量，需要小于npops。
 **fst**
-    Average *F*\ :sub:`*st*`.
+	平均 *F*\ :sub:`*st*` 。
 **sample\_size**
-    Average number of individuals sampled on each population.
+	每个群体抽样个体平均数
 **mut**
-    Mutation model: 0 - Infinite alleles; 1 - Stepwise mutations
+	突变模型：0 - 无限等位基因突变模型；1 - 渐变突变模型
 **num\_sims**
-    Number of simulations to perform. Typically a number around 40000
-    will be OK, but if you get a confidence interval that looks sharp
-    (this can be detected when plotting the confidence interval computed
-    below) the value can be increased (a suggestion would be steps of
-    10000 simulations).
+	执行模拟的次数。通常，40000左右的数值即可，但是如果得到的执行区间范围比较大（可以通过下面的置信区间作图检测到），可以上调此值（建议每次调整10000次模拟）。
 
-The confusion in wording between number of samples and sample size stems
-from the original application.
+样本数量和样本大小措辞上的混乱源于原始的应用程序。
 
-A file named out.dat will be created with the simulated heterozygosities
-and *F*\ :sub:`*st*`\ s, it will have as many lines as the number of
-simulations requested.
+将会得到一个名为out.dat的文件，它包含模拟的杂合度和 *F*\ :sub:`*st*` 值，行数与模拟的次数相同。
 
-Note that fdist returns the average *F*\ :sub:`*st*` that it was
-*capable* of simulating, for more details about this issue please read
-below the paragraph on approximating the desired average
-*F*\ :sub:`*st*`.
+注意，fdist返回它可以模拟的平均 *F*\ :sub:`*st*` ，关于此问题更多的细节，请阅读下面的“估计期望的平均 *F*\ :sub:`*st*` ”
 
-The next (optional) step is to calculate the confidence interval:
+下一步（可选步骤）是计算置信区间：
 
 .. code:: verbatim
 
     cpl_interval = ctrl.run_cplot(ci=0.99)
 
-You can only call cplot after having run fdist.
+只能在运行fdist之后才能调用cplot。
 
-This will calculate the confidence intervals (99% in this case) for a
-previous fdist run. A list of quadruples is returned. The first element
-represents the heterozygosity, the second the lower bound of
-*F*\ :sub:`*st*` confidence interval for that heterozygosity, the third
-the average and the fourth the upper bound. This can be used to trace
-the confidence interval contour. This list is also written to a file,
-out.cpl.
+这将计算先前fdist结果的置信区间（此例中为99%）。第一个元素是杂合度，第二个是该杂合度的 *F*\ :sub:`*st*` 置信下限，第三个是 *F*\ :sub:`*st*` 平均值，第四个是置信上限。可以用于记录置信区间等高线。该列表也可以输出到out.cpl文件。
 
-The main purpose of this step is return a set of points which can be
-easily used to plot a confidence interval. It can be skipped if the
-objective is only to assess the status of each marker against the
-simulation, which is the next step...
+这步的主要目的是返回一系列的点用于对置信区间作图。如果只是需要根据模拟结果对每个marker的状态进行评估，可以跳过此步。
 
 .. code:: verbatim
 
     pv_data = ctrl.run_pv()
 
-You can only call cplot after having run datacal and fdist.
+只能在运行fdist之后才能调用pv。
 
-This will use the simulated markers to assess the status of each
-individual real marker. A list, in the same order than the loci\_list
-that is on the FDist record (which is in the same order that the GenePop
-record) is returned. Each element in the list is a quadruple, the
-fundamental member of each quadruple is the last element (regarding the
-other elements, please refer to the pv documentation – for the sake of
-simplicity we will not discuss them here) which returns the probability
-of the simulated *F*\ :sub:`*st*` being lower than the marker
-*F*\ :sub:`*st*`. Higher values would indicate a stronger candidate for
-positive selection, lower values a candidate for balancing selection,
-and intermediate values a possible neutral marker. What is “higher”,
-“lower” or “intermediate” is really a subjective issue, but taking a
-“confidence interval” approach and considering a 95% confidence
-interval, “higher” would be between 0.95 and 1.0, “lower” between 0.0
-and 0.05 and “intermediate” between 0.05 and 0.95.
+这将使用模拟marker对每个个体真实的marker进行评估，并返回一个列表，顺序与FDist记录中loci\_list一致（loci\_list又与GenePop顺序一致）。列表中每个元素包含四个元素，其中最重要的是最后一个元素（关于其他的元素，为了简单起见，我们不在这里讨论，请见pv帮助文档），它返回模拟的 *F*\ :sub:`*st*` 低于 marker *F*\ :sub:`*st*` 的概率。较大值表明是候选的正选择（positive selection）marker，较小值表明是候选的平衡选择（balancing selection）marker，中间值可能是中性marker。怎样的值是“较大值”、“较小值”或者“中间值”是一个很主观的问题，但当使用置信区间方法及95%的置信区间时，“较大值”在0.95 - 1.00之间，“较小值”在0.00 - 0.05之间，“中间值”在0.05 - 0.05之间。
 
-12.3.1.1  Approximating the desired average *F*\ :sub:`*st*`
+12.3.1.1  估计期望的平均 *F*\ :sub:`*st*` 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Fdist tries to approximate the desired average *F*\ :sub:`*st*` by doing
-a coalescent simulation using migration rates based on the formula
+FDist通过对由下例公式得到的迁移率进行溯祖模拟估计期望的平均 *F*\ :sub:`*st*` ：
 
-*N*\ :sub:`*m*` = 
+*N*\ :sub:`*m*` = ( 1 − \ *F*\ :sub:`*st*` ) / 4\ *F*\ :sub:`*st*` 
 
-+--------------------------+
-| 1 − \ *F*\ :sub:`*st*`   |
-+--------------------------+
-+--------------------------+
-| 4\ *F*\ :sub:`*st*`      |
-+--------------------------+
+该公式有一些前提，比如种群大小无限大。
 
- 
+在实践中，当群体数量比较小，突变模型为渐进突变模型，样本大小增加，fdist将不能模拟得到可接受的近似平均 *F*\ :sub:`*st*` 。
 
-This formula assumes a few premises like an infinite number of
-populations.
-
-In practice, when the number of populations is low, the mutation model
-is stepwise and the sample size increases, fdist will not be able to
-simulate an acceptable approximate average *F*\ :sub:`*st*`.
-
-To address that, a function is provided to iteratively approach the
-desired value by running several fdists in sequence. This approach is
-computationally more intensive than running a single fdist run, but
-yields good results. The following code runs fdist approximating the
-desired *F*\ :sub:`*st*`:
+为了解决这个问题，Biopython提供了一个使用迭代方法的函数，通过依次运行几个fdist得到期望的值。该方法比运行单个fdist相比耗费更多计算资源，但是可以得到更好的结果。以下代码运行fdist得到期望的 *F*\ :sub:`*st*` ：
 
 .. code:: verbatim
 
@@ -583,25 +346,16 @@ desired *F*\ :sub:`*st*`:
         fst = fst, sample_size = samp_size, mut = 0, num_sims = 40000,
         limit = 0.05)
 
-The only new optional parameter, when comparing with run\_fdist, is
-limit which is the desired maximum error. run\_fdist can (and probably
-should) be safely replaced with run\_fdist\_force\_fst.
+与run\_fdist相比，唯一一个新的可选参数是limit，它表示期望的最大错误率。run\_fdist可以（或许应该）由run\_fdist\_force\_fst替代。
 
-12.3.1.2  Final notes
+12.3.1.2  说明
 ^^^^^^^^^^^^^^^^^^^^^
 
-The process to determine the average *F*\ :sub:`*st*` can be more
-sophisticated than the one presented here. For more information we refer
-you to the FDist README file. Biopython’s code can be used to implement
-more sophisticated approaches.
+计算平均 *F*\ :sub:`*st*` 的过程可能比这里呈现的要复杂得多。更多的信息请查阅FDist README文件。同时，Biopython的代码也可用于实现更复杂的过程。
 
-12.4  Future Developments
+12.4  未来发展
 -------------------------
 
-The most desired future developments would be the ones you add yourself
-;) .
+最期望的是您的参与！
 
-That being said, already existing fully functional code is currently
-being incorporated in Bio.PopGen, that code covers the applications
-FDist and SimCoal2, the HapMap and UCSC Table Browser databases and some
-simple statistics like *F*\ :sub:`*st*`, or allele counts.
+话虽这么说，已经完成的功能模块正在逐步加入到Bio.PopGen，这些代码覆盖了程序FDist和SimCoal2，HapMap和UCSC Table Browser数据库，以及一些简单的统计计算，如 *F*\ :sub:`*st*` ， 或等位基因数。
