@@ -1,77 +1,30 @@
-Chapter 17  Graphics including GenomeDiagram
-============================================
+第17章 Graphics模块中的基因组可视化包—GenomeDiagram
+==================================================
 
-The ``Bio.Graphics`` module depends on the third party Python library
-`ReportLab <http://www.reportlab.org>`__. Although focused on producing
-PDF files, ReportLab can also create encapsulated postscript (EPS) and
-(SVG) files. In addition to these vector based images, provided certain
-further dependencies such as the `Python Imaging Library
-(PIL) <http://www.pythonware.com/products/pil/>`__ are installed,
-ReportLab can also output bitmap images (including JPEG, PNG, GIF, BMP
-and PICT formats).
+ ``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS(Encapsulated Postscript)文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
 
-17.1  GenomeDiagram
+17.1  基因组可视化包—GenomeDiagram
 -------------------
 
-17.1.1  Introduction
+17.1.1  GenomeDiagram简介
 ~~~~~~~~~~~~~~~~~~~~
 
-The ``Bio.Graphics.GenomeDiagram`` module was added to Biopython 1.50,
-having previously been available as a separate Python module dependent
-on Biopython. GenomeDiagram is described in the Bioinformatics journal
-publication by Pritchard et al. (2006) [`2 <#pritchard2006>`__\ ], which
-includes some examples images. There is a PDF copy of the old manual
-here,
-```http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf`` <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__
-which has some more examples. As the name might suggest, GenomeDiagram
-was designed for drawing whole genomes, in particular prokaryotic
-genomes, either as linear diagrams (optionally broken up into fragments
-to fit better) or as circular wheel diagrams. Have a look at Figure 2 in
-Toth *et al.* (2006) [`3 <#toth2006>`__\ ] for a good example. It proved
-also well suited to drawing quite detailed figures for smaller genomes
-such as phage, plasmids or mitochrondia, for example see Figures 1 and 2
-in Van der Auwera *et al.* (2009) [`4 <#vanderauwera2009>`__\ ] (shown
-with additional manual editing).
+ ``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 ```http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf`` <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
 
-This module is easiest to use if you have your genome loaded as a
-``SeqRecord`` object containing lots of ``SeqFeature`` objects - for
-example as loaded from a GenBank file (see
-Chapters \ `4 <#chapter:SeqRecord>`__ and \ `5 <#chapter:Bio.SeqIO>`__).
+如果存储基因组信息的是从GenBank文件中下载的 ``SeqRecord`` ，它会包含许多 ``SeqFeature`` ，用这个模块处理就很简单。(see
+Chapters \ `4 <#chapter:SeqRecord>`__ and \ `5 <#chapter:Bio.SeqIO>`__)。
 
-17.1.2  Diagrams, tracks, feature-sets and features
+17.1.2 图形，轨迹,  特征集和特征
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GenomeDiagram uses a nested set of objects. At the top level, you have a
-diagram object representing a sequence (or sequence region) along the
-horizontal axis (or circle). A diagram can contain one or more tracks,
-shown stacked vertically (or radially on circular diagrams). These will
-typically all have the same length and represent the same sequence
-region. You might use one track to show the gene locations, another to
-show regulatory regions, and a third track to show the GC percentage.
-The most commonly used type of track will contain features, bundled
-together in feature-sets. You might choose to use one feature-set for
-all your CDS features, and another for tRNA features. This isn’t
-required - they can all go in the same feature-set, but it makes it
-easier to update the properties of just selected features (e.g. make all
-the tRNA features red).
-
-There are two main ways to build up a complete diagram. Firstly, the top
-down approach where you create a diagram object, and then using its
-methods add track(s), and use the track methods to add feature-set(s),
-and use their methods to add the features. Secondly, you can create the
-individual objects separately (in whatever order suits your code), and
-then combine them.
-
-17.1.3  A top down example
+GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的图形对象（diagram object）表示一个序列（sequence）或序列区域（sequence region）。一个图形可以包含多个轨迹（track），呈现为横向排列或者环形放射图。这些轨迹的长度通常相等，代表相同的序列区域。可用一个轨迹表示基因的位置，另一个轨迹表示调节区域，第三个轨迹表示GC含量。可将最常用轨迹的特征打包为一个特征集（feature-sets）。CDS的特征可以用一个特征集，而tRNA的特征可以用另外一个特征集。这不是强制性的要求，你可以在diagram中用同样的特征集。如果diagram中用不同的特征集，修改一个特征会很容易，比如把所有tRNA的特征都变为红色，你只需选择tRNA的特征就行。
+ 
+新建图形主要有两种方式。第一种是自上而下的方法（Top-Down），首先新建diagram对象，然后用diagram的方法来添加track(s)，最后用track的方法添加特征。第二种是自下而上的方法（Bottom-Up），首先单独新建对象，然后再将其进行组合。
+ 
+17.1.3 自上而下的实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-We’re going to draw a whole genome from a ``SeqRecord`` object read in
-from a GenBank file (see Chapter \ `5 <#chapter:Bio.SeqIO>`__). This
-example uses the pPCP1 plasmid from *Yersinia pestis biovar Microtus*,
-the file is included with the Biopython unit tests under the GenBank
-folder, or online
-```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
-from our website.
+ 
+我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组 (see Chapter \ `5 <#chapter:Bio.SeqIO>`__)。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
 
 .. code:: verbatim
 
@@ -81,9 +34,7 @@ from our website.
     from Bio import SeqIO
     record = SeqIO.read("NC_005816.gb", "genbank")
 
-We’re using a top down approach, so after loading in our sequence we
-next create an empty diagram, then add an (empty) track, and to that add
-an (empty) feature set:
+这里用自上而下的方法，导入目标序列后，新建一个diagram，然后新建一个track，最后新建一个特征集（feature set）：
 
 .. code:: verbatim
 
@@ -91,10 +42,7 @@ an (empty) feature set:
     gd_track_for_features = gd_diagram.new_track(1, name="Annotated Features")
     gd_feature_set = gd_track_for_features.new_set()
 
-Now the fun part - we take each gene ``SeqFeature`` object in our
-``SeqRecord``, and use it to generate a feature on the diagram. We’re
-going to color them blue, alternating between a dark blue and a light
-blue.
+接下来的部分最有趣，提取 ``SeqRecord`` 中每个基因的 ``SeqFeature`` 对象，就相应地为diagram生成一个特征（feature）。将其设置为蓝色，分别用深蓝和浅蓝表示。
 
 .. code:: verbatim
 
@@ -108,11 +56,7 @@ blue.
             color = colors.lightblue
         gd_feature_set.add_feature(feature, color=color, label=True)
 
-Now we come to actually making the output file. This happens in two
-steps, first we call the ``draw`` method, which creates all the shapes
-using ReportLab objects. Then we call the ``write`` method which renders
-these to the requested file format. Note you can output in multiple file
-formats:
+创建导出文件需要两步，首先是 ``draw`` 方法，它用ReportLab对象生成全部图形。然后是  ``write`` 方法，将图形存储到格式文件。注意：输出文件格式不止一种。
 
 .. code:: verbatim
 
@@ -122,8 +66,7 @@ formats:
     gd_diagram.write("plasmid_linear.eps", "EPS")
     gd_diagram.write("plasmid_linear.svg", "SVG")
 
-Also, provided you have the dependencies installed, you can also do
-bitmaps, for example:
+如果安装了依赖关系（Dependencies），也可以生成位图(Bitmap image)，代码如下：
 
 .. code:: verbatim
 
@@ -131,10 +74,9 @@ bitmaps, for example:
 
 |image13|
 
-Notice that the ``fragments`` argument which we set to four controls how
-many pieces the genome gets broken up into.
+注意，我们将代码中的  ``fragments`` 变量设置为“4”，基因组就会被分为“4”个片段。
 
-If you want to do a circular figure, then try this:
+如果想要环形图，可以试试以下的代码：
 
 .. code:: verbatim
 
@@ -144,14 +86,12 @@ If you want to do a circular figure, then try this:
 
 |image14|
 
-These figures are not very exciting, but we’ve only just got started.
+示例图不是非常精彩，但这仅仅是精彩的开始。
 
-17.1.4  A bottom up example
+17.1.4  自下而上的实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now let’s produce exactly the same figures, but using the bottom up
-approach. This means we create the different objects directly (and this
-can be done in almost any order) and then combine them.
+现在，用“自下而上”的方法来创建相同的图形。首先新建不同的对象（可以是任何顺序），然后将其组合。
 
 .. code:: verbatim
 
@@ -182,26 +122,20 @@ can be done in almost any order) and then combine them.
     gd_track_for_features.add_set(gd_feature_set)
     gd_diagram.add_track(gd_track_for_features, 1)
 
-You can now call the ``draw`` and ``write`` methods as before to produce
-a linear or circular diagram, using the code at the end of the top-down
-example above. The figures should be identical.
+同样，利用 ``draw`` 和 ``write`` 方法来创建线形图或者环形图，结果应该完全相同（“draw”和“write”部分的代码见17.1.3）。
 
-17.1.5  Features without a SeqFeature
+17.1.5  简单的Feature
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the above example we used a ``SeqRecord``\ ’s ``SeqFeature`` objects
-to build our diagram (see also Section \ `4.3 <#sec:seq_features>`__).
-Sometimes you won’t have ``SeqFeature`` objects, but just the
-coordinates for a feature you want to draw. You have to create minimal
-``SeqFeature`` object, but this is easy:
+以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象 (see also Section \ `4.3 <#sec:seq_features>`__)。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
+``SeqFeature`` 对象，方法很简单，代码如下：
 
 .. code:: verbatim
 
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     my_seq_feature = SeqFeature(FeatureLocation(50,100),strand=+1)
 
-For strand, use ``+1`` for the forward strand, ``-1`` for the reverse
-strand, and ``None`` for both. Here is a short self contained example:
+对于序列来说， ``+1`` 代表正向， ``-1`` 代表反向，  ``None`` 代表两者都有，下面举个简单的示例：
 
 .. code:: verbatim
 
@@ -225,36 +159,26 @@ strand, and ``None`` for both. Here is a short self contained example:
              start=0, end=400)
     gdd.write("GD_labels_default.pdf", "pdf")
 
-The top part of the image in the next subsection shows the output (in
-the default feature color, pale green).
+图形示例结果请见下一节图中的第一个图，缺省的feature为浅绿色。
 
-Notice that we have used the ``name`` argument here to specify the
-caption text for these features. This is discussed in more detail next.
+注意，这里用 ``name`` 参数作为feature的“说明文本”（caption text）。下文将会讲述更多细节。
 
-17.1.6  Feature captions
+17.1.6  Feature说明
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Recall we used the following (where ``feature`` was a ``SeqFeature``
-object) to add a feature to the diagram:
+下面代码中， ``feature`` 作为 ``SeqFeature`` 的对象添加到diagram。
 
 .. code:: verbatim
 
     gd_feature_set.add_feature(feature, color=color, label=True)
 
-In the example above the ``SeqFeature`` annotation was used to pick a
-sensible caption for the features. By default the following possible
-entries under the ``SeqFeature`` object’s qualifiers dictionary are
-used: ``gene``, ``label``, ``name``, ``locus_tag``, and ``product``.
-More simply, you can specify a name directly:
+前面的示例用 ``SeqFeature`` 的注释为feature做了恰当的文字说明。 ``SeqFeature`` 对象的限定符（qualifiers dictionary）缺省值是： ``gene``, ``label``, ``name``, ``locus_tag``, 和 ``product`` 。简单地说，你可以定义一个名称：
 
 .. code:: verbatim
 
     gd_feature_set.add_feature(feature, color=color, label=True, name="My Gene")
 
-In addition to the caption text for each feature’s label, you can also
-choose the font, position (this defaults to the start of the sigil, you
-can also choose the middle or at the end) and orientation (for linear
-diagrams only, where this defaults to rotated by 45 degrees):
+每个feature标签的说明文本可以设置字体、位置和方向。说明文本默认的位置在图形符号（sigil）的左边，可选择在中间或者右边，线形图中文本的默认方向是45°旋转。
 
 .. code:: verbatim
 
@@ -272,25 +196,18 @@ diagrams only, where this defaults to rotated by 45 degrees):
                                label_position="middle",
                                label_size=6, label_angle=-90)
 
-Combining each of these three fragments with the complete example in the
-previous section should give something like this:
+用前面示例的代码将这三个片段组合之后应该可以得到如下的结果：
 
 |image15|
 
-We’ve not shown it here, but you can also set ``label_color`` to control
-the label’s color (used in Section \ `17.1.9 <#sec:gd_nice_example>`__).
+除此之外，还可以设置“label_color”来调节标签的颜色 (used in Section \ `17.1.9 <#sec:gd_nice_example>`__)，这里没有进行演示。
 
-You’ll notice the default font is quite small - this makes sense because
-you will usually be drawing many (small) features on a page, not just a
-few large ones as shown here.
+示例中默认的字体很小，这是比较明智的，因为通常我们会把许多Feature同时展示，而不像这里只展示了几个比较大的feature。
 
-17.1.7  Feature sigils
+17.1.7  表示Feature的图形符号
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The examples above have all just used the default sigil for the feature,
-a plain box, which was all that was available in the last publicly
-released standalone version of GenomeDiagram. Arrow sigils were included
-when GenomeDiagram was added to Biopython 1.50:
+以上示例中Feature的图形符号（sigil）默认是一个方框（plain box），GenomeDiagram第一版中只有这一选项，后来GenomeDiagram被整合到Biopython1.50时，新增了箭头状的图形符号（sigil）。
 
 .. code:: verbatim
 
@@ -303,7 +220,7 @@ when GenomeDiagram was added to Biopython 1.50:
     #Or opt for an arrow:
     gd_feature_set.add_feature(feature, sigil="ARROW")
 
-Biopython 1.61 added three more sigils,
+Biopython 1.61又新增3个图形形状（sigil）。
 
 .. code:: verbatim
 
@@ -316,21 +233,14 @@ Biopython 1.61 added three more sigils,
     #Arrow which spans the axis with strand used only for direction
     gd_feature_set.add_feature(feature, sigil="BIGARROW")
 
-These are shown below. Most sigils fit into a bounding box (as given by
-the default BOX sigil), either above or below the axis for the forward
-or reverse strand, or straddling it (double the height) for strand-less
-features. The BIGARROW sigil is different, always straddling the axis
-with the direction taken from the feature’s stand.
+下面就是这些新增的图形形状（sigil），多数的图形形状都在边界框（bounding box）内部，在坐标轴的上/下位置代表序列（Strand）方向的正/反向，或者上下跨越坐标轴，高度是其他图形形状的两倍。”BIGARROW“有所不同，它总是跨越坐标轴，方向由feature的序列决定。
 
 |image16|
 
-17.1.8  Arrow sigils
+17.1.8 箭头形状
 ~~~~~~~~~~~~~~~~~~~~
 
-We introduced the arrow sigils in the previous section. There are two
-additional options to adjust the shapes of the arrows, firstly the
-thickness of the arrow shaft, given as a proportion of the height of the
-bounding box:
+上一部分我们简单引出了箭头形状。还有两个选项可以对箭头形状进行设置：首先根据边界框的高度比例来设置箭杆宽度。
 
 .. code:: verbatim
 
@@ -344,12 +254,11 @@ bounding box:
     gd_feature_set.add_feature(feature, sigil="ARROW", color="darkgreen",
                                arrowshaft_height=0.1)
 
-The results are shown below:
+结果见下图：
 
 |image17|
 
-Secondly, the length of the arrow head - given as a proportion of the
-height of the bounding box (defaulting to 0.5, or 50%):
+其次，根据边界框的高度比例设置箭头长度（默认为0.5或50%）：
 
 .. code:: verbatim
 
@@ -363,30 +272,24 @@ height of the bounding box (defaulting to 0.5, or 50%):
     gd_feature_set.add_feature(feature, sigil="ARROW", color="red",
                                arrowhead_length=10000)
 
-The results are shown below:
+结果见下图：
 
 |image18|
 
-Biopython 1.61 adds a new ``BIGARROW`` sigil which always stradles the
-axis, pointing left for the reverse strand or right otherwise:
+Biopython1.61新增 ``BIGARROW`` 箭头形状，它经常跨越坐标轴，箭头指向”左边“代表”反向“，指向”右边“代表”正向“。
 
 .. code:: verbatim
 
     #A large arrow straddling the axis:
     gd_feature_set.add_feature(feature, sigil="BIGARROW")
 
-All the shaft and arrow head options shown above for the ``ARROW`` sigil
-can be used for the ``BIGARROW`` sigil too.
+上述 ``ARROW`` 形状中的箭杆和箭头设置选项都适用于 ``BIGARROW`` 。
 
-17.1.9  A nice example
+17.1.9 完美示例
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Now let’s return to the pPCP1 plasmid from *Yersinia pestis biovar
-Microtus*, and the top down approach used in
-Section \ `17.1.3 <#sec:gd_top_down>`__, but take advantage of the sigil
-options we’ve now discussed. This time we’ll use arrows for the genes,
-and overlay them with strand-less features (as plain boxes) showing the
-position of some restriction digest sites.
+回到”自上而下的示例 Section \ `17.1.3 <#sec:gd_top_down>`__ 中鼠疫杆菌 *Yersinia pestis biovar
+Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭头表示基因，窄框穿越箭头表示限制性内切酶的切割位点。
 
 .. code:: verbatim
 
@@ -442,36 +345,22 @@ position of some restriction digest sites.
     gd_diagram.write("plasmid_circular_nice.eps", "EPS")
     gd_diagram.write("plasmid_circular_nice.svg", "SVG")
 
-And the output:
+输出结果见下图：
 
 |image19|
 
 |image20|
 
-17.1.10  Multiple tracks
+17.1.10 多重轨迹
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-All the examples so far have used a single track, but you can have more
-than one track – for example show the genes on one, and repeat regions
-on another. In this example we’re going to show three phage genomes side
-by side to scale, inspired by Figure 6 in Proux *e*\ t al. (2002)
-[`5 <#proux2002>`__\ ]. We’ll need the GenBank files for the following
-three phage:
+前面实例中都是单独的track，我们可以创建多个track，比如，一个track展示基因，另一个track展示重复序列。Proux等人2002年报道的文章 [`5 <#proux2002>`__\ ] 中图6是一个很好的范例，下面我们将三个噬菌体基因组依次进行展示。首先需要三个噬菌体的GenBank文件。
+   
+-  ``NC_002703`` – Lactococcus phage Tuc2009, 全基因组大小 (38347 bp)
+-  ``AF323668`` – Bacteriophage bIL285, 全基因组大小(35538 bp)
+-  ``NC_003212`` – *Listeria innocua* Clip11262,我们将仅关注前噬菌体5的全基因组 (长度大体相同).
 
--  ``NC_002703`` – Lactococcus phage Tuc2009, complete genome (38347 bp)
--  ``AF323668`` – Bacteriophage bIL285, complete genome (35538 bp)
--  ``NC_003212`` – *Listeria innocua* Clip11262, complete genome, of
-   which we are focussing only on integrated prophage 5 (similar
-   length).
-
-You can download these using Entrez if you like, see
-Section \ `9.6 <#sec:efetch>`__ for more details. For the third record
-we’ve worked out where the phage is integrated into the genome, and
-slice the record to extract it (with the features preserved, see
-Section \ `4.6 <#sec:SeqRecord-slicing>`__), and must also reverse
-complement to match the orientation of the first two phage (again
-preserving the features, see
-Section \ `4.8 <#sec:SeqRecord-reverse-complement>`__):
+这三个文件可以从Entrez下载，详情请查阅 \ `9.6 <#sec:efetch>`__ 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 \ `4.6 <#sec:SeqRecord-slicing>`__ ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 \ `4.8 <#sec:SeqRecord-reverse-complement>`__)。
 
 .. code:: verbatim
 
@@ -481,15 +370,10 @@ Section \ `4.8 <#sec:SeqRecord-reverse-complement>`__):
     B_rec = SeqIO.read("AF323668.gbk", "gb")
     C_rec = SeqIO.read("NC_003212.gbk", "gb")[2587879:2625807].reverse_complement(name=True)
 
-The figure we are imitating used different colors for different gene
-functions. One way to do this is to edit the GenBank file to record
-color preferences for each feature - something `Sanger’s Artemis
-editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ does,
-and which GenomeDiagram should understand. Here however, we’ll just hard
-code three lists of colors.
+图像中用不同颜色表示基因功能的差异。这需要编辑GenBank文件中每一个feature的颜色参数——就像用  `Sanger’s Artemis
+editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——这样才能被GenomeDiagram识别。但是，这里只需要硬编码（hard code）三个颜色列表。
 
-Note that the annotation in the GenBank files doesn’t exactly match that
-shown in Proux *et al.*, they have drawn some unannotated genes.
+上述GenBank文件中的注释信息与Proux所用的文件信息并不完全相同，他们还添加了一些未注释的基因。
 
 .. code:: verbatim
 
@@ -503,9 +387,7 @@ shown in Proux *et al.*, they have drawn some unannotated genes.
     C_colors = [grey]*30 + [green]*5 + [brown]*4 + [blue]*2 + [grey, blue] + [lightblue]*2 \
              + [grey]*5
 
-Now to draw them – this time we add three tracks to the diagram, and
-also notice they are given different start/end values to reflect their
-different lengths (this requires Biopython 1.59 or later).
+接下来是”draw“方法，给diagram添加3个track。我们在示例中设置不同的开始/结束值来体现它们之间长度不等（Biopython 1.59及更高级的版本）。
 
 .. code:: verbatim
 
@@ -540,35 +422,22 @@ different lengths (this requires Biopython 1.59 or later).
     gd_diagram.write(name + ".eps", "EPS")
     gd_diagram.write(name + ".svg", "SVG")
 
-The result:
+结果如图所示：
 
 |image21|
 
-I did wonder why in the original manuscript there were no red or orange
-genes marked in the bottom phage. Another important point is here the
-phage are shown with different lengths - this is because they are all
-drawn to the same scale (they *are* different lengths).
+在示例图中底部的噬菌体没有红色或橙色的基因标记。另外，三个噬菌体可视化图的长度不同，这是因为它们的比例相同，长度却不同。
 
-The key difference from the published figure is they have color-coded
-links between similar proteins – which is what we will do in the next
-section.
+另外有一点不同，不同噬菌体的同源蛋白质之间用有颜色的links相连，下一部分将解决这个问题。
 
-17.1.11  Cross-Links between tracks
+17.1.11 不同Track之间的Cross-Links
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Biopython 1.59 added the ability to draw cross links between tracks -
-both simple linear diagrams as we will show here, but also linear
-diagrams split into fragments and circular diagrams.
+Biopython1.59新增绘制不同track之间Cross-Links的功能，这个功能可用于将要展示的简单线形图中，也可用于将线形图分割为短片段（fragments）和环形图。
 
-Continuing the example from the previous section inspired by Figure 6
-from Proux *et al.* 2002 [`5 <#proux2002>`__\ ], we would need a list of
-cross links between pairs of genes, along with a score or color to use.
-Realistically you might extract this from a BLAST file computationally,
-but here I have manually typed them in.
+我们接着模仿Proux等人 [`5 <#proux2002>`__\ ] 的图像，我们需要一个包含基因之间的”cross links“、”得分“或”颜色“的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。
 
-My naming convention continues to refer to the three phage as A, B and
-C. Here are the links we want to show between A and B, given as a list
-of tuples (percentage similarity score, gene in A, gene in B).
+噬菌体的名称同样表示为A,B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。
 
 .. code:: verbatim
 
@@ -601,7 +470,7 @@ of tuples (percentage similarity score, gene in A, gene in B).
         (95, "Tuc2009_52", "orf60"), 
     ]
 
-Likewise for B and C:
+对噬菌体B和C做同样的处理：
 
 .. code:: verbatim
 
@@ -624,10 +493,7 @@ Likewise for B and C:
         (28, "orf54", "lin2566"),
     ]
 
-For the first and last phage these identifiers are locus tags, for the
-middle phage there are no locus tags so I’ve used gene names instead.
-The following little helper function lets us lookup a feature using
-either a locus tag or gene name:
+噬菌体A和C的标识符（Identifiers）是基因座标签（locus tags），噬菌体B没有基因座标签，这里用基因名称来代替。以下的辅助函数可用基因座标签或基因名称来寻找Feature。
 
 .. code:: verbatim
 
@@ -641,13 +507,7 @@ either a locus tag or gene name:
                          return f
         raise KeyError(id)
 
-We can now turn those list of identifier pairs into SeqFeature pairs,
-and thus find their location co-ordinates. We can now add all that code
-and the following snippet to the previous example (just before the
-``gd_diagram.draw(...)`` line – see the finished example script
-`Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__
-included in the ``Doc/examples`` folder of the Biopython source code) to
-add cross links to the figure:
+现在将这些标识符对（identifier pairs）的列表转换为“SeqFeature”列表，因此来查找它们的坐标定位。现在将下列代码添加到上段代码中 ``gd_diagram.draw(...)`` 这一行之前，将cross-links添加到图像中。示例中的脚本文件 `Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__ 在Biopython源程序文件夹的 ``Doc/examples`` 目录下。
 
 .. code:: verbatim
 
@@ -667,81 +527,37 @@ add cross links to the figure:
                                 color, colors.lightgrey)
             gd_diagram.cross_track_links.append(link_xy)
 
-There are several important pieces to this code. First the
-``GenomeDiagram`` object has a ``cross_track_links`` attribute which is
-just a list of ``CrossLink`` objects. Each ``CrossLink`` object takes
-two sets of track-specific co-ordinates (here given as tuples, you can
-alternatively use a ``GenomeDiagram.Feature`` object instead). You can
-optionally supply a colour, border color, and say if this link should be
-drawn flipped (useful for showing inversions).
+这段代码有几个要点，第一， ``GenomeDiagram`` 对象有一个 ``cross_track_links`` 属性，这个属性只是 ``CrossLink`` 对象的一组数据。每个 ``CrossLink`` 对象有两个track-specific坐标，示例中用元组（tuples）来展现，可用 ``GenomeDiagram.Feature`` 对象来代替。可选择添加颜色和边框颜色，还可以说明这个link是否需要翻转，这个功能易于表现染色体异位。
 
-You can also see how we turn the BLAST percentage identity score into a
-colour, interpolating between white (0%) and a dark red (100%). In this
-example we don’t have any problems with overlapping cross-links. One way
-to tackle that is to use transparency in ReportLab, by using colors with
-their alpha channel set. However, this kind of shaded color scheme
-combined with overlap transparency would be difficult to interpret. The
-result:
+你也可以看我们是如何将BLAST中特征百分比(Percentage Identity Score)转换为白-红的渐变色（白-0%，红-100%）。这个实例中没有cross-links的重叠，如果有links重叠可以用ReportLab库中的透明度(transparency)来解决，通过设置颜色的alpha通道来使用。然而，若同时使用边框阴影和叠加透明度会增加理解的难度。结果见下图：
 
 |image22|
 
-There is still a lot more that can be done within Biopython to help
-improve this figure. First of all, the cross links in this case are
-between proteins which are drawn in a strand specific manor. It can help
-to add a background region (a feature using the ‘BOX’ sigil) on the
-feature track to extend the cross link. Also, we could reduce the
-vertical height of the feature tracks to allocate more to the links
-instead – one way to do that is to allocate space for empty tracks.
-Furthermore, in cases like this where there are no large gene overlaps,
-we can use the axis-straddling ``BIGARROW`` sigil, which allows us to
-further reduce the vertical space needed for the track. These
-improvements are demonstrated in the example script
-`Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__
-included in the ``Doc/examples`` folder of the Biopython source code.
-The result:
+当然，Biopython还有很多增强图像效果的方法。首先，这个示例中的cross links是蛋白质之间的，被呈现在一个链的固定区域（strand specific manor）。可以在feature track上用 ‘BOX’ sigil添加背景区域（background region）来扩展cross link的效果。同样，可以缩短feature tracks之间的垂直高度，使用更多的links来代替——一种方法是为空的track分配空间。此外，在没有大规模基因重叠的情况下，可以用跨越轴线的"BIGARROW",这样就为track进一步增加了垂直空间。详情请查看Biopython源程序的 ``Doc/examples`` 目录下的示例脚本文件：`Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__ 
+结果见下图：
 
 |image23|
 
-Beyond that, finishing touches you might want to do manually in a vector
-image editor include fine tuning the placement of gene labels, and
-adding other custom annotation such as highlighting particular regions.
+除此之外，你可能希望在图像编辑软件里手动调整gene标签的位置，添加特定标识，比如强调某个特别的区域。
 
-Although not really necessary in this example since none of the
-cross-links overlap, using a transparent color in ReportLab is a very
-useful technique for superimposing multiple links. However, in this case
-a shaded color scheme should be avoided.
+如果有多个叠加的links，使用ReportLab库里的颜色透明度（transparent color）是非常好的方法，由于这个示例没有cross-link的重叠，所以没有用到颜色透明度（transparent color）。然而，尽量避免在这个示例中使用边框阴影（shaded color scheme）
 
-17.1.12  Further options
+17.1.12 高级选项
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can control the tick marks to show the scale – after all every graph
-should show its units, and the number of the grey-track labels.
+可以通过控制刻度线（tick marks）来调节展示比例（scale），毕竟每个图形应该包括基本单位和轴线标签的数目。
 
-Also, we have only used the ``FeatureSet`` so far. GenomeDiagram also
-has a ``GraphSet`` which can be used for show line graphs, bar charts
-and heat plots (e.g. to show plots of GC% on a track parallel to the
-features).
+到目前为止，我们只使用了 ``FeatureSet`` 。GenomeDiagram还可以用 ``GraphSet`` 来制作线形图，饼状图和heatmap热图（例如在轨迹内展示feature中的GC含量）
 
-These options are not covered here yet, so for now we refer you to the
-`User Guide
-(PDF) <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__
-included with the standalone version of GenomeDiagram (but please read
-the next section first), and the docstrings.
+目前还没有添加这个选项，最后，推荐你去参考GenomeDiagram单机版 `User Guide
+(PDF) <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 和文档字符串（docstrings）。
 
-17.1.13  Converting old code
+17.1.13 转换旧代码
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have old code written using the standalone version of
-GenomeDiagram, and you want to switch it over to using the new version
-included with Biopython then you will have to make a few changes - most
-importantly to your import statements.
+如果你有用GenomeDiagram独立版本写的旧代码，想将其转换为Bippython和新版本可识别的代码，你需要做一些调整——主要是import语句。GenomeDiagram的旧版本中使用英式拼写“colour” 和 “centre”来表示“color” 和“center”。被Biopython整合后，参数名可以使用任意一种。但是将来可能会不支持英式的参数名。
 
-Also, the older version of GenomeDiagram used only the UK spellings of
-color and center (colour and centre). As part of the integration into
-Biopython, both forms can now be used for argument names. However, at
-some point in the future the UK spellings may be deprecated.
-
-For example, if you used to have:
+如果你过去使用下面的方式：
 
 .. code:: verbatim
 
@@ -749,7 +565,7 @@ For example, if you used to have:
     gdd = GDDiagram("An example")
     ...
 
-you could just switch the import statements like this:
+你只需要将import语句转换成下面这样：
 
 .. code:: verbatim
 
@@ -757,8 +573,7 @@ you could just switch the import statements like this:
     gdd = GDDiagram("An example")
     ...
 
-and hopefully that should be enough. In the long term you might want to
-switch to the new names, but you would have to change more of your code:
+希望能够顺利运行。将来你可能想换用新名称，你必须在更大程度上改变你编写代码的方式：
 
 .. code:: verbatim
 
@@ -774,32 +589,20 @@ or:
     gdd = GenomeDiagram.Diagram("An example")
     ...
 
-If you run into difficulties, please ask on the Biopython mailing list
-for advice. One catch is that we have not included the old module
-``GenomeDiagram.GDUtilities`` yet. This included a number of GC% related
-functions, which will probably be merged under ``Bio.SeqUtils`` later
-on.
+如果运行过程中出现问题，请到Biopython邮件列表中寻求帮助。唯一的缺点就是没有包括旧模块 ``GenomeDiagram.GDUtilities`` ，这个模块有计算GC百分比含量的函数，这一部分将会合并到 ``Bio.SeqUtils`` 模块。
 
-17.2  Chromosomes
+17.2 染色体
 -----------------
 
-The ``Bio.Graphics.BasicChromosome`` module allows drawing of
-chromosomes. There is an example in Jupe *et al.* (2012)
-[`6 <#jupe2012>`__\ ] (open access) using colors to highlight different
-gene families.
+ ``Bio.Graphics.BasicChromosome`` 模块可以绘制染色体，Jupe等人在2012发表的文章 [`6 <#jupe2012>`__\ ] 中利用不同的颜色来展示不同的基因家族。
 
-17.2.1  Simple Chromosomes
+17.2.1 简单染色体
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here is a very simple example - for which we’ll use *Arabidopsis
-thaliana*.
+我们用 *Arabidopsis
+thaliana* 来展示一个简单示例。
 
-You can skip this bit, but first I downloaded the five sequenced
-chromosomes from the NCBI’s FTP site
-```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__
-and then parsed them with ``Bio.SeqIO`` to find out their lengths. You
-could use the GenBank files for this, but it is faster to use the FASTA
-files for the whole chromosomes:
+首先从NCBI的FTP服务器 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ 下载拟南芥已测序的五个染色体文件，利用 ``Bio.SeqIO`` 函数计算它们的长度。你可以利用GenBank文件，但是对于染色体来说，FASTA文件的处理速度会快点。
 
 .. code:: verbatim
 
@@ -813,8 +616,7 @@ files for the whole chromosomes:
        record = SeqIO.read(filename,"fasta")
        print name, len(record)
 
-This gave the lengths of the five chromosomes, which we’ll now use in
-the following short demonstration of the ``BasicChromosome`` module:
+计算出5个染色体长度后，就可用 ``BasicChromosome`` 模块对其作如下的处理：
 
 .. code:: verbatim
 
@@ -860,22 +662,17 @@ the following short demonstration of the ``BasicChromosome`` module:
 
     chr_diagram.draw("simple_chrom.pdf", "Arabidopsis thaliana")
 
-This should create a very simple PDF file, shown here:
+
+新建的PDF文档如图所示：
 
 |image24|
 
-This example is deliberately short and sweet. The next example shows the
-location of features of interest.
+这个示例可以短小精悍，下面的示例可以展示目标feature的定位。
 
-17.2.2  Annotated Chromosomes
+17.2.2 染色体注释
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Continuing from the previous example, let’s also show the tRNA genes.
-We’ll get their locations by parsing the GenBank files for the five
-*Arabidopsis thaliana* chromosomes. You’ll need to download these files
-from the NCBI FTP site
-```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__,
-and preserve the subdirectory names or edit the paths below:
+继续前面的示例，我们可以同时展示tRNA基因。通过解析 *Arabidopsis thaliana* 的5个染色体GenBank文件，我们可以对他们进行定位。你需要从NCBI的FTP服务器下载这些文件 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ ，也可以保存子目录名称或者添加如下的路径：
 
 .. code:: verbatim
 
@@ -929,9 +726,7 @@ and preserve the subdirectory names or edit the paths below:
 
     chr_diagram.draw("tRNA_chrom.pdf", "Arabidopsis thaliana")
 
-It might warn you about the labels being too close together - have a
-look at the forward strand (right hand side) of Chr I, but it should
-create a colorful PDF file, shown here:
+如果标签之间太紧密会发出警告，所以要注意第一条染色体的的前导链（左手边），可以创建一个彩色的PDF文件，如下图所示：
 
 |image25|
 
