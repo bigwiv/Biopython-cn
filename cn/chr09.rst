@@ -1,56 +1,56 @@
-Chapter 9  Accessing NCBI Entrez databases
+第9章  访问NCBI Entrez数据库
 ============================================
 
 Entrez
 (```http://www.ncbi.nlm.nih.gov/Entrez`` <http://www.ncbi.nlm.nih.gov/Entrez>`__)
-是一个提供给客户的可以检索NCBI各个数据库（如PubMed, GeneBank, GEO等等）的系统。
-用户可以通过浏览器手动输入查询条目访问Entrez，也可以使用Biopython的 ``Bio.Entrez`` 模块来访问Entrez。
+是一个给客户提供NCBI各个数据库（如PubMed, GeneBank, GEO等等）访问的检索系统。
+用户可以通过浏览器手动输入查询条目访问Entrez，也可以使用Biopython的 ``Bio.Entrez`` 模块以编程方式访问来访问Entrez。
 如果使用第二种方法，用户用一个Python脚本就可以实现在PubMed里面搜索或者从GenBank下载数据。
 
-``Bio.Entrez`` 模块利用了Entrez Programming Utilities（也称作EUtils），EUtils八个工具，详情请见NCBI的网站：
+``Bio.Entrez`` 模块利用了Entrez Programming Utilities（也称作EUtils），包含八个工具，详情请见NCBI的网站：
 ```http://www.ncbi.nlm.nih.gov/entrez/utils/`` <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
 每个工具都能在Python的 ``Bio.Entrez`` 模块中找到对应函数，后面会详细讲到。这个模块可以保证用来查询的URL
 的正确性，并且向NCBI要求的一样，每三秒钟查询的次数不超过一。
 
-EUtils返回的输出结果通常是XML格式，我们有一下不同的方法来处理这种类型的输入文件：
+EUtils返回的输出结果通常是XML格式，我们有以下不同的方法来解析这种类型的输入文件：
 
-#. 使用 ``Bio.Entrez``\ 语义分析讲XML的输出转成一种Python的对象;
-#. 使用Python标准库中的DOM (Document Object Model)语义分析器;
-#. 使用Python标准库中的SAX (Simple API for XML)语义分析器;
-#. 把XML输出当做原始的文本文件，通过字符串查找和处理来进行；
+#. 使用 ``Bio.Entrez``\ 解析器将XML输出的解析成Python对象;
+#. 使用Python标准库中的DOM (Document Object Model)解析器;
+#. 使用Python标准库中的SAX (Simple API for XML)解析器;
+#. 把XML输出当做原始的文本文件，通过字符串查找和处理来进行解析；
 
-对于DOM和SAX语义分析器可以看Python的文档. ``Bio.Entrez`` 中使用到的语义分析器将会在下面讨论.
+对于DOM和SAX解析器，可以查看Python的文档. ``Bio.Entrez`` 中使用到的解析器将会在下面讨论.
 
 NCBI使用DTD (Document Type Definition)文件来描述XML文件中所包含信息的结构. 大多数NCBI使用的DTD文件
-格式都包含在了Biopython distribution里。当NCBI Entrez读入一个XML格式的文件的时候，``Bio.Entrez``
+格式都包含在了Biopython发行包里。当NCBI Entrez读入一个XML格式的文件的时候，``Bio.Entrez``
 将会使用DTD文件。
 
-有时候，你可能会发现与某种特殊的XML相关的DTD文件在Biopython distribution里面不存在。当NCBI升级她的
-DTD文件的时候，这种情况会发生。如果发生这种情况，``Entrez.read`` 将会显示包含丢失的DTD文件名字和URL的
-警示信息。语义分析器会通过互联网获取却是的DTD文件，让XML的分析继续正常进行。如果本地存在对应的DTD文件的
+有时候，你可能会发现与某种特殊的XML相关的DTD文件在Biopython发行包里面不存在。当NCBI升级它的
+DTD文件的时候，这种情况可能发生。如果发生这种情况，``Entrez.read`` 将会显示丢失的DTD文件名字和URL的
+警示信息。解析器会通过互联网获取缺失的DTD文件，让XML的分析继续正常进行。如果本地存在对应的DTD文件的
 话，处理起来会更快。因此，为了更快的处理，我们可以通过警示信息里面的URL来下载对应的DTD文件，将文件放在DTD
 文件默认存放的文件夹 ``...site-packages/Bio/Entrez/DTDs`` 。如果你没有权限进入这个文件夹，你也可以把
-DTD文件放到 ``~/.biopython/Bio/Entrez/DTDs`` 这个目录，``~`` 表示的是你的家目录。因为这个目录会先于
- ``...site-packages/Bio/Entrez/DTDs`` 被语义分析器读取，所以当 ``...site-packages/Bio/Entrez/DTDs`` 
-下面的DTD文件过时的时候，你也可以将最新版本的DTD文件放到家目录的那个文件夹下面。当然也有其他方案，如果你
+DTD文件放到 ``~/.biopython/Bio/Entrez/DTDs`` 这个目录，``~`` 表示的是你的Home目录。因为这个目录会先于
+ ``...site-packages/Bio/Entrez/DTDs`` 被解析器读取，所以当 ``...site-packages/Bio/Entrez/DTDs`` 
+下面的DTD文件过时的时候，你也可以将最新版本的DTD文件放到Home目录的那个文件夹下面。当然也有其他方案，如果你
 是通过源码来安装的Biopython，你可以将DTD文件放到源码的 ``Bio/Entrez/DTDs`` 文件夹下，然后重新安装Biopython。
 这样会将新的DTD文件和之前的一样地安装到正确的位置。
 
 Entrez Programming Utilities也可以生成其他格式的输出文件，比如Fasta、序列数据库里面的GenBank文件格式
-或者文献数据库里面的MedLine格式，更多内容将会在`9.12 <#sec:entrez-specialized-parsers>`中讨论。
+或者文献数据库里面的MedLine格式，更多内容将会在 `9.12 <#sec:entrez-specialized-parsers>` 中讨论。
 
 9.1  Entrez 简介
 ----------------------
 
 在我们通过Biopython访问NCBI的线上资源（通过 ``Bio.Entrez`` 或者其他模块）的时候，请先阅读 `NCBI的Entrez
-用户规范<http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
-如果NCBI发现你在瞎倒腾他们的系统，他们会禁止你的访问。
+用户规范 <http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen>`__.
+如果NCBI发现你在滥用他们的系统，他们会禁止你的访问。
 
 详细规范如下：
 -  对任何连续超过100次的访问请求，请在周末时间或者避开美国的使用高峰时间。这个取决于你是否遵从。
--  使用这个网址 ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__，, 
+-  使用这个网址 ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__ ，
    而不是通常的NCBI网址。Biopython使用的是这个网址。
--  每秒钟不要超过三次请求（比2009年年初的没三秒钟最多一次请求要宽松）。这个有Biopython自动强制实行。
+-  每秒钟不要超过三次请求（比2009年年初的每三秒钟最多一次请求要宽松）。这个由Biopython自动强制实行。
 -  使用email参数，这样如果遇到什么问题，NCBI可以通过邮件联系到你。你可以在每次请求Entrez的时候明确的设置
    这个参数（例如，在参数列表中包含 ``email="A.N.Other@example.com"`` ），或者你也可以设置一个全局的email
    地址：
@@ -60,8 +60,8 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
        >>> from Bio import Entrez
        >>> Entrez.email = "A.N.Other@example.com"
 
-   ``Bio.Entrez`` 将会在每次想Entrez请求的时候使用这个邮件地址。请千万不要胡乱的填写邮件地址，不填写都比
-   这要好。邮件的参数将从2010年6月1日开始执行。为了防止滥用，NCBI会在封锁用户访问E-utilities之前尝试通过
+   ``Bio.Entrez`` 将会在每次向Entrez请求的时候使用这个邮件地址。请千万不要胡乱的填写邮件地址，不填写都比
+   这要好。邮件的参数从2010年6月1日将是强制的参数。在过度使用的情况下，NCBI会在封锁用户访问E-utilities之前尝试通过
    用户提供的邮件地址联系。
 
 -  如果你是在一个大的软件包里面使用Biopython的，请通过tool这个参数明确说明。你既可以在每次请求访问Entrez
@@ -75,8 +75,8 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
 
    默认的tool名称是Biopython。
 
--  对于大规模的查询请求，NCBI也推荐使用他们的session history feature (the WebEnv session cookie string, see
-   Section \ `9.15 <#sec:entrez-webenv>`__). 只是这个稍微有点复杂。
+-  对于大规模的查询请求，NCBI也推荐使用他们的会话历史特性（ WebEnv会话cookie字符串，见
+   章节 \ `9.15 <#sec:entrez-webenv>`__ ）。 只是这个稍微有点复杂。
    
 
 最后，根据你的使用情况选择不同的策略。如果你打算下载大量的数据，最好使用其他的方法。比如，你想得到所有人的
@@ -146,8 +146,8 @@ Entrez获取所有数据库名字的列表：
     </DbList>
     </eInfoResult>
 
-因为这是一个相当简单的XML文件，我们可以简单的通过字符串查找提取里面所包含的信息。使用 ``Bio.Entrez`` 的语义
-分析软件，我们可以直接将这个XML读入到一个Python对象里面去：
+因为这是一个相当简单的XML文件，我们可以简单的通过字符串查找提取里面所包含的信息。使用 ``Bio.Entrez`` 的解析器，
+我们可以直接将这个XML读入到一个Python对象里面去：
 
 .. code:: verbatim
 
@@ -187,8 +187,8 @@ Entrez获取所有数据库名字的列表：
     >>> record["DbInfo"]["LastUpdate"]
     '2008/05/24 06:45'
 
-通过 ``record["DbInfo"].keys()`` 可以获取存储在这个记录里面的其他信息。使用ESearch的可能搜索领域列表是
-最有用的信息之一：
+通过 ``record["DbInfo"].keys()`` 可以获取存储在这个记录里面的其他信息。这里面最有用的信息之一是一个ESearch可用的
+搜索值列表：
 
 .. code:: verbatim
 
@@ -207,7 +207,7 @@ Entrez获取所有数据库名字的列表：
     ...
 
 这是一个很长的列表，但是间接的告诉你在使用PubMed的时候，你可以通过 ``Jones[AUTH]`` 搜索作者，或者通过
- ``Sanger[AFFL]`` 讲作者限制在Sanger Centre。这个会非常方便，特别是在你对某个数据库不太熟悉的时候。
+ ``Sanger[AFFL]`` 将作者范围限制在Sanger Centre。这个会非常方便，特别是在你对某个数据库不太熟悉的时候。
 
 9.3  ESearch: 搜索Entrez数据库
 --------------------------------------------
@@ -224,10 +224,10 @@ Entrez获取所有数据库名字的列表：
     ['19304878', '18606172', '16403221', '16377612', '14871861', '14630660', '12230038']
 
 在输出的结果中，我们可以看到七个PubMed IDs（包括19304878，这个是Biopython应用笔记的PMID），你可以通过
-EFetch来获取这些文献（请见Section `9.6 <#sec:efetch>`__）。
+EFetch来获取这些文献（请见章节 `9.6 <#sec:efetch>`__ ）。
 
-你也可以通过ESearch来搜索GenBank。我们讲以在*Cypripedioideae* orchids中搜索*matK*基因为例，快速展示
-一下（请见Section `9.2 <#sec:entrez-einfo>`__ 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。
+你也可以通过ESearch来搜索GenBank。我们将以在*Cypripedioideae* orchids中搜索*matK*基因为例，快速展示
+一下（请见章节 `9.2 <#sec:entrez-einfo>`__ 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。
 
 .. code:: verbatim
 
@@ -261,7 +261,7 @@ taxon ID，像 ``txid158330[Orgn]`` 这样。这个并没有记录在ESearch的�
 
 同样，我们可以通过EFetch来获得关于每个journal IDs更多的消息。
 
-ESearch有很多用用的参数——参见 `ESearch 帮助页面
+ESearch有很多有用的参数——参见 `ESearch 帮助页面
  <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
 来获取更多信息.
 
@@ -280,7 +280,7 @@ EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助�
  “HTML get” ， 避开了long URL可能产生的问题）。由于历史记录的支持，你可以使用EFetch来指向这个长的IDs列表，
 并且下载相关的数据。
 
-让我们通过下面一个简单的例子来看看EPost是如何工作的 ®C 上传了一些PubMed的IDs：
+让我们通过下面一个简单的例子来看看EPost是如何工作的——上传了一些PubMed的IDs：
 
 .. code:: verbatim
 
@@ -346,8 +346,8 @@ webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
 and
 `taxonomy <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchtax_help.html>`__).
 
-一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式(可以使用 ``Bio.SeqIO`` 来处理, 参见 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-and \ `9.6 <#sec:efetch>`__). 从上面 *Cypripedioideae* 的例子,我们可以通过 ``Bio.Entrez.efetch`` 
+一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式 (接着可以使用 ``Bio.SeqIO`` 来解析, 参见 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+和 \ `9.6 <#sec:efetch>`__ ）。从上面 *Cypripedioideae* 的例子,我们可以通过 ``Bio.Entrez.efetch`` 
 从GenBank下载记录186972394。
 
 .. code:: verbatim
@@ -430,15 +430,15 @@ and \ `9.6 <#sec:efetch>`__). 从上面 *Cypripedioideae* 的例子,我们可以
 参数 ``rettype="gb"`` 和 ``retmode="text"`` 让我们下载的数据为GenBank格式。
 
 需要注意的是直到2009年，Entrez EFetch API要求使用 “genbank” 作为返回类型，然而现在NCBI坚持使用官方的
-“gb” or “gbwithparts” (or “gp” for proteins) 返回类型。同样需要注意的是，直到2012年2月，
-Entrez EFetch API默认的范围格式为纯文本格式文件，现在默认的为XML格式。
+“gb” 或 “gbwithparts” （或者针对蛋白的“gp”) 返回类型。同样需要注意的是，直到2012年2月，
+Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的为XML格式。
 
 作为另外的选择，你也可以使用 ``rettype="fasta"`` 来获取Fasta格式的文件；参见 `EFetch Sequences 帮助页面
- <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 记住，根据你要下载的
- 数据库 ®C 也是一种可选的格式 - 请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+ <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。记住，可选的数据格式决定于你要下载的
+ 数据库——请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
 如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(see Chapter \ `5 <#chapter:Bio.SeqIO>`__),
-你可以直接通过 ``SeqRecord`` 来处理：
+你可以直接将其解析为一个 ``SeqRecord`` ：
 
 .. code:: verbatim
 
@@ -454,8 +454,8 @@ Entrez EFetch API默认的范围格式为纯文本格式文件，现在默认的
     ...
     Seq('ATTTTTTACGAACCTGTGGAAATTTTTGGTTATGACAATAAATCTAGTTTAGTA...GAA', IUPACAmbiguousDNA())
 
-需要注意的是，一种典型的用法是先把序列数据保存到一个本地文件，*然后*使用 ``Bio.SeqIO`` 来处理。这样就避免了
-在运行脚本的时候需要重复的下载同样的文件，和NCBI服务器的负载。例如：
+需要注意的是，一种更加典型的用法是先把序列数据保存到一个本地文件，*然后* 使用 ``Bio.SeqIO`` 来解析。这样就避免了
+在运行脚本的时候需要重复的下载同样的文件，并减轻NCBI服务器的负载。例如：
 
 .. code:: verbatim
 
@@ -477,7 +477,7 @@ Entrez EFetch API默认的范围格式为纯文本格式文件，现在默认的
     record = SeqIO.read(filename, "genbank")
     print record
 
-为了得到XML格式的输出，你可以使用 ``Bio.Entrez.read()`` 函数，使用 ``retmode="xml"`` :
+为了得到XML格式的输出，你可以使用 ``Bio.Entrez.read()`` 函数和参数 ``retmode="xml"`` 进行解析，：
 
 .. code:: verbatim
 
@@ -490,16 +490,16 @@ Entrez EFetch API默认的范围格式为纯文本格式文件，现在默认的
     >>> record[0]["GBSeq_source"] 
     'chloroplast Selenipedium aequinoctiale'
 
-就像这样处理数据。例如处理其他数据库特异的文件格式（例如，PubMed中用到的 ``MEDLINE`` 格式），请参见Section \ `9.12 <#sec:entrez-specialized-parsers>`__.
+就像这样处理数据。例如解析其他数据库特异的文件格式（例如，PubMed中用到的 ``MEDLINE`` 格式），请参见章节 \ `9.12 <#sec:entrez-specialized-parsers>`__.
 
 如果你想使用 ``Bio.Entrez.esearch()`` 进行搜索，然后用 ``Bio.Entrez.efetch()`` 下载数据，那么你需要用到
-WebEnv的历史特征®C，请见 Section \ `9.15 <#sec:entrez-webenv>`__.
+WebEnv的历史特性，请参加见章节 \ `9.15 <#sec:entrez-webenv>`__.
 
 9.7  ELink: 在NCBI Entrez中搜索相关的条目
 ------------------------------------------------------
 
 ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez数据库中寻找相关的条目。例如，你
-可以使用它在gene数据库中寻找核苷酸条目或者而其他很酷的事情。
+可以使用它在gene数据库中寻找核苷酸条目，或者其他很酷的事情。
 
 让我们使用ELink来在2009年的 *Bioinformatics* 杂志中寻找与Biopython应用相关的文章。这篇文章的PubMed ID
 是19304878：
@@ -511,7 +511,7 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
     >>> pmid = "19304878"
     >>> record = Entrez.read(Entrez.elink(dbfrom="pubmed", id=pmid))
 
-变量 ``record`` 包含了了一个Python列表，列出了已经搜索过的数据库。因为我们特指了一个PubMed ID来搜索，所以
+变量 ``record`` 包含了一个Python列表，列出了已经搜索过的数据库。因为我们特指了一个PubMed ID来搜索，所以
  ``record`` 只包含了一个条目。这个条目是一个字典变量，包含了我们需要寻找的条目的信息，以及能搜索到的所有相关
 的内容：
 
@@ -553,7 +553,7 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
     >>> record[0]["LinkSetDb"][0]["Link"][1]
     {u'Id': '14630660'}
 
-这个PubMed为14530660的文章是关于Biopython PDB parser的。
+这个PubMed ID为14530660的文章是关于Biopython PDB解析器的。
 
 我们通过一个循环来打印出所有的PubMed IDs：
 
@@ -568,18 +568,18 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
     12368254
     ......
 
-现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个 ®C 至少对PubMed
-Central的杂志来所是这样的（请见 Section \ `9.15.3 <#sec:elink-citations>`__）。
+现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个——至少对PubMed
+Central的杂志来说是这样的（请见 Section \ `9.15.3 <#sec:elink-citations>`__）。
 
 关于ELink的帮助，请见`ELink 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__.
 这是一个关于`link names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__
-整个的子页面， 描述了不同的数据库可以怎样交叉的索引。
+的整个的子页面， 描述了不同的数据库可以怎样交叉的索引。
 
 9.8  EGQuery: 全局搜索- 统计搜索的条目
 ----------------------------------------------------
 
-EGQuery提供在每个Entrez数据库中的数目。这个非常的有用，当我们只需要知道在每个数据库中能找到的条目的个数，
-而不需要知道具体搜索结果的时候（请见例子`9.14.2 <#subsec:entrez_example_genbank>`__ below）。
+EGQuery提供搜索字段在每个Entrez数据库中的数目。当我们只需要知道在每个数据库中能找到的条目的个数，
+而不需要知道具体搜索结果的时候，这个非常的有用（请见例子`9.14.2 <#subsec:entrez_example_genbank>`__ below）。
 
 在这个例子中，我们使用 ``Bio.Entrez.egquery()`` 来获取跟 “Biopython” 相关的数目：
 
@@ -618,12 +618,12 @@ ESpell可以检索拼写建议。在这个例子中，我们使用 ``Bio.Entrez.
 请见 `ESpell 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/espell_help.html>`__
 获得更多信息. 这个的主要用法是在使用GUI工具的时候为搜索的条目自动的提供拼写建议。
 
-9.10  处理大的Entrez XML文件
+9.10  解析大的Entrez XML文件
 -----------------------------------
 
-``Entrez.read``函数将Entrez返回的结果读取到一个Python对象里面去，这个对象被保存在内存中。对于处理太大的
-XML文件而内存不够时，可以使用 ``Entrez.parse`` 这个函数。这个函数将一个一个的读取XML文件里面的内容。只有XML
-文件是一个列表对象的时候，这个函数才有用（换句话说，如果在一个内存无限的计算机上 ``Entrez.parse`` 将返回一个
+``Entrez.read`` 函数将Entrez返回的结果读取到一个Python对象里面去，这个对象被保存在内存中。对于解析太大的
+XML文件而内存不够时，可以使用 ``Entrez.parse`` 这个函数。这是一个生成器函数，它将一个一个的读取XML文件里面的内容。只有XML
+文件是一个列表对象的时候，这个函数才有用（换句话说，如果在一个内存无限的计算机上 ``Entrez.read`` 将返回一个
 Python列表）。
 
 例如，你可以通过NCBI的FTP站点从Entrez Gene 数据库中下载某个物种全部的条目作为一个文件。这个文件可能很大。
@@ -637,7 +637,7 @@ Python列表）。
 
 XML结果文件有6.1GB. 在大多数电脑上尝试 ``Entrez.read`` 都会导致 ``MemoryError`` 。
 
-XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每个对应与人的一个Entrez基因信息。 ``Entrez.parse`` 
+XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每个对应于人的一个Entrez基因信息。 ``Entrez.parse`` 
 将一个一个的读取这些记录。这样你可以通过遍历每个记录的方式打印或者存储每个记录相关的信息。例如，下面这个脚本
 遍历了Entrez基因里面的记录，打印了每个基因的数目和名字：
 
@@ -677,13 +677,13 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 9.11  错误处理
 ---------------------
 
-当处理 ZXML 文件的时候，可能出现一下三个错误：
+当解析XML文件的时候，可能出现一下三个错误：
 
 -  这个文件可能不是以常规的 XML 文件格式开头；
 -  这个文件可能不完整或者包含一些非 XML 格式的内容；
--  这个文件是正常的 XML 文件，但是包含和相关 DTD 文件无关的内容。
+-  这个文件是正常的 XML 文件，但是包含和相关 DTD 文件无关的条目。
 
-第一种情况会发生，例如，你尝试把一个 Fasta 文件当做 XML 文件来处理：
+第一种情况会在，例如，你尝试把一个 Fasta 文件当做 XML 文件来处理时发生：
 
 .. code:: verbatim
 
@@ -698,9 +698,9 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
         raise NotXMLError(e)
     Bio.Entrez.Parser.NotXMLError: Failed to parse the XML data (syntax error: line 1, column 0). Please make sure that the input data are in XML format.
 
-这时候，语义分析器找不到 ``<?xml ...`` 标签，而这是是一个 XML 文件开始的标志，那么可以确定这个文件不是 XML 文件。
+这时候，解析器找不到 ``<?xml ...`` 标签，而这是一个 XML 文件开始的标志，那么可以确定这个文件不是 XML 文件。
 
-当你的文件是XML格式，但是是不完整的（例如，提前结束了），那么语义分析器会报CorruptedXMLError错误。下面
+当你的文件是XML格式，但是是不完整的（例如，提前结束了），那么解析器会报CorruptedXMLError错误。下面
 这个是一个XML文件提前结束的例子：
 
 .. code:: verbatim
@@ -721,7 +721,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
             <DbName>cancerchromosomes</DbName>
             <DbName>cdd</DbName>
 
-这个会生成一下的日志文件：
+这个会生成以下的日志文件：
 
 .. code:: verbatim
 
@@ -769,8 +769,8 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
     </eInfoResult>
 
 在这个文件里面，因为一些原因，``<DocsumList>``（还有一些其他的）标签没有在DTD文件 ``eInfo_020511.dtd`` 
-中列出来，XML文件对应DTD文件的第二行会特别的描述出来。默认情况下，如果没有找到DTD文件中的标签，语义
-分析器会中止并报ValidationError错误。
+中列出来，XML文件对应DTD文件的第二行会特别的描述出来。默认情况下，如果没有找到DTD文件中的标签，解析器
+会中止并报ValidationError错误。
 
 .. code:: verbatim
 
@@ -787,7 +787,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
         raise ValidationError(name)
     Bio.Entrez.Parser.ValidationError: Failed to find tag 'DocsumList' in the DTD. To skip all tags that are not represented in the DTD, please call Bio.Entrez.read or Bio.Entrez.parse with validate=False.
 
-可选地，你可以让语义分析器跳过这样的标签，而不是报ValidationError错误。通过调用 ``Entrez.read`` 或者
+可选地，你可以让解析器跳过这样的标签，而不是报ValidationError错误。通过调用 ``Entrez.read`` 或者
 ``Entrez.parse`` 并使参数 ``validate`` 等于False可以实现这个功能：
 
 .. code:: verbatim
@@ -797,26 +797,26 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
     >>> record = Entrez.read(handle,validate=False)
     >>>
 
-当然，XML文件中的tag没有出现在对应DTD文件中的信息将在 ``Entrez.read`` 的返回记录中包含。
+当然，XML文件中的tag没有出现在对应DTD文件中的信息，将不会在 ``Entrez.read`` 的返回记录中出现。
 
-9.12  专用的语义分析器
+9.12  专用的解析器
 -------------------------
 
-函数 ``Bio.Entrez.read()`` 可以处理啊大部分（如果不是所有的话）Entrez返回的XML文件。Entrez也可以
-允许你通过其他格式来获取数据，有时候，这种方式比XML文件格式更具有可比性（或者下载文件的大小）。
+函数 ``Bio.Entrez.read()`` 可以处理大部分（如果不是所有的话）Entrez返回的XML文件。Entrez也可以
+允许你通过其他格式来获取数据，有时候，这种方式在可读性上比XML文件格式更具优势（或者下载文件的大小）。
 
 为了使用 ``Bio.Entrez.efetch()`` 函数从Entrez中提取一种特有的文件格式，需要指明 ``rettype`` 和或者或 ``retmode`` 
-等可选参数。不同的组合在`NCBI efetch的页面<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+等可选参数。不同的组合在 `NCBI efetch的页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__ 。
 有对不同数据库的描述。
 
-一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept (这些可以通过 ``Bio.SeqIO`` 来处理, 请见 Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-和 \ `9.6 <#sec:efetch>`__).纯文本形式下载序列书。对于文献数据库，Biopython包含了一个处理PubMed中
-使用的 ``MEDLINE`` 格式的语义分析器。
+一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept ( 这些可以通过 ``Bio.SeqIO`` 来处理, 请见 Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
+和 \ `9.6 <#sec:efetch>`__ ） 纯文本形式下载序列。对于文献数据库，Biopython包含了一个处理PubMed中
+使用的 ``MEDLINE`` 格式的解析器。
 
-9.12.1  处理Medline记录
+9.12.1  解析Medline记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-你可以在 ``Bio.Medline`` 中找到Medline的语义分析器。假设你想处理包含一个Medline记录的 ``pubmed_result1.txt`` 
+你可以在 ``Bio.Medline`` 中找到Medline的解析器。假设你想处理包含一个Medline记录的 ``pubmed_result1.txt`` 
 文件。你可以在Biopython的 ``Tests\Medline`` 目录下找到这个文件，这个文件内容如下所示：
 
 .. code:: verbatim
@@ -838,7 +838,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
           Open Source BioPerl, BioPython and Biojava projects provide toolkits with
     ...
 
-我们首先打开文件，然后处理它：
+我们首先打开文件，然后解析它：
 
 .. code:: verbatim
 
@@ -873,7 +873,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 
 可以做一个简单的总结。
 
-为了处理包含多个Medline记录的文件，你可以使用 ``parse`` 函数来代替：
+为了解析包含多个Medline记录的文件，你可以使用 ``parse`` 函数来代替：
 
 .. code:: verbatim
 
@@ -899,15 +899,15 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
     >>> record["IdList"]
     ['19304878', '18606172', '16403221', '16377612', '14871861', '14630660', '12230038']
 
-现在我们使用 ``Bio.Entrez.efetch`` 来现在这些Medline记录:
+现在我们使用 ``Bio.Entrez.efetch`` 来下载这些Medline记录:
 
 .. code:: verbatim
 
     >>> idlist = record["IdList"]
     >>> handle = Entrez.efetch(db="pubmed",id=idlist,rettype="medline",retmode="text")
 
-这里，我们使 ``rettype="medline", retmode="text"`` 来以纯文本形式的Medline格式来的到这些记录。现在
-我们使用 ``Bio.Medline`` 来处理这些记录：
+这里，我们使 ``rettype="medline", retmode="text"`` 来以纯文本形式的Medline格式来得到这些记录。现在
+我们使用 ``Bio.Medline`` 来解析这些记录：
 
 .. code:: verbatim
 
@@ -943,13 +943,13 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
     The Bio* toolkits--a brief overview.
 
 需要注意的是，在上面这两个例子当中，为了简便我们混合使用了 ESearch 和 EFetch。在这种情形下，NCBI 希望你
-使用他们的历史特征，在下面章节中会讲到Section \ `9.15 <#sec:entrez-webenv>`__.
+使用他们的历史记录特性，在下面章节中会讲到Section \ `9.15 <#sec:entrez-webenv>`__.
 
-9.12.2  处理GEO记录
+9.12.2  解析GEO记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GEO ( `Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__ ) 是高通量基因表达和杂交芯片
-数据的数据库。 ``Bio.Geo`` 模块可以用来处理GEO格式的数据。
+数据的数据库。 ``Bio.Geo`` 模块可以用来解析GEO格式的数据。
 
 下面的代码展示了怎样将一个名称为 ``GSE16.txt`` 的GEO文件存进一个记录，并打印该记录：
 
@@ -981,7 +981,7 @@ GEO ( `Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__ ) 是高通
 在这个例子当中，你需要的文件应该是 ```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
 （一个压缩文件，参见Python的gzip 模块）。
 
-9.12.3  处理UniGene记录
+9.12.3  解析UniGene记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本在某个特定物种中相关的基因。一个典型的UniGene
@@ -1025,7 +1025,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 这个记录展示了这个转录本（如 ``SEQUENCE`` 行展示）是来自人的NAT2基因，编码en N-acetyltransferase。
  ``PROTSIM`` 显示的是和NAT2显著相似的蛋白质， ``STS`` 展示的是基因组当中的STS位点。
 
-我们使用 ``Bio.UniGene`` 模块来处理UniGene文件：
+我们使用 ``Bio.UniGene`` 模块来解析UniGene文件：
 
 .. code:: verbatim
 
@@ -1033,7 +1033,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     >>> input = open("myunigenefile.data")
     >>> record = UniGene.read(input)
     
-``UniGene.read`` 返回的是一个和UniGene记录相关的Python对象。例如，
+``UniGene.read`` 返回的是一个包含一些和UniGene记录的字段相对应属性的Python对象。例如，
 
 .. code:: verbatim
 
@@ -1075,9 +1075,9 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 通常状况下，你不需要使用代理，但是如果你的网络有问题的时候，我们有以下应对方法。在内部， ``Bio.Entrez`` 使用
 一个标准的 Python 库 ``urllib`` 来访问 NCBI的服务器。这个将检查叫做 ``http_proxy`` 的环境变量来自动配置简单
-的代理服务。不幸的是，这个模块不支持需要认真的代理。
+的代理服务。不幸的是，这个模块不支持需要认证的代理。
 
-你可以选择设定环境变量 ``http_proxy`` 。同样，你可以再Python脚本开头的地方设置这个参数，例如：
+你可以选择设定环境变量 ``http_proxy`` 。同样，你可以在Python脚本开头的地方设置这个参数，例如：
 
 .. code:: verbatim
 
@@ -1093,11 +1093,11 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 9.14.1  PubMed和Medline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你是在医药领域或者对人类的问题（可能大多数情况下你不感兴趣!）感兴趣，PubMed(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
+如果你是在医药领域或者对人类的问题感兴趣（或者尽管并你不感兴趣，大多数情况下也适用!），PubMed(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。
 
 在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(see section \ `2.3 <#sec:orchids>`__ for our motivation)。
-我们首先看看又多少这样的文章：
+我们首先看看有多少这样的文章：
 
 .. code:: verbatim
 
@@ -1128,7 +1128,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     ...
 
 这样我们就得到了这些信息，显然我们想要得到对应的Medline records和更多额外的信息。这里，我们将以纯文本的
-形式下载和Medline records相关的信息，然后使用 ``Bio.Medline`` 模块来处理他们：
+形式下载和Medline records相关的信息，然后使用 ``Bio.Medline`` 模块来解析他们：
 
 .. code:: verbatim
 
@@ -1137,7 +1137,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
                                retmode="text")
     >>> records = Medline.parse(handle)
 
-注意 - 我们完成了一次搜索和提取，NCBI更希望你在这种情况下使用他们的history support。请见Section \ `9.15 <#sec:entrez-webenv>`__.
+注意 - 我们完成了一次搜索和获取，NCBI更希望你在这种情况下使用他们的历史记录支持。请见章节 \ `9.15 <#sec:entrez-webenv>`__.
 
 请记住 ``records`` 是一个迭代器，所以你只能访问这些records一次。如果你想保存这些records，你需要把他们转成列表：
 
@@ -1166,8 +1166,8 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     'Ibarra F', 'Francke W']
     source: J Comp Physiol [A] 2000 Jun;186(6):567-74
 
-特别有意思的是作者的列表，作者的列表会作为一个标准的Python列表返回。这是用标准的Python工具处理和搜索
-变得简单。例如，我们可以想下面的代码这样循环读取所有条目来所有跟某个作者相关的信息：
+特别有意思的是作者的列表，作者的列表会作为一个标准的Python列表返回。这使得用标准的Python工具操作和搜索
+变得简单。例如，我们可以像下面的代码这样循环读取所有条目来查找某个特定的作者：
 
 .. code:: verbatim
 
@@ -1181,12 +1181,12 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 希望这个章节可以让你知道Entrez和Medline借口的能力和便利性和怎样同时使用他们。
 
-9.14.2  搜索，下载，和处理Entrez核酸记录
+9.14.2  搜索，下载，和解析Entrez核酸记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 这里我们将展示一个关于远程Entrez查询的简单例子。在 \ `2.3 <#sec:orchids>`__ 章节，我们讲到了使用NCBI
 的Entrez网站来搜索 NCBI 的核酸数据库来获得关于Cypripedioideae的信息。现在我们看看如何使用Python脚本
-自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，处理他们。
+自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，解析他们。
 
 首先，我们在下载这些结果之前，使用EGQuery来计算结果的数目。EGQuery 将会告诉我们在每个数据库中分别有多少
 搜索结果，但在我们这个例子当中，我们只对核苷酸感兴趣：
@@ -1203,7 +1203,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     814
 
 所以，我们预期能找到814个 Entrez 核酸记录（这是我在2008年得到的结果；在未来这个结果应该会增加）。如果你得
-到了高的不可思议的结果数目时，你可能得重新考试是否需要下载所有的这些结果，下载是我们的下一步：
+到了高的不可思议的结果数目时，你可能得重新考虑是否需要下载所有的这些结果，下载是我们的下一步：
 
 .. code:: verbatim
 
@@ -1211,7 +1211,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     >>> handle = Entrez.esearch(db="nucleotide", term="Cypripedioideae", retmax=814)
     >>> record = Entrez.read(handle)
 
-在这里, ``record`` 是一个包含了搜索结果和一些辅助信息的Python字典。为了这些信息，让我们看看在这些字典当中
+在这里, ``record`` 是一个包含了搜索结果和一些辅助信息的Python字典。仅仅作为参考信息，让我们看看在这些字典当中
 究竟存储了些什么内容： 
 
 .. code:: verbatim
@@ -1240,8 +1240,8 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     >>> print record["IdList"][:5]
     ['187237168', '187372713', '187372690', '187372688', '187372686']
 
-我们可以使用 ``efetch`` 来下载这些结果. 为了减少 NCBI 服务器的负载，你可以一个一个的下载这些记录，最好呢还是
-一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节中会要讲到的 history feature Section \ `9.15 <#sec:entrez-webenv>`__.
+我们可以使用 ``efetch`` 来下载这些结果. 尽管你可以一个一个的下载这些记录，但为了减少 NCBI 服务器的负载，最好呢还是
+一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节 \ `9.15 <#sec:entrez-webenv>`__ 中会要讲到的历史记录特性。
 
 .. code:: verbatim
 
@@ -1278,19 +1278,19 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     >>> print records[0]["GBSeq_organism"]
     Cypripedium calceolus
 
-你可以这些来快速的开始搜索 ®C 但是更高深的用法请见  \ `9.15 <#sec:entrez-webenv>`__.
+你可以用这个来快速的开始搜索 —— 但是对于频繁的使用请见  \ `9.15 <#sec:entrez-webenv>`__.
 
-9.14.3  搜索、下载和处理GenBank record
+9.14.3  搜索、下载和解析GenBank record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GenBank record 格式是包含序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库获取
-信息非常好的一种方法 ```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
+GenBank record 格式是保存序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库 
+```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__ 获取信息非常好的一种方式 .
 
-在这个例子当中，我们讲展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 处理他们 -
-在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__.中提到过这些。简单起见，这个例子*不会*使用 WebEnv history feature
- ®C 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
+在这个例子当中，我们将展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 解析他们 ——
+在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__ 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
+ —— 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
 
-首先，我们想要查询找出要检索的记录。这里我们快速的检索我们最喜欢的一个物种 *Opuntia* (多刺的梨型仙人掌).我们
+首先，我们想要查询找出要获取的记录的ID。这里我们快速的检索我们最喜欢的一个物种 *Opuntia* (多刺的梨型仙人掌)。我们
 可以做一个快速的检索来获得所有满足要求的GIs（GenBank标志符）。首先我们看看有多少个记录：
 
 .. code:: verbatim
@@ -1316,7 +1316,7 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
     ['57240072', '57240071', '6273287', '6273291', '6273290', '6273289', '6273286',
     '6273285', '6273284']
 
-现在我们使用这些GIs来下载GenBank records - 注意在老的Biopython版本中，你必须将GI号用逗号隔开，例如
+现在我们使用这些GIs来下载GenBank records —— 注意在老的Biopython版本中，你必须将GI号用逗号隔开传递给Entrez，例如
 在 Biopython 1.59中，你可以传递一个列表，下面的内容会为你做转换：
 
 .. code:: verbatim
@@ -1370,18 +1370,18 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
     AF191659, length 894, with 3 features
     AF191658, length 896, with 3 features
 
-使用这些自动的查询提取功能相对于手动处理是一个很大的进步。尽管这些模块需要遵守NCBI每秒钟最多三次的规则，NCBI
-有向避开高峰时刻的建议。请见Section \ `9.1 <#sec:entrez-guidelines>`__. 尤其需要注意的是，这个例子没有
-用到 WebEnv history feature。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见Section \ `9.15 <#sec:entrez-webenv>`__.
+使用这些自动的查询提取功能相对于手动处理是一个很大的进步。尽管这些模块需要遵守NCBI每秒钟最多三次的规则，然而NCBI
+有其他像避开高峰时刻的建议。请见章节 \ `9.1 <#sec:entrez-guidelines>`__. 尤其需要注意的是，这个例子没有
+用到 WebEnv 历史记录特性。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见章节 \ `9.15 <#sec:entrez-webenv>`__.
 
-最后，如果你计划重复你的分析，你应该下载这些record *一次* ，然后将他们保存在你的硬盘你，在本地进行分析；而不是
+最后，如果你计划重复你的分析，你应该下载这些record *一次* ，然后将他们保存在你的硬盘里，在本地进行分析；而不是
 从 NCBI 下载之后就马上进行分析（像这个例子一样）。
 
-9.14.4  查看物种直接的谱系关系
+9.14.4  查看物种的谱系关系
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 仍然以植物为例子，让我们找出Cyripedioideae兰花家族的谱系。首先让我们在Taxonomy数据库中查找跟Cypripedioideae
-相关的记录，确实找到了一个确切的NCBI taxonomy identifier：
+相关的记录，确实找到了一个确切的 NCBI taxonomy 标识号：
 
 .. code:: verbatim
 
@@ -1394,7 +1394,7 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
     >>> record["IdList"][0]
     '158330'
 
-现在，我们使用 ``efetch`` 从 Taxonomy 数据库中下载这些条目，然后处理它：
+现在，我们使用 ``efetch`` 从 Taxonomy 数据库中下载这些条目，然后解析它：
 
 .. code:: verbatim
 
@@ -1419,28 +1419,28 @@ GenBank record 格式是包含序列信息、序列特征和其他相关信息�
      Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta;
      Liliopsida; Asparagales; Orchidaceae'
 
-这个record数据包含的信息远远超过在这里显示的-例如查看 ``"LineageEx"`` 而不是 ``"Lineage"`` 相关的
-信息，你也可以得到谱系里面的NCBI taxon identifiers信息。
+这个record数据包含的信息远远超过在这里显示的 —— 例如查看 ``"LineageEx"`` 而不是 ``"Lineage"`` 相关的
+信息，你也可以得到谱系里面的 NCBI taxon 标识号信息。
 
-9.15  使用历史和WebEnv
+9.15  使用历史记录和WebEnv
 ----------------------------------
 
 通常，你想做一系列相关的查询。最典型的是，进行一个搜索，精炼搜索，然后提取详细的搜索结果。你 *可以* 通过一系列
-独立的调用Entrez来完成这些工作。然而，NCBI更希望你利用 histroy support 的优势来完成这个 - 例如将ESearch
+独立的调用Entrez来完成这些工作。然而，NCBI更希望你利用历史记录支持的优势来完成这个 - 例如将ESearch
 和EFetch结合起来。
 
-另外一个关于history support典型的使用是结合EPost和EFetch。你可以使用EPost来上传一个identifiers的
+另外一个关于历史记录支持，典型的使用是结合EPost和EFetch。你可以使用EPost来上传一个标识号的
 列表，这样就开始一些新的history session。接下来你就可以用EFetch指向这个session来下载这些数据（而不是那些
-identifiers）。
+标识号）。
 
 9.15.1  利用 history 来搜索和下载序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像Section \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__
+假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像章节 \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__
 里一样, 我们可以简单的用 ``Bio.Entrez.esearch()`` 得到一个GI号的列表，然后调用 ``Bio.Entrez.efetch()`` 
 来下载他们。
 
-然而，被认同的方法是使用history feature来进行搜索。然后，我们可以通过指向这些搜索结果就可以提取他们 - 
+然而，被认同的方法是使用历史记录特性来进行搜索。然后，我们可以通过指向这些搜索结果的引用来获取他们 - 
 NCBI 将会提前进行缓冲。
 
 为此，调用 ``Bio.Entrez.esearch()`` 是正常的，但是需要额外的 ``usehistory="y"`` 参数，
@@ -1462,7 +1462,7 @@ NCBI 将会提前进行缓冲。
     >>> count = int(search_results["Count"])
     >>> assert count == len(gi_list)
 
-然而，你将得到两个额外的信息， ``WebEnv`` session cookie 和 ``QueryKey`` :
+然而，你将得到两个额外的信息， ``WebEnv`` 会话cookie 和 ``QueryKey`` :
 
 .. code:: verbatim
 
@@ -1525,8 +1525,8 @@ NCBI 将会提前进行缓冲。
     out_handle.close()
 
 在写这份文档的时候，这个搜索返回了28个匹配结果 - 但是因为这个是跟时间相关的搜索，因此返回结果会发生变化。
-像在上面 \ `9.12.1 <#subsec:entrez-and-medline>`__ 讲到的一样, 你可以使用 ``Bio.Medline`` 来处理
-保存下来的records。
+像在上面 \ `9.12.1 <#subsec:entrez-and-medline>`__ 讲到的一样, 你可以使用 ``Bio.Medline`` 来解析
+保存下来的记录。
 
 9.15.3  搜索引用文章
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1551,7 +1551,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
 文章， PMCID 2682512。
 
 那么，如果（像我）你希望得到的是PubMed IDs的列表的话，该怎么做呢？好吧，你可以使用再次使用ELink来更改他们。
-这将成为两步处理，所以你应该使用history feature来完成这个工作（Section `9.15 <#sec:entrez-webenv>`__）。
+这将成为两步处理，所以你应该使用历史记录特性来完成这个工作（章节 `9.15 <#sec:entrez-webenv>`__）。
 
 但是首先，让我们使用更直接的方法来进行第二次调用ELink：
 
@@ -1565,6 +1565,6 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
 
 这次，你可以立即的看到Biopython应用笔记作为第三个hit（PubMed ID 19304878）。
 
-现在，让我们重新使用history再试一遍 … *TODO*.
+现在，让我们重新使用历史记录再试一遍 … *TODO*.
 
 最终，不要忘记在Entrez调用的时候，加上你 *自己* 的电子邮箱地址。
