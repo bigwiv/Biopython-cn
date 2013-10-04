@@ -127,27 +127,18 @@ Biopython目前有两个“cookbook”示例集合——本章（本章包含在
     SeqIO.write(shuffled_recs, handle, "fasta")
     handle.close()
 
-18.1.3  Translating a FASTA file of CDS entries
+18.1.3  翻译CDS条目为FASTA文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose you’ve got an input file of CDS entries for some organism, and
-you want to generate a new FASTA file containing their protein
-sequences. i.e. Take each nucleotide sequence from the original file,
-and translate it. Back in Section \ `3.9 <#sec:translation>`__ we saw
-how to use the ``Seq`` object’s ``translate method``, and the optional
-``cds`` argument which enables correct translation of alternative start
-codons.
+假设你有一个包含某个物种的CDS条目的输入文件，你想生成一个新的包含它们的蛋白序列的FASTA文件。也就是，从原始文件中取出
+每一个核苷酸序列，并翻译它。回到章节 \ `3.9 <#sec:translation>`__ 我们看到了怎么使用 ``Seq`` 对象的 ``translate`` 方法，
+和可选的 ``cds`` 参数来使得不同的起始密码子能正确翻译。
 
-We can combine this with ``Bio.SeqIO`` as shown in the reverse
-complement example in
-Section \ `5.5.3 <#sec:SeqIO-reverse-complement>`__. The key point is
-that for each nucleotide ``SeqRecord``, we need to create a protein
-``SeqRecord`` - and take care of naming it.
+就像章节 \ `5.5.3 <#sec:SeqIO-reverse-complement>`__ 反向互补例子中展示的那样，我们能用 ``Bio.SeqIO`` 将这个结合起来。
+关键是对每一个核苷酸 ``SeqRecord`` ，我们需要创建一个蛋白 ``SeqRecord`` —— 并注意对它命名。
 
-You can write you own function to do this, choosing suitable protein
-identifiers for your sequences, and the appropriate genetic code. In
-this example we just use the default table and add a prefix to the
-identifier:
+你能编写自己的函数来做这个事情，为你的序列选择合适的蛋白标识和恰当的遗传密码。在这个例子中，我们仅使用默认的密码表，给
+标识加一个前缀。
 
 .. code:: verbatim
 
@@ -158,9 +149,7 @@ identifier:
                          id = "trans_" + nuc_record.id, \
                          description = "translation of CDS, using default table")
 
-We can then use this function to turn the input nucleotide records into
-protein records ready for output. An elegant way and memory efficient
-way to do this is with a generator expression:
+我们接着能用这个函数将输入的核苷酸记录转换为蛋白记录，以备输出。一个优雅且内存高效的方式是使用一个生成表达式实现：
 
 .. code:: verbatim
 
@@ -169,21 +158,15 @@ way to do this is with a generator expression:
                 SeqIO.parse("coding_sequences.fasta", "fasta"))
     SeqIO.write(proteins, "translations.fasta", "fasta")
 
-This should work on any FASTA file of complete coding sequences. If you
-are working on partial coding sequences, you may prefer to use
-``nuc_record.seq.translate(to_stop=True)`` in the example above, as this
-wouldn’t check for a valid start codon etc.
+这适用于任何全编码序列的FASTA文件。如果你使用部分编码序列，你可能更喜欢在上面的例子中使用 ``nuc_record.seq.translate(to_stop=True)``
+因为它不会检查起始密码的有效性，等等。
 
-18.1.4  Making the sequences in a FASTA file upper case
+18.1.4  将FASTA文件中的序列变为大写
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Often you’ll get data from collaborators as FASTA files, and sometimes
-the sequences can be in a mixture of upper and lower case. In some cases
-this is deliberate (e.g. lower case for poor quality regions), but
-usually it is not important. You may want to edit the file to make
-everything consistent (e.g. all upper case), and you can do this easily
-using the ``upper()`` method of the ``SeqRecord`` object (added in
-Biopython 1.55):
+通常你会从合作者那里得到FASTA文件的数据，有时候这些序列可能是大小写混合的。在某些情况下，这些可能是有意为之的（例如，
+小写的作为低质量的区域），但通常不太重要。你可能希望编辑这个文件以使所有的序列都变得一致（如，都为大写），你可以使用
+``SeqRecord`` 对象的 ``upper()`` 方法轻易的实现（Biopython 1.55中引入）：
 
 .. code:: verbatim
 
@@ -192,27 +175,18 @@ Biopython 1.55):
     count = SeqIO.write(records, "upper.fas", "fasta")
     print "Converted %i records to upper case" % count
 
-How does this work? The first line is just importing the ``Bio.SeqIO``
-module. The second line is the interesting bit – this is a Python
-generator expression which gives an upper case version of each record
-parsed from the input file (``mixed.fas``). In the third line we give
-this generator expression to the ``Bio.SeqIO.write()`` function and it
-saves the new upper cases records to our output file (``upper.fas``).
+这是怎么工作的呢？第一行只是导入 ``Bio.SeqIO`` 模块。第二行是最有趣的——这是一个Python生成器表达式，它提供从输入文件（ ``mixed.fas`` ）解析后
+的每个记录的大写版本。第三行中，我们把这个生成器表达式传给 ``Bio.SeqIO.write()`` 函数，它保存新的大写的记录到我们的输出文件（ ``upper.fas`` ）。
 
-The reason we use a generator expression (rather than a list or list
-comprehension) is this means only one record is kept in memory at a
-time. This can be really important if you are dealing with large files
-with millions of entries.
+我们使用生成器（而不是一个列表或列表解析式）的原因是，前者表示每次仅有一个记录保存在内存中。当你在处理包含成千上万的条目的大文件时，这可能非常重要。
 
-18.1.5  Sorting a sequence file
+18.1.5  对序列文件排序
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose you wanted to sort a sequence file by length (e.g. a set of
-contigs from an assembly), and you are working with a file format like
-FASTA or FASTQ which ``Bio.SeqIO`` can read, write (and index).
+假设你想对一个序列文件按序列长度排序（例如，一个序列拼接的重叠群(contig)集合），而且你工作的文件格式是像FASTA或FASTQ这样 ``Bio.SeqIO`` 能读写（和索引）
+的格式。
 
-If the file is small enough, you can load it all into memory at once as
-a list of ``SeqRecord`` objects, sort the list, and save it:
+如果文件足够小，你能将它都一次读入内存为一个 ``SeqRecord`` 对象列表，对列表进行排序，并保存它：
 
 .. code:: verbatim
 
@@ -221,10 +195,7 @@ a list of ``SeqRecord`` objects, sort the list, and save it:
     records.sort(cmp=lambda x,y: cmp(len(x),len(y)))
     SeqIO.write(records, "sorted_orchids.fasta", "fasta")
 
-The only clever bit is specifying a comparison function for how to sort
-the records (here we sort them by length). If you wanted the longest
-records first, you could flip the comparison or use the reverse
-argument:
+唯一需要聪明点的是指明一个比较函数来说明怎样对记录进行排序（这里我们按长度对他们排序）。如果你希望最长的记录在第一个，你可以交换比对，或者使用reverse参数：
 
 .. code:: verbatim
 
@@ -233,10 +204,8 @@ argument:
     records.sort(cmp=lambda x,y: cmp(len(y),len(x)))
     SeqIO.write(records, "sorted_orchids.fasta", "fasta")
 
-Now that’s pretty straight forward - but what happens if you have a very
-large file and you can’t load it all into memory like this? For example,
-you might have some next-generation sequencing reads to sort by length.
-This can be solved using the ``Bio.SeqIO.index()`` function.
+现在这个非常直接——但是如果你的文件非常大，你不能像这样把它整个加载到内存中应该怎么办呢？例如，你可能有一些二代测序的读长要根据长度排序。这可以通过 ``Bio.SeqIO.index()``
+函数解决。
 
 .. code:: verbatim
 
@@ -250,19 +219,11 @@ This can be solved using the ``Bio.SeqIO.index()`` function.
     records = (record_index[id] for id in ids)
     SeqIO.write(records, "sorted.fasta", "fasta")
 
-First we scan through the file once using ``Bio.SeqIO.parse()``,
-recording the record identifiers and their lengths in a list of tuples.
-We then sort this list to get them in length order, and discard the
-lengths. Using this sorted list of identifiers ``Bio.SeqIO.index()``
-allows us to retrieve the records one by one, and we pass them to
-``Bio.SeqIO.write()`` for output.
+首先我们使用 ``Bio.SeqIO.parse()`` 扫描一次整个文件，在一个tuple列表中记下所有记录的标识和他们的长度。接着我们对这个列表进行排序使得他们按长度顺序进行排列，并舍弃这些长度。
+使用这个排列后的标识列表， ``Bio.SeqIO.index()`` 允许我们一个一个获取这些记录，我们把它们传给 ``Bio.SeqIO.write()`` 输出。
 
-These examples all use ``Bio.SeqIO`` to parse the records into
-``SeqRecord`` objects which are output using ``Bio.SeqIO.write()``. What
-if you want to sort a file format which ``Bio.SeqIO.write()`` doesn’t
-support, like the plain text SwissProt format? Here is an alternative
-solution using the ``get_raw()`` method added to ``Bio.SeqIO.index()``
-in Biopython 1.54 (see Section \ `5.4.2.2 <#sec:seqio-index-getraw>`__).
+这些例子都使用 ``Bio.SeqIO`` 来解析记录为 ``SeqRecord`` 对象，并通过 ``Bio.SeqIO.write()`` 输出。当你想排序的文件格式 ``Bio.SeqIO.write()`` 不支持应该怎么办呢？如纯文本的
+SwissProt格式。这里有一个额外的解决方法，使用在 Biopython 1.54 (see Section \ `5.4.2.2 <#sec:seqio-index-getraw>`__) 的 ``Bio.SeqIO.index()`` 中添加的 ``get_raw()`` 方法。
 
 .. code:: verbatim
 
@@ -278,10 +239,9 @@ in Biopython 1.54 (see Section \ `5.4.2.2 <#sec:seqio-index-getraw>`__).
         handle.write(record_index.get_raw(id))
     handle.close()
 
-As a bonus, because it doesn’t parse the data into ``SeqRecord`` objects
-a second time it should be faster.
+作为一个回报，因为它不将数据第二次解析为 ``SeqRecord`` 对象，它会更快。
 
-18.1.6  Simple quality filtering for FASTQ files
+18.1.6  FASTQ文件的简单质量过滤
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The FASTQ file format was introduced at Sanger and is now widely used
@@ -925,30 +885,22 @@ here (see the Python module ``re``). These are an extremely powerful
 supported in lots of programming languages and also command line tools
 like ``grep`` as well). You can find whole books about this topic!
 
-18.2  Sequence parsing plus simple plots
+18.2  序列解析与简单作图
 ----------------------------------------
 
-This section shows some more examples of sequence parsing, using the
-``Bio.SeqIO`` module described in Chapter \ `5 <#chapter:Bio.SeqIO>`__,
-plus the Python library matplotlib’s ``pylab`` plotting interface (see
-`the matplotlib website for a
-tutorial <http://matplotlib.sourceforge.net/>`__). Note that to follow
-these examples you will need matplotlib installed - but without it you
-can still try the data parsing bits.
+这一部分展示更多使用第 \ `5 <#chapter:Bio.SeqIO>`__ 章介绍的 ``Bio.SeqIO`` 模块进行序列解析的例子，
+以及Python类库matplotlib中 ``pylab`` 的作图接口（参见 `matplotlib 主页的教程 <http://matplotlib.sourceforge.net/>`__ ）。
+注意，跟随这些例子，你需要安装matplotlib - 但是没有它，你也可以尝试数据的解析的内容。
 
-18.2.1  Histogram of sequence lengths
+18.2.1  序列长度柱状图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are lots of times when you might want to visualise the
-distribution of sequence lengths in a dataset – for example the range of
-contig sizes in a genome assembly project. In this example we’ll reuse
-our orchid FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
-which has only 94 sequences.
+许多时候，你可能想要将某个数据集中的序列长度分布可视化 —— 例如，基因组组装项目中的contig的大小范围。
+在这个例子中，我们将再次使用我们的兰花FASTA文件 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ ，
+它只包含94条序列。
 
-First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
-compile a list of all the sequence lengths. You could do this with a for
-loop, but I find a list comprehension more pleasing:
+首先，我们使用 ``Bio.SeqIO`` 来解析这个FASTA文件，并创建一个序列长度的列表。你可以用一个for循环来实现，
+然而我觉得列表解析（list comprehension）更赏心悦目：
 
 .. code:: verbatim
 
@@ -959,8 +911,7 @@ loop, but I find a list comprehension more pleasing:
     >>> sizes
     [740, 753, 748, 744, 733, 718, 730, 704, 740, 709, 700, 726, ..., 592]
 
-Now that we have the lengths of all the genes (as a list of integers),
-we can use the matplotlib histogram function to display it.
+现在我们得到了所有基因的长度（以整数列表的形式），我们可以用matplotlib的柱状图功能来显示它。
 
 .. code:: verbatim
 
@@ -975,31 +926,24 @@ we can use the matplotlib histogram function to display it.
     pylab.ylabel("Count")
     pylab.show()
 
-That should pop up a new window containing the following graph:
+这将弹出一个包含如下图形的新的窗口：
 
 |image26|
 
-Notice that most of these orchid sequences are about 740 bp long, and
-there could be two distinct classes of sequence here with a subset of
-shorter sequences.
+注意，这些兰花序列的长度大多数大约在740bp左右，这里有可能有两个显著的序列分类，其中包含一个更短的序列子集。
 
-*Tip:* Rather than using ``pylab.show()`` to show the plot in a window,
-you can also use ``pylab.savefig(...)`` to save the figure to a file
-(e.g. as a PNG or PDF).
+*提示：* 除了使用 ``pylab.show()`` 在窗口中显示图像以外，你也可以使用 ``pylab.savefig(...)`` 来保存图像到
+文件中（例如PNG或PDF文件）。
 
-18.2.2  Plot of sequence GC%
+18.2.2  序列GC%含量作图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Another easily calculated quantity of a nucleotide sequence is the GC%.
-You might want to look at the GC% of all the genes in a bacterial genome
-for example, and investigate any outliers which could have been recently
-acquired by horizontal gene transfer. Again, for this example we’ll
-reuse our orchid FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
+核酸序列另一个容易计算的量值是GC%。例如，你可能想要查看一个细菌基因组中所有基因的GC%含量，并研究任何离群值
+来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用我们的兰花FASTA文件
+```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 。
 
-First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
-compile a list of all the GC percentages. Again, you could do this with
-a for loop, but I prefer this:
+首先，我们使用 ``Bio.SeqIO`` 解析这个FASTA文件并创建一个GC百分含量的列表。再次，你可以使用for循环，但我更喜
+欢这样：
 
 .. code:: verbatim
 
@@ -1008,9 +952,7 @@ a for loop, but I prefer this:
 
     gc_values = sorted(GC(rec.seq) for rec in SeqIO.parse("ls_orchid.fasta", "fasta"))
 
-Having read in each sequence and calculated the GC%, we then sorted them
-into ascending order. Now we’ll take this list of floating point values
-and plot them with matplotlib:
+读取完每个序列并计算了GC百分比，我们接着将它们按升序排列。现在，我们用这个浮点数列表采用matplotlib作图：
 
 .. code:: verbatim
 
@@ -1022,25 +964,19 @@ and plot them with matplotlib:
     pylab.ylabel("GC%")
     pylab.show()
 
-As in the previous example, that should pop up a new window containing a
-graph:
+像之前的例子一样，这将弹出一个新的窗口包含如下图形：
 
 |image27|
 
-If you tried this on the full set of genes from one organism, you’d
-probably get a much smoother plot than this.
+如果你使用的是一个物种中的所有基因集，你可能得到一个比这个更加平滑的图。
 
-18.2.3  Nucleotide dot plots
+18.2.3  核苷酸点线图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A dot plot is a way of visually comparing two nucleotide sequences for
-similarity to each other. A sliding window is used to compare short
-sub-sequences to each other, often with a mis-match threshold. Here for
-simplicity we’ll only look for perfect matches (shown in black in the
-plot below).
+点线图是可视化比较两条核苷酸序列的相似性的一种方式。采用一个滑动窗来相互比较较短的子序列，通常使用一个不匹配阈值。
+这里为了简单起见，我们将只查找完全匹配（如下图黑色所示）。
 
-To start off, we’ll need two sequences. For the sake of argument, we’ll
-just take the first two from our orchid FASTA file
+我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。
 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
 .. code:: verbatim
@@ -1052,11 +988,8 @@ just take the first two from our orchid FASTA file
     rec_two = record_iterator.next()
     handle.close()
 
-We’re going to show two approaches. Firstly, a simple naive
-implementation which compares all the window sized sub-sequences to each
-other to compiles a similarity matrix. You could construct a matrix or
-array object, but here we just use a list of lists of booleans created
-with a nested list comprehension:
+我们将展示两种方式。首先，一个简单幼稚的实现，它将所有滑动窗大小的子序列相互比较，并生产一个相似性矩阵。
+你可以创建一个矩阵或数组对象，而在这儿，我们只用一个用嵌套的列表解析生成的布尔值列表的列表。
 
 .. code:: verbatim
 
@@ -1067,10 +1000,8 @@ with a nested list comprehension:
             for j in range(len(seq_one)-window)] \
            for i in range(len(seq_two)-window)]
 
-Note that we have *not* checked for reverse complement matches here. Now
-we’ll use the matplotlib’s ``pylab.imshow()`` function to display this
-data, first requesting the gray color scheme so this is done in black
-and white:
+注意，我们在这里并 *没有* 检查反向的互补匹配。现在我们将使用matplotlib的 ``pylab.imshow()`` 函数来显示这个数据，
+首先请求灰度模式，以保证这是在黑白颜色下完成的：
 
 .. code:: verbatim
 
@@ -1082,27 +1013,17 @@ and white:
     pylab.title("Dot plot using window size %i\n(allowing no mis-matches)" % window)
     pylab.show()
 
-That should pop up a new window containing a graph like this:
+这将弹出一个新的窗口，包含类似这样的图形：
 
 |image28|
 
-As you might have expected, these two sequences are very similar with a
-partial line of window sized matches along the diagonal. There are no
-off diagonal matches which would be indicative of inversions or other
-interesting events.
+可能如您所料，这两条序列非常相似，图中部分滑动窗大小的线沿着对角线匹配。这里没有能够说明是倒装或其他有趣事件的偏离对角线的匹配。
 
-The above code works fine on small examples, but there are two problems
-applying this to larger sequences, which we will address below. First
-off all, this brute force approach to the all against all comparisons is
-very slow. Instead, we’ll compile dictionaries mapping the window sized
-sub-sequences to their locations, and then take the set intersection to
-find those sub-sequences found in both sequences. This uses more memory,
-but is *much* faster. Secondly, the ``pylab.imshow()`` function is
-limited in the size of matrix it can display. As an alternative, we’ll
-use the ``pylab.scatter()`` function.
+上面的代码在小的例子中工作得很好，但是应用到大的序列时，这里有两个问题，将在后面讨论。首先，这个暴力的所有对所有的比对方式非常慢。
+作为替代，我们将创建一个词典来映射所有滑动窗大小的子序列的位置，然后取两者的交集来获得两条序列中都发现的子序列。这将占用更多的内存，
+然而速度 *更* 快。另外， ``pylab.imshow()`` 函数受限于它能显示的矩阵的大小。作为替代，我们将使用 ``pylab.scatter()`` 函数。
 
-We start by creating dictionaries mapping the window-sized sub-sequences
-to locations:
+我们从创建，从滑动窗大小的子序列到其位置的字典映射，开始：
 
 .. code:: verbatim
 
@@ -1122,8 +1043,7 @@ to locations:
     matches = set(dict_one).intersection(dict_two)
     print "%i unique matches" % len(matches)
 
-In order to use the ``pylab.scatter()`` we need separate lists for the
-*x* and *y* co-ordinates:
+为了使用 ``pylab.scatter()`` 函数，我们需要分开的 *x* 和 *y* 轴的列表：
 
 .. code:: verbatim
 
@@ -1136,7 +1056,7 @@ In order to use the ``pylab.scatter()`` we need separate lists for the
                 x.append(i)
                 y.append(j)
 
-We are now ready to draw the revised dot plot as a scatter plot:
+现在我们能以散点图的形式画出优化后的点线图：
 
 .. code:: verbatim
 
@@ -1151,32 +1071,23 @@ We are now ready to draw the revised dot plot as a scatter plot:
     pylab.title("Dot plot using window size %i\n(allowing no mis-matches)" % window)
     pylab.show()
 
-That should pop up a new window containing a graph like this:
+这将弹出一个新的窗口，包含类似如下图形：
 
 |image29|
 
-Personally I find this second plot much easier to read! Again note that
-we have *not* checked for reverse complement matches here – you could
-extend this example to do this, and perhaps plot the forward matches in
-one color and the reverse matches in another.
+我个人认为第二个图更加易读！再次注意，我们在这里 *没有* 检查反向互补匹配 —— 你可以扩展这个例子
+来实现它，或许可以以一种颜色显示正向匹配，另一种显示反向匹配。
 
-18.2.4  Plotting the quality scores of sequencing read data
+18.2.4  绘制序列读长数据的质量图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are working with second generation sequencing data, you may want
-to try plotting the quality data. Here is an example using two FASTQ
-files containing paired end reads, ``SRR001666_1.fastq`` for the forward
-reads, and ``SRR001666_2.fastq`` for the reverse reads. These were
-downloaded from the ENA sequence read archive FTP site
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__
-and
-```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__),
-and are from *E. coli* – see
-```http://www.ebi.ac.uk/ena/data/view/SRR001666`` <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__
-for details. In the following code the ``pylab.subplot(...)`` function
-is used in order to show the forward and reverse qualities on two
-subplots, side by side. There is also a little bit of code to only plot
-the first fifty reads.
+如果你在处理二代测序数据，你可能希望绘制数据的质量图。这里使用两个包含双端读长的FASTQ文件作为例子，
+``SRR001666_1.fastq`` 为正向读长， ``SRR001666_2.fastq`` 为反向读长。它们从ENA序列读长档案FTP中下载
+（ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__
+和
+```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__ ），
+且来自 *E. coli* —— 参见 ```http://www.ebi.ac.uk/ena/data/view/SRR001666`` <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__ 的详细介绍。
+在下面的代码中， ``pylab.subplot(...)`` 函数被用来在两个子图中展示正向和反向的质量。这里也有少量的代码来保证仅仅展示前50个读长的质量。
 
 .. code:: verbatim
 
@@ -1194,110 +1105,78 @@ the first fifty reads.
     pylab.savefig("SRR001666.png")
     print "Done"
 
-You should note that we are using the ``Bio.SeqIO`` format name
-``fastq`` here because the NCBI has saved these reads using the standard
-Sanger FASTQ format with PHRED scores. However, as you might guess from
-the read lengths, this data was from an Illumina Genome Analyzer and was
-probably originally in one of the two Solexa/Illumina FASTQ variant file
-formats instead.
+你应该注意到，这里我们使用了 ``Bio.SeqIO`` 的格式名称 ``fastq`` ，因为NCBI使用标准Sanger FASTQ和PHRED分数的存储这些读长。然而，你可能从读长的长度中猜到，这些数据来自
+Illumina Genome Analyzer，而且可能最初是以Solexa/Illumina FASTQ两种格式变种中的一种存在。
 
-This example uses the ``pylab.savefig(...)`` function instead of
-``pylab.show(...)``, but as mentioned before both are useful. Here is
-the result:
+这个例子使用 ``pylab.savefig(...)`` 函数，而不是``pylab.show(...)`` ，然而就像前面提到的一样，它们两者都非常有用。下面是得到的结果：
 
 |image30|
 
-18.3  Dealing with alignments
+18.3  处理序列比对
 -----------------------------
 
-This section can been seen as a follow on to
-Chapter \ `6 <#chapter:Bio.AlignIO>`__.
+这部分可以看做是第 \ `6 <#chapter:Bio.AlignIO>`__ 章的继续。
 
-18.3.1  Calculating summary information
+18.3.1  计算摘要信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once you have an alignment, you are very likely going to want to find
-out information about it. Instead of trying to have all of the functions
-that can generate information about an alignment in the alignment object
-itself, we’ve tried to separate out the functionality into separate
-classes, which act on the alignment.
+一旦你有一个比对，你很可能希望找出关于它的一些信息。我们尽力将这些功能分离到
+单独的能作用于比对对象的类中，而不是将所有的能生成比对信息的函数都放入比对对象
+本身。
 
-Getting ready to calculate summary information about an object is quick
-to do. Let’s say we’ve got an alignment object called ``alignment``, for
-example read in using ``Bio.AlignIO.read(...)`` as described in
-Chapter \ `6 <#chapter:Bio.AlignIO>`__. All we need to do to get an
-object that will calculate summary information is:
+准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 ``alignment`` ，
+例如使用在第 \ `6 <#chapter:Bio.AlignIO>`__ 章介绍的 ``Bio.AlignIO.read(...)`` 读入。
+我们计算对象的摘要信息所要做的所有事情是：
 
 .. code:: verbatim
 
     from Bio.Align import AlignInfo
     summary_align = AlignInfo.SummaryInfo(alignment)
 
-The ``summary_align`` object is very useful, and will do the following
-neat things for you:
+``summary_align`` 对象非常有用，它将帮你做以下巧妙的事情：
 
-#. Calculate a quick consensus sequence – see
-   section \ `18.3.2 <#sec:consensus>`__
-#. Get a position specific score matrix for the alignment – see
-   section \ `18.3.3 <#sec:pssm>`__
-#. Calculate the information content for the alignment – see
-   section \ `18.3.4 <#sec:getting_info_content>`__
-#. Generate information on substitutions in the alignment –
-   section \ `18.4 <#sec:sub_matrix>`__ details using this to generate a
-   substitution matrix.
+#. 计算一个快速一致序列 – 参见章节 \ `18.3.2 <#sec:consensus>`__
+#. 获取一个针对该比对的位点特异性打分矩阵 – 参见章节 \ `18.3.3 <#sec:pssm>`__
+#. 计算比对的信息量 – 参见章节 \ `18.3.4 <#sec:getting_info_content>`__
+#. 生成该比对中的替换信息 – 章节 \ `18.4 <#sec:sub_matrix>`__ 详细描述了使用该方法生成
+一个替换矩阵
 
-18.3.2  Calculating a quick consensus sequence
+18.3.2  计算一个快速一致序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``SummaryInfo`` object, described in
-section \ `18.3.1 <#sec:summary_info>`__, provides functionality to
-calculate a quick consensus of an alignment. Assuming we’ve got a
-``SummaryInfo`` object called ``summary_align`` we can calculate a
-consensus by doing:
+在章节 \ `18.3.1 <#sec:summary_info>`__ 中描述的 ``SummaryInfo`` 对象提供了一个可以计算
+比对的快速一致序列的功能。假设我们有一个 ``SummaryInfo`` 对象，叫做 ``summary_align``，我们能通过
+下面的方法计算一个一致序列：
 
 .. code:: verbatim
 
     consensus = summary_align.dumb_consensus()
 
-As the name suggests, this is a really simple consensus calculator, and
-will just add up all of the residues at each point in the consensus, and
-if the most common value is higher than some threshold value will add
-the common residue to the consensus. If it doesn’t reach the threshold,
-it adds an ambiguity character to the consensus. The returned consensus
-object is Seq object whose alphabet is inferred from the alphabets of
-the sequences making up the consensus. So doing a ``print consensus``
-would give:
+就行名字显示的那样，这是一个非常简单的一致序列计算器，它将只是在一致序列中累加每个位点的所有残基，如果
+最普遍的值大于某个阈值时，这个最普遍的残基将被添加到一致序列。如果它没有到达这个阈值，将添加一个“不确定字符”。
+最终返回的一致序列对象是一个Seq对象，它的字母表是从组成一致序列所有序列的字母表中推断出来的。所以使用
+``print consensus`` 将给出如下信息：
 
 .. code:: verbatim
 
     consensus Seq('TATACATNAAAGNAGGGGGATGCGGATAAATGGAAAGGCGAAAGAAAGAAAAAAATGAAT
     ...', IUPACAmbiguousDNA())
 
-You can adjust how ``dumb_consensus`` works by passing optional
-parameters:
+你可以通过传入可选参数来调整 ``dumb_consensus`` 的工作方式：
 
  **the threshold**
-    This is the threshold specifying how common a particular residue has
-    to be at a position before it is added. The default is 0.7 (meaning
-    70%).
+    这是用来设定某个残基在某个位点出现频率超过哪个阈值，才将其添加到一致序列。默认为0.7（即70%）。
 **the ambiguous character**
-    This is the ambiguity character to use. The default is ’N’.
+    作为一致序列中的不确定字符。默认为’N’。
 **the consensus alphabet**
-    This is the alphabet to use for the consensus sequence. If an
-    alphabet is not specified than we will try to guess the alphabet
-    based on the alphabets of the sequences in the alignment.
+    作为一致序列的字母表。如果没有提供，我们将从比对序列的字母表基础上推断该字母表。
 
-18.3.3  Position Specific Score Matrices
+18.3.3  位点特异性打分矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Position specific score matrices (PSSMs) summarize the alignment
-information in a different way than a consensus, and may be useful for
-different tasks. Basically, a PSSM is a count matrix. For each column in
-the alignment, the number of each alphabet letters is counted and
-totaled. The totals are displayed relative to some representative
-sequence along the left axis. This sequence may be the consesus
-sequence, but can also be any sequence in the alignment. For instance
-for the alignment,
+位点特异性打分矩阵（Position specific score matrices，PSSMs）以另一种和一致序列不同的方式总结比对信息，或许
+对不同的工作有用。总的来说，PSSM是一个计数矩阵。对于比对中的每一列，每一个字母都被计数并加和。这些加和值将
+和一个放在左轴的代表序列相对一起显示出来。这个序列可能是一致序列，但也可以是比对中的任何序列。例如，对于比对，
 
 .. code:: verbatim
 
@@ -1305,7 +1184,7 @@ for the alignment,
     AT--C
     CTGTC
 
-the PSSM is:
+它的PSSM是：
 
 .. code:: verbatim
 
@@ -1316,33 +1195,24 @@ the PSSM is:
         T 0 0 2 0
         C 0 0 0 3
 
-Let’s assume we’ve got an alignment object called ``c_align``. To get a
-PSSM with the consensus sequence along the side we first get a summary
-object and calculate the consensus sequence:
+假设我们有一个比对对象叫做 ``c_align`` ，为了获得PSSM和旁边的一致序列，我们首先得到一个摘要对象，并计算一致序列：
 
 .. code:: verbatim
 
     summary_align = AlignInfo.SummaryInfo(c_align)
     consensus = summary_align.dumb_consensus()
 
-Now, we want to make the PSSM, but ignore any ``N`` ambiguity residues
-when calculating this:
+现在，我们想创建PSSM，但是在计算中忽略任何 ``N`` 不确定残基：
 
 .. code:: verbatim
 
     my_pssm = summary_align.pos_specific_score_matrix(consensus,
                                                       chars_to_ignore = ['N'])
 
-Two notes should be made about this:
+关于此的需要说明的两点是：
 
-#. To maintain strictness with the alphabets, you can only include
-   characters along the top of the PSSM that are in the alphabet of the
-   alignment object. Gaps are not included along the top axis of the
-   PSSM.
-#. The sequence passed to be displayed along the left side of the axis
-   does not need to be the consensus. For instance, if you wanted to
-   display the second sequence in the alignment along this axis, you
-   would need to do:
+#. 为了维持字母表的严格性，你可以只在PSSM的顶部包含在比对对象中出现的字母。空白缺口字符并不包含在PSSM的顶轴中。
+#. 传入并显示在左侧轴的序列可以不必为一致序列。例如，你如果想要在轴上显示比对中的第二条序列，你需要做：
 
    .. code:: verbatim
 
@@ -1350,8 +1220,7 @@ Two notes should be made about this:
        my_pssm = summary_align.pos_specific_score_matrix(second_seq
                                                          chars_to_ignore = ['N'])
 
-The command above returns a ``PSSM`` object. To print out the PSSM as we
-showed above, we simply need to do a ``print my_pssm``, which gives:
+上面的命令返回一个 ``PSSM`` 对象。像上面我们展示的一样打印PSSM，我们只需要简单的 ``print my_pssm``，结果如下：
 
 .. code:: verbatim
 
@@ -1366,32 +1235,24 @@ showed above, we simply need to do a ``print my_pssm``, which gives:
     T  1.0 0.0 0.0 6.0
     ...
 
-You can access any element of the PSSM by subscripting like
-``your_pssm[sequence_number][residue_count_name]``. For instance, to get
-the counts for the ’A’ residue in the second element of the above PSSM
-you would do:
+你可以用 ``your_pssm[sequence_number][residue_count_name]`` 获得任何PSSM的元素。例如，获取上面PSSM中第二个元素的
+‘A’残基的计数，你可以：
 
 .. code:: verbatim
 
     >>> print my_pssm[1]["A"]
     7.0
 
-The structure of the PSSM class hopefully makes it easy both to access
-elements and to pretty print the matrix.
+PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
-18.3.4  Information Content
+18.3.4  信息量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A potentially useful measure of evolutionary conservation is the
-information content of a sequence.
+一个潜在而有用的衡量进化保守性的尺度是序列的信息量。
 
-A useful introduction to information theory targeted towards molecular
-biologists can be found at
-```http://www.lecb.ncifcrf.gov/~toms/paper/primer/`` <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__.
-For our purposes, we will be looking at the information content of a
-consesus sequence, or a portion of a consensus sequence. We calculate
-information content at a particular column in a multiple sequence
-alignment using the following formula:
+一个有用的面向于分子生物学家的分子信息论的介绍可以在这里找到：
+```http://www.lecb.ncifcrf.gov/~toms/paper/primer/`` <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__ 。
+对于我们的目地，我们将查看一致序列或其部分的信息量。我们使用下面的公式计算多序列比对中某个特定的列的信息量：
 
 *IC*\ :sub:`*j*` = 
 
@@ -1422,46 +1283,29 @@ alignment using the following formula:
 |  ⎟
 |  ⎠
 
-where:
+其中：
 
--  *IC*\ :sub:`*j*` – The information content for the *j*-th column in
-   an alignment.
--  *N*\ :sub:`*a*` – The number of letters in the alphabet.
--  *P*\ :sub:`*ij*` – The frequency of a particular letter *i* in the
-   *j*-th column (i. e. if G occurred 3 out of 6 times in an aligment
-   column, this would be 0.5)
--  *Q*\ :sub:`*i*` – The expected frequency of a letter *i*. This is an
-   optional argument, usage of which is left at the user’s discretion.
-   By default, it is automatically assigned to 0.05 = 1/20 for a protein
-   alphabet, and 0.25 = 1/4 for a nucleic acid alphabet. This is for
-   geting the information content without any assumption of prior
-   distributions. When assuming priors, or when using a non-standard
-   alphabet, you should supply the values for *Q*\ :sub:`*i*`.
+-  *IC*\ :sub:`*j*` – 比对中第 *j* 列的信息量。
+-  *N*\ :sub:`*a*` – 字母表中字母的个数。
+-  *P*\ :sub:`*ij*` – 第 *j* 列的某个特定字母 *i* 的频率（即，如果G在比对列中6次有3次出现，则为0.5）
+-  *Q*\ :sub:`*i*` – 字母 *i* 的期望频率。这是一个可选参数，由用户自行决定使用。默认情况下，它被自动赋值为
+   0.05 = 1/20，若为蛋白字母表；或0.25 = 1/4 ，若为核酸字母表。这是在没有先验分布假设的情况下计算信息量。而在假设
+   先验分布或使用非标准字母表时，你需要提供 *Q*\ :sub:`*i*` 的值。
 
-Well, now that we have an idea what information content is being
-calculated in Biopython, let’s look at how to get it for a particular
-region of the alignment.
+好了，现在我们知道Biopython计算了什么信息量，让我们看看怎么对部分比对区域计算它。
 
-First, we need to use our alignment to get an alignment summary object,
-which we’ll assume is called ``summary_align`` (see
-section \ `18.3.1 <#sec:summary_info>`__) for instructions on how to get
-this. Once we’ve got this object, calculating the information content
-for a region is as easy as:
+首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 ``summary_align`` （参见章节
+ \ `18.3.1 <#sec:summary_info>`__ 以获取怎样得到它的操作说明）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：
 
 .. code:: verbatim
 
     info_content = summary_align.information_content(5, 30,
                                                      chars_to_ignore = ['N'])
 
-Wow, that was much easier then the formula above made it look! The
-variable ``info_content`` now contains a float value specifying the
-information content over the specified region (from 5 to 30 of the
-alignment). We specifically ignore the ambiguity residue ’N’ when
-calculating the information content, since this value is not included in
-our alphabet (so we shouldn’t be interested in looking at it!).
+哇哦，这比上面的公式看起来要简单多了！变量 ``info_content`` 现在含有一个浮点数来表示指定区域（比对中的5到30）的信息量。
+我们在计算信息量时特意忽略了不确定残基’N’，因为这个值没有包括在我们的字母表中（因而我们不必要关心它！）。
 
-As mentioned above, we can also calculate relative information content
-by supplying the expected frequencies:
+像上面提到的一样，我们同样能通过提供期望频率计算相对信息量：
 
 .. code:: verbatim
 
@@ -1471,15 +1315,11 @@ by supplying the expected frequencies:
         'T' : .3,
         'C' : .2}
 
-The expected should not be passed as a raw dictionary, but instead by
-passed as a ``SubsMat.FreqTable`` object (see
-section \ `20.2.2 <#sec:freq_table>`__ for more information about
-FreqTables). The FreqTable object provides a standard for associating
-the dictionary with an Alphabet, similar to how the Biopython Seq class
-works.
+期望值不能以原始的字典传入，而需要作为 ``SubsMat.FreqTable`` 对象传入（参见章节
+ \ `20.2.2 <#sec:freq_table>`__ 以获得关于FreqTables的更多信息）。FreqTable对象
+ 提供了一个关联字典和字母表的标准，和Biopython中Seq类的工作方式类似。
 
-To create a FreqTable object, from the frequency dictionary you just
-need to do:
+要从频率字典创建一个FreqTable对象，你只需要：
 
 .. code:: verbatim
 
@@ -1489,8 +1329,7 @@ need to do:
     e_freq_table = FreqTable.FreqTable(expect_freq, FreqTable.FREQ,
                                        IUPAC.unambiguous_dna)
 
-Now that we’ve got that, calculating the relative information content
-for our region of the alignment is as simple as:
+现在我们得到了它，计算我们比对区域的相对信息量就像下面一样简单：
 
 .. code:: verbatim
 
@@ -1498,52 +1337,40 @@ for our region of the alignment is as simple as:
                                                      e_freq_table = e_freq_table,
                                                      chars_to_ignore = ['N'])
 
-Now, ``info_content`` will contain the relative information content over
-the region in relation to the expected frequencies.
+现在，``info_content`` 将包含与期望频率相关的该区域的相对信息量。
 
-The value return is calculated using base 2 as the logarithm base in the
-formula above. You can modify this by passing the parameter ``log_base``
-as the base you want:
+返回值是按上面的公式以2为对数底计算的。你可以通过传入 ``log_base`` 参数来改变成你想
+要的底数：
 
 .. code:: verbatim
 
     info_content = summary_align.information_content(5, 30, log_base = 10,
                                                      chars_to_ignore = ['N'])
 
-Well, now you are ready to calculate information content. If you want to
-try applying this to some real life problems, it would probably be best
-to dig into the literature on information content to get an idea of how
-it is used. Hopefully your digging won’t reveal any mistakes made in
-coding this function!
+好了，现在你已经知道怎么计算信息量了。如果你想要在实际的生命科学问题中应用它，最好找一些关于
+信息量的文献钻研，以了解它是怎样用的。希望你的钻研不会出现在编码这个函数时所犯的错误。
 
-18.4  Substitution Matrices
+18.4  替换矩阵
 ---------------------------
 
-Substitution matrices are an extremely important part of everyday
-bioinformatics work. They provide the scoring terms for classifying how
-likely two different residues are to substitute for each other. This is
-essential in doing sequence comparisons. The book “Biological Sequence
-Analysis” by Durbin et al. provides a really nice introduction to
-Substitution Matrices and their uses. Some famous substitution matrices
-are the PAM and BLOSUM series of matrices.
+替换矩阵是每天的生物信息学工作中的极端重要的一部分。它们提供决定两个不同的
+残基有多少相互替换的可能性的得分规则。这在序列比较中必不可少。Durbin等的
+“Biological Biological Sequence Analysis” 一书中提供了对替换矩阵以及它们的用法的
+非常好的介绍。一些非常有名的替换矩阵是PAM和BLOSUM系列矩阵。
 
-Biopython provides a ton of common substitution matrices, and also
-provides functionality for creating your own substitution matrices.
+Biopython提供了大量的常见替换矩阵，也提供了创建你自己的替换矩阵的功能。
 
-18.4.1  Using common substitution matrices
+18.4.1  使用常见替换矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-18.4.2  Creating your own substitution matrix from an alignment
+18.4.2  从序列比对创建你自己的替换矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A very cool thing that you can do easily with the substitution matrix
-classes is to create your own substitution matrix from an alignment. In
-practice, this is normally done with protein alignments. In this
-example, we’ll first get a Biopython alignment object and then get a
-summary object to calculate info about the alignment. The file
-containing `protein.aln <examples/protein.aln>`__ (also available online
-`here <http://biopython.org/DIST/docs/tutorial/examples/protein.aln>`__)
-contains the Clustalw alignment output.
+使用替换矩阵类能轻易做出的一个非常酷的事情，是从序列比对创建出你自己的替换矩阵。
+实际中，通常是使用蛋白比对来做。在这个例子中，我们将首先得到一个Biopython比对对象，
+然后得到一个摘要对象来计算关于这个比对的相关信息。文件 `protein.aln <examples/protein.aln>`__ 
+（也可在 `这里 <http://biopython.org/DIST/docs/tutorial/examples/protein.aln>`__ 获取）包含
+Clustalw比对输出。
 
 .. code:: verbatim
 
@@ -1556,17 +1383,13 @@ contains the Clustalw alignment output.
     >>> c_align = AlignIO.read(filename, "clustal", alphabet=alpha)
     >>> summary_align = AlignInfo.SummaryInfo(c_align)
 
-Sections \ `6.4.1 <#sec:align_clustal>`__
-and \ `18.3.1 <#sec:summary_info>`__ contain more information on doing
-this.
+章节 \ `6.4.1 <#sec:align_clustal>`__
+和 \ `18.3.1 <#sec:summary_info>`__ 包含关于此类做法的更多信息。
 
-Now that we’ve got our ``summary_align`` object, we want to use it to
-find out the number of times different residues substitute for each
-other. To make the example more readable, we’ll focus on only amino
-acids with polar charged side chains. Luckily, this can be done easily
-when generating a replacement dictionary, by passing in all of the
-characters that should be ignored. Thus we’ll create a dictionary of
-replacements for only charged polar amino acids using:
+现在我们得到了我们的 ``summary_align`` 对象，我们想使用它来找出不同的残基相互替换的次数。
+为了使例子更已读，我们将只关注那些有极性电荷侧链的氨基酸。幸运的是，这能在生成一个替代字典
+时很轻松的实现，通过传入所有需要被忽略的字符。这样我们将能创建一个只包含带电荷的极性氨基酸的
+替代字典：
 
 .. code:: verbatim
 
@@ -1574,8 +1397,7 @@ replacements for only charged polar amino acids using:
     ...                                                      "M", "P", "F", "W", "S",
     ...                                                      "T", "N", "Q", "Y", "C"])
 
-This information about amino acid replacements is represented as a
-python dictionary which will look something like (the order can vary):
+这个关于氨基酸替代的信息以python字典的形式展示出来将会像如下的样子（顺序可能有所差异）：
 
 .. code:: verbatim
 
@@ -1587,40 +1409,31 @@ python dictionary which will look something like (the order can vary):
     ('K', 'R'): 130.0, ('E', 'D'): 241.0, ('E', 'E'): 3305.0,
     ('D', 'E'): 270.0, ('D', 'D'): 2360.0}
 
-This information gives us our accepted number of replacements, or how
-often we expect different things to substitute for each other. It turns
-out, amazingly enough, that this is all of the information we need to go
-ahead and create a substitution matrix. First, we use the replacement
-dictionary information to create an Accepted Replacement Matrix (ARM):
+这个信息提供了我们所接收的替换次数，或者说我们期望的不同的事情相互替换有多频繁。事实证明，
+令人惊奇的是，这就是我们继续创建替代矩阵所需要的全部信息。首先，我们使用替代字典信息创建
+一个“接受替换矩阵”（Accepted Replacement Matrix，ARM）：
 
 .. code:: verbatim
 
     >>> from Bio import SubsMat
     >>> my_arm = SubsMat.SeqMat(replace_info)
 
-With this accepted replacement matrix, we can go right ahead and create
-our log odds matrix (i. e. a standard type Substitution Matrix):
+使用这个“接受替换矩阵”，我们能继续创建我们的对数奇数矩阵（即一个标准类型的替换举证）：
 
 .. code:: verbatim
 
     >>> my_lom = SubsMat.make_log_odds_matrix(my_arm)
 
-The log odds matrix you create is customizable with the following
-optional arguments:
+你创建的这个对数奇数矩阵可以用以下参数进行自定义：
 
--  ``exp_freq_table`` – You can pass a table of expected frequencies for
-   each alphabet. If supplied, this will be used instead of the passed
-   accepted replacement matrix when calculate expected replacments.
--  ``logbase`` - The base of the logarithm taken to create the log odd
-   matrix. Defaults to base 10.
--  ``factor`` - The factor to multiply each matrix entry by. This
-   defaults to 10, which normally makes the matrix numbers easy to work
-   with.
--  ``round_digit`` - The digit to round to in the matrix. This defaults
-   to 0 (i. e. no digits).
+-  ``exp_freq_table`` – 你可以传入一个每个字母的期望频率的表格。如果提供，在计算期望替换时，
+   这将替代传入的“接收替换矩阵”。
+-  ``logbase`` - 用来创建对数奇数矩阵的对数底数。默认为10。
+-  ``factor`` - 用来乘以每个矩阵元素的因数。默认为10，这样通常可以使得矩阵的数据容易处理。
+-  ``round_digit`` - 矩阵中四舍五入所取的小数位数，默认为0（即没有小数）。
 
-Once you’ve got your log odds matrix, you can display it prettily using
-the function ``print_mat``. Doing this on our created matrix gives:
+一旦你获得了你的对数奇数矩阵，你可以使用函数 ``print_mat`` 很漂亮的显示出来。使用我们创建的
+矩阵可以得到：
 
 .. code:: verbatim
 
@@ -1632,20 +1445,17 @@ the function ``print_mat``. Doing this on our created matrix gives:
     R  -4  -8  -4  -2   2
        D   E   H   K   R
 
-Very nice. Now we’ve got our very own substitution matrix to play with!
+很好。我们现在得到了自己的替换矩阵！
 
-18.5  BioSQL – storing sequences in a relational database
+18.5  BioSQL – 存储序列到关系数据库中
 ---------------------------------------------------------
 
-`BioSQL <http://www.biosql.org/>`__ is a joint effort between the
-`OBF <http://open-bio.org/>`__ projects (BioPerl, BioJava etc) to
-support a shared database schema for storing sequence data. In theory,
-you could load a GenBank file into the database with BioPerl, then using
-Biopython extract this from the database as a record object with
-features - and get more or less the same thing as if you had loaded the
-GenBank file directly as a SeqRecord using ``Bio.SeqIO``
-(Chapter `5 <#chapter:Bio.SeqIO>`__).
+`BioSQL <http://www.biosql.org/>`__ 是 `OBF <http://open-bio.org/>`__ 多个项目
+（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。
+理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取
+出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 ``Bio.SeqIO`` 
+（第 `5 <#chapter:Bio.SeqIO>`__ 章）加载GenBank文件为SeqRecord相同的东西。
 
-Biopython’s BioSQL module is currently documented at
+Biopython中BioSQL模块的文档目前放在
 ```http://biopython.org/wiki/BioSQL`` <http://biopython.org/wiki/BioSQL>`__
-which is part of our wiki pages.
+，是我们维基页面的一部分。
