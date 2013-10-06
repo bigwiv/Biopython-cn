@@ -244,14 +244,11 @@ SwissProt格式。这里有一个额外的解决方法，使用在 Biopython 1.5
 18.1.6  FASTQ文件的简单质量过滤
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The FASTQ file format was introduced at Sanger and is now widely used
-for holding nucleotide sequencing reads together with their quality
-scores. FASTQ files (and the related QUAL files) are an excellent
-example of per-letter-annotation, because for each nucleotide in the
-sequence there is an associated quality score. Any per-letter-annotation
-is held in a ``SeqRecord`` in the ``letter_annotations`` dictionary as a
-list, tuple or string (with the same number of elements as the sequence
-length).
+FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列读长和它们的质量分数。
+FASTQ文件（和相关的QUAL文件）是单字母注释（per-letter-annotation）的最好的例子，
+因为序列中每一个核苷酸都有一个相对应的质量分数。任何单字母注释都以list、tuple或
+string被保存在 ``SeqRecord`` 的 ``letter_annotations`` 字典中（包含和序列长度
+相同个数的元素）。
 
 One common task is taking a large set of sequencing reads and filtering
 them (or cropping them) based on their quality scores. The following
@@ -593,36 +590,31 @@ For more details, see the built in help (also
     >>> help(QualityIO)
     ...
 
-18.1.10  Converting FASTA and QUAL files into FASTQ files
+18.1.10  转换FASTA和QUAL文件为FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FASTQ files hold *both* sequences and their quality strings. FASTA files
-hold *just* sequences, while QUAL files hold *just* the qualities.
-Therefore a single FASTQ file can be converted to or from *paired* FASTA
-and QUAL files.
+FASTQ *同时* 包含序列和他们的质量信息字符串。FASTA文件 *只* 包含序列，而QUAL文件 *只* 
+包含质量。因此，一个单独的FASTQ文件可以转换为或转换自 *成对的* FASTA和QUAL文件。
 
-Going from FASTQ to FASTA is easy:
+从FASTQ到FASTA很简单：
 
 .. code:: verbatim
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.fasta", "fasta")
 
-Going from FASTQ to QUAL is also easy:
+从FASTQ到QUAL也很简单：
 
 .. code:: verbatim
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.qual", "qual")
 
-However, the reverse is a little more tricky. You can use
-``Bio.SeqIO.parse()`` to iterate over the records in a *single* file,
-but in this case we have two input files. There are several strategies
-possible, but assuming that the two files are really paired the most
-memory efficient way is to loop over both together. The code is a little
-fiddly, so we provide a function called ``PairedFastaQualIterator`` in
-the ``Bio.SeqIO.QualityIO`` module to do this. This takes two handles
-(the FASTA file and the QUAL file) and returns a ``SeqRecord`` iterator:
+然而，反向则有一点复杂。你可以使用 ``Bio.SeqIO.parse()`` 迭代一个 *单独* 文件中的所有记录，
+但是这里我们有两个输入文件。有几个可能的策略，然而这里假设两个文件是真的完全匹配的，最内存
+高效的方式是同时循环两个文件。代码有些巧妙，所以在 ``Bio.SeqIO.QualityIO`` 模块中我们提供一个函数
+来实现，叫做 ``PairedFastaQualIterator``。它接受两个句柄（FASTA文件和QUAL文件）并返回一个
+ ``SeqRecord`` 迭代器：
 
 .. code:: verbatim
 
@@ -630,10 +622,8 @@ the ``Bio.SeqIO.QualityIO`` module to do this. This takes two handles
     for record in PairedFastaQualIterator(open("example.fasta"), open("example.qual")):
        print record
 
-This function will check that the FASTA and QUAL files are consistent
-(e.g. the records are in the same order, and have the same sequence
-length). You can combine this with the ``Bio.SeqIO.write()`` function to
-convert a pair of FASTA and QUAL files into a single FASTQ files:
+这个函数将检查FASTA和QUAL文件是否一致（例如，记录顺序是相同的，并且序列长度一致）。
+你可以和 ``Bio.SeqIO.write()`` 函数结合使用，转换一对FASTA和QUAL文件为单独的FASTQ文件：
 
 .. code:: verbatim
 
@@ -645,23 +635,18 @@ convert a pair of FASTA and QUAL files into a single FASTQ files:
     handle.close()
     print "Converted %i records" % count
 
-18.1.11  Indexing a FASTQ file
+18.1.11  索引FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-FASTQ files are often very large, with millions of reads in them. Due to
-the sheer amount of data, you can’t load all the records into memory at
-once. This is why the examples above (filtering and trimming) iterate
-over the file looking at just one ``SeqRecord`` at a time.
+FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因，你不能一次加载所有的记录到内存中。
+这就是为什么上面的例子（过滤和剪切）迭代整个文件的过程中，每次只查看一个 ``SeqRecord`` 。
 
-However, sometimes you can’t use a big loop or an iterator - you may
-need random access to the reads. Here the ``Bio.SeqIO.index()`` function
-may prove very helpful, as it allows you to access any read in the FASTQ
-file by its name (see Section \ `5.4.2 <#sec:SeqIO-index>`__).
+然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 ``Bio.SeqIO.index()`` 
+函数将证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 \ `5.4.2 <#sec:SeqIO-index>`__ ）。
 
-Again we’ll use the ``SRR020192.fastq`` file from the ENA
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__),
-although this is actually quite a small FASTQ file with less than 50,000
-reads:
+再次，我们将使用来自 ENA
+(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__) 
+的文件 ``SRR020192.fastq`` ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：
 
 .. code:: verbatim
 
@@ -674,25 +659,19 @@ reads:
     >>> fq_dict["SRR020192.23186"].seq
     Seq('GTCCCAGTATTCGGATTTGTCTGCCAAAACAATGAAATTGACACAGTTTACAAC...CCG', SingleLetterAlphabet())
 
-When testing this on a FASTQ file with seven million reads, indexing
-took about a minute, but record access was almost instant.
+当在包含7百万读长的FASTQ文件上测试时，索引大概花费1分钟，然而获取记录几乎是瞬间。
 
-The example in Section \ `18.1.5 <#sec:SeqIO-sort>`__ show how you can
-use the ``Bio.SeqIO.index()`` function to sort a large FASTA file – this
-could also be used on FASTQ files.
+章节 \ `18.1.5 <#sec:SeqIO-sort>`__ 的例子展示了如何使用 ``Bio.SeqIO.index()`` 函数来
+进行FASTA文件排序 —— 这也可以用在FASTQ文件上。
 
-18.1.12  Converting SFF files
+18.1.12  转换SFF文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you work with 454 (Roche) sequence data, you will probably have
-access to the raw data as a Standard Flowgram Format (SFF) file. This
-contains the sequence reads (called bases) with quality scores and the
-original flow information.
+如果你处理454(Roche)序列数据，你可能会接触Standard Flowgram Format (SFF)原始数据。这包括序列读长（
+called bases）、质量分数和原始流信息。
 
-A common task is to convert from SFF to a pair of FASTA and QUAL files,
-or to a single FASTQ file. These operations are trivial using the
-``Bio.SeqIO.convert()`` function (see
-Section \ `5.5.2 <#sec:SeqIO-conversion>`__):
+一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这些操作使用 ``Bio.SeqIO.convert()`` 
+函数非常平凡（参见 \ `5.5.2 <#sec:SeqIO-conversion>`__ ）：
 
 .. code:: verbatim
 
@@ -704,11 +683,9 @@ Section \ `5.5.2 <#sec:SeqIO-conversion>`__):
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff", "reads.fastq", "fastq")
     10
 
-Remember the convert function returns the number of records, in this
-example just ten. This will give you the *untrimmed* reads, where the
-leading and trailing poor quality sequence or adaptor will be in lower
-case. If you want the *trimmed* reads (using the clipping information
-recorded within the SFF file) use this:
+注意这个转换函数返回记录的条数，在这个例子中为10。这将给你 *未裁剪* 的读长，其中先导和跟随链中低质量的
+序列，或接头序列将以小写字母显示。如果你希望得到 *裁剪* 后的读长（使用SFF文件中的剪切信息），使用下面的
+代码：
 
 .. code:: verbatim
 
@@ -720,10 +697,8 @@ recorded within the SFF file) use this:
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff-trim", "trimmed.fastq", "fastq")
     10
 
-If you run Linux, you could ask Roche for a copy of their “off
-instrument” tools (often referred to as the Newbler tools). This offers
-an alternative way to do SFF to FASTA or QUAL conversion at the command
-line (but currently FASTQ output is not supported), e.g.
+如果你使用Linux，你可以向Roche请求一份“脱离仪器”的工具（通常叫做Newbler工具）。这提供了一种可选的方式，来
+在命令行实现SFF到FASTA或QUAL的转换（但是FASTQ输出目前不支持）。
 
 .. code:: verbatim
 
@@ -732,11 +707,9 @@ line (but currently FASTQ output is not supported), e.g.
     $ sffinfo -seq -trim E3MFGYR02_random_10_reads.sff > trimmed.fasta
     $ sffinfo -qual -trim E3MFGYR02_random_10_reads.sff > trimmed.qual
 
-The way Biopython uses mixed case sequence strings to represent the
-trimming points deliberately mimics what the Roche tools do.
+Biopython以大小写混合的方式来表示剪切位点实际上有意地模拟了Roche工具的做法。
 
-For more information on the Biopython SFF support, consult the built in
-help:
+要获得Biopython对SFF支持的更多信息，请参考内部帮助：
 
 .. code:: verbatim
 
@@ -744,26 +717,21 @@ help:
     >>> help(SffIO)
     ...
 
-18.1.13  Identifying open reading frames
+18.1.13  识别开放读码框
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A very simplistic first step at identifying possible genes is to look
-for open reading frames (ORFs). By this we mean look in all six frames
-for long regions without stop codons – an ORF is just a region of
-nucleotides with no in frame stop codons.
+在识别可能的基因中一个非常简单的第一步是寻找开放读码框（Open Reading Frame，ORF）。
+这里我们的意思是寻找六个编码框中所有的没有终止密码子的长区域 —— 一个ORF只是一个不包含任何
+框内终止密码子的核苷酸区域。
 
-Of course, to find a gene you would also need to worry about locating a
-start codon, possible promoters – and in Eukaryotes there are introns to
-worry about too. However, this approach is still useful in viruses and
-Prokaryotes.
+当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要
+关心内含子。然而，这种方法在病毒和原核生物中仍然有效。
 
-To show how you might approach this with Biopython, we’ll need a
-sequence to search, and as an example we’ll again use the bacterial
-plasmid – although this time we’ll start with a plain FASTA file with no
-pre-marked genes:
-```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
-This is a bacterial sequence, so we’ll want to use NCBI codon table 11
-(see Section \ `3.9 <#sec:translation>`__ about translation).
+为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的
+质粒 —— 然而，这次我们将以没有任何基因标记的纯文本FASTA文件开始：
+```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。
+这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻
+译的介绍）。
 
 .. code:: verbatim
 
@@ -772,8 +740,8 @@ This is a bacterial sequence, so we’ll want to use NCBI codon table 11
     >>> table = 11
     >>> min_pro_len = 100
 
-Here is a neat trick using the ``Seq`` object’s ``split`` method to get
-a list of all the possible ORF translations in the six reading frames:
+这里有一个巧妙的技巧，使用 ``Seq`` 对象的 ``split`` 方法获得一个包含六个读码框中所有可能的ORF翻译的
+列表：
 
 .. code:: verbatim
 
@@ -799,18 +767,13 @@ a list of all the possible ORF translations in the six reading frames:
     LSHTVTDFTDQMAQVGLCQCVNVFLDEVTG...KAA - length 107, strand -1, frame 2
     RALTGLSAPGIRSQTSCDRLRELRYVPVSL...PLQ - length 119, strand -1, frame 2
 
-Note that here we are counting the frames from the 5’ end (start) of
-*each* strand. It is sometimes easier to always count from the 5’ end
-(start) of the *forward* strand.
+注意，这里我们从 *每条* 序列的5’末（起始）端开始计算读码框。对 *正向* 链一直从5’末（起始）端开始计算有时更加容易。
 
-You could easily edit the above loop based code to build up a list of
-the candidate proteins, or convert this to a list comprehension. Now,
-one thing this code doesn’t do is keep track of where the proteins are.
+你可以轻易编辑上面的循环代码，来创建一个待选蛋白列表，或者将它转换为一个列表解析。现在，这个代码所不能做的一个事情
+是记录蛋白的位置信息。
 
-You could tackle this in several ways. For example, the following code
-tracks the locations in terms of the protein counting, and converts back
-to the parent sequence by multiplying by three, then adjusting for the
-frame and strand:
+你可以用几种方式来处理。例如，下面的代码以蛋白计数的方式记录位置信息，并通过乘以三倍来转换为父序列，接着调整编码框
+和链：
 
 .. code:: verbatim
 
@@ -850,7 +813,7 @@ frame and strand:
         print "%s...%s - length %i, strand %i, %i:%i" \
               % (pro[:30], pro[-3:], len(pro), strand, start, end)
 
-And the output:
+输出是：
 
 .. code:: verbatim
 
@@ -869,21 +832,15 @@ And the output:
     TGKQNSCQMSAIWQLRQNTATKTRQNRARI...AIK - length 100, strand 1, 8741:9044
     QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609
 
-If you comment out the sort statement, then the protein sequences will
-be shown in the same order as before, so you can check this is doing the
-same thing. Here we have sorted them by location to make it easier to
-compare to the actual annotation in the GenBank file (as visualised in
-Section \ `17.1.9 <#sec:gd_nice_example>`__).
+如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做
+相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对
+较更加容易（就像章节 \ `17.1.9 <#sec:gd_nice_example>`__ 中显示的那样）。
 
-If however all you want to find are the locations of the open reading
-frames, then it is a waste of time to translate every possible codon,
-including doing the reverse complement to search the reverse strand too.
-All you need to do is search for the possible stop codons (and their
-reverse complements). Using regular expressions is an obvious approach
-here (see the Python module ``re``). These are an extremely powerful
-(but rather complex) way of describing search strings, which are
-supported in lots of programming languages and also command line tools
-like ``grep`` as well). You can find whole books about this topic!
+然而，如果你想要的只是所有开放读码框的位置，这翻译每一个可能的密码子将是很浪费
+时间的，包括转换和查找反向互补链。那么，你所要做的所有事情是查找可能的终止密码子
+(和他们反向互补)。使用正则表达式是一个很显然的方式（参见Python中的 ``re`` 模块）。
+这是描述查找字符串的一种非常强大的方式（然而非常复杂），也被许多编程语言和命令行
+工具，如 ``grep``，所支持。你能找到关于这个话题的整本的书籍！
 
 18.2  序列解析与简单作图
 ----------------------------------------
