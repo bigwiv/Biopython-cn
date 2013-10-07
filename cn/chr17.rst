@@ -1,7 +1,7 @@
 第17章 Graphics模块中的基因组可视化包—GenomeDiagram
 ==================================================
 
- ``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS(Encapsulated Postscript)文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
+ ``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS（Encapsulated Postscript）文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
 
 17.1  基因组可视化包—GenomeDiagram
 -------------------
@@ -9,10 +9,10 @@
 17.1.1  GenomeDiagram简介
 ~~~~~~~~~~~~~~~~~~~~
 
- ``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 ```http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf`` <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
+ ``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 ```http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf`` <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
 
-如果存储基因组信息的是从GenBank文件中下载的 ``SeqRecord`` ，它会包含许多 ``SeqFeature`` ，用这个模块处理就很简单。(see
-Chapters \ `4 <#chapter:SeqRecord>`__ and \ `5 <#chapter:Bio.SeqIO>`__)。
+如果存储基因组信息的是从GenBank文件中下载的 ``SeqRecord`` 话，它会包含许多 ``SeqFeature`` ，那么用这个模块处理就很简单（详见
+第 \ `4 <#chapter:SeqRecord>`__ 章和第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。
 
 17.1.2 图形，轨迹,  特征集和特征
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,7 +24,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 17.1.3 自上而下的实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组 (see Chapter \ `5 <#chapter:Bio.SeqIO>`__)。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
+我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
 
 .. code:: verbatim
 
@@ -42,7 +42,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
     gd_track_for_features = gd_diagram.new_track(1, name="Annotated Features")
     gd_feature_set = gd_track_for_features.new_set()
 
-接下来的部分最有趣，提取 ``SeqRecord`` 中每个基因的 ``SeqFeature`` 对象，就相应地为diagram生成一个特征（feature）。将其设置为蓝色，分别用深蓝和浅蓝表示。
+接下来的部分最有趣，提取 ``SeqRecord`` 中每个基因的 ``SeqFeature`` 对象，就会为diagram生成一个相应的特征（feature），将其颜色设置为蓝色，分别用深蓝和浅蓝表示。
 
 .. code:: verbatim
 
@@ -66,7 +66,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
     gd_diagram.write("plasmid_linear.eps", "EPS")
     gd_diagram.write("plasmid_linear.svg", "SVG")
 
-如果安装了依赖关系（Dependencies），也可以生成位图(Bitmap image)，代码如下：
+如果安装了依赖关系（Dependencies），也可以生成位图（Bitmap image），代码如下：
 
 .. code:: verbatim
 
@@ -127,7 +127,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 17.1.5  简单的Feature
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象 (see also Section \ `4.3 <#sec:seq_features>`__)。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
+以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象（ 详见 \ `4.3 <#sec:seq_features>`__ 章节）。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
 ``SeqFeature`` 对象，方法很简单，代码如下：
 
 .. code:: verbatim
@@ -200,7 +200,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 |image15|
 
-除此之外，还可以设置“label_color”来调节标签的颜色 (used in Section \ `17.1.9 <#sec:gd_nice_example>`__)，这里没有进行演示。
+除此之外，还可以设置“label_color”来调节标签的颜色（第 \ `17.1.9 <#sec:gd_nice_example>`__ 章节也将用到这一步），这里没有进行演示。
 
 示例中默认的字体很小，这是比较明智的，因为通常我们会把许多Feature同时展示，而不像这里只展示了几个比较大的feature。
 
@@ -233,7 +233,7 @@ Biopython 1.61又新增3个图形形状（sigil）。
     #Arrow which spans the axis with strand used only for direction
     gd_feature_set.add_feature(feature, sigil="BIGARROW")
 
-下面就是这些新增的图形形状（sigil），多数的图形形状都在边界框（bounding box）内部，在坐标轴的上/下位置代表序列（Strand）方向的正/反向，或者上下跨越坐标轴，高度是其他图形形状的两倍。”BIGARROW“有所不同，它总是跨越坐标轴，方向由feature的序列决定。
+下面就是这些新增的图形形状（sigil），多数的图形形状都在边界框（bounding box）内部，在坐标轴的上/下位置代表序列（Strand）方向的正/反向，或者上下跨越坐标轴，高度是其他图形形状的两倍。“BIGARROW”有所不同，它总是跨越坐标轴，方向由feature的序列决定。
 
 |image16|
 
@@ -371,7 +371,7 @@ Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭�
     C_rec = SeqIO.read("NC_003212.gbk", "gb")[2587879:2625807].reverse_complement(name=True)
 
 图像中用不同颜色表示基因功能的差异。这需要编辑GenBank文件中每一个feature的颜色参数——就像用  `Sanger’s Artemis
-editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——这样才能被GenomeDiagram识别。但是，这里只需要硬编码（hard code）三个颜色列表。
+editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——才能被GenomeDiagram识别。但是，这里只需要硬编码（hard code）三个颜色列表。
 
 上述GenBank文件中的注释信息与Proux所用的文件信息并不完全相同，他们还添加了一些未注释的基因。
 
@@ -387,7 +387,7 @@ editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——这
     C_colors = [grey]*30 + [green]*5 + [brown]*4 + [blue]*2 + [grey, blue] + [lightblue]*2 \
              + [grey]*5
 
-接下来是”draw“方法，给diagram添加3个track。我们在示例中设置不同的开始/结束值来体现它们之间长度不等（Biopython 1.59及更高级的版本）。
+接下来是“draw”方法，给diagram添加3个track。我们在示例中设置不同的开始/结束值来体现它们之间长度不等（Biopython 1.59及更高级的版本）。
 
 .. code:: verbatim
 
@@ -433,11 +433,11 @@ editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——这
 17.1.11 不同Track之间的Cross-Links
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Biopython1.59新增绘制不同track之间Cross-Links的功能，这个功能可用于将要展示的简单线形图中，也可用于将线形图分割为短片段（fragments）和环形图。
+Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能可用于将要展示的简单线形图中，也可用于将线形图分割为短片段（fragments）和环形图。
 
-我们接着模仿Proux等人 [`5 <#proux2002>`__\ ] 的图像，我们需要一个包含基因之间的”cross links“、”得分“或”颜色“的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。
+我们接着模仿Proux等人 [`5 <#proux2002>`__\ ] 的图像，我们需要一个包含基因之间的“cross links”、“得分”或“颜色”的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。
 
-噬菌体的名称同样表示为A,B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。
+噬菌体的名称同样表示为A，B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。
 
 .. code:: verbatim
 
@@ -529,28 +529,28 @@ Biopython1.59新增绘制不同track之间Cross-Links的功能，这个功能可
 
 这段代码有几个要点，第一， ``GenomeDiagram`` 对象有一个 ``cross_track_links`` 属性，这个属性只是 ``CrossLink`` 对象的一组数据。每个 ``CrossLink`` 对象有两个track-specific坐标，示例中用元组（tuples）来展现，可用 ``GenomeDiagram.Feature`` 对象来代替。可选择添加颜色和边框颜色，还可以说明这个link是否需要翻转，这个功能易于表现染色体异位。
 
-你也可以看我们是如何将BLAST中特征百分比(Percentage Identity Score)转换为白-红的渐变色（白-0%，红-100%）。这个实例中没有cross-links的重叠，如果有links重叠可以用ReportLab库中的透明度(transparency)来解决，通过设置颜色的alpha通道来使用。然而，若同时使用边框阴影和叠加透明度会增加理解的难度。结果见下图：
+你也可以看我们是如何将BLAST中特征百分比（Percentage Identity Score）转换为白-红的渐变色（白-0%，红-100%）。这个实例中没有cross-links的重叠，如果有links重叠可以用ReportLab库中的透明度（transparency）来解决，通过设置颜色的alpha通道来使用。然而，若同时使用边框阴影和叠加透明度会增加理解的难度。结果见下图：
 
 |image22|
 
-当然，Biopython还有很多增强图像效果的方法。首先，这个示例中的cross links是蛋白质之间的，被呈现在一个链的固定区域（strand specific manor）。可以在feature track上用 ‘BOX’ sigil添加背景区域（background region）来扩展cross link的效果。同样，可以缩短feature tracks之间的垂直高度，使用更多的links来代替——一种方法是为空的track分配空间。此外，在没有大规模基因重叠的情况下，可以用跨越轴线的"BIGARROW",这样就为track进一步增加了垂直空间。详情请查看Biopython源程序的 ``Doc/examples`` 目录下的示例脚本文件：`Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__ 
+当然，Biopython还有很多增强图像效果的方法。首先，这个示例中的cross links是蛋白质之间的，被呈现在一个链的固定区域（strand specific manor）。可以在feature track上用 ‘BOX’ sigil添加背景区域（background region）来扩展cross link的效果。同样，可以缩短feature tracks之间的垂直高度，使用更多的links来代替——一种方法是为空的track分配空间。此外，在没有大规模基因重叠的情况下，可以用跨越轴线的"BIGARROW",这样就为track进一步增加了垂直空间。详情请查看Biopython源程序的 ``Doc/examples`` 目录下的示例脚本文件：`Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__ 。
 结果见下图：
 
 |image23|
 
 除此之外，你可能希望在图像编辑软件里手动调整gene标签的位置，添加特定标识，比如强调某个特别的区域。
 
-如果有多个叠加的links，使用ReportLab库里的颜色透明度（transparent color）是非常好的方法，由于这个示例没有cross-link的重叠，所以没有用到颜色透明度（transparent color）。然而，尽量避免在这个示例中使用边框阴影（shaded color scheme）
+如果有多个叠加的links，使用ReportLab库里的颜色透明度（transparent color）是非常好的方法，由于这个示例没有cross-link的重叠，所以没有用到颜色透明度（transparent color）。然而，尽量避免在这个示例中使用边框阴影（shaded color scheme）。
 
 17.1.12 高级选项
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 可以通过控制刻度线（tick marks）来调节展示比例（scale），毕竟每个图形应该包括基本单位和轴线标签的数目。
 
-到目前为止，我们只使用了 ``FeatureSet`` 。GenomeDiagram还可以用 ``GraphSet`` 来制作线形图，饼状图和heatmap热图（例如在轨迹内展示feature中的GC含量）
+到目前为止，我们只使用了 ``FeatureSet`` 。GenomeDiagram还可以用 ``GraphSet`` 来制作线形图，饼状图和heatmap热图（例如在轨迹内展示feature中的GC含量）。
 
-目前还没有添加这个选项，最后，推荐你去参考GenomeDiagram单机版 `User Guide
-(PDF) <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 和文档字符串（docstrings）。
+目前还没有添加这个选项，最后，推荐你去参考GenomeDiagram单机版 `用户指南
+（PDF） <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 和文档字符串（docstrings）。
 
 17.1.13 转换旧代码
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
