@@ -250,24 +250,16 @@ FASTQ文件（和相关的QUAL文件）是单字母注释（per-letter-annotatio
 string被保存在 ``SeqRecord`` 的 ``letter_annotations`` 字典中（包含和序列长度
 相同个数的元素）。
 
-One common task is taking a large set of sequencing reads and filtering
-them (or cropping them) based on their quality scores. The following
-example is very simplistic, but should illustrate the basics of working
-with quality data in a ``SeqRecord`` object. All we are going to do here
-is read in a file of FASTQ data, and filter it to pick out only those
-records whose PHRED quality scores are all above some threshold (here
-20).
+一个常见的工作是输入一个大的测序读长集合，并根据它们的质量分数过滤他们（或修剪他们）。
+下面的例子非常简单，然而足以展示处理 ``SeqRecord`` 对象中质量数据的基本用法。我们所有要
+做的事情是读入一个FASTQ文件，过滤并取出那些PHRED质量分数在某个阈值（这里为20）以上的记录。
 
-For this example we’ll use some real data downloaded from the ENA
-sequence read archive,
+在这个例子中，我们将使用从ENA序列读长存档下载的真实数据，
 ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__
-(2MB) which unzips to a 19MB file ``SRR020192.fastq``. This is some
-Roche 454 GS FLX single end data from virus infected California sea
-lions (see
-```http://www.ebi.ac.uk/ena/data/view/SRS004476`` <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__
-for details).
+(2MB) ，解压后为19MB的文件 ``SRR020192.fastq`` 。这些是由Roche 454 GS FLX生成的感染加利福利亚海狮的病毒单端数据（参见 ```http://www.ebi.ac.uk/ena/data/view/SRS004476`` <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__
+的详细信息）。
 
-First, let’s count the reads:
+首先，让我们来统计读长数：
 
 .. code:: verbatim
 
@@ -277,7 +269,7 @@ First, let’s count the reads:
         count += 1
     print "%i reads" % count
 
-Now let’s do a simple filtering for a minimum PHRED quality of 20:
+现在让我们做一个简单的过滤，PHRED质量不小于20：
 
 .. code:: verbatim
 
@@ -288,30 +280,21 @@ Now let’s do a simple filtering for a minimum PHRED quality of 20:
     count = SeqIO.write(good_reads, "good_quality.fastq", "fastq")
     print "Saved %i reads" % count
 
-This pulled out only 14580 reads out of the 41892 present. A more
-sensible thing to do would be to quality trim the reads, but this is
-intended as an example only.
+这只取出了41892条读长中的14580条。一个更有意义的做法是根据质量来裁剪读长，但是这里只是作为一个例子。
 
-FASTQ files can contain millions of entries, so it is best to avoid
-loading them all into memory at once. This example uses a generator
-expression, which means only one ``SeqRecord`` is created at a time -
-avoiding any memory limitations.
+FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载它们到内存。这个例子使用一个生成器表达式，这意味着
+每次只有一个 ``SeqRecord`` 被创建 —— 避免内存限制。
 
-18.1.7  Trimming off primer sequences
+18.1.7  切除引物序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For this example we’re going to pretend that ``GATGACGGTGT`` is a 5’
-primer sequence we want to look for in some FASTQ formatted read data.
-As in the example above, we’ll use the ``SRR020192.fastq`` file
-downloaded from the ENA
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
-The same approach would work with any other supported file format (e.g.
-FASTA files).
+在这个例子中，我们将假设 ``GATGACGGTGT`` 是一个我们要在FASTQ格式的读长数据中
+找的5’端的引物序列。同上面的例子一样，我们将使用从ENA下载的 ``SRR020192.fastq``
+文件（ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。
+相同的方式同样适用于任何其他支持的格式（例如FASTA文件）。
 
-This code uses ``Bio.SeqIO`` with a generator expression (to avoid
-loading all the sequences into memory at once), and the ``Seq`` object’s
-``startswith`` method to see if the read starts with the primer
-sequence:
+这个代码使用 ``Bio.SeqIO`` 和一个生成器表达式（避免一次加载所有的序列到内存中），
+以及 ``Seq`` 对象的 ``startswith`` 方法来检查读长是否以引物序列开始：
 
 .. code:: verbatim
 
@@ -322,14 +305,10 @@ sequence:
     count = SeqIO.write(primer_reads, "with_primer.fastq", "fastq")
     print "Saved %i reads" % count
 
-That should find 13819 reads from ``SRR014849.fastq`` and save them to a
-new FASTQ file, ``with_primer.fastq``.
+这将从 ``SRR014849.fastq`` 找到13819条读长记录，并保存为一个新的FASTQ文件，``with_primer.fastq``。
 
-Now suppose that instead you wanted to make a FASTQ file containing
-these reads but with the primer sequence removed? That’s just a small
-change as we can slice the ``SeqRecord`` (see
-Section \ `4.6 <#sec:SeqRecord-slicing>`__) to remove the first eleven
-letters (the length of our primer):
+现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们能对 ``SeqRecord``
+进行切片（参见章节 \ `4.6 <#sec:SeqRecord-slicing>`__ ）以移除前11个字母（我们的引物长度）：
 
 .. code:: verbatim
 
@@ -340,14 +319,11 @@ letters (the length of our primer):
     count = SeqIO.write(trimmed_primer_reads, "with_primer_trimmed.fastq", "fastq")
     print "Saved %i reads" % count
 
-Again, that should pull out the 13819 reads from ``SRR020192.fastq``,
-but this time strip off the first ten characters, and save them to
-another new FASTQ file, ``with_primer_trimmed.fastq``.
+再次，这将从 ``SRR020192.fastq`` 取出13819条读长，但是这次移除了前十个字符，并保存它们为另一个
+新的FASTQ文件， ``with_primer_trimmed.fastq`` 。
 
-Finally, suppose you want to create a new FASTQ file where these reads
-have their primer removed, but all the other reads are kept as they
-were? If we want to still use a generator expression, it is probably
-clearest to define our own trim function:
+最后，假设你想移除部分读长中的引物并创建一个新的FASTQ文件，而其他的读长保持不变。如果我们仍然希望
+使用生成器表达式，声明我们自己的修剪函数可能更加清楚：
 
 .. code:: verbatim
 
@@ -363,10 +339,8 @@ clearest to define our own trim function:
     count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq")
     print "Saved %i reads" % count
 
-This takes longer, as this time the output file contains all 41892
-reads. Again, we’re used a generator expression to avoid any memory
-problems. You could alternatively use a generator function rather than a
-generator expression.
+这需要更长的时间，因为这次输出文件包含所有41892个读长。再次，我们将使用生成器表达式来避免任何的
+内存问题。你也可以使用一个生成器函数来替代生成器表达式。
 
 .. code:: verbatim
 
@@ -389,21 +363,16 @@ generator expression.
     count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
     print "Saved %i reads" % count
 
-This form is more flexible if you want to do something more complicated
-where only some of the records are retained – as shown in the next
-example.
+这种形式非常灵活，如果你想做一些更复杂的事情，譬如只保留部分记录 —— 像下一个例子中展示的那样。
 
-18.1.8  Trimming off adaptor sequences
+18.1.8  切除接头序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is essentially a simple extension to the previous example. We are
-going to going to pretend ``GATGACGGTGT`` is an adaptor sequence in some
-FASTQ formatted read data, again the ``SRR020192.fastq`` file from the
-NCBI
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
+这实际上是前面例子的一个简单扩展。我们将假设 ``GATGACGGTGT`` 是某个FASTQ格式的读长数据中的一个接头序列，并再次使用
+来自NCBI的 ``SRR020192.fastq`` 文件
+（ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。
 
-This time however, we will look for the sequence *anywhere* in the
-reads, not just at the very beginning:
+然而这次，我们将在读长的 *任何位置* 查找序列，不仅仅是最开始：
 
 .. code:: verbatim
 
@@ -430,16 +399,11 @@ reads, not just at the very beginning:
     count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
     print "Saved %i reads" % count
 
-Because we are using a FASTQ input file in this example, the
-``SeqRecord`` objects have per-letter-annotation for the quality scores.
-By slicing the ``SeqRecord`` object the appropriate scores are used on
-the trimmed records, so we can output them as a FASTQ file too.
+因为我们在这个例子中使用FASTQ输入文件， ``SeqRecord`` 对象有质量分数的单字母注释（per-letter-annotation）。
+通过对 ``SeqRecord`` 对象进行切片，合适的分数也保留在剪切后的记录中，所以我们也可以将它们输出到一个FASTQ文件。
 
-Compared to the output of the previous example where we only looked for
-a primer/adaptor at the start of each read, you may find some of the
-trimmed reads are quite short after trimming (e.g. if the adaptor was
-found in the middle rather than near the start). So, let’s add a minimum
-length requirement as well:
+和上面的例子，我们只在每个读长的开始查找引物/接头，相比，你发现有些剪切后的读长非常短（例如，如果接头序列在读长的
+中部发现，而不是开始附近）。所以，让我们再加入一个最低长度要求：
 
 .. code:: verbatim
 
@@ -470,56 +434,36 @@ length requirement as well:
     count = SeqIO.write(trimmed_reads, "trimmed.fastq", "fastq") 
     print "Saved %i reads" % count
 
-By changing the format names, you could apply this to FASTA files
-instead. This code also could be extended to do a fuzzy match instead of
-an exact match (maybe using a pairwise alignment, or taking into account
-the read quality scores), but that will be much slower.
+通过改变格式名称，你也可以将这个应用于FASTA文件。该代码也可以扩展为模糊匹配，而非绝对匹配（或许用一个两两比对，或者考虑
+读长的质量分数），但是这会变得更慢。
 
-18.1.9  Converting FASTQ files
+18.1.9  转换FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Back in Section \ `5.5.2 <#sec:SeqIO-conversion>`__ we showed how to use
-``Bio.SeqIO`` to convert between two file formats. Here we’ll go into a
-little more detail regarding FASTQ files which are used in second
-generation DNA sequencing. Please refer to Cock *et al.* (2009)
-[`7 <#cock2010>`__\ ] for a longer description. FASTQ files store both
-the DNA sequence (as a string) and the associated read qualities.
+回到章节 \ `5.5.2 <#sec:SeqIO-conversion>`__ ，我们展示了怎样使用 ``Bio.SeqIO`` 转换两个文件格式。这里，我们将更进一步探讨
+在二代DNA测序中使用的FASTQ文件。对于更加详细的介绍，请参加 Cock *et al.* (2009)
+[`7 <#cock2010>`__\ ] 。FASTQ文件同时存储DNA序列（作为字符串）和相应的读长质量。
 
-PHRED scores (used in most FASTQ files, and also in QUAL files, ACE
-files and SFF files) have become a *de facto* standard for representing
-the probability of a sequencing error (here denoted by *P*\ :sub:`*e*`)
-at a given base using a simple base ten log transformation:
+PHRED分数（在大多数FASTQ文件中使用，也存在QUAL、ACE和SFF文件中）已经成为一个用来表示某个给定碱基测序错误概率（这里用
+ *P*\ :sub:`*e*` 表示）的 *事实上的* 标准，使用一个简单的10为底的对数表达式：
 
 +--------------------------------------------------------------------------+
 | *Q*\ :sub:`PHRED` = − 10 × log:sub:`10` ( *P*\ :sub:`*e*` )     (18.1)   |
 +--------------------------------------------------------------------------+
 
-This means a wrong read (*P*\ :sub:`*e*` = 1) gets a PHRED quality of 0,
-while a very good read like *P*\ :sub:`*e*` = 0.00001 gets a PHRED
-quality of 50. While for raw sequencing data qualities higher than this
-are rare, with post processing such as read mapping or assembly,
-qualities of up to about 90 are possible (indeed, the MAQ tool allows
-for PHRED scores in the range 0 to 93 inclusive).
+这意味着一个错误的读长（ *P*\ :sub:`*e*` = 1 ）得到的PHRED质量为0，而一个非常好的 *P*\ :sub:`*e*` = 0.00001 的读长得到的PHRED
+质量为50。然而原始的测序数据质量比这个要高的非常稀少，通过后期处理，如读长映射和组装，质量到达90是可能的（确实，MAQ工具允许PHRED分数
+包含在0到93范围内）。
 
-The FASTQ format has the potential to become a *de facto* standard for
-storing the letters and quality scores for a sequencing read in a single
-plain text file. The only fly in the ointment is that there are at least
-three versions of the FASTQ format which are incompatible and difficult
-to distinguish...
+FASTQ格式有潜力成为以单文件纯文本方式存储测序读长的字符和质量分数的 *事实上的* 的标准。 唯一的美中不足是，目前至少有三个FASTQ格式版本，
+它们并不兼容，且难以区分...
 
-#. The original Sanger FASTQ format uses PHRED qualities encoded with an
-   ASCII offset of 33. The NCBI are using this format in their Short
-   Read Archive. We call this the ``fastq`` (or ``fastq-sanger``) format
-   in ``Bio.SeqIO``.
-#. Solexa (later bought by Illumina) introduced their own version using
-   Solexa qualities encoded with an ASCII offset of 64. We call this the
-   ``fastq-solexa`` format.
-#. Illumina pipeline 1.3 onwards produces FASTQ files with PHRED
-   qualities (which is more consistent), but encoded with an ASCII
-   offset of 64. We call this the ``fastq-illumina`` format.
+#. 原始的Sanger FASTQ格式将PHRED质量分数和33个ASCII字符偏移进行编码。NCBI目前在它们的Short Read Archive中使用这种格式。我们在 ``Bio.SeqIO`` 中
+   称之为 ``fastq`` （或 ``fastq-sanger`` ）格式。
+#. Solexa（后来由Illumina收购）引入了他们自己的版本，使用Solexa质量分数和64个ASCII字符偏移进行编码。我们叫做 ``fastq-solexa`` 格式。
+#. Illumina工作流1.3进一步推出了PHRED质量分数（这比较一致）的FASTQ文件，但是却以64个ASCII字符偏移编码。我们叫做 ``fastq-illumina`` 格式。
 
-The Solexa quality scores are defined using a different log
-transformation:
+Solexa质量分数采用一种不同的对数式定义：
 
 *Q*\ :sub:`Solexa` = − 10 × log:sub:`10` 
 
@@ -544,45 +488,30 @@ transformation:
 
     (18.2)
 
-Given Solexa/Illumina have now moved to using PHRED scores in version
-1.3 of their pipeline, the Solexa quality scores will gradually fall out
-of use. If you equate the error estimates (*P*\ :sub:`*e*`) these two
-equations allow conversion between the two scoring systems - and
-Biopython includes functions to do this in the ``Bio.SeqIO.QualityIO``
-module, which are called if you use ``Bio.SeqIO`` to convert an old
-Solexa/Illumina file into a standard Sanger FASTQ file:
+由于Solexa/Illumina目前在他们的工作流1.3版本中已迁移到使用PHRED分数，Solexa质量分数将逐渐淡出使用。如果你将错误估值取等号（ *P*\ :sub:`*e*` ），这两个
+等式允许在两个打分系统之间进行转换 —— Biopython在 ``Bio.SeqIO.QualityIO`` 模块中有函数可以实现，该函数在使用 ``Bio.SeqIO`` 进行从Solexa/Illumina老文件格式
+到标准Sanger FASTQ文件格式转换时被调用：
 
 .. code:: verbatim
 
     from Bio import SeqIO
     SeqIO.convert("solexa.fastq", "fastq-solexa", "standard.fastq", "fastq")
 
-If you want to convert a new Illumina 1.3+ FASTQ file, all that gets
-changed is the ASCII offset because although encoded differently the
-scores are all PHRED qualities:
+如果你想转换新的Illumina 1.3+ FASTQ文件，有改变的只是ASCII的偏移。因为尽管编码不同，所有的质量分数都是PHRED分数：
 
 .. code:: verbatim
 
     from Bio import SeqIO
     SeqIO.convert("illumina.fastq", "fastq-illumina", "standard.fastq", "fastq")
 
-Note that using ``Bio.SeqIO.convert()`` like this is *much* faster than
-combining ``Bio.SeqIO.parse()`` and ``Bio.SeqIO.write()`` because
-optimised code is used for converting between FASTQ variants (and also
-for FASTQ to FASTA conversion).
+注意，像这样使用 ``Bio.SeqIO.convert()`` 会比 ``Bio.SeqIO.parse()`` 和 ``Bio.SeqIO.write()`` 组合快得 *多* ，因为
+转换FASTQ变种（包括FASTQ到FASTA的转换）的代码经过优化。
 
-For good quality reads, PHRED and Solexa scores are approximately equal,
-which means since both the ``fasta-solexa`` and ``fastq-illumina``
-formats use an ASCII offset of 64 the files are almost the same. This
-was a deliberate design choice by Illumina, meaning applications
-expecting the old ``fasta-solexa`` style files will probably be OK using
-the newer ``fastq-illumina`` files (on good data). Of course, both
-variants are very different from the original FASTQ standard as used by
-Sanger, the NCBI, and elsewhere (format name ``fastq`` or
-``fastq-sanger``).
+对于质量好的读长，PHRED和Solexa分数几乎相等，这意味着，因为 ``fasta-solexa`` 和 ``fastq-illumina`` 都使用64个ASCII字符偏移，它们的文件几乎相同。这个是Illumina有意
+设计选择的，意味着使用老版本 ``fasta-solexa`` 格式文件的应用或许在使用新版本 ``fastq-illumina`` 格式文件时也是可以的（在好的数据上）。当然，两个版本和原始的，由Sanger、
+NCBI和其他地方使用的FASTQ标准有很大不同（格式名为 ``fastq`` 或 ``fastq-sanger`` ）。
 
-For more details, see the built in help (also
-`online <http://www.biopython.org/DIST/docs/api/Bio.SeqIO.QualityIO-module.html>`__):
+了解更多细节，请参见内置的帮助（或 `在线帮助 <http://www.biopython.org/DIST/docs/api/Bio.SeqIO.QualityIO-module.html>`__ ）：
 
 .. code:: verbatim
 
