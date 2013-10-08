@@ -662,49 +662,42 @@ Weighting
 计算聚类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The centroid of a cluster can be defined either as the mean or as the
-median of each dimension over all cluster items. The function
-``clustercentroids`` in ``Bio.Cluster`` can be used to calculate either:
-
+聚类中心可以是所有聚类元素的在每个维度上的平均值或者中值，可以用 ``Bio.Cluster`` 中的 ``clustercentroids`` 
+函数计算：
+ 
 .. code:: verbatim
 
     >>> from Bio.Cluster import clustercentroids
     >>> cdata, cmask = clustercentroids(data)
 
-where the following arguments are defined:
+包含了一下参数:
 
--  ``data`` (required)
+-  ``data`` (必选)
     Array containing the data for the items.
--  ``mask`` (default: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
--  ``clusterid`` (default: ``None``)
-    Vector of integers showing to which cluster each item belongs. If
-   ``clusterid`` is ``None``, then all items are assumed to belong to
-   the same cluster.
--  ``method`` (default: ``'a'``)
-    Specifies whether the arithmetic mean (``method=='a'``) or the
-   median (``method=='m'``) is used to calculate the cluster center.
--  ``transpose`` (default: ``0``)
-    Determines if the centroids of the rows of ``data`` are to be
-   calculated (``transpose==0``), or the centroids of the columns of
-   ``data`` (``transpose==1``).
+-  ``mask`` (默认: ``None``)
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失.
+-  ``clusterid`` (默认: ``None``)
+    一个整型向量，用来表示每个元素属于那个类别。如果
+   ``clusterid`` 是 ``None``, 表明所有的元素属于相同的类别。
+-  ``method`` (默认: ``'a'``)
+    指定使用算术平方根 (``method=='a'``) 或者中值
+   median (``method=='m'``) 来计算聚类中心。
+-  ``transpose`` (默认: ``0``)
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 
-This function returns the tuple ``(cdata, cmask)``. The centroid data
-are stored in the 2D Numerical Python array ``cdata``, with missing data
-indicated by the 2D Numerical Python integer array ``cmask``. The
-dimensions of these arrays are (number of clusters, number of columns)
-if ``transpose`` is ``0``, or (number of rows, number of clusters) if
-``transpose`` is ``1``. Each row (if ``transpose`` is ``0``) or column
-(if ``transpose`` is ``1``) contains the averaged data corresponding to
-the centroid of each cluster.
+这个函数返回值为元组 ``(cdata, cmask)``。 聚类中心的数据存储在一个二维的Numerical Python 
+数组 ``cdata`` 中, 缺失值的结果存储在二维的Numerical Python整型数组 ``cmask`` 中。 当 ``transpose`` 
+为 ``0`` 时，这些数组的长度为（聚类数，列数），当 ``transpose`` 是 ``1`` 时，数组的
+长度为 （行数，聚类数）。每一行（当 ``transpose`` = ``0``) 或者 每一列（当 ``transpose`` = ``1`` ）
+包含着对应每一聚类中心对应的数据。
 
-Calculating the distance between clusters
+计算每类之间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Given a distance function between *items*, we can define the distance
-between two *clusters* in several ways. The distance between the
+根据每个 *items* 的距离函数，我们可以计算出两个 *clusters* 的距离。
+The distance between the
 arithmetic means of the two clusters is used in pairwise
 centroid-linkage clustering and in *k*-means clustering. In *k*-medoids
 clustering, the distance between the medians of the two clusters is used
