@@ -23,29 +23,24 @@ Biopython中的 ``Bio.Cluster`` 模块提供了常用的聚类算法，并且设
 其中，每一行表示不同的基因，每一列表示不同的实验条件。 ``Bio.Cluster`` 既可以
 针对每行（基因），也可以针对每列（实验条件）进行聚类。
 
-Missing values
 缺失值
 ~~~~~~~~~~~~~~
 
-Often in microarray experiments, some of the data values are missing,
-which is indicated by an additional *n* × *m* Numerical Python integer
-array ``mask``. If ``mask[i,j]==0``, then ``data[i,j]`` is missing and
-is ignored in the analysis.
-在芯片实验中，经常会有些缺失值，通常用一个额外的 *n* × *m* Numerical Python
-integer矩阵``mask``表示。例如``mask[i,j]==0``，表示``data[i,j]``是个缺失值，
-并且在分析中忽略
 
-Random number generator
+在芯片实验中，经常会有些缺失值，通常用一个额外的 *n* × *m* Numerical Python
+整型矩阵 ``mask`` 表示。例如 ``mask[i,j]==0`` ，表示 ``data[i,j]`` 是个缺失值，
+并且在分析中忽略。
+
 随机数生成器
 ~~~~~~~~~~~~~~~~~~~~~~~
 *k*-means/medians/medoids clustering algorithms and Self-Organizing
-Maps (SOMs) 需要调用随机数生成器。``Bio.Cluster``中使用的正态分布随机数
+Maps (SOMs) 需要调用随机数生成器。 ``Bio.Cluster`` 中使用的正态分布随机数
 生成器使用的算法是基于L’Ecuyer [`25 <#lecuyer1988>`__\ ],二项分布的随机数
 生成是根据Kachitvichyanukul and Schmeiser [`23 <#kachitvichyanukul1988>`__\ ]
 开发的BTPE算法。随机数生成器在调用时首先进行初始化。由于随机数生成器使用了
 两个multiplicative linear congruential generators，所以初始化时需要两个整型的
-种子，并调用系统提供的``rand``（C标注库）生成随机数。在``Bio.Cluster``中，
-也可以调用``srand``使用当前时间的秒作为初始值，用``rand``随机产生的头两
+种子，并调用系统提供的 ``rand`` （C标注库）生成随机数。在 ``Bio.Cluster`` 中，
+也可以调用 ``srand` `使用当前时间的秒作为初始值，用 ``rand`` 随机产生的头两
 个随机数作为种子来产生正态分布的随机数。
 
 
