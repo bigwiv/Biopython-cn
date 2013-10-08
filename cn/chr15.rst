@@ -40,7 +40,7 @@ Maps (SOMs) 需要调用随机数生成器。 ``Bio.Cluster`` 中使用的正态
 开发的BTPE算法。随机数生成器在调用时首先进行初始化。由于随机数生成器使用了
 两个multiplicative linear congruential generators，所以初始化时需要两个整型的
 种子，并调用系统提供的 ``rand`` （C标注库）生成随机数。在 ``Bio.Cluster`` 中，
-也可以调用 ``srand` `使用当前时间的秒作为初始值，用 ``rand`` 随机产生的头两
+也可以调用 ``srand`` 使用当前时间的秒作为初始值，用 ``rand`` 随机产生的头两
 个随机数作为种子来产生正态分布的随机数。
 
 
@@ -150,14 +150,12 @@ for all
 
 ,
 
-and are therefore refered to as *metrics*. In everyday language, this
-means that the shortest distance between two points is a straight line.
+所以称之为 *metrics*. 在任何语言中，这个意味着两点之间直线最短。
 
-The remaining six distance measures are related to the correlation
-coefficient, where the distance *d* is defined in terms of the
-correlation *r* by *d*\ =1−\ *r*. Note that these distance functions are
-*semi-metrics* that do not satisfy the triangle inequality. For example,
-for
+剩余的六中距离函数同相关系数有关，距离 *d* 是有相关性*r* 确定： *d*\ =1−\ *r*。
+请注意这类距离函数是 *semi-metrics* ，因此不满足三角形的两边之和大于第三边的
+性质。例如
+
 
 +-------+
 | *u*   |
@@ -210,13 +208,13 @@ for
 
 ;
 
-we find a Pearson distance *d*\ (*u*,\ *w*) = 1.8660, while
+计算Pearson距离 *d*\ (*u*,\ *w*) = 1.8660, 而
 *d*\ (*u*,\ *v*)+\ *d*\ (*v*,\ *w*) = 1.6340.
 
-Euclidean distance
+Euclidean 距离
 ~~~~~~~~~~~~~~~~~~
 
-In ``Bio.Cluster``, we define the Euclidean distance as
+在 ``Bio.Cluster`` 中, 定义 Euclidean 距离为
 
 *d* = 
 
@@ -249,23 +247,17 @@ In ``Bio.Cluster``, we define the Euclidean distance as
 
 :sup:`2`.
 
-Only those terms are included in the summation for which both
-*x*\ :sub:`*i*` and *y*\ :sub:`*i*` are present, and the denominator *n*
-is chosen accordingly. As the expression data *x*\ :sub:`*i*` and
-*y*\ :sub:`*i*` are subtracted directly from each other, we should make
-sure that the expression data are properly normalized when using the
-Euclidean distance.
+计算时，求和时只考虑*x*\ :sub:`*i*` 和 *y*\ :sub:`*i*` 都存在的值, 分母 *n* 
+也相应的做出调整。当分析表达谱数据时，由于 *x*\ :sub:`*i*` 和 *y*\ :sub:`*i*` 
+会直接相减, 在使用Euclidean距离前，请对表达谱数据归一化处理.
 
 City-block distance
 ~~~~~~~~~~~~~~~~~~~
 
-The city-block distance, alternatively known as the Manhattan distance,
-is related to the Euclidean distance. Whereas the Euclidean distance
-corresponds to the length of the shortest path between two points, the
-city-block distance is the sum of distances along each dimension. As
-gene expression data tend to have missing values, in ``Bio.Cluster`` we
-define the city-block distance as the sum of distances divided by the
-number of dimensions:
+city-block distance也称之为Manhattan 距离，跟Euclidean距离以相关性。Euclidean距离
+表示的是两点间最短的距离，而city-block距离是所有维度中距离的和。由于基因表达的数据
+经常会有缺失数据，在 ``Bio.Cluster`` 中，city-block距离定义为总距离除以
+总维度：
 
 *d* = 
 
@@ -298,16 +290,14 @@ number of dimensions:
 
 .
 
-This is equal to the distance you would have to walk between two points
-in a city, where you have to walk along city blocks. As for the
-Euclidean distance, the expression data are subtracted directly from
-each other, and we should therefore make sure that they are properly
-normalized.
+这个相当于当你在从城市里一个位置到另一个位置时，所经过街道的距离。
+跟Euclidean 距离类似，表达谱的数据会直接相减，因此必须先对数据进行归一化才能
+使用。
 
-The Pearson correlation coefficient
+Pearson 相关系数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Pearson correlation coefficient is defined as
+Pearson相关系数定义为：
 
 *r* = 
 
@@ -370,24 +360,18 @@ The Pearson correlation coefficient is defined as
 
 ,
 
-in which x, ȳ are the sample mean of *x* and *y* respectively, and
-σ\ :sub:`*x*`, σ\ :sub:`*y*` are the sample standard deviation of *x*
-and *y*. The Pearson correlation coefficient is a measure for how well a
-straight line can be fitted to a scatterplot of *x* and *y*. If all the
-points in the scatterplot lie on a straight line, the Pearson
-correlation coefficient is either +1 or -1, depending on whether the
-slope of line is positive or negative. If the Pearson correlation
-coefficient is equal to zero, there is no correlation between *x* and
-*y*.
+其中 x, ȳ 分别是 *x* 和 *y* 的样品均值, σ\ :sub:`*x*`, σ\ :sub:`*y*` 
+是 *x* 和 *y* 的样品标准差. Pearson相关系数是用于测量 *x* and *y* 散点图对直线的
+拟合程度。如果所有的点都在直线上，那么Pearson相关系数为 +1 or -1, 取决于直线的斜率
+是正还是负。如果Pearson 相关系数等于0，表明 *x* 和 *y* 直接没有相关性。
 
-The *Pearson distance* is then defined as
+ *Pearson distance* 定义为
 
 +----------------------------+
 | *d*\ :sub:`P` ≡ 1 − *r*.   |
 +----------------------------+
 
-As the Pearson correlation coefficient lies between -1 and 1, the
-Pearson distance lies between 0 and 2.
+由于the Pearson 相关性介于 -1 和 1之间, Pearson 距离的范围为 0 和 2 之间.
 
 Absolute Pearson correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
