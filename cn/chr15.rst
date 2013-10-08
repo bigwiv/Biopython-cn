@@ -8,6 +8,7 @@ widely used in gene expression data analysis to find groups of genes
 with similar gene expression profiles. This may identify functionally
 related genes, as well as suggest the function of presently unknown
 genes.
+
 聚类分析是对一堆元素按照相似度来进行分组的过程。在生物信息中，聚类分析经常
 用于分析基因表达的数据，用来发现有相同的表达图谱的基因，以鉴定功能相关的基
 因，或者发现未知的功能相关基因。
