@@ -23,6 +23,7 @@ Biopython中的``Bio.Cluster``模块提供了常用的聚类算法，并且设�
 
 The following four clustering approaches are implemented in
 ``Bio.Cluster``:
+``Bio.Cluster``包含了以下四种聚类算法：
 
 -  Hierarchical clustering (pairwise centroid-, single-, complete-, and
    average-linkage);
@@ -30,7 +31,13 @@ The following four clustering approaches are implemented in
 -  Self-Organizing Maps;
 -  Principal Component Analysis.
 
+-  分层聚类（两两聚类，single-，complete-, and average-linkage);
+-  *k*-means, *k*-medians, and *k*-medoids clustering;
+-  Self-Organizing Maps;
+-  主成分分析
+
 Data representation
+数据结构
 ~~~~~~~~~~~~~~~~~~~
 
 The data to be clustered are represented by a *n* × *m* Numerical Python
@@ -39,14 +46,21 @@ typically the rows correspond to different genes whereas the columns
 correspond to different experimental conditions. The clustering
 algorithms in ``Bio.Cluster`` can be applied both to rows (genes) and to
 columns (experiments).
+用于聚类的数据为一个*n* x *m*的Numerical Python 矩阵 ``data``。
+其中，每一行表示不同的基因，每一列表示不同的实验条件。``Bio.Cluster``既可以
+针对每行（基因），也可以针对每列（实验条件）进行聚类。
 
 Missing values
+缺失值
 ~~~~~~~~~~~~~~
 
 Often in microarray experiments, some of the data values are missing,
 which is indicated by an additional *n* × *m* Numerical Python integer
 array ``mask``. If ``mask[i,j]==0``, then ``data[i,j]`` is missing and
 is ignored in the analysis.
+在芯片实验中，经常会有些缺失值，通常用一个额外的 *n* × *m* Numerical Python
+integer矩阵``mask``表示。例如``mask[i,j]==0``，表示``data[i,j]``是个缺失值，
+并且在分析中忽略
 
 Random number generator
 ~~~~~~~~~~~~~~~~~~~~~~~
