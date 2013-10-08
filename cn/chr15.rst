@@ -596,10 +596,8 @@ Weighting
 
 计算距离矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-距离矩阵是 ``data`` 每个元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中
- ``distancematrix`` 函数计算：
-
+距离矩阵是 ``data`` 每个元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中 ``distancematrix`` 函数计算：
+ 
 .. code:: verbatim
 
     >>> from Bio.Cluster import distancematrix
