@@ -1,5 +1,6 @@
-Chapter 15  Cluster analysis
+第十五章 聚类分析
 ============================
+
 
 Cluster analysis is the grouping of items into clusters based on the
 similarity of the items to each other. In bioinformatics, clustering is
@@ -7,12 +8,18 @@ widely used in gene expression data analysis to find groups of genes
 with similar gene expression profiles. This may identify functionally
 related genes, as well as suggest the function of presently unknown
 genes.
+聚类分析是对一堆元素按照相似度来进行分组的过程。在生物信息中，聚类分析经常
+用于分析基因表达的数据，用来发现有相同的表达图谱的基因，以鉴定功能相关的基
+因，或者发现未知的功能相关基因。
 
 The Biopython module ``Bio.Cluster`` provides commonly used clustering
 algorithms and was designed with the application to gene expression data
 in mind. However, this module can also be used for cluster analysis of
 other types of data. ``Bio.Cluster`` and the underlying C Clustering
 Library is described by De Hoon *et al.* [`14 <#dehoon2004>`__\ ].
+Biopython中的``Bio.Cluster``模块提供了常用的聚类算法，并且设计的时候考虑了
+基因表达数据的应用。然而， 这个模块也可以用于其他类型数据的使用。``Bio.Cluster``
+和其使用的C聚类库的说明见De Hoon *et al.* [`14 <#dehoon2004>`__\ ].
 
 The following four clustering approaches are implemented in
 ``Bio.Cluster``:
