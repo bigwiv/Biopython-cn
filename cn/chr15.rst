@@ -374,34 +374,27 @@ Pearson相关系数定义为：
 Absolute Pearson correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By taking the absolute value of the Pearson correlation, we find a
-number between 0 and 1. If the absolute value is 1, all the points in
-the scatter plot lie on a straight line with either a positive or a
-negative slope. If the absolute value is equal to zero, there is no
-correlation between *x* and *y*.
+通过对Pearson相关系数取绝对值，可以得到一个0和1之间的数。如果绝对值是1，所有的点
+都位于一条直线上，无论斜率为正还是负。当绝对值为0时，表明 *x* and *y* 没有相关性。
 
-The corresponding distance is defined as
+对应的距离定义为：
 
 +------------------------+------+-------+------+-----+
 | *d*\ :sub:`A` ≡ 1 −    | ⎪    | *r*   | ⎪    | ,   |
 |                        |  ⎪   |       |  ⎪   |     |
 +------------------------+------+-------+------+-----+
 
-where *r* is the Pearson correlation coefficient. As the absolute value
-of the Pearson correlation coefficient lies between 0 and 1, the
-corresponding distance lies between 0 and 1 as well.
+其中 *r* 是 Pearson 相关系数. 由于Pearson的相关系数介于 0 和 1之间, 对应的
+距离也位于0和1之间。
 
-In the context of gene expression experiments, the absolute correlation
-is equal to 1 if the gene expression profiles of two genes are either
-exactly the same or exactly opposite. The absolute correlation
-coefficient should therefore be used with care.
+在基因表达数据中，绝对相关性等于1，表明两组基因的表达情况完全一样或者完全
+相反，在使用时，应该注意这一点。
 
 Uncentered correlation (cosine of the angle)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In some cases, it may be preferable to use the *uncentered correlation*
-instead of the regular Pearson correlation coefficient. The uncentered
-correlation is defined as
+在某些情况下，使用 *uncentered correlation* 比常规的Pearson相关系数更合适。
+uncentered correlation 定义为：
 
 *r*\ :sub:`U` = 
 
@@ -464,7 +457,7 @@ correlation is defined as
 
 ,
 
-where
+其中
 
      
 
@@ -529,133 +522,108 @@ where
 .  
 
  
+这个公式同Pearson相关系数的公式一样，只是把样本均值 x, ȳ 设为0 。
+uncentered correlation 适用于表达量基准为0的情况。例如，在对基因表达情况计算
+比值后取对数，当log-ratio 等于0 表明红色或绿色信号强度相等，也意味着实验处理
+不影响基因的表达量。
 
-This is the same expression as for the regular Pearson correlation
-coefficient, except that the sample means x, ȳ are set equal to zero.
-The uncentered correlation may be appropriate if there is a zero
-reference state. For instance, in the case of gene expression data given
-in terms of log-ratios, a log-ratio equal to zero corresponds to the
-green and red signal being equal, which means that the experimental
-manipulation did not affect the gene expression.
-
-The distance corresponding to the uncentered correlation coefficient is
-defined as
+uncentered correlation 系数对应的距离计算方法为：
 
 +--------------------------------------+
 | *d*\ :sub:`U` ≡ 1 − *r*\ :sub:`U`,   |
 +--------------------------------------+
 
-where *r*\ :sub:`U` is the uncentered correlation. As the uncentered
-correlation coefficient lies between -1 and 1, the corresponding
-distance lies between 0 and 2.
+其中 *r*\ :sub:`U` 是uncentered 系数。 由于uncentered系数位于-1 和 1
+之间，对应的距离范围为 0 与 2之间。
 
-The uncentered correlation is equal to the cosine of the angle of the
-two data vectors in *n*-dimensional space, and is often referred to as
-such.
+由于 uncentered 系数同 *n* 维空间里的两个数据向量所成角度的cosine值相同，因此
+得名。
 
 Absolute uncentered correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As for the regular Pearson correlation, we can define a distance measure
-using the absolute value of the uncentered correlation:
+与 Pearson 相关性类似, 也可以用uncentered correlation的绝对值来定义距离:
 
 +-------------------------+------+-----------------+------+-----+
 | *d*\ :sub:`AU` ≡ 1 −    | ⎪    | *r*\ :sub:`U`   | ⎪    | ,   |
 |                         |  ⎪   |                 |  ⎪   |     |
 +-------------------------+------+-----------------+------+-----+
 
-where *r*\ :sub:`U` is the uncentered correlation coefficient. As the
-absolute value of the uncentered correlation coefficient lies between 0
-and 1, the corresponding distance lies between 0 and 1 as well.
+其中 *r*\ :sub:`U` 是 uncentered相关系数。由于uncentered 相关系数的
+绝对值位于 0 和 1 之间，对应的距离也为位于 0 和 1之间。
 
-Geometrically, the absolute value of the uncentered correlation is equal
-to the cosine between the supporting lines of the two data vectors
-(i.e., the angle without taking the direction of the vectors into
-consideration).
+从几何学上来讲，uncentered相关系数的绝对值等于两个数据组成的向量的supporting lines
+的角度的cosine值（即不考虑向量的方向性）。
 
 Spearman rank correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Spearman rank correlation is an example of a non-parametric
-similarity measure, and tends to be more robust against outliers than
-the Pearson correlation.
+Spearman秩相关系数是一种非参的相关性测量方法，同Pearson相关系数相比，对于离群点
+有更好的稳健性。
 
-To calculate the Spearman rank correlation, we replace each data value
-by their rank if we would order the data in each vector by their value.
-We then calculate the Pearson correlation between the two rank vectors
-instead of the data vectors.
+为了计算Spearman秩相关系数，首先对每个数据集里的数据按值排序，得到每个数据的
+秩。然后，计算两个数据集的秩的Pearson相关系数，得到Spearson的相关系数。
 
-As in the case of the Pearson correlation, we can define a distance
-measure corresponding to the Spearman rank correlation as
+同Pearson相关性类似，Spearman秩相关系数对应的距离定义为：
 
 +--------------------------------------+
 | *d*\ :sub:`S` ≡ 1 − *r*\ :sub:`S`,   |
 +--------------------------------------+
 
-where *r*\ :sub:`S` is the Spearman rank correlation.
+其中 *r*\ :sub:`S` 是Spearman秩相关系数。
 
 Kendall’s τ
 ~~~~~~~~~~~
 
-Kendall’s τ is another example of a non-parametric similarity measure.
-It is similar to the Spearman rank correlation, but instead of the ranks
-themselves only the relative ranks are used to calculate τ (see Snedecor
-& Cochran [`29 <#snedecor1989>`__\ ]).
+Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它使用秩来计算
+ τ (see Snedecor & Cochran [`29 <#snedecor1989>`__\ ]) 。
 
-We can define a distance measure corresponding to Kendall’s τ as
+Kendall’s τ 对应的距离计算为：
 
 +--------------------------+
 | *d*\ :sub:`K` ≡ 1 − τ.   |
 +--------------------------+
 
-As Kendall’s τ is always between -1 and 1, the corresponding distance
-will be between 0 and 2.
+因为 Kendall’s τ 位于 -1 和 1之间, 对应的距离位于 0 和 2之间。
 
 Weighting
 ~~~~~~~~~
 
-For most of the distance functions available in ``Bio.Cluster``, a
-weight vector can be applied. The weight vector contains weights for the
-items in the data vector. If the weight for item *i* is *w*\ :sub:`*i*`,
-then that item is treated as if it occurred *w*\ :sub:`*i*` times in the
-data. The weight do not have to be integers. For the Spearman rank
-correlation and Kendall’s τ, weights do not have a well-defined meaning
-and are therefore not implemented.
+对于 ``Bio.Cluster`` 中大部分距离函数，都可以使用权重矩阵。权重矩阵包含着
+数据集中每个元素的权重。如果元素 *i* 的权重为 *w*\ :sub:`*i*`，那么这个元素
+计算为元素的值乘以 *w*\ :sub:`*i*` 。权重值不需要为整数。对于 Spearman 秩相关系数
+和Kendall’s τ, 权重没有很好的定义，因此不能用于这两个函数。
 
-Calculating the distance matrix
+计算距离矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The distance matrix is a square matrix with all pairwise distances
-between the items in ``data``, and can be calculated by the function
-``distancematrix`` in the ``Bio.Cluster`` module:
+距离矩阵是 ``data`` 每个元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中
+ ``distancematrix`` 函数计算：
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import distancematrix
     >>> matrix = distancematrix(data)
 
-where the following arguments are defined:
+其中，包含以下参数：
 
--  ``data`` (required)
-    Array containing the data for the items.
--  ``mask`` (default: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
--  ``weight`` (default: ``None``)
-    The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
--  ``transpose`` (default: ``0``)
-    Determines if the distances between the rows of ``data`` are to be
-   calculated (``transpose==0``), or between the columns of ``data``
-   (``transpose==1``).
--  ``dist`` (default: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+-  ``data`` (必选)
+    包含所有元素的矩阵
+-  ``mask`` (默认: ``None``)
+    显示是否为缺失数据的矩阵。若
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 缺失。若 ``mask==None``,
+   那么表明没有缺失数据。
+-  ``weight`` (默认: ``None``)
+    计算距离时使用的权重矩阵。若
+   ``weight==None``, 则假设所有的数据使用相同的权重。
+-  ``transpose`` (默认: ``0``)
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
+    定义使用的距离函数 (具体见
    `15.1 <#sec:distancefunctions>`__).
 
-To save memory, the distance matrix is returned as a list of 1D arrays.
-The number of columns in each row is equal to the row number. Hence, the
-first row has zero elements. An example of the return value is
+为了节省内存，函数运行返回的距离矩阵是一个1D 数组的列表。每一行的列数等于
+行号。因此，第一行有0个元素。例如一个返回值为：
 
 .. code:: verbatim
 
@@ -664,7 +632,7 @@ first row has zero elements. An example of the return value is
      array([7., 3.]),
      array([4., 2., 6.])]
 
-This corresponds to the distance matrix
+对应的距离矩阵为：
 
 | ⎛
 |  ⎜
@@ -690,10 +658,10 @@ This corresponds to the distance matrix
 
 .
 
-15.2  Calculating cluster properties
+15.2  计算聚类的相关性质
 ------------------------------------
 
-Calculating the cluster centroids
+计算聚类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The centroid of a cluster can be defined either as the mean or as the
