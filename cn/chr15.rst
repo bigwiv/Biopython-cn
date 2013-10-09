@@ -673,7 +673,7 @@ Weighting
 包含了一下参数:
 
 -  ``data`` (必选)
-    Array containing the data for the items.
+    包含所有元素的矩阵。
 -  ``mask`` (默认: ``None``)
     用来表示数据是否缺失的整型数组。如果
    ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
@@ -696,152 +696,105 @@ Weighting
 计算每类之间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-根据每个 *items* 的距离函数，我们可以计算出两个 *clusters* 的距离。
-The distance between the
-arithmetic means of the two clusters is used in pairwise
-centroid-linkage clustering and in *k*-means clustering. In *k*-medoids
-clustering, the distance between the medians of the two clusters is used
-instead. The shortest pairwise distance between items of the two
-clusters is used in pairwise single-linkage clustering, while the
-longest pairwise distance is used in pairwise maximum-linkage
-clustering. In pairwise average-linkage clustering, the distance between
-two clusters is defined as the average over the pairwise distances.
+根据每个 *items* 的距离函数，我们可以计算出两个 *clusters* 的距离。两个类别的
+数学平均值之间的距离通常用于两两间的centroid-linkage聚类和 *k*-means聚类，而 *k*-medoids
+聚类中，通常利用两类的中值进行计算。两类中，最短的元素之间的距离用于pairwise single-linkage的聚类，
+而最长的元素之间的距离用于计算pairwise maximum-linkage 聚类。在pairwise average-linkage聚类中，
+两类之间的距离定义为两两元素间距离的平均值。
 
-To calculate the distance between two clusters, use
+为了计算两类之间的距离，可以利用:
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import clusterdistance
     >>> distance = clusterdistance(data)
 
-where the following arguments are defined:
+其中，包含的参数有：
 
--  ``data`` (required)
-    Array containing the data for the items.
--  ``mask`` (default: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
--  ``weight`` (default: ``None``)
-    The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
--  ``index1`` (default: ``0``)
-    A list containing the indices of the items belonging to the first
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
--  ``index2`` (default: ``0``)
-    A list containing the indices of the items belonging to the second
-   cluster. A cluster containing only one items *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
--  ``method`` (default: ``'a'``)
-    Specifies how the distance between clusters is defined:
+-  ``data`` (必选)
+    包含所有元素的矩阵。
+-  ``mask`` (默认: ``None``)
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失。
+-  ``weight`` (默认: ``None``)
+    计算距离时使用的权重矩阵。若
+   ``weight==None``, 则假设所有的数据使用相同的权重。
+-  ``index1`` (默认: ``0``)
+    第一个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    可以为一个列表 ``[i]``, 或者整数 ``i``.
+-  ``index2`` (默认: ``0``)
+   第二个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    可以为一个列表 ``[i]``, 或者整数 ``i``.
+-  ``method`` (默认: ``'a'``)
+    选择计算类别间距离的方法:
 
-   -  ``'a'``: Distance between the two cluster centroids (arithmetic
-      mean);
-   -  ``'m'``: Distance between the two cluster centroids (median);
-   -  ``'s'``: Shortest pairwise distance between items in the two
-      clusters;
-   -  ``'x'``: Longest pairwise distance between items in the two
-      clusters;
-   -  ``'v'``: Average over the pairwise distances between items in the
-      two clusters.
+   -  ``'a'``: 使用两个聚类中心的距离 (算术平均值);
+   -  ``'m'``: 使用两个聚类中心的距离 (中值);
+   -  ``'s'``: 使用两类中最短的两个元素之间的距离;
+   -  ``'x'``: 使用两类中最长的两个元素之间的距离;
+   -  ``'v'``: 使用两类中两两元素距离的平均值作为距离。
 
--  ``dist`` (default: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
+    选择使用的距离函数 (see
    `15.1 <#sec:distancefunctions>`__).
--  ``transpose`` (default: ``0``)
-    If ``transpose==0``, calculate the distance between the rows of
-   ``data``. If ``transpose==1``, calculate the distance between the
-   columns of ``data``.
+-  ``transpose`` (默认: ``0``)
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 
 15.3  Partitioning algorithms
 -----------------------------
 
-Partitioning algorithms divide items into *k* clusters such that the sum
-of distances over the items to their cluster centers is minimal. The
-number of clusters *k* is specified by the user. Three partitioning
-algorithms are available in ``Bio.Cluster``:
+Partitioning algorithms 依据所有元素到各自聚类中心距离之和最小化原则，
+将元素分为 *k* 类。类别的个数 *k* 由用户定义。 ``Bio.Cluster`` 提供了三种不同
+的算法:
 
--  *k*-means clustering
--  *k*-medians clustering
--  *k*-medoids clustering
+-  *k*-means 聚类
+-  *k*-medians 聚类
+-  *k*-medoids 聚类
 
-These algorithms differ in how the cluster center is defined. In
-*k*-means clustering, the cluster center is defined as the mean data
-vector averaged over all items in the cluster. Instead of the mean, in
-*k*-medians clustering the median is calculated for each dimension in
-the data vector. Finally, in *k*-medoids clustering the cluster center
-is defined as the item which has the smallest sum of distances to the
-other items in the cluster. This clustering algorithm is suitable for
-cases in which the distance matrix is known but the original data matrix
-is not available, for example when clustering proteins based on their
-structural similarity.
+这些算法的区别在于如何定义聚类中心。在 *k*-means 中, 聚类中心定义为该类中所有
+元素的mean data vector。 在 *k*-medians 聚类中， 利用每个维度的中间值来计算。
+最后， *k*-medoids 聚类中，聚类中心定义为该类中，离其他所有元素距离之和最小的元素的位置。
+这个方法适用于已知距离矩阵，但是原始数据矩阵未知的情况，例如根据结构相似度对蛋白进行聚类
+的情况。
 
-The expectation-maximization (EM) algorithm is used to find this
-partitioning into *k* groups. In the initialization of the EM algorithm,
-we randomly assign items to clusters. To ensure that no empty clusters
-are produced, we use the binomial distribution to randomly choose the
-number of items in each cluster to be one or more. We then randomly
-permute the cluster assignments to items such that each item has an
-equal probability to be in any cluster. Each cluster is thus guaranteed
-to contain at least one item.
+expectation-maximization (EM) 算法通常用于将数据分成 *k* 组。在 EM算法的起始阶段,
+随机的把元素分配到不同的组。为了保证不存在空元素的类别，可以利用二项分布的方法随机
+为每类挑选元素。然后，随机的对分组进行permute，保证每个元素有相同的概率去任何一个类别。
+最终，保证每类中至少含有一个元素。
 
-We then iterate:
+之后进行迭代:
 
--  Calculate the centroid of each cluster, defined as either the mean,
-   the median, or the medoid of the cluster;
--  Calculate the distances of each item to the cluster centers;
--  For each item, determine which cluster centroid is closest;
--  Reassign each item to its closest cluster, or stop the iteration if
-   no further item reassignments take place.
+-  利用均值，中值或者medoid计算每类的中心;
+-  计算每类的元素离各自中心的距离;
+-  对于每个元素，判别其离那个聚类中心最近;
+-  对元素重新进行聚类，当不能进行调整时，迭代终止。
 
-To avoid clusters becoming empty during the iteration, in *k*-means and
-*k*-medians clustering the algorithm keeps track of the number of items
-in each cluster, and prohibits the last remaining item in a cluster from
-being reassigned to a different cluster. For *k*-medoids clustering,
-such a check is not needed, as the item that functions as the cluster
-centroid has a zero distance to itself, and will therefore never be
-closer to a different cluster.
+为了避免迭代中产生空的类别，在 *k*-means 和 *k*-medians 聚类中，算法始终记录着每类中元素的
+个数，并且阻止最后一个元素被分到其他的类别中。对于 *k*-medoids 聚类, 这种检查就是没有必要的，
+因为当只剩最后一个元素时，它里中心的距离就为0，所以不会被分配到其他的类别中。
 
-As the initial assignment of items to clusters is done randomly, usually
-a different clustering solution is found each time the EM algorithm is
-executed. To find the optimal clustering solution, the *k*-means
-algorithm is repeated many times, each time starting from a different
-initial random clustering. The sum of distances of the items to their
-cluster center is saved for each run, and the solution with the smallest
-value of this sum will be returned as the overall clustering solution.
+由于起始阶段的元素是随机的，通常当EM算法执行时，会产生不同的聚类结果。为了找到最优的聚类结果，
+ *k*-means 算法会重复很多次，每次都以不同的随机分配作为起始。每次运行后，都会保存所有元素距离
+ 其中心距离之和，并且选择距离最小的那次运行结果最为最终的结果。
 
-How often the EM algorithm should be run depends on the number of items
-being clustered. As a rule of thumb, we can consider how often the
-optimal solution was found; this number is returned by the partitioning
-algorithms as implemented in this library. If the optimal solution was
-found many times, it is unlikely that better solutions exist than the
-one that was found. However, if the optimal solution was found only
-once, there may well be other solutions with a smaller within-cluster
-sum of distances. If the number of items is large (more than several
-hundreds), it may be difficult to find the globally optimal solution.
+EM算法运行的次数取决于需要聚类元素的多少。一般而言，我们可以考虑最优解被发现的次数，
+这个次数会作为partitioning算法的返回值。如果最优解被多次返回，那么不太可能存在比这个
+更优的解。然后，如果最优解只被发现一次，那么可能存在着距离更小的解。但是，如果需要聚类的
+元素过多的话（多余几百），那么很难找到一个全局最优解。
 
-The EM algorithm terminates when no further reassignments take place. We
-noticed that for some sets of initial cluster assignments, the EM
-algorithm fails to converge due to the same clustering solution
-reappearing periodically after a small number of iteration steps. We
-therefore check for the occurrence of such periodic solutions during the
-iteration. After a given number of iteration steps, the current
-clustering result is saved as a reference. By comparing the clustering
-result after each subsequent iteration step to the reference state, we
-can determine if a previously encountered clustering result is found. In
-such a case, the iteration is halted. If after a given number of
-iterations the reference state has not yet been encountered, the current
-clustering solution is saved to be used as the new reference state.
-Initially, ten iteration steps are executed before resaving the
-reference state. This number of iteration steps is doubled each time, to
-ensure that periodic behavior with longer periods can also be detected.
+EM算法会在不能进行任何分配的时候停止。我们注意到，对于某些起始的分配，由于
+相同的解会在迭代中周期性的重复，从而导致EM算法的失败。因此，我们在迭代中也会
+检查这种周期性出现的解。在给定数目的迭代后，当前的聚类结果会保存作为参考。之后
+继续迭代一定次数，比较该结果同之前保存的结果，可以确定之前的结果是否重复出现。
+如果有重复出现，迭代会终止。如果没有出现，那么再次迭代后的结果会保存作为新的参考。
+首先，会重复10次迭代，再保存新的参考。之后，迭代的次数会翻倍，保证在长的周期中也可以
+检测到该解。
 
 *k*-means and *k*-medians
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The *k*-means and *k*-medians algorithms are implemented as the function
-``kcluster`` in ``Bio.Cluster``:
+ *k*-means and *k*-medians 算法可以利用 ``Bio.Cluster``中的 ``kcluster`` 实现:
 
 .. code:: verbatim
 
