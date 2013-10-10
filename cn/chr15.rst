@@ -794,84 +794,70 @@ EM算法会在不能进行任何分配的时候停止。我们注意到，对于
 *k*-means and *k*-medians
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
- *k*-means and *k*-medians 算法可以利用 ``Bio.Cluster``中的 ``kcluster`` 实现:
+*k*-means and *k*-medians 算法可以利用 ``Bio.Cluster``中的 ``kcluster`` 实现:
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import kcluster
     >>> clusterid, error, nfound = kcluster(data)
 
-where the following arguments are defined:
+其中，包含的参数有：
 
--  ``data`` (required)
-    Array containing the data for the items.
--  ``nclusters`` (default: ``2``)
-    The number of clusters *k*.
--  ``mask`` (default: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
--  ``weight`` (default: ``None``)
-    The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
--  ``transpose`` (default: ``0``)
-    Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
--  ``npass`` (default: ``1``)
-    The number of times the *k*-means/-medians clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored and the
-   clustering algorithm is run only once, as it behaves
-   deterministically in that case.
--  ``method`` (default: ``a``)
-    describes how the center of a cluster is found:
+-  ``data`` (必选)
+    包含所有元素的矩阵。
+-  ``nclusters`` (默认: ``2``)
+    聚类的数目 *k*.
+-  ``mask`` (默认: ``None``)
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失。
+-  ``weight`` (默认: ``None``)
+    计算距离时使用的权重矩阵。若
+   ``weight==None``, 则假设所有的数据使用相同的权重。
+-  ``transpose`` (默认: ``0``)
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+-  ``npass`` (默认: ``1``)
+    *k*-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+    如果指定了 ``initialid`` , ``npass`` 的值会忽略，并且聚类算法只会运行一次。
+-  ``method`` (默认: ``a``)
+    指定确定聚类中心的方法:
 
-   -  ``method=='a'``: arithmetic mean (*k*-means clustering);
-   -  ``method=='m'``: median (*k*-medians clustering).
+   -  ``method=='a'``: 算数平均值 (*k*-means clustering);
+   -  ``method=='m'``: 中间值 (*k*-medians clustering).
 
-   For other values of ``method``, the arithmetic mean is used.
--  ``dist`` (default: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__). Whereas all eight distance
-   measures are accepted by ``kcluster``, from a theoretical viewpoint
-   it is best to use the Euclidean distance for the *k*-means algorithm,
-   and the city-block distance for *k*-medians.
--  ``initialid`` (default: ``None``)
-    Specifies the initial clustering to be used for the EM algorithm. If
-   ``initialid==None``, then a different random initial clustering is
-   used for each of the ``npass`` runs of the EM algorithm. If
-   ``initialid`` is not ``None``, then it should be equal to a 1D array
-   containing the cluster number (between ``0`` and ``nclusters-1``) for
-   each item. Each cluster should contain at least one item. With the
-   initial clustering specified, the EM algorithm is deterministic.
+   当指定 ``method`` 使用其他值时，算法会采用算数平均值。
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
+    选择使用的距离函数 (see
+   `15.1 <#sec:distancefunctions>`__). 尽管八种距离都可以用于 ``kcluster`` 计算,
+   但从经验上来讲，Euclidean 距离适合 *k*-means 算法, city-block 距离适合 *k*-medians.
+-  ``initialid`` (默认: ``None``)
+    指定EM算法运行初始的聚类类别。如果
+   ``initialid==None``, 那么每运行一次EM算法时，都会采取不同的随机初始聚类，总共
+   运行的次数由 ``npass`` 决定。如果
+   ``initialid`` 不是 ``None``, 那么它应该为一个长度为聚类数的1维数组，每类中至少含有
+   一个元素。当初始类别给定后，EM算法的结果也就确定了。
 
-This function returns a tuple ``(clusterid, error, nfound)``, where
-``clusterid`` is an integer array containing the number of the cluster
-to which each row or cluster was assigned, ``error`` is the
-within-cluster sum of distances for the optimal clustering solution, and
-``nfound`` is the number of times this optimal solution was found.
+这个函数的返回值为一个包含 ``(clusterid, error, nfound)`` 的元组，其中 ``clusterid`` 是
+一个整型矩阵，包含着每类中所包含的行或列的数目。 ``error`` 是最优聚类解中，每类内距离的总和，
+``nfound`` 指的是最优解出现的次数。
 
-*k*-medoids clustering
+*k*-medoids 聚类
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The ``kmedoids`` routine performs *k*-medoids clustering on a given set
-of items, using the distance matrix and the number of clusters passed by
-the user:
+``kmedoids`` 函数根据提供的距离矩阵和聚类数，来运行 *k*-medoids 聚类：
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import kmedoids
     >>> clusterid, error, nfound = kmedoids(distance)
 
-where the following arguments are defined: , nclusters=2, npass=1,
+其中，包含的参数有: , nclusters=2, npass=1,
 initialid=None)\|
 
--  ``distance`` (required)
-    The matrix containing the distances between the items; this matrix
-   can be specified in three ways:
+-  ``distance`` (必选)
+    元素两两间的距离矩阵，可以通过三种不同的方法提供：
 
-   -  as a 2D Numerical Python array (in which only the left-lower part
-      of the array will be accessed):
+   -  提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):
 
       .. code:: verbatim
 
@@ -879,15 +865,13 @@ initialid=None)\|
                             [1.1, 0.0, 4.5],
                             [2.3, 4.5, 0.0]])
 
-   -  as a 1D Numerical Python array containing consecutively the
-      distances in the left-lower part of the distance matrix:
+   -  输入一个1D的 Numerical Python 数组，包含了距离矩阵左下角的数据：
 
       .. code:: verbatim
 
           distance = array([1.1, 2.3, 4.5])
 
-   -  as a list containing the rows of the left-lower part of the
-      distance matrix:
+   -  输入一个列表，包含距离矩阵左下角的数据：
 
       .. code:: verbatim
 
@@ -896,63 +880,40 @@ initialid=None)\|
                       array([2.3, 4.5])
                      ]
 
-   These three expressions correspond to the same distance matrix.
--  ``nclusters`` (default: ``2``)
-    The number of clusters *k*.
--  ``npass`` (default: ``1``)
-    The number of times the *k*-medoids clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored, as the
-   clustering algorithm behaves deterministically in that case.
--  ``initialid`` (default: ``None``)
-    Specifies the initial clustering to be used for the EM algorithm. If
-   ``initialid==None``, then a different random initial clustering is
-   used for each of the ``npass`` runs of the EM algorithm. If
-   ``initialid`` is not ``None``, then it should be equal to a 1D array
-   containing the cluster number (between ``0`` and ``nclusters-1``) for
-   each item. Each cluster should contain at least one item. With the
-   initial clustering specified, the EM algorithm is deterministic.
+   三种方法对应着同样的距离矩阵。
+-  ``nclusters`` (默认: ``2``)
+    聚类的数目 *k*.
+-  ``npass`` (默认: ``1``)
+    *k*-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+    如果指定了 ``initialid`` , ``npass`` 的值会忽略，并且聚类算法只会运行一次。
+-  ``initialid`` (默认: ``None``)
+    指定EM算法运行初始的聚类类别。如果
+   ``initialid==None``, 那么每运行一次EM算法时，都会采取不同的随机初始聚类，总共
+   运行的次数由 ``npass`` 决定。如果
+   ``initialid`` 不是 ``None``, 那么它应该为一个长度为聚类数的1维数组，每类中至少含有
+   一个元素。当初始类别给定后，EM算法的结果也就确定了。
 
-This function returns a tuple ``(clusterid, error, nfound)``, where
-``clusterid`` is an array containing the number of the cluster to which
-each item was assigned, ``error`` is the within-cluster sum of distances
-for the optimal *k*-medoids clustering solution, and ``nfound`` is the
-number of times the optimal solution was found. Note that the cluster
-number in ``clusterid`` is defined as the item number of the item
-representing the cluster centroid.
+函数返回值为一个 包含 ``(clusterid, error, nfound)`` 的元组, 其中
+``clusterid`` 一个整型矩阵，包含着每类中所包含的行或列的数目。``error`` 是最优聚类解中，每类内距离的总和，
+``nfound`` 指的是最优解出现的次数。需要注意的是， ``clusterid`` 中的聚类数指的是代表聚类中的元素的个数。
 
-15.4  Hierarchical clustering
+15.4  系统聚类
 -----------------------------
 
-Hierarchical clustering methods are inherently different from the
-*k*-means clustering method. In hierarchical clustering, the similarity
-in the expression profile between genes or experimental conditions are
-represented in the form of a tree structure. This tree structure can be
-shown graphically by programs such as Treeview and Java Treeview, which
-has contributed to the popularity of hierarchical clustering in the
-analysis of gene expression data.
+系统聚类同 *k*-means 聚类有本质的不同。在系统聚类中，基因间或者实验条件间的相似度是通过
+树的形式展现出来的。可以利用Treeview或者Java Treeview来查看这些树的结构，因此很便于基因表达
+数据中系统聚类的运用。
 
-The first step in hierarchical clustering is to calculate the distance
-matrix, specifying all the distances between the items to be clustered.
-Next, we create a node by joining the two closest items. Subsequent
-nodes are created by pairwise joining of items or nodes based on the
-distance between them, until all items belong to the same node. A tree
-structure can then be created by retracing which items and nodes were
-merged. Unlike the EM algorithm, which is used in *k*-means clustering,
-the complete process of hierarchical clustering is deterministic.
+系统聚类的第一步是计算所有元素间的距离矩阵。之后，融合两个最近的元素成为一个节点。然后，不断的
+通过融合相近的元素或者节点来形成新的节点，直到所有的元素都属于同一个节点。在追溯元素和节点融合
+的过程的同时形成了树的结构。不同于 *k*-means 使用的EM算法，系统聚类的过程是固定的。
 
-Several flavors of hierarchical clustering exist, which differ in how
-the distance between subnodes is defined in terms of their members. In
-``Bio.Cluster``, pairwise single, maximum, average, and centroid linkage
-are available.
+系统聚类也存在着几个不同的方法，他们区别在于如何计算子节点内的距离。在
+``Bio.Cluster`` 中，提供了最短距离法（ pairwise single）,最长距离法（maximum）, 类平均法（average）,
+和重心法（centroid linkage）。
 
--  In pairwise single-linkage clustering, the distance between two nodes
-   is defined as the shortest distance among the pairwise distances
-   between the members of the two nodes.
--  In pairwise maximum-linkage clustering, alternatively known as
-   pairwise complete-linkage clustering, the distance between two nodes
-   is defined as the longest distance among the pairwise distances
-   between the members of the two nodes.
+-  在最短距离法中，节点间的距离被定义两个节点最近样品间距离。
+-  在最短距离法中，节点间的距离被定义两个节点最远样品间距离。
 -  In pairwise average-linkage clustering, the distance between two
    nodes is defined as the average over all pairwise distances between
    the items of the two nodes.
