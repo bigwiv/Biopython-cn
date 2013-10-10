@@ -915,68 +915,38 @@ initialid=None)\|
 -  在最短距离法中，节点间的距离被定义两个节点最近样品间距离。
 -  在最短距离法中，节点间的距离被定义两个节点最远样品间距离。
 -  在类平均法中，节点间的距离被定义为所有样品对之间的平均距离。
-In pairwise average-linkage clustering, the distance between two
-   nodes is defined as the average over all pairwise distances between
-   the items of the two nodes.
--  In pairwise centroid-linkage clustering, the distance between two
-   nodes is defined as the distance between their centroids. The
-   centroids are calculated by taking the mean over all the items in a
-   cluster. As the distance from each newly formed node to existing
-   nodes and items need to be calculated at each step, the computing
-   time of pairwise centroid-linkage clustering may be significantly
-   longer than for the other hierarchical clustering methods. Another
-   peculiarity is that (for a distance measure based on the Pearson
-   correlation), the distances do not necessarily increase when going up
-   in the clustering tree, and may even decrease. This is caused by an
-   inconsistency between the centroid calculation and the distance
-   calculation when using the Pearson correlation: Whereas the Pearson
-   correlation effectively normalizes the data for the distance
-   calculation, no such normalization occurs for the centroid
-   calculation.
+-  在重心法中，节点间的距离被定义为两个节点重心间的距离。重心的计算是通过对
+每类中所有元素进行计算的。由于每次都要计算新的节点对各个元素和已存在节点的距离，
+因此重心法的运行时间比其他系统聚类的方法更长。该方法另外一个特性是，当聚类树的
+长大的时候，距离并不会增加，有时候反而减少。由于使用Pearson相关对重心的计算和距离的计算不一致，导致了
+这种特性：因为Pearson相关对于计算距离很有效，但是对于重心的计算不是很好normalization。
 
-For pairwise single-, complete-, and average-linkage clustering, the
-distance between two nodes can be found directly from the distances
-between the individual items. Therefore, the clustering algorithm does
-not need access to the original gene expression data, once the distance
-matrix is known. For pairwise centroid-linkage clustering, however, the
-centroids of newly formed subnodes can only be calculated from the
-original data and not from the distance matrix.
+对于最短距离法，最长距离法和类平均法时，两个节点之间的距离是直接对类别里的元素计算得到的。
+因此，聚类的算法在得到距离矩阵后，不一定需要提供最开始的基因表达数据。而对于重心法而言，
+新生成的节点的中心必须依靠原始的数据，而不是仅仅依靠距离矩阵。
 
-The implementation of pairwise single-linkage hierarchical clustering is
-based on the SLINK algorithm (R. Sibson, 1973), which is much faster and
-more memory-efficient than a straightforward implementation of pairwise
-single-linkage clustering. The clustering result produced by this
-algorithm is identical to the clustering solution found by the
-conventional single-linkage algorithm. The single-linkage hierarchical
-clustering algorithm implemented in this library can be used to cluster
-large gene expression data sets, for which conventional hierarchical
-clustering algorithms fail due to excessive memory requirements and
-running time.
+最短距离法的实现是根据 SLINK algorithm (R. Sibson, 1973), 这个算法具有快速和高效的特点。
+并且这个方法聚类的结果同传统的方法结果一致。并且这个算法，可以运用于大量的数据，而传统的
+算法则需要大量的内存需求和运行时间。
 
 Representing a hierarchical clustering solution
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The result of hierarchical clustering consists of a tree of nodes, in
-which each node joins two items or subnodes. Usually, we are not only
-interested in which items or subnodes are joined at each node, but also
-in their similarity (or distance) as they are joined. To store one node
-in the hierarchical clustering tree, we make use of the class ``Node``,
-which defined in ``Bio.Cluster``. An instance of ``Node`` has three
-attributes:
+分层聚类的结果是用树的结构展示所有节点，每个节点包含两个元素或者子节点。通常，我们既关心那个元素
+或者哪个子节点互相融合，也关心二者之间的距离（或者相似度）。我们可以调用 ``Bio.Cluster``中的
+``Node``函数，来存储聚类树的一个节点。 ``Node``的实例包含以下三个性质：
 
 -  ``left``
 -  ``right``
 -  ``distance``
 
-Here, ``left`` and ``right`` are integers referring to the two items or
-subnodes that are joined at this node, and ``distance`` is the distance
-between them. The items being clustered are numbered from 0 to (number
-of items − 1), while clusters are numbered from -1 to −(number of
-items−1). Note that the number of nodes is one less than the number of
-items.
+其中, ``left`` 和 ``right`` 是两个需要合并的节点所包含的元素或者子节点的个数。
+``distance`` 指的是两个节点的距离。需要聚类的元素的编号是从0到（元素数目-1），
+而聚类的组别是从-1到-（元素数目-1）。请注意，节点的数目比元素的数目少一。
 
-To create a new ``Node`` object, we need to specify ``left`` and
-``right``; ``distance`` is optional.
+
+为了创建一个新的 ``Node`` 对象,我们需要指定 ``left`` 和 ``right``; 
+``distance`` 是可选的。
 
 .. code:: verbatim
 
@@ -986,8 +956,7 @@ To create a new ``Node`` object, we need to specify ``left`` and
     >>> Node(2,3,0.91)
     (2, 3): 0.91
 
-The attributes ``left``, ``right``, and ``distance`` of an existing
-``Node`` object can be modified directly:
+一个已存在 ``Node`` 对象的 ``left``, ``right``, 和 ``distance`` 都是可以直接修改的：
 
 .. code:: verbatim
 
@@ -998,12 +967,10 @@ The attributes ``left``, ``right``, and ``distance`` of an existing
     >>> node
     (6, 2): 0.73
 
-An error is raised if ``left`` and ``right`` are not integers, or if
-``distance`` cannot be converted to a floating-point value.
+当 ``left`` 和 ``right`` 不是整数的时候，或者 ``distance`` 不能被转化成浮点值，会抛出错误。
 
-The Python class ``Tree`` represents a full hierarchical clustering
-solution. A ``Tree`` object can be created from a list of ``Node``
-objects:
+ Python的类 ``Tree`` 包含着整个系统聚类的结果。 ``Tree`` 的对象可以通过
+ 一个 ``Node`` 的列表创建:
 
 .. code:: verbatim
 
@@ -1016,8 +983,7 @@ objects:
     (-2, 4): 0.6
     (-1, -3): 0.9
 
-The ``Tree`` initializer checks if the list of nodes is a valid
-hierarchical clustering result:
+ ``Tree`` 的初始器会检查包含节点的list是否是一个有效的系统聚类树的结果:
 
 .. code:: verbatim
 
@@ -1027,8 +993,7 @@ hierarchical clustering result:
       File "<stdin>", line 1, in ?
     ValueError: Inconsistent tree
 
-Individual nodes in a ``Tree`` object can be accessed using square
-brackets:
+也可以用中括号来对 ``Tree`` 对象进行检索：
 
 .. code:: verbatim
 
@@ -1041,9 +1006,8 @@ brackets:
     >>> tree[-1]
     (0, -1): 0.5
 
-As a ``Tree`` object is read-only, we cannot change individual nodes in
-a ``Tree`` object. However, we can convert the tree to a list of nodes,
-modify this list, and create a new tree from this list:
+因为 ``Tree`` 对象是只读的，我们不能对 ``Tree`` 对象中任何一个节点进行改变。然而，我们可以将其
+转换成一个节点的列表，对列表进行操作，最后创建新的树。
 
 .. code:: verbatim
 
@@ -1061,88 +1025,76 @@ modify this list, and create a new tree from this list:
     (2, -1): 0.5
     (-2, 3): 0.9
 
-This guarantees that any ``Tree`` object is always well-formed.
+这保证了``Tree`` 都具有良好的结果。
 
-To display a hierarchical clustering solution with visualization
-programs such as Java Treeview, it is better to scale all node distances
-such that they are between zero and one. This can be accomplished by
-calling the ``scale`` method on an existing ``Tree`` object:
+为了利用可视化工具，例如Java Treeview，来查看系统聚类树，最好对所有节点的距离进行归一化，
+使其位于0和1之间。可以通过对 ``Tree`` 对象调用 ``scale`` 方法来实现这个功能：
 
 .. code:: verbatim
 
     >>> tree.scale()
 
-This method takes no arguments, and returns ``None``.
+这个方法不需要任何参数，返回值是 ``None``.
 
-After hierarchical clustering, the items can be grouped into *k*
-clusters based on the tree structure stored in the ``Tree`` object by
-cutting the tree:
+经过系统聚类后，可以对 ``Tree`` 对象进行剪接，将所有的元素分为 *k* 类：
 
 .. code:: verbatim
 
     >>> clusterid = tree.cut(nclusters=1)
 
-where ``nclusters`` (defaulting to ``1``) is the desired number of
-clusters *k*. This method ignores the top *k*\ −1 linking events in the
-tree structure, resulting in *k* separated clusters of items. The number
-of clusters *k* should be positive, and less than or equal to the number
-of items. This method returns an array ``clusterid`` containing the
-number of the cluster to which each item is assigned.
+其中 ``nclusters`` (默认是 ``1``) 是期望的类别数 *k*。这个方法会忽略树结构里面的
+最高的 *k*\ −1 节点，最终形成 *k* 个独立的类别。对于 *k* 必须为正数，并且小于或者等于
+元素的数目。这个方法会返回一个数组 ``clusterid`` ,包含着每类中所包含元素的个数。
 
-Performing hierarchical clustering
+运行系统聚类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To perform hierarchical clustering, use the ``treecluster`` function in
-``Bio.Cluster``.
+为了进行系统聚类，可以用 ``Bio.Cluster`` 中的 ``treecluster`` 函数。
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(data)
 
-where the following arguments are defined:
+包含着以下参数:
 
 -  ``data``
-    Array containing the data for the items.
--  ``mask`` (default: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
--  ``weight`` (default: ``None``)
-    The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
--  ``transpose`` (default: ``0``)
-    Determines if rows (``transpose==0``) or columns (``transpose==1``)
-   are to be clustered.
--  ``method`` (default: ``'m'``)
-    defines the linkage method to be used:
+    包含所有元素的矩阵。
+-  ``mask`` (默认: ``None``)
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失。
+-  ``weight`` (默认: ``None``)
+    计算距离时使用的权重矩阵。若
+   ``weight==None``, 则假设所有的数据使用相同的权重。
+-  ``transpose`` (默认: ``0``)
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+-  ``method`` (默认: ``'m'``)
+    选择合适的节点距离计算方法:
 
-   -  ``method=='s'``: pairwise single-linkage clustering
-   -  ``method=='m'``: pairwise maximum- (or complete-) linkage
-      clustering
-   -  ``method=='c'``: pairwise centroid-linkage clustering
-   -  ``method=='a'``: pairwise average-linkage clustering
+   -  ``method=='s'``: 最小距离法
+   -  ``method=='m'``: 最大距离法
+   -  ``method=='c'``: 重心法
+   -  ``method=='a'``: 类平均法
 
--  ``dist`` (default: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
+    选择合适的元素距离算法 (see
    `15.1 <#sec:distancefunctions>`__).
 
-To apply hierarchical clustering on a precalculated distance matrix,
-specify the ``distancematrix`` argument when calling ``treecluster``
-function instead of the ``data`` argument:
+为了对一个事先计算好的距离矩阵进行系统聚类，可以在调用 ``treecluster`` 时候，
+用 ``distancematrix`` 参数来代替 ``data`` 参数：
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(distancematrix=distance)
 
-In this case, the following arguments are defined:
+这种情况下，需要定义下面的参数：
 
 -  ``distancematrix``
-    The distance matrix, which can be specified in three ways:
+    元素两两间的距离矩阵，可以通过三种不同的方法提供：
 
-   -  as a 2D Numerical Python array (in which only the left-lower part
-      of the array will be accessed):
+   -  提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):
 
       .. code:: verbatim
 
@@ -1150,15 +1102,13 @@ In this case, the following arguments are defined:
                             [1.1, 0.0, 4.5],
                             [2.3, 4.5, 0.0]])
 
-   -  as a 1D Numerical Python array containing consecutively the
-      distances in the left-lower part of the distance matrix:
+   -  输入一个1D的 Numerical Python 数组，包含了距离矩阵左下角的数据：
 
       .. code:: verbatim
 
           distance = array([1.1, 2.3, 4.5])
 
-   -  as a list containing the rows of the left-lower part of the
-      distance matrix:
+   -  输入一个列表，包含距离矩阵左下角的数据：
 
       .. code:: verbatim
 
@@ -1166,34 +1116,25 @@ In this case, the following arguments are defined:
                       array([1.1]),
                       array([2.3, 4.5])
 
-   These three expressions correspond to the same distance matrix. As
-   ``treecluster`` may shuffle the values in the distance matrix as part
-   of the clustering algorithm, be sure to save this array in a
-   different variable before calling ``treecluster`` if you need it
-   later.
+      三种方法对应着同样的距离矩阵。由于 ``treecluster`` 会对距离矩阵中的值进行随机洗牌，
+      如果后面需要调用这个距离矩阵，请在调用 ``treecluster`` 之情，事先存到一个新的变量
+
 -  ``method``
-    The linkage method to be used:
+    选择合适的节点距离计算方法:
 
-   -  ``method=='s'``: pairwise single-linkage clustering
-   -  ``method=='m'``: pairwise maximum- (or complete-) linkage
-      clustering
-   -  ``method=='a'``: pairwise average-linkage clustering
+   -  ``method=='s'``: 最小距离法
+   -  ``method=='m'``: 最大距离法
+   -  ``method=='a'``: 类平均法
 
-   While pairwise single-, maximum-, and average-linkage clustering can
-   be calculated from the distance matrix alone, pairwise
-   centroid-linkage cannot.
+   其中，最小距离法、最大距离法和类平均法可以只通过距离矩阵计算，而重心法却不行。
 
-When calling ``treecluster``, either ``data`` or ``distancematrix``
-should be ``None``.
+当调用 ``treecluster``时,  ``data`` 或者 ``distancematrix`` 总有一个必须为 ``None``。
 
-This function returns a ``Tree`` object. This object contains (number of
-items − 1) nodes, where the number of items is the number of rows if
-rows were clustered, or the number of columns if columns were clustered.
-Each node describes a pairwise linking event, where the node attributes
-``left`` and ``right`` each contain the number of one item or subnode,
-and ``distance`` the distance between them. Items are numbered from 0 to
-(number of items − 1), while clusters are numbered -1 to −(number of
-items−1).
+函数返回一个 ``Tree`` 对象，该对象包含着 (元素数目-1）个节点，当选择行作为聚类时，元素的
+数目同行数一致；当使用列作为聚类时，元素的数目同列数一致。每个节点都意味着一对相邻连锁的
+事件，其中节点的性质 ``left`` 和 ``right`` 包含着每个合并的元素或者子节点的元素数， ``distance`` 
+是两个合并元素或者子节点的距离。元素是从 0 to (元素数目 − 1) 进行标记, 而类别是从 -1 到 −(元素
+数目 -1 ）
 
 15.5  Self-Organizing Maps
 --------------------------
@@ -1344,26 +1285,26 @@ where the following arguments are defined:
 
 -  ``data`` (required)
     Array containing the data for the items.
--  ``mask`` (default: ``None``)
+-  ``mask`` (默认: ``None``)
     Array of integers showing which data are missing. If
    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
    then all data are present.
--  ``weight`` (default: ``None``)
+-  ``weight`` (默认: ``None``)
     contains the weights to be used when calculating distances. If
    ``weight==None``, then equal weights are assumed.
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
    (``transpose`` is ``1``) are to be clustered.
--  ``nxgrid, nygrid`` (default: ``2, 1``)
+-  ``nxgrid, nygrid`` (默认: ``2, 1``)
     The number of cells horizontally and vertically in the rectangular
    grid on which the Self-Organizing Map is calculated.
--  ``inittau`` (default: ``0.02``)
+-  ``inittau`` (默认: ``0.02``)
     The initial value for the parameter τ that is used in the SOM
-   algorithm. The default value for ``inittau`` is 0.02, which was used
+   algorithm. The 默认 value for ``inittau`` is 0.02, which was used
    in Michael Eisen’s Cluster/TreeView program.
--  ``niter`` (default: ``1``)
+-  ``niter`` (默认: ``1``)
     The number of iterations to be performed.
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
 
@@ -1557,11 +1498,11 @@ use
 
 where the following arguments are defined:
 
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if the distances between the rows of ``data`` are to be
    calculated (``transpose==0``), or between the columns of ``data``
    (``transpose==1``).
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
 
@@ -1579,14 +1520,14 @@ use
 
     >>> cdata, cmask = record.clustercentroids()
 
--  ``clusterid`` (default: ``None``)
+-  ``clusterid`` (默认: ``None``)
     Vector of integers showing to which cluster each item belongs. If
    ``clusterid`` is not given, then all items are assumed to belong to
    the same cluster.
--  ``method`` (default: ``'a'``)
+-  ``method`` (默认: ``'a'``)
     Specifies whether the arithmetic mean (``method=='a'``) or the
    median (``method=='m'``) is used to calculate the cluster center.
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if the centroids of the rows of ``data`` are to be
    calculated (``transpose==0``), or the centroids of the columns of
    ``data`` (``transpose==1``).
@@ -1606,15 +1547,15 @@ record, use
 
 where the following arguments are defined:
 
--  ``index1`` (default: ``0``)
+-  ``index1`` (默认: ``0``)
     A list containing the indices of the items belonging to the first
    cluster. A cluster containing only one item *i* can be represented
    either as a list ``[i]``, or as an integer ``i``.
--  ``index2`` (default: ``0``)
+-  ``index2`` (默认: ``0``)
     A list containing the indices of the items belonging to the second
    cluster. A cluster containing only one item *i* can be represented
    either as a list ``[i]``, or as an integer ``i``.
--  ``method`` (default: ``'a'``)
+-  ``method`` (默认: ``'a'``)
     Specifies how the distance between clusters is defined:
 
    -  ``'a'``: Distance between the two cluster centroids (arithmetic
@@ -1627,10 +1568,10 @@ where the following arguments are defined:
    -  ``'v'``: Average over the pairwise distances between items in the
       two clusters.
 
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     If ``transpose==0``, calculate the distance between the rows of
    ``data``. If ``transpose==1``, calculate the distance between the
    columns of ``data``.
@@ -1647,10 +1588,10 @@ use
 
 where the following arguments are defined:
 
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if rows (``transpose==0``) or columns (``transpose==1``)
    are to be clustered.
--  ``method`` (default: ``'m'``)
+-  ``method`` (默认: ``'m'``)
     defines the linkage method to be used:
 
    -  ``method=='s'``: pairwise single-linkage clustering
@@ -1659,7 +1600,7 @@ where the following arguments are defined:
    -  ``method=='c'``: pairwise centroid-linkage clustering
    -  ``method=='a'``: pairwise average-linkage clustering
 
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose``
@@ -1688,25 +1629,25 @@ the record, use
 
 where the following arguments are defined:
 
--  ``nclusters`` (default: ``2``)
+-  ``nclusters`` (默认: ``2``)
     The number of clusters *k*.
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
    (``transpose`` is ``1``) are to be clustered.
--  ``npass`` (default: ``1``)
+-  ``npass`` (默认: ``1``)
     The number of times the *k*-means/-medians clustering algorithm is
    performed, each time with a different (random) initial condition. If
    ``initialid`` is given, the value of ``npass`` is ignored and the
    clustering algorithm is run only once, as it behaves
    deterministically in that case.
--  ``method`` (default: ``a``)
+-  ``method`` (默认: ``a``)
     describes how the center of a cluster is found:
 
    -  ``method=='a'``: arithmetic mean (*k*-means clustering);
    -  ``method=='m'``: median (*k*-medians clustering).
 
    For other values of ``method``, the arithmetic mean is used.
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
 
@@ -1728,19 +1669,19 @@ use
 
 where the following arguments are defined:
 
--  ``transpose`` (default: ``0``)
+-  ``transpose`` (默认: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
    (``transpose`` is ``1``) are to be clustered.
--  ``nxgrid, nygrid`` (default: ``2, 1``)
+-  ``nxgrid, nygrid`` (默认: ``2, 1``)
     The number of cells horizontally and vertically in the rectangular
    grid on which the Self-Organizing Map is calculated.
--  ``inittau`` (default: ``0.02``)
+-  ``inittau`` (默认: ``0.02``)
     The initial value for the parameter τ that is used in the SOM
-   algorithm. The default value for ``inittau`` is 0.02, which was used
+   algorithm. The 默认 value for ``inittau`` is 0.02, which was used
    in Michael Eisen’s Cluster/TreeView program.
--  ``niter`` (default: ``1``)
+-  ``niter`` (默认: ``1``)
     The number of iterations to be performed.
--  ``dist`` (default: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
    `15.1 <#sec:distancefunctions>`__).
 
