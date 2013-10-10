@@ -914,7 +914,8 @@ initialid=None)\|
 
 -  在最短距离法中，节点间的距离被定义两个节点最近样品间距离。
 -  在最短距离法中，节点间的距离被定义两个节点最远样品间距离。
--  In pairwise average-linkage clustering, the distance between two
+-  在类平均法中，节点间的距离被定义为所有样品对之间的平均距离。
+In pairwise average-linkage clustering, the distance between two
    nodes is defined as the average over all pairwise distances between
    the items of the two nodes.
 -  In pairwise centroid-linkage clustering, the distance between two
