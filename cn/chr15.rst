@@ -1185,8 +1185,7 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 
 .
 
-The parameter τ is a parameter that decreases at each iteration step. We
-have used a simple linear function of the iteration step:
+参数 τ 会随着迭代次数增加而减少。可以用一个简单的线性函数来定义其与迭代次数的关系：
 
 τ = τ\ :sub:`init` · 
 
@@ -1211,14 +1210,10 @@ have used a simple linear function of the iteration step:
 
 ,
 
-τ\ :sub:`init` is the initial value of τ as specified by the user, *i*
-is the number of the current iteration step, and *n* is the total number
-of iteration steps to be performed. While changes are made rapidly in
-the beginning of the iteration, at the end of iteration only small
-changes are made.
+τ\ :sub:`init` 是可以指定的起始的 τ 值， *i* 是当前迭代的次数， *n* 是总的需要迭代的次数。
+在迭代开始时，τ变化很快，然而在迭代末尾，变化越来越小。
 
-All clusters within a radius *R* are adjusted to the gene under
-consideration. This radius decreases as the calculation progresses as
+所有在半径 *R* 内的类别都会在每次迭代中进行调整。半径也会随着迭代的增加而减小：
 
 *R* = *R*\ :sub:`max` · 
 
@@ -1243,7 +1238,7 @@ consideration. This radius decreases as the calculation progresses as
 
 ,
 
-in which the maximum radius is defined as
+其中最大的半径定义为：
 
 *R*\ :sub:`max` = 
 
@@ -1256,154 +1251,109 @@ in which the maximum radius is defined as
 
 ,
 
-where (*N*\ :sub:`*x*`, *N*\ :sub:`*y*`) are the dimensions of the
-rectangle defining the topology.
+其中 (*N*\ :sub:`*x*`, *N*\ :sub:`*y*`) 是定义拓扑结构的矩形维度。
 
-The function ``somcluster`` implements the complete algorithm to
-calculate a Self-Organizing Map on a rectangular grid. First it
-initializes the random number generator. The node data are then
-initialized using the random number generator. The order in which genes
-or microarrays are used to modify the SOM is also randomized. The total
-number of iterations in the SOM algorithm is specified by the user.
+函数 ``somcluster`` 可以用来在一个矩形的网格里计算 Self-Organizing Map。
+首先，初始化一个随机数产生器。利用随机化产生器来对节点数据进行初始化。
+基因或者芯片的使用顺序同样是随机的。用户可以定义总的SOM迭代的次数。
 
-To run ``somcluster``, use
+运行 ``somcluster``, 例如：
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import somcluster
     >>> clusterid, celldata = somcluster(data)
 
-where the following arguments are defined:
+其中，可以定义一下参数:
 
 -  ``data`` (required)
-    Array containing the data for the items.
+    包含所有元素的矩阵。
 -  ``mask`` (默认: ``None``)
-    Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失。
 -  ``weight`` (默认: ``None``)
-    contains the weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    计算距离时使用的权重矩阵。若
+   ``weight==None``, 则假设所有的数据使用相同的权重。
 -  ``transpose`` (默认: ``0``)
-    Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 -  ``nxgrid, nygrid`` (默认: ``2, 1``)
-    The number of cells horizontally and vertically in the rectangular
-   grid on which the Self-Organizing Map is calculated.
+    当Self-Organizing Map计算的时候，矩形的网格所包含的横向和纵向的格子。
 -  ``inittau`` (默认: ``0.02``)
-    The initial value for the parameter τ that is used in the SOM
-   algorithm. The 默认 value for ``inittau`` is 0.02, which was used
-   in Michael Eisen’s Cluster/TreeView program.
+    SOM算法中，参数 τ 的初始值，默认是 0.02。 这个初始值同Michael Eisen’s Cluster/TreeView 一致。
 -  ``niter`` (默认: ``1``)
-    The number of iterations to be performed.
+    迭代运行的次数。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择合适的元素距离算法 (见
    `15.1 <#sec:distancefunctions>`__).
 
-This function returns the tuple ``(clusterid, celldata)``:
+这个函数返回的是一个元组 ``(clusterid, celldata)``:
 
 -  ``clusterid``:
-    An array with two columns, where the number of rows is equal to the
-   number of items that were clustered. Each row contains the *x* and
-   *y* coordinates of the cell in the rectangular SOM grid to which the
-   item was assigned.
+    一个两列的数组，行的数目等于待聚类元素的个数。每行包含着在矩形SOM网格中，将每个元素分配到的
+    格子的 *x* 和 *y* 的坐标。
 -  ``celldata``:
-    An array with dimensions (``nxgrid``, ``nygrid``, number of columns)
-   if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
-   rows) if columns are being clustered. Each element ``[ix][iy]`` of
-   this array is a 1D vector containing the gene expression data for the
-   centroid of the cluster in the grid cell with coordinates
-   ``[ix][iy]``.
+    当以行进行聚类时，生成的矩阵维度为 (``nxgrid``, ``nygrid``, number of columns)；
+   当以列进行聚类时，生成的矩阵维度为 (``nxgrid``, ``nygrid``, number of  rows)。
+   在这个矩阵里， ``[ix][iy]`` 表示着一个1D向量，其中用于计算该类中心的这基因的表达谱数据.
 
-15.6  Principal Component Analysis
+15.6  主成分分析
 ----------------------------------
 
-Principal Component Analysis (PCA) is a widely used technique for
-analyzing multivariate data. A practical example of applying Principal
-Component Analysis to gene expression data is presented by Yeung and
-Ruzzo (2001) [`33 <#yeung2001>`__\ ].
+主成分分析 (PCA) 被广泛的用于分析多维数据，一个将主成分分析应用于表达谱数据的请见
+Yeung and Ruzzo (2001) [`33 <#yeung2001>`__\ ].
 
-In essence, PCA is a coordinate transformation in which each row in the
-data matrix is written as a linear sum over basis vectors called
-principal components, which are ordered and chosen such that each
-maximally explains the remaining variance in the data vectors. For
-example, an *n* × 3 data matrix can be represented as an ellipsoidal
-cloud of *n* points in three dimensional space. The first principal
-component is the longest axis of the ellipsoid, the second principal
-component the second longest axis of the ellipsoid, and the third
-principal component is the shortest axis. Each row in the data matrix
-can be reconstructed as a suitable linear combination of the principal
-components. However, in order to reduce the dimensionality of the data,
-usually only the most important principal components are retained. The
-remaining variance present in the data is then regarded as unexplained
-variance.
+简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分利用
+线性关系显示。主成分的选择是基于是残差尽可能的小。例如，一个 *n* × 3 的数据矩阵可以表示为三维
+空间内的一个椭圆球形的点的云。第一主成分是这个椭圆球形的最长轴，第二主成分是次长轴，第三主成分
+是最短的轴。矩阵中，每一行都可以用主成分的线性关系展示。一般而言，为了对数据进行降维，只保留最
+重要的几个主成分。剩余的残差认为是不可解释的方差。
 
-The principal components can be found by calculating the eigenvectors of
-the covariance matrix of the data. The corresponding eigenvalues
-determine how much of the variance present in the data is explained by
-each principal component.
+可以通过计算数据的协方差矩阵的特征向量来得到主成分。每个主成分对应的特征值决定了
+其在数据中代表的方差的大小。
 
-Before applying principal component analysis, typically the mean is
-subtracted from each column in the data matrix. In the example above,
-this effectively centers the ellipsoidal cloud around its centroid in 3D
-space, with the principal components describing the variation of points
-in the ellipsoidal cloud with respect to their centroid.
+在进行主成分分析前，矩阵的数据每一列都要减去其平均值。在上面的例子中，椭圆球形云在3D
+空间中，围绕着其中心分布，而主成分则显示着每个点对其中心的变化。
 
-The function ``pca`` below first uses the singular value decomposition
-to calculate the eigenvalues and eigenvectors of the data matrix. The
-singular value decomposition is implemented as a translation in C of the
-Algol procedure ``svd`` [`16 <#golub1971>`__\ ], which uses Householder
-bidiagonalization and a variant of the QR algorithm. The principal
-components, the coordinates of each data vector along the principal
-components, and the eigenvalues corresponding to the principal
-components are then evaluated and returned in decreasing order of the
-magnitude of the eigenvalue. If data centering is desired, the mean
-should be subtracted from each column in the data matrix before calling
-the ``pca`` routine.
+函数 ``pca`` 首先使用奇异值分解（singular value decomposition）来计算矩阵的特征值和
+特征向量。奇异值分解使用的是Algol写的C语言的 ``svd`` [`16 <#golub1971>`__\ ], 利用的是
+Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据在主成分上的坐标和主成分
+对应的特征值都会被计算出来，并按照特征值的降序排列。如果需要数据中心，则需要在调用 ``pca`` 
+前，对每列数据减去其平均值。
 
-To apply Principal Component Analysis to a rectangular matrix ``data``,
-use
+将主成分分析应用于二维矩阵 ``data``,可以：
 
 .. code:: verbatim
 
     >>> from Bio.Cluster import pca
     >>> columnmean, coordinates, components, eigenvalues = pca(data)
 
-This function returns a tuple
+函数会返回一个元组：
 ``columnmean, coordinates, components, eigenvalues``:
 
 -  ``columnmean``
-    Array containing the mean over each column in ``data``.
+    包含 ``data`` 每列均值的数组 .
 -  ``coordinates``
-    The coordinates of each row in ``data`` with respect to the
-   principal components.
+     数据 ``data`` 中每行在主成分上对应的坐标。
 -  ``components``
-    The principal components.
+    主成分
 -  ``eigenvalues``
-    The eigenvalues corresponding to each of the principal components.
+    每个主成分对应的特征值
 
-The original matrix ``data`` can be recreated by calculating
-``columnmean +  dot(coordinates, components)``.
+原始的数据 ``data`` 可以通过计算 ``columnmean +  dot(coordinates, components)`` 得到。
 
-15.7  Handling Cluster/TreeView-type files
+15.7  处理 Cluster/TreeView-type 文件
 ------------------------------------------
 
-Cluster/TreeView are GUI-based codes for clustering gene expression
-data. They were originally written by `Michael
-Eisen <http://rana.lbl.gov>`__ while at Stanford University.
-``Bio.Cluster`` contains functions for reading and writing data files
-that correspond to the format specified for Cluster/TreeView. In
-particular, by saving a clustering result in that format, TreeView can
-be used to visualize the clustering results. We recommend using Alok
-Saldanha’s
+Cluster/TreeView 是一个对基因表达数据可视化的工具。他们最初由 `Michael
+Eisen <http://rana.lbl.gov>`__ 在 Stanford University 完成。``Bio.Cluster`` 
+包含着读写 Cluster/TreeView 对应的文件格式的函数。因此，将结果保存为该格式后，
+可以用Treeview对结果进行直接的查看。我们推荐使用 Alok Saldanha 的
 ```http://jtreeview.sourceforge.net/`` <http://jtreeview.sourceforge.net/>`__\ Java
-TreeView program, which can display hierarchical as well as *k*-means
-clustering results.
+TreeView 程序。这个软件可以显示系统聚类和 *k*-means 聚类的结果。
 
-An object of the class ``Record`` contains all information stored in a
-Cluster/TreeView-type data file. To store the information contained in
-the data file in a ``Record`` object, we first open the file and then
-read it:
+类 ``Record`` 的一个对象包含着一个 Cluster/TreeView-type数据文件需要的所有信息。
+为了将结果保存到一个 ``Record`` 对象中，首先需要打开一个文件，并读取：
 
 .. code:: verbatim
 
@@ -1412,202 +1362,165 @@ read it:
     >>> record = Cluster.read(handle)
     >>> handle.close()
 
-This two-step process gives you some flexibility in the source of the
-data. For example, you can use
+分成两步操作可以对数据的来源有更好的可变性，例如可以利用：
 
 .. code:: verbatim
 
     >>> import gzip # Python standard library
     >>> handle = gzip.open("mydatafile.txt.gz")
 
-to open a gzipped file, or
+来打开一个gzipped文件，或者利用
 
 .. code:: verbatim
 
     >>> import urllib # Python standard library
     >>> handle = urllib.urlopen("http://somewhere.org/mydatafile.txt")
 
-to open a file stored on the Internet before calling ``read``.
+来打开一个网络文件，然后调用 ``read``.
 
-The ``read`` command reads the tab-delimited text file
-``mydatafile.txt`` containing gene expression data in the format
-specified for Michael Eisen’s Cluster/TreeView program. For a
-description of this file format, see the manual to Cluster/TreeView. It
-is available at `Michael Eisen’s lab
-website <http://rana.lbl.gov/manuals/ClusterTreeView.pdf>`__ and at `our
+``read`` 命令会读取一个由制表符分割的文本文件 ``mydatafile.txt``，文件包含着
+符合Michael Eisen’s Cluster/TreeView格式的基因表达数据。具体的格式说明，可以参见
+Cluster/TreeView手册，链接见 `Michael Eisen’s lab
+website <http://rana.lbl.gov/manuals/ClusterTreeView.pdf>`__ 或者 `our
 website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>`__.
 
-A ``Record`` object has the following attributes:
+一个 ``Record`` 对象有以下的性质:
 
 -  ``data``
-    The data array containing the gene expression data. Genes are stored
-   row-wise, while microarrays are stored column-wise.
+    包含基因表达数据的矩阵，每行为基因，每列为芯片。
 -  ``mask``
-    This array shows which elements in the ``data`` array, if any, are
-   missing. If ``mask[i,j]==0``, then ``data[i,j]`` is missing. If no
-   data were found to be missing, ``mask`` is set to ``None``.
+    用来表示数据是否缺失的整型数组。如果
+   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+   那么没有数据缺失。
 -  ``geneid``
-    This is a list containing a unique description for each gene (i.e.,
-   ORF numbers).
+    包含每个基因的独特说明的列表 (例如 ORF 数目).
 -  ``genename``
-    This is a list containing a description for each gene (i.e., gene
-   name). If not present in the data file, ``genename`` is set to
-   ``None``.
+    包含每个基因说明的列表（例如基因名）。如果文件中不包含该数据，
+    那么 ``genename`` 被设为 ``None``.
 -  ``gweight``
-    The weights that are to be used to calculate the distance in
-   expression profile between genes. If not present in the data file,
-   ``gweight`` is set to ``None``.
+    计算表达谱数据中，基因间的距离使用的权重。如果文件中不含该信息，则
+   ``gweight`` 为 ``None``.
 -  ``gorder``
-    The preferred order in which genes should be stored in an output
-   file. If not present in the data file, ``gorder`` is set to ``None``.
+    期望输出文件中基因的排列的顺序。如果文件中不含该信息，则
+    ``gorder`` 为``None``.
 -  ``expid``
-    This is a list containing a description of each microarray, e.g.
-   experimental condition.
+    包含每个芯片说明的列表，例如实验条件。
 -  ``eweight``
-    The weights that are to be used to calculate the distance in
-   expression profile between microarrays. If not present in the data
-   file, ``eweight`` is set to ``None``.
+    计算表达谱数据中，不同芯片间的距离使用的权重。如果文件中不含该信息，则
+    ``eweight`` 为 ``None``.
 -  ``eorder``
-    The preferred order in which microarrays should be stored in an
-   output file. If not present in the data file, ``eorder`` is set to
-   ``None``.
+    期望输出文件中基因的排列的顺序。如果文件中不含该信息，则 ``eorder`` 为  ``None``.
 -  ``uniqid``
-    The string that was used instead of UNIQID in the data file.
+    用于代替文件中 UNIQID 的字符串.
 
-After loading a ``Record`` object, each of these attributes can be
-accessed and modified directly. For example, the data can be
-log-transformed by taking the logarithm of ``record.data``.
+在载入 ``Record`` 对象后，上述的每个性质可以直接读取和修改。例如，可以对
+``record.data`` 直接取对数来对数据进行log转换。
 
-Calculating the distance matrix
+计算距离矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To calculate the distance matrix between the items stored in the record,
-use
+为了计算record中存储元素的距离矩阵，可以用：
 
 .. code:: verbatim
 
     >>> matrix = record.distancematrix()
 
-where the following arguments are defined:
+其中，包含以下参数：
 
 -  ``transpose`` (默认: ``0``)
-    Determines if the distances between the rows of ``data`` are to be
-   calculated (``transpose==0``), or between the columns of ``data``
-   (``transpose==1``).
+       选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择合适的元素距离算法 (见
    `15.1 <#sec:distancefunctions>`__).
 
-This function returns the distance matrix as a list of rows, where the
-number of columns of each row is equal to the row number (see section
+函数会返回一个距离矩阵，每行的列数等于行数。(see section
 `15.1 <#subsec:distancematrix>`__).
 
-Calculating the cluster centroids
+计算聚类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To calculate the centroids of clusters of items stored in the record,
-use
+为了计算存储在record中的元素的聚类中心，利用：
 
 .. code:: verbatim
 
     >>> cdata, cmask = record.clustercentroids()
 
 -  ``clusterid`` (默认: ``None``)
-    Vector of integers showing to which cluster each item belongs. If
-   ``clusterid`` is not given, then all items are assumed to belong to
-   the same cluster.
+    用于显示每个元素属于哪类的整型的向量。如果缺少 ``clusterid``,
+    那么所有的元素属于同一类。
 -  ``method`` (默认: ``'a'``)
-    Specifies whether the arithmetic mean (``method=='a'``) or the
-   median (``method=='m'``) is used to calculate the cluster center.
+    选择是否使用算术平均值 (``method=='a'``) 或者中值 (``method=='m'``) 
+    来计算聚类中心。
 -  ``transpose`` (默认: ``0``)
-    Determines if the centroids of the rows of ``data`` are to be
-   calculated (``transpose==0``), or the centroids of the columns of
-   ``data`` (``transpose==1``).
+    选择计算``data`` 的行的中心 (``transpose==0``), 或者计算列的中心 (``transpose==1``).
 
-This function returns the tuple ``cdata, cmask``; see section
+函数返回元组 ``cdata, cmask``; 见 section
 `15.2 <#subsec:clustercentroids>`__ for a description.
 
-Calculating the distance between clusters
+计算两类间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To calculate the distance between clusters of items stored in the
-record, use
+为了计算存储在record中，两类的距离，利用：
 
 .. code:: verbatim
 
     >>> distance = record.clusterdistance()
 
-where the following arguments are defined:
+其中，包含以下参数：
 
 -  ``index1`` (默认: ``0``)
-    A list containing the indices of the items belonging to the first
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+    第一个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``index2`` (默认: ``0``)
-    A list containing the indices of the items belonging to the second
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+   第二个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``method`` (默认: ``'a'``)
-    Specifies how the distance between clusters is defined:
+    选择计算类别间距离的方法:
 
-   -  ``'a'``: Distance between the two cluster centroids (arithmetic
-      mean);
-   -  ``'m'``: Distance between the two cluster centroids (median);
-   -  ``'s'``: Shortest pairwise distance between items in the two
-      clusters;
-   -  ``'x'``: Longest pairwise distance between items in the two
-      clusters;
-   -  ``'v'``: Average over the pairwise distances between items in the
-      two clusters.
+   -  ``'a'``: 使用两个聚类中心的距离 (算术平均值);
+   -  ``'m'``: 使用两个聚类中心的距离 (中值);
+   -  ``'s'``: 使用两类中最短的两个元素之间的距离;
+   -  ``'x'``: 使用两类中最长的两个元素之间的距离;
+   -  ``'v'``: 使用两类中两两元素距离的平均值作为距离。
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择使用的距离函数 (见
    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (默认: ``0``)
-    If ``transpose==0``, calculate the distance between the rows of
-   ``data``. If ``transpose==1``, calculate the distance between the
-   columns of ``data``.
+        选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``)..
 
 Performing hierarchical clustering
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To perform hierarchical clustering on the items stored in the record,
-use
+为了对存储在record中的数据进行系统聚类，利用：
 
 .. code:: verbatim
 
     >>> tree = record.treecluster()
 
-where the following arguments are defined:
+包含以下参数:
 
 -  ``transpose`` (默认: ``0``)
-    Determines if rows (``transpose==0``) or columns (``transpose==1``)
-   are to be clustered.
+    选择使用行 (``transpose==0``) 或者列 (``transpose==1``) 用于聚类
 -  ``method`` (默认: ``'m'``)
-    defines the linkage method to be used:
+    选择合适的节点距离计算方法:
 
-   -  ``method=='s'``: pairwise single-linkage clustering
-   -  ``method=='m'``: pairwise maximum- (or complete-) linkage
-      clustering
-   -  ``method=='c'``: pairwise centroid-linkage clustering
-   -  ``method=='a'``: pairwise average-linkage clustering
+   -  ``method=='s'``: 最小距离法
+   -  ``method=='m'``: 最大距离法
+   -  ``method=='c'``: 重心法
+   -  ``method=='a'``: 类平均法
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择使用的距离函数(见
    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose``
-    Determines if genes or microarrays are being clustered. If
-   ``transpose==0``, genes (rows) are being clustered. If
-   ``transpose==1``, microarrays (columns) are clustered.
+    选择使用基因或者芯片进行聚类，如果是 ``transpose==0``,则使用基因 (行) 进行聚类，如果使用
+   ``transpose==1``, 芯片 (列) 用于聚类.
 
-This function returns a ``Tree`` object. This object contains (number of
-items − 1) nodes, where the number of items is the number of rows if
-rows were clustered, or the number of columns if columns were clustered.
-Each node describes a pairwise linking event, where the node attributes
-``left`` and ``right`` each contain the number of one item or subnode,
-and ``distance`` the distance between them. Items are numbered from 0 to
-(number of items − 1), while clusters are numbered -1 to −(number of
-items−1).
+函数返回 ``Tree`` 对象。对象包含 (元素数目 − 1） 节点, 如果使用行进行聚类时，元素数目为总行数；
+当使用列进行聚类时，元素数目为总列数。每个节点描述着一对节点连接，然而节点的性质 ``left`` 和
+``right`` 包含着相邻节点所有的元素和子节点数， ``distance`` 显示着左右节点的距离。
+元素从 0 到 (元素数目 − 1) 进行索引, 而类别从 -1 to −(元素数目−1)进行索引。
 
 Performing *k*-means or *k*-medians clustering
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
