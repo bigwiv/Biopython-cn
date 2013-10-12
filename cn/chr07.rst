@@ -103,16 +103,27 @@ The ``qblast`` function also take a number of other option arguments
 which are basically analogous to the different parameters you can set on
 the BLAST web page. We’ll just highlight a few of them here:
 
-``qblast`` 函数还可以接受许多其他可选的参数。这些可选的参数
+``qblast`` 函数还可以接受许多其他可选的参数。这些可选的参数类似于你在BLAST网站页面
+设置的参数。在这里我们着重讲解下其中的一些：
+
 -  The ``qblast`` function can return the BLAST results in various
 formats, which you can choose with the optional ``format_type``
 keyword: ``"HTML"``, ``"Text"``, ``"ASN.1"``, or ``"XML"``. The
 default is ``"XML"``, as that is the format expected by the parser,
 described in section \ `7.3 <#sec:parsing-blast>`__ below.
+
+- ``qblast`` 函数可以返回许多种格式的BLAST结果。你可以通过可选参数 ``format_type`` 
+指定为：``"HTML"``, ``"Text"``, ``"ASN.1"``, or ``"XML"`` 等格式。默认
+格式是 ``"XML"``。``"XML"``格式是解析器输入要求的格式，相关信息将在下面
+`7.3 <#sec:parsing-blast>`__ 讲述。
+
 -  The argument ``expect`` sets the expectation or e-value threshold.
+
+- 参数 ``expect``  指定期望值 即 e-value 的阈值。
 
 For more about the optional BLAST arguments, we refer you to the NCBI’s
 own documentation, or that built into Biopython:
+更多关于BLAST 可选的参数，你可以参照NCBI的文档，或者是Biopython内置的文档。
 
 .. code:: verbatim
 
@@ -125,9 +136,15 @@ the same as the defaults on QBLAST. If you get different results, you’ll
 need to check the parameters (e.g. the expectation value threshold and
 the gap values).
 
+请注意，NCBI BLAST 网站上的默认参数和QBLAST的默认参数不同。如果你得到了
+不同的结果，你可以检查下参数设置 （比如，e-value的阈值和gap值）.
+
 For example, if you have a nucleotide sequence you want to search
 against the nucleotide database (nt) using BLASTN, and you know the GI
 number of your query sequence, you can use:
+
+举个例子，如果你有条核酸序列并且知道它的GI值，想用BLASTN程序在核酸序列数据库搜索，
+你可以这样做：
 
 .. code:: verbatim
 
@@ -138,6 +155,9 @@ Alternatively, if we have our query sequence already in a FASTA
 formatted file, we just need to open the file and read in this record as
 a string, and use that as the query argument:
 
+或者，你想要查询的序列在FASTA文件中，那么你只需打开文件并读入到字符串，并
+用这个字符串作为查询的参数:
+
 .. code:: verbatim
 
 >>> from Bio.Blast import NCBIWWW
@@ -146,6 +166,9 @@ a string, and use that as the query argument:
 
 We could also have read in the FASTA file as a ``SeqRecord`` and then
 supplied just the sequence itself:
+
+我们同样可以读入FASTA文件中的序列，并转换成``SeqRecord``类型，然后提供其中
+的序列：
 
 .. code:: verbatim
 
