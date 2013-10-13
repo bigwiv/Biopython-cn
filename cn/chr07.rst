@@ -252,32 +252,59 @@ to jump ahead to that now ….
 7.2  Running BLAST locally
 --------------------------
 
+7.2  本地运行BLAST
+--------------------------
+
 7.2.1  Introduction
+~~~~~~~~~~~~~~~~~~~
+
+7.2.1  介绍
 ~~~~~~~~~~~~~~~~~~~
 
 Running BLAST locally (as opposed to over the internet, see
 Section \ `7.1 <#sec:running-www-blast>`__) has at least major two
 advantages:
 
+在本地运行BLAST（跟通过internet运行比，见\ `7.1 <#sec:running-www-blast>`__ ）
+至少有2个主要优点：
+
 -  Local BLAST may be faster than BLAST over the internet;
+
+- 本地运行BLAST速度比通过internet运行快；
+
 -  Local BLAST allows you to make your own database to search for
 sequences against.
+
+- 本地运行可以让允许你搜索自己的数据库。
 
 Dealing with proprietary or unpublished sequence data can be another
 reason to run BLAST locally. You may not be allowed to redistribute the
 sequences, so submitting them to the NCBI as a BLAST query would not be
 an option.
 
+处理有版权的或者没有发表的序列数据也许是本地运行BLAST的一个原因。你也许
+不能泄露这些序列数据，所以没法提交给NCBI来BLAST。
+
 Unfortunately, there are some major drawbacks too – installing all the
 bits and getting it setup right takes some effort:
 
+不幸的是，本地运行也有些缺点 - 安装所有的东东并成功运行需要花些力气：
+
 -  Local BLAST requires command line tools to be installed.
+
+- 本地运行BLAST需要你安装相关命令行工具。
+
 -  Local BLAST requires (large) BLAST databases to be setup (and
 potentially kept up to date).
+
+- 本地运行BLAST需要安装一个很大的BLAST的数据库（并且需要更新数据）.
 
 To further confuse matters there are at least four different standalone
 BLAST packages, and there are also other tools which can produce
 imitation BLAST output files, such as BLAT.
+
+更令人困惑的是，至少有4种不同的BLAST安装程序，并且还有其他的一些工具能
+产生类似的BLAST 输出文件，比如BLAT
 
 7.2.2  Standalone NCBI “legacy” BLAST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
