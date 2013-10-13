@@ -182,6 +182,9 @@ for your sequence automatically. You might prefer to use the
 ``SeqRecord`` object’s format method to make a fasta string (which will
 include the existing identifier):
 
+只提供序列意味着BLAST会自动分配给你一个ID。你也许更倾向于用``SeqRecord``
+实例的format方法来获取衣蛾fasta字符串，这样可以包括一个已经存在的ID：
+
 .. code:: verbatim
 
 >>> from Bio.Blast import NCBIWWW
@@ -193,6 +196,9 @@ This approach makes more sense if you have your sequence(s) in a
 non-FASTA file format which you can extract using ``Bio.SeqIO`` (see
 Chapter \ `5 <#chapter:Bio.SeqIO>`__).
 
+如果你的序列在一个不是FASTA格式的文件中并且你用``Bio.SeqIO``(看第5章`5 <#chapter:Bio.SeqIO>`__)
+把序列取出来了，那么这个方法更有用。
+
 Whatever arguments you give the ``qblast()`` function, you should get
 back your results in a handle object (by default in XML format). The
 next step would be to parse the XML output into Python objects
@@ -202,9 +208,18 @@ this especially useful when debugging my code that extracts info from
 the BLAST results (because re-running the online search is slow and
 wastes the NCBI computer time).
 
+不论你给``qblast()`` 函数提供了什么参数，你都应该得到一个在handle object的结果(
+默认是XML格式)。下一步就是解析这个XML格式的结果到可以代表的BLAST搜索结果的Python
+实例（`7.3 <#sec:parsing-blast>`__）。
+不过，也许你想先把BLAST结果存储在本地文件。当你调试从BLAST结果提取信息的代码的时候，这样做
+特别有用。(因为重新运行线上的BLAST搜索很慢并且会浪费NCBI服务器的运行时间)。
+
 We need to be a bit careful since we can use ``result_handle.read()`` to
 read the BLAST output only once – calling ``result_handle.read()`` again
 returns an empty string.
+
+这里我们需要注意下：因为用``result_handle.read()``来读取BLAST结果只能用一次 -
+再次调用``result_handle.read()``会返回一个空的字符串.
 
 .. code:: verbatim
 
@@ -219,6 +234,10 @@ However, the ``parse`` function of the BLAST parser (described
 in \ `7.3 <#sec:parsing-blast>`__) takes a file-handle-like object, so
 we can just open the saved file for input:
 
+这些做好后，结果已经存储在 `my_blast.xml`` 文件中了并且原先的handle中的数据
+已经被全部提取出来了(所以我们把它关闭了)。在\ `7.3 <#sec:parsing-blast>`__)
+采用一个file-handle类似的实例，所以我们只需打开已经保存的文件作为输入。
+
 .. code:: verbatim
 
 >>> result_handle = open("my_blast.xml")
@@ -227,6 +246,8 @@ Now that we’ve got the BLAST results back into a handle again, we are
 ready to do something with them, so this leads us right into the parsing
 section (see Section \ `7.3 <#sec:parsing-blast>`__ below). You may want
 to jump ahead to that now ….
+既然现在已经把BLAST的结果又一次读回handle，我们可以分析下这些结果。所以你可以去读
+关于结果解析的章节（看下面  \ `7.3 <#sec:parsing-blast>`__ ）。你现在也许想跳过去看吧 ...
 
 7.2  Running BLAST locally
 --------------------------
