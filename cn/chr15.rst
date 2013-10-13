@@ -1489,7 +1489,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``transpose`` (默认: ``0``)
         选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``)..
 
-Performing hierarchical clustering
+进行系统聚类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 为了对存储在record中的数据进行系统聚类，利用：
@@ -1522,137 +1522,105 @@ Performing hierarchical clustering
 ``right`` 包含着相邻节点所有的元素和子节点数， ``distance`` 显示着左右节点的距离。
 元素从 0 到 (元素数目 − 1) 进行索引, 而类别从 -1 to −(元素数目−1)进行索引。
 
-Performing *k*-means or *k*-medians clustering
+进行 *k*-means or *k*-medians 聚类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To perform *k*-means or *k*-medians clustering on the items stored in
-the record, use
+为了对存储在record中的元素进行 *k*-means 或者 *k*-medians 聚类，可以使用：
 
 .. code:: verbatim
 
     >>> clusterid, error, nfound = record.kcluster()
 
-where the following arguments are defined:
+包含以下参数:
 
 -  ``nclusters`` (默认: ``2``)
-    The number of clusters *k*.
+    聚类的数目 *k*.
 -  ``transpose`` (默认: ``0``)
-    Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 -  ``npass`` (默认: ``1``)
-    The number of times the *k*-means/-medians clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored and the
-   clustering algorithm is run only once, as it behaves
-   deterministically in that case.
+    *k*-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+    如果指定了 ``initialid`` , ``npass`` 的值会忽略，并且聚类算法只会运行一次。
 -  ``method`` (默认: ``a``)
-    describes how the center of a cluster is found:
+    指定确定聚类中心的方法:
 
-   -  ``method=='a'``: arithmetic mean (*k*-means clustering);
-   -  ``method=='m'``: median (*k*-medians clustering).
+   -  ``method=='a'``: 算数平均值 (*k*-means clustering);
+   -  ``method=='m'``: 中间值 (*k*-medians clustering).
 
-   For other values of ``method``, the arithmetic mean is used.
+   当指定 ``method`` 使用其他值时，算法会采用算数平均值。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择使用的距离函数 (see
    `15.1 <#sec:distancefunctions>`__).
 
-This function returns a tuple ``(clusterid, error, nfound)``, where
-``clusterid`` is an integer array containing the number of the cluster
-to which each row or cluster was assigned, ``error`` is the
-within-cluster sum of distances for the optimal clustering solution, and
-``nfound`` is the number of times this optimal solution was found.
+这个函数返回的是一个元组 ``(clusterid, error, nfound)``, 其中 ``clusterid`` 是一个包含
+该类中所有的行或者类别的数目（还是id）， ``error`` 是最优解的类内的距离和， ``nfound`` 
+是最优解被发现的次数。
 
-Calculating a Self-Organizing Map
+计算Self-Organizing Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To calculate a Self-Organizing Map of the items stored in the record,
-use
+可以利用以下命令，计算对存储在record中元素计算 Self-Organizing Map ：
 
 .. code:: verbatim
 
     >>> clusterid, celldata = record.somcluster()
 
-where the following arguments are defined:
+包含以下参数:
 
 -  ``transpose`` (默认: ``0``)
-    Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
 -  ``nxgrid, nygrid`` (默认: ``2, 1``)
-    The number of cells horizontally and vertically in the rectangular
-   grid on which the Self-Organizing Map is calculated.
+    当Self-Organizing Map计算时，在矩形网格里的横向和纵向格子数目
 -  ``inittau`` (默认: ``0.02``)
-    The initial value for the parameter τ that is used in the SOM
-   algorithm. The 默认 value for ``inittau`` is 0.02, which was used
-   in Michael Eisen’s Cluster/TreeView program.
+    用于SOM算法的参数 τ 的初始值。默认的 ``inittau`` 是0.02，同Michael Eisen’s Cluster/TreeView 程序中
+    使用的参数一致。
 -  ``niter`` (默认: ``1``)
-    The number of iterations to be performed.
+    迭代运行的次数。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    Defines the distance function to be used (see
+    选择使用的距离函数(see
    `15.1 <#sec:distancefunctions>`__).
 
-This function returns the tuple ``(clusterid, celldata)``:
+函数返回一个元组 ``(clusterid, celldata)``:
 
 -  ``clusterid``:
-    An array with two columns, where the number of rows is equal to the
-   number of items that were clustered. Each row contains the *x* and
-   *y* coordinates of the cell in the rectangular SOM grid to which the
-   item was assigned.
+    一个二维数组，行数同待聚类的元素数目相同。每行的内容对应着该元素在矩形SOM方格内 *x* 和
+   *y* 的坐标。
 -  ``celldata``:
-    An array with dimensions (``nxgrid``, ``nygrid``, number of columns)
-   if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
-   rows) if columns are being clustered. Each element ``[ix][iy]`` of
-   this array is a 1D vector containing the gene expression data for the
-   centroid of the cluster in the grid cell with coordinates
-   ``[ix][iy]``.
+    格式为一个矩阵，如果是对行聚类，内容为 (``nxgrid``, ``nygrid``, 列数)，如果是对列聚类，
+    那么内容为 (``nxgrid``, ``nygrid``, 行数) 。矩阵中，坐标 ``[ix][iy]`` 对应的是该坐标的网格里的
+    基因表达数据的聚类中心的1D向量。
 
-Saving the clustering result
+保存聚类结果
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To save the clustering result, use
+为了保存聚类结果，可以利用：
 
 .. code:: verbatim
 
     >>> record.save(jobname, geneclusters, expclusters)
 
-where the following arguments are defined:
+包含以下参数:
 
 -  ``jobname``
-    The string ``jobname`` is used as the base name for names of the
-   files that are to be saved.
+    字符串 ``jobname`` 作为保存的文件名。
 -  ``geneclusters``
-    This argument describes the gene (row-wise) clustering result. In
-   case of *k*-means clustering, this is a 1D array containing the
-   number of the cluster each gene belongs to. It can be calculated
-   using ``kcluster``. In case of hierarchical clustering,
-   ``geneclusters`` is a ``Tree`` object.
+    这个参数指的是基因（以行聚类）的结果。在 *k*-means 聚类中，这个参数是一个1D的数组，包含着
+    每个基因对应的类别，可以通过 ``kcluster`` 得到。在系统聚类中， ``geneclusters`` 是一个``Tree`` 对象。
 -  ``expclusters``
-    This argument describes the (column-wise) clustering result for the
-   experimental conditions. In case of *k*-means clustering, this is a
-   1D array containing the number of the cluster each experimental
-   condition belongs to. It can be calculated using ``kcluster``. In
-   case of hierarchical clustering, ``expclusters`` is a ``Tree``
-   object.
+    这个参数指的是实验条件（以列聚类）的结果。在 *k*-means 聚类中，这个参数是一个1D的数组，包含着
+    每个实验条件对应的类别，可以通过 ``kcluster`` 得到。在系统聚类中， ``geneclusters`` 是一个``Tree`` 对象。
 
-This method writes the text file ``jobname.cdt``, ``jobname.gtr``,
-``jobname.atr``, ``jobname*.kgg``, and/or ``jobname*.kag`` for
-subsequent reading by the Java TreeView program. If ``geneclusters`` and
-``expclusters`` are both ``None``, this method only writes the text file
-``jobname.cdt``; this file can subsequently be read into a new
-``Record`` object.
+这个方法会生成文本文件 ``jobname.cdt``, ``jobname.gtr``, ``jobname.atr``, ``jobname*.kgg``, 
+和/或 ``jobname*.kag``。 这些文件可以用于后续分析。如果 ``geneclusters`` 和 ``expclusters`` 
+都是 ``None``, 那这个方法只会生成 ``jobname.cdt``; 这个文件可以被读取，生成一个新的 ``Record`` 对象.
 
-15.8  Example calculation
+15.8  示例
 -------------------------
 
-This is an example of a hierarchical clustering calculation, using
-single linkage clustering for genes and maximum linkage clustering for
-experimental conditions. As the Euclidean distance is being used for
-gene clustering, it is necessary to scale the node distances
-``genetree`` such that they are all between zero and one. This is needed
-for the Java TreeView code to display the tree diagram correctly. To
-cluster the experimental conditions, the uncentered correlation is being
-used. No scaling is needed in this case, as the distances in ``exptree``
-are already between zero and two. The example data ``cyano.txt`` can be
-found in the ``data`` subdirectory.
+以下是一个系统聚类的例子，其中使用最短距离法对基因进行聚类，用最大距离法对实验条件进行聚类。
+由于使用 Euclidean 距离对基因进行聚类，因此需要将节点距离 ``genetree`` 进行调整，使其处于0和1之间。
+这种调整对于Java TreeView正确显示树结构也是很必须的。为了对实验条件进行聚类，使用了 非中心的关联分析（uncentered 
+correlation）。在这种情况下，不需要任何的调整，因为 ``exptree`` 中的结果已经位于0和2之间。 示例中使用的
+文件 ``cyano.txt`` 可以再 ``data`` 文件夹中找到。
 
 .. code:: verbatim
 
@@ -1665,10 +1633,9 @@ found in the ``data`` subdirectory.
     >>> exptree = record.treecluster(dist='u', transpose=1)
     >>> record.save("cyano_result", genetree, exptree)
 
-This will create the files ``cyano_result.cdt``, ``cyano_result.gtr``,
-and ``cyano_result.atr``.
+这个命令会生成 ``cyano_result.cdt``, ``cyano_result.gtr``, 和 ``cyano_result.atr``等文件。
 
-Similarly, we can save a *k*-means clustering solution:
+同样的，也可以保存一个 *k*-means 聚类的结果:
 
 .. code:: verbatim
 
@@ -1680,16 +1647,14 @@ Similarly, we can save a *k*-means clustering solution:
     >>> (expclusters, error, ifound) = record.kcluster(nclusters=2, npass=100, transpose=1)
     >>> record.save("cyano_result", geneclusters, expclusters)
 
-This will create the files ``cyano_result_K_G2_A2.cdt``,
-``cyano_result_K_G2.kgg``, and ``cyano_result_K_A2.kag``.
+这个会生成文件 ``cyano_result_K_G2_A2.cdt``,``cyano_result_K_G2.kgg``, 和 ``cyano_result_K_A2.kag``.
 
-15.9  Auxiliary functions
+15.9  其他函数
 -------------------------
 
-``median(data)`` returns the median of the 1D array ``data``.
+``median(data)`` 返回1D数组 ``data``的中值
 
-``mean(data)`` returns the mean of the 1D array ``data``.
+``mean(data)`` 返回1D数组``data``的均值。
 
-``version()`` returns the version number of the underlying C Clustering
-Library as a string.
+``version()`` 返回使用的C聚类库的版本号。
 
