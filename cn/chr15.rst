@@ -1,61 +1,60 @@
 第十五章 聚类分析
 ============================
 
-聚类分析是对一堆元素按照相似度来进行分组的过程。在生物信息中，聚类分析经常
+聚类分析是根据相似度，对集合中对象进行分组的过程。在生物信息中，聚类分析经常
 用于分析基因表达的数据，用来发现有相同的表达图谱的基因，以鉴定功能相关的基
 因，或者发现未知的功能相关基因。
 
-Biopython中的 ``Bio.Cluster`` 模块提供了常用的聚类算法，并且设计的时候考虑了
+Biopython中的 ``Bio.Cluster`` 模块提供了常用的聚类算法，同时设计的时候考虑了
 基因表达数据的应用。然而，这个模块也可以用于其他类型数据。 ``Bio.Cluster`` 
 和其使用的C聚类库的说明见De Hoon *et al.* [`14 <#dehoon2004>`__\ ].
 
 ``Bio.Cluster`` 包含了以下四种聚类算法：
 
--  分层聚类（两两聚类，single-，complete-, and average-linkage);
--  *k*-means, *k*-medians, and *k*-medoids clustering;
+-  系统聚类（重心法，最短距离，最大距离 和类平均法);
+-  *k*-means, *k*-medians, 和 *k*-medoids 聚类;
 -  Self-Organizing Maps;
 -  主成分分析
 
 数据结构 
 ~~~~~~~~~~~~~~~~~~~
 
-用于聚类的数据为一个 *n* x *m* 的Numerical Python 矩阵 ``data``。
-其中，每一行表示不同的基因，每一列表示不同的实验条件。 ``Bio.Cluster`` 既可以
+用于聚类的输入为一个 *n* x *m* 的Numerical Python 矩阵 ``data``。在队基因表达数据聚类中，
+每一行表示不同的基因，每一列表示不同的实验条件。 ``Bio.Cluster`` 既可以
 针对每行（基因），也可以针对每列（实验条件）进行聚类。
 
 缺失值
 ~~~~~~~~~~~~~~
 
-
-在芯片实验中，经常会有些缺失值，通常用一个额外的 *n* × *m* Numerical Python
+在芯片实验中，经常会有些缺失值，可以用一个额外的 *n* × *m* Numerical Python
 整型矩阵 ``mask`` 表示。例如 ``mask[i,j]==0`` ，表示 ``data[i,j]`` 是个缺失值，
 并且在分析中忽略。
 
 随机数生成器
 ~~~~~~~~~~~~~~~~~~~~~~~
-*k*-means/medians/medoids clustering algorithms and Self-Organizing
-Maps (SOMs) 需要调用随机数生成器。 ``Bio.Cluster`` 中使用的正态分布随机数
-生成器使用的算法是基于L’Ecuyer [`25 <#lecuyer1988>`__\ ],二项分布的随机数
-生成是根据Kachitvichyanukul and Schmeiser [`23 <#kachitvichyanukul1988>`__\ ]
-开发的BTPE算法。随机数生成器在调用时首先进行初始化。由于随机数生成器使用了
-两个multiplicative linear congruential generators，所以初始化时需要两个整型的
-种子，并调用系统提供的 ``rand`` （C标注库）生成随机数。在 ``Bio.Cluster`` 中，
-也可以调用 ``srand`` 使用当前时间的秒作为初始值，用 ``rand`` 随机产生的头两
+*k*-means/medians/medoids 聚类和 Self-Organizing 
+Maps (SOMs) 需要调用随机数生成器。在 ``Bio.Cluster`` 中，正态分布随机数
+生成器的算法是基于L’Ecuyer [`25 <#lecuyer1988>`__\ ],二项分布的随机数
+生成器算法是基于Kachitvichyanukul and Schmeiser [`23 <#kachitvichyanukul1988>`__\ ]
+开发的BTPE算法。随机数生成器在调用时会首先进行初始化。由于随机数生成器使用了
+两个乘同余发生器（multiplicative linear congruential generators），所以初始化时需要两个整型的
+种子。这两个种子可以调用系统提供的 ``rand`` （C标注库）函数生成。在 ``Bio.Cluster`` 中，
+我们首先调用 ``srand`` 使用以秒为单位的时间戳的值初始值，再用 ``rand`` 随机产生两
 个随机数作为种子来产生正态分布的随机数。
 
 
 15.1 距离函数
 ------------------------
-为了根据相似度进行聚类，首先需要定义相似度。``Bio.Cluster``提供了八种不同
+为了对元素，根据相似度进行聚类，第一步需要定义相似度。``Bio.Cluster``提供了八种不同
 的距离函数来计算相似度或者距离，分别用不同的字母代表：
 
 -  ``'e'``: Euclidean 距离;
 -  ``'b'``: City-block 距离.
 -  ``'c'``: Pearson 相关系数;
 -  ``'a'``: Pearson相关系数的绝对值;
--  ``'u'``: Uncentered Pearson correlation (相当于两个数据向量的形成角度的cos值
--  ``'x'``: 绝对的uncentered Pearson correlation;
--  ``'s'``: Spearman’s rank correlation;
+-  ``'u'``: Uncentered Pearson correlation （相当于两个数据向量的夹角余弦值）
+-  ``'x'``: uncentered Pearson correlation的绝对值;
+-  ``'s'``: Spearman’s 秩相关系数;
 -  ``'k'``: Kendall’s τ.
 
 前两个距离函数满足三角形的两边和大于第三边的特点：
@@ -127,7 +126,7 @@ Maps (SOMs) 需要调用随机数生成器。 ``Bio.Cluster`` 中使用的正态
 |  ⎟
 |  ⎠
 
-for all  
+其中  
 
 +-------+
 | *u*   |
@@ -150,9 +149,9 @@ for all
 
 ,
 
-所以称之为 *metrics*. 在任何语言中，这个意味着两点之间直线最短。
+所以称之为 *metrics*。 在任何语言中，这个意味着两点之间直线最短。
 
-剩余的六中距离函数同相关系数有关，距离 *d* 是有相关性*r* 确定： *d*\ =1−\ *r*。
+剩余的六种距离函数同相关系数有关，距离 *d* 是由相关性 *r* 确定： *d*\ =1−\ *r*。
 请注意这类距离函数是 *semi-metrics* ，因此不满足三角形的两边之和大于第三边的
 性质。例如
 
@@ -208,13 +207,13 @@ for all
 
 ;
 
-计算Pearson距离 *d*\ (*u*,\ *w*) = 1.8660, 而
+通过计算Pearson距离，可以得到 *d*\ (*u*,\ *w*) = 1.8660, 而
 *d*\ (*u*,\ *v*)+\ *d*\ (*v*,\ *w*) = 1.6340.
 
 Euclidean 距离
 ~~~~~~~~~~~~~~~~~~
 
-在 ``Bio.Cluster`` 中, 定义 Euclidean 距离为
+在 ``Bio.Cluster`` 中, Euclidean 距离被定义为
 
 *d* = 
 
@@ -249,15 +248,14 @@ Euclidean 距离
 
 计算时，求和时只考虑*x*\ :sub:`*i*` 和 *y*\ :sub:`*i*` 都存在的值, 分母 *n* 
 也相应的做出调整。当分析表达谱数据时，由于 *x*\ :sub:`*i*` 和 *y*\ :sub:`*i*` 
-会直接相减, 在使用Euclidean距离前，请对表达谱数据归一化处理.
+会直接相减, 因此在使用Euclidean距离前，请对表达谱数据标准化处理。
 
 City-block distance
 ~~~~~~~~~~~~~~~~~~~
 
-city-block distance也称之为Manhattan 距离，跟Euclidean距离以相关性。Euclidean距离
-表示的是两点间最短的距离，而city-block距离是所有维度中距离的和。由于基因表达的数据
-经常会有缺失数据，在 ``Bio.Cluster`` 中，city-block距离定义为总距离除以
-总维度：
+city-block distance也称之为Manhattan 距离，跟Euclidean距离有一定的相似性。Euclidean距离
+表示的是两点间最短的距离，而city-block距离则是两点在所有维度中距离的和。由于基因表达的数据
+经常会有缺失数据，在 ``Bio.Cluster`` 中，city-block距离定义为总距离除以总维度：
 
 *d* = 
 
@@ -289,9 +287,8 @@ city-block distance也称之为Manhattan 距离，跟Euclidean距离以相关性
 |  ⎪
 
 
-这个相当于当你在从城市里一个位置到另一个位置时，所经过街道的距离。
-跟Euclidean 距离类似，表达谱的数据会直接相减，因此必须先对数据进行归一化才能
-使用。
+这个距离的等于当你在从城市里一个位置到另一个位置时，所经过街道的距离。
+跟Euclidean 距离类似，表达谱的数据会直接相减，因此必须先对数据进行标准化。
 
 Pearson 相关系数
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -369,13 +366,13 @@ Pearson相关系数定义为：
 | *d*\ :sub:`P` ≡ 1 − *r*.   |
 +----------------------------+
 
-由于the Pearson 相关性介于 -1 和 1之间, Pearson 距离的范围为 0 和 2 之间.
+由于Pearson 相关性的值介于 -1 和 1之间, Pearson 距离的范围为 0 和 2 之间.
 
 Absolute Pearson correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-通过对Pearson相关系数取绝对值，可以得到一个0和1之间的数。如果绝对值是1，所有的点
-都位于一条直线上，无论斜率为正还是负。当绝对值为0时，表明 *x* and *y* 没有相关性。
+通过对Pearson相关系数取绝对值，可以得到一个0和1之间的数。如果绝对值是1，
+所有的点都位于一条斜率为正或负直线上。当绝对值为0时，表明 *x* and *y* 没有相关性。
 
 对应的距离定义为：
 
@@ -384,13 +381,13 @@ Absolute Pearson correlation
 |                        |  ⎪   |       |  ⎪   |     |
 +------------------------+------+-------+------+-----+
 
-其中 *r* 是 Pearson 相关系数. 由于Pearson的相关系数介于 0 和 1之间, 对应的
+其中 *r* 是 Pearson 相关系数. 由于Pearson的相关系数的绝对值介于 0 和 1之间, 对应的
 距离也位于0和1之间。
 
-在基因表达数据中，绝对相关性等于1，表明两组基因的表达情况完全一样或者完全
-相反，在使用时，应该注意这一点。
+在基因表达数据分析中，应当注意，当相关性的绝对值等于1时，表明两组基因的表达情况完全一样或者完全
+相反。
 
-Uncentered correlation (cosine of the angle)
+Uncentered correlation (夹角余弦)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 在某些情况下，使用 *uncentered correlation* 比常规的Pearson相关系数更合适。
@@ -522,9 +519,9 @@ uncentered correlation 定义为：
 .  
 
  
-这个公式同Pearson相关系数的公式一样，只是把样本均值 x, ȳ 设为0 。
-uncentered correlation 适用于表达量基准为0的情况。例如，在对基因表达情况计算
-比值后取对数，当log-ratio 等于0 表明红色或绿色信号强度相等，也意味着实验处理
+这个公式同Pearson相关系数的公式形式一样，只是把样本均值 x, ȳ 设为0 。
+uncentered correlation 适用于表达量基准为0的情况。例如，在对基因表达分析中，使用
+比值对数时，当log-ratio 等于0 表明红绿信号强度相等，也意味着实验处理
 不影响基因的表达量。
 
 uncentered correlation 系数对应的距离计算方法为：
@@ -533,11 +530,10 @@ uncentered correlation 系数对应的距离计算方法为：
 | *d*\ :sub:`U` ≡ 1 − *r*\ :sub:`U`,   |
 +--------------------------------------+
 
-其中 *r*\ :sub:`U` 是uncentered 系数。 由于uncentered系数位于-1 和 1
+其中 *r*\ :sub:`U` 是uncentered 相关性系数。 由于uncentered系数位于-1 和 1
 之间，对应的距离范围为 0 与 2之间。
 
-由于 uncentered 系数同 *n* 维空间里的两个数据向量所成角度的cosine值相同，因此
-得名。
+由于 uncentered 相关系数值等同于两个数据向量在 *n* 维空间里的夹角余弦，因此也常称为夹角余弦。
 
 Absolute uncentered correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -552,17 +548,17 @@ Absolute uncentered correlation
 其中 *r*\ :sub:`U` 是 uncentered相关系数。由于uncentered 相关系数的
 绝对值位于 0 和 1 之间，对应的距离也为位于 0 和 1之间。
 
-从几何学上来讲，uncentered相关系数的绝对值等于两个数据组成的向量的supporting lines
-的角度的cosine值（即不考虑向量的方向性）。
+从几何学上来讲，uncentered相关系数的绝对值等于两个数据所在向量的支持线（supporting lines）
+的角度余弦值（即不考虑向量的方向性）。
 
 Spearman rank correlation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Spearman秩相关系数是一种非参的相关性测量方法，同Pearson相关系数相比，对于离群点
+Spearman秩相关系数是一种非参的相关性测量方法，对于数据中的离群点，比Pearson相关系数
 有更好的稳健性。
 
-为了计算Spearman秩相关系数，首先对每个数据集里的数据按值排序，得到每个数据的
-秩。然后，计算两个数据集的秩的Pearson相关系数，得到Spearson的相关系数。
+为了计算Spearman秩相关系数，首先对每个数据集里的数据按值排序，得到每个数据的对应的
+秩。然后，计算对两个数据的秩集合计算Pearson相关系数，得到Spearman的相关系数。
 
 同Pearson相关性类似，Spearman秩相关系数对应的距离定义为：
 
@@ -575,8 +571,8 @@ Spearman秩相关系数是一种非参的相关性测量方法，同Pearson相�
 Kendall’s τ
 ~~~~~~~~~~~
 
-Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它使用秩来计算
- τ (see Snedecor & Cochran [`29 <#snedecor1989>`__\ ]) 。
+Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它不对数据进行排序，
+而是使用相对秩来计算  τ (see Snedecor & Cochran [`29 <#snedecor1989>`__\ ]) 。
 
 Kendall’s τ 对应的距离计算为：
 
@@ -590,13 +586,13 @@ Weighting
 ~~~~~~~~~
 
 对于 ``Bio.Cluster`` 中大部分距离函数，都可以使用权重矩阵。权重矩阵包含着
-数据集中每个元素的权重。如果元素 *i* 的权重为 *w*\ :sub:`*i*`，那么这个元素
-计算为元素的值乘以 *w*\ :sub:`*i*` 。权重值不需要为整数。对于 Spearman 秩相关系数
-和Kendall’s τ, 权重没有很好的定义，因此不能用于这两个函数。
+数据集中每个元素的权重。如果元素 *i* 的权重为 *w*\ :sub:`*i*`，那么将会认为该元素
+出现了 *w*\ :sub:`*i*` 次 。权重值可以不为整数。对于 Spearman 秩相关系数
+和Kendall’s τ, 权重没有太大的意义，因此不能用于这两个函数。
 
 计算距离矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-距离矩阵是 ``data`` 每个元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中 ``distancematrix`` 函数计算：
+距离矩阵是 ``data`` 中，所有元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中 ``distancematrix`` 函数计算：
  
 .. code:: verbatim
 
@@ -608,20 +604,16 @@ Weighting
 -  ``data`` (必选)
     包含所有元素的矩阵
 -  ``mask`` (默认: ``None``)
-    显示是否为缺失数据的矩阵。若
-   ``mask[i,j]==0``, 那么 ``data[i,j]`` 缺失。若 ``mask==None``,
-   那么表明没有缺失数据。
+    缺失数据矩阵。若 ``mask[i,j]==0``, 则 ``data[i,j]`` 缺失。若 ``mask==None``, 则明没有缺失数据。
 -  ``weight`` (默认: ``None``)
-    计算距离时使用的权重矩阵。若
-   ``weight==None``, 则假设所有的数据使用相同的权重。
+    权重矩阵。若 ``weight==None``, 则假设所有的数据使用相同的权重。
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择使用 ``data`` 中的行 (``transpose==0``), 或者列 (``transpose==1``)来计算距离.
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    定义使用的距离函数 (具体见
-   `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
 
-为了节省内存，函数运行返回的距离矩阵是一个1D 数组的列表。每一行的列数等于
-行号。因此，第一行有0个元素。例如一个返回值为：
+为了节省内存，函数运行返回的距离矩阵是一个1D矩阵的列表。每个矩阵的列数等于行号。
+因此，第一行有0个元素。例如：
 
 .. code:: verbatim
 
@@ -656,13 +648,13 @@ Weighting
 
 .
 
-15.2  计算聚类的相关性质
+15.2  计算类的相关性质
 ------------------------------------
 
-计算聚类中心
+计算类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-聚类中心可以是所有聚类元素的在每个维度上的平均值或者中值，可以用 ``Bio.Cluster`` 中的 ``clustercentroids`` 
+类中心可以定义为该类中在每个维度上所有元素的平均值或者中值，可以用 ``Bio.Cluster`` 中的 ``clustercentroids`` 
 函数计算：
  
 .. code:: verbatim
@@ -670,37 +662,33 @@ Weighting
     >>> from Bio.Cluster import clustercentroids
     >>> cdata, cmask = clustercentroids(data)
 
-包含了一下参数:
+包含了以下参数:
 
 -  ``data`` (必选)
     包含所有元素的矩阵。
 -  ``mask`` (默认: ``None``)
-    用来表示数据是否缺失的整型数组。如果
-   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
-   那么没有数据缺失.
+    缺失数据矩阵。若 ``mask[i,j]==0``, 则 ``data[i,j]`` 缺失。若 ``mask==None``, 则明没有缺失数据。
 -  ``clusterid`` (默认: ``None``)
-    一个整型向量，用来表示每个元素属于那个类别。如果
-   ``clusterid`` 是 ``None``, 表明所有的元素属于相同的类别。
+    一个表示每个元素的所属类的整型向量。如果 ``clusterid`` 是 ``None``, 表明所有的元素属于相同的类。
 -  ``method`` (默认: ``'a'``)
-    指定使用算术平方根 (``method=='a'``) 或者中值
-   median (``method=='m'``) 来计算聚类中心。
+    指定使用算术平方根 (``method=='a'``) 或者中值(``method=='m'``) 来计算类中心。
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择使用 ``data`` 中的行 (``transpose==0``), 或者列 (``transpose==1``) 来计算类中心.
 
-这个函数返回值为元组 ``(cdata, cmask)``。 聚类中心的数据存储在一个二维的Numerical Python 
-数组 ``cdata`` 中, 缺失值的结果存储在二维的Numerical Python整型数组 ``cmask`` 中。 当 ``transpose`` 
-为 ``0`` 时，这些数组的长度为（聚类数，列数），当 ``transpose`` 是 ``1`` 时，数组的
-长度为 （行数，聚类数）。每一行（当 ``transpose`` = ``0``) 或者 每一列（当 ``transpose`` = ``1`` ）
-包含着对应每一聚类中心对应的数据。
+这个函数返回值为元组 ``(cdata, cmask)``。 类中心的数据存储在一个二维的Numerical Python 
+数组 ``cdata`` 中, 缺失值的结果存储在二维的Numerical Python整型数组 ``cmask`` 中。 当 ``transpose`` = ``0`` 时，
+这两个数组的维度是（类数，列数），当 ``transpose`` = ``1`` 时，数组的长度为 （行数，类数）。
+其中每一行（当 ``transpose`` = ``0``) 或者 每一列（当 ``transpose`` = ``1`` ）
+包含着对应每类对应的数据的平均值。
 
 计算每类之间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 根据每个 *items* 的距离函数，我们可以计算出两个 *clusters* 的距离。两个类别的
-数学平均值之间的距离通常用于两两间的centroid-linkage聚类和 *k*-means聚类，而 *k*-medoids
-聚类中，通常利用两类的中值进行计算。两类中，最短的元素之间的距离用于pairwise single-linkage的聚类，
-而最长的元素之间的距离用于计算pairwise maximum-linkage 聚类。在pairwise average-linkage聚类中，
-两类之间的距离定义为两两元素间距离的平均值。
+算术平均值之间的距离通常用于重心法聚类和 *k*-means 聚类，而 *k*-medoids
+聚类中，通常利用两类的中值进行计算。最短距离法利用的是两类间最近的元素之间的距离，
+而最大距离发利用最长的元素之间的距离。在类平均法聚类中，
+类间的距离定义为类内所有对应元素两两间距离的平均值。
 
 为了计算两类之间的距离，可以利用:
 
@@ -714,38 +702,34 @@ Weighting
 -  ``data`` (必选)
     包含所有元素的矩阵。
 -  ``mask`` (默认: ``None``)
-    用来表示数据是否缺失的整型数组。如果
-   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
-   那么没有数据缺失。
+    缺失数据矩阵。若 ``mask[i,j]==0``, 则 ``data[i,j]`` 缺失。若 ``mask==None``, 则明没有缺失数据。
 -  ``weight`` (默认: ``None``)
-    计算距离时使用的权重矩阵。若
-   ``weight==None``, 则假设所有的数据使用相同的权重。
+    权重矩阵。若 ``weight==None``, 则假设所有的数据使用相同的权重。
 -  ``index1`` (默认: ``0``)
-    第一个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    第一个类所包含的元素索引的列表。如果一个类别只包含一个元素 *i* ，则数据类型
     可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``index2`` (默认: ``0``)
-   第二个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    第二个类所包含的元素的列表。如果一个类别只包含一个元素 *i* ，则数据类型
     可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``method`` (默认: ``'a'``)
     选择计算类别间距离的方法:
 
-   -  ``'a'``: 使用两个聚类中心的距离 (算术平均值);
-   -  ``'m'``: 使用两个聚类中心的距离 (中值);
+   -  ``'a'``: 使用两个类中心的距离 (算术平均值);
+   -  ``'m'``: 使用两个类中心的距离 (中值);
    -  ``'s'``: 使用两类中最短的两个元素之间的距离;
    -  ``'x'``: 使用两类中最长的两个元素之间的距离;
-   -  ``'v'``: 使用两类中两两元素距离的平均值作为距离。
+   -  ``'v'``: 使用两类中对应元素间的距离的平均值作为距离。
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择使用的距离函数 (see
-   `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择使用 ``data`` 中的行 (``transpose==0``), 或者列 (``transpose==1``)来计算距离.
 
 15.3  Partitioning algorithms
 -----------------------------
 
 Partitioning algorithms 依据所有元素到各自聚类中心距离之和最小化原则，
-将元素分为 *k* 类。类别的个数 *k* 由用户定义。 ``Bio.Cluster`` 提供了三种不同
+将元素分为 *k* 类。类的个数 *k* 由用户定义。 ``Bio.Cluster`` 提供了三种不同
 的算法:
 
 -  *k*-means 聚类
@@ -753,10 +737,9 @@ Partitioning algorithms 依据所有元素到各自聚类中心距离之和最�
 -  *k*-medoids 聚类
 
 这些算法的区别在于如何定义聚类中心。在 *k*-means 中, 聚类中心定义为该类中所有
-元素的mean data vector。 在 *k*-medians 聚类中， 利用每个维度的中间值来计算。
-最后， *k*-medoids 聚类中，聚类中心定义为该类中，离其他所有元素距离之和最小的元素的位置。
-这个方法适用于已知距离矩阵，但是原始数据矩阵未知的情况，例如根据结构相似度对蛋白进行聚类
-的情况。
+元素的平均值。 在 *k*-medians 聚类中， 利用每个维度的中间值来计算。
+最后， *k*-medoids 聚类中，聚类中心定义为该类中，离其他所有元素距离之和最小的元素所在的位置。
+这个方法适用于已知距离矩阵，但是原始数据矩阵未知的情况，例如根据结构相似度对蛋白进行聚类。
 
 expectation-maximization (EM) 算法通常用于将数据分成 *k* 组。在 EM算法的起始阶段,
 随机的把元素分配到不同的组。为了保证不存在空元素的类别，可以利用二项分布的方法随机
