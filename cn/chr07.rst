@@ -304,9 +304,12 @@ BLAST packages, and there are also other tools which can produce
 imitation BLAST output files, such as BLAT.
 
 更令人困惑的是，至少有4种不同的BLAST安装程序，并且还有其他的一些工具能
-产生类似的BLAST 输出文件，比如BLAT
+产生类似的BLAST 输出文件，比如BLAT。
 
 7.2.2  Standalone NCBI “legacy” BLAST
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+7.2.2  单机版的NCBI的老版本的BLAST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `NCBI “legacy”
@@ -315,11 +318,20 @@ included command line tools ``blastall``, ``blastpgp`` and ``rpsblast``.
 This was the most widely used standalone BLAST tool up until its
 replacement BLAST+ was released by the NCBI.
 
+`NCBI “老版本” BLAST <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download>`__
+包括命令行工具 ``blastall``, ``blastpgp`` 和 ``rpsblast`` 。
+这是NCBI发布它的替代品BLAST+ 前使用最为广泛的单机版BLAST工具。
+
 The ``Bio.Blast.Applications`` module has wrappers for the “legacy” NCBI
 BLAST tools like ``blastall``, ``blastpgp`` and ``rpsblast``, and there
 are also helper functions in ``Bio.Blast.NCBIStandalone``. These are now
 considered obsolete, and will be deprecated and eventually removed from
 Biopython as people move over to the replacement BLAST+ suite.
+
+``Bio.Blast.Applications`` 模块有个对老版本NCBI BLAST 工具像 ``blastall``, ``blastpgp`` 
+和 ``rpsblast`` 的封装， 并且在 ``Bio.Blast.NCBIStandalone`` 还有个辅助函数。
+这些东东现在都被认为是将要淘汰的，并且当用户们迁移到BLAST+程序套件后，这些都会会被弃用，
+最终从Biopython删除。
 
 To try and avoid confusion, we will not cover calling these old tools
 from Biopython in this tutorial. Have a look at the older edition of
@@ -327,7 +339,14 @@ this tutorial included with Biopython 1.52 if you are curious (look at
 the Tutorial PDF or HTML file in the Doc directory within
 ``biopython-1.52.tar.gz`` or ``biopython-1.52.zip``).
 
+为了减少你的困惑，我们在这个指南中不会提到怎么从Biopython调用这些老版本的工具。
+如果你有兴趣，可以看下在Biopython 1.52中包含的基本指南。（看下``biopython-1.52.tar.gz`` 
+或者 ``biopython-1.52.zip`` 中Doc目录下的指南的PDF文件 或者 HTML 文件）。
+
 7.2.3  Standalone NCBI BLAST+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+7.2.3  单机版 NCBI BLAST+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `NCBI “new”
@@ -340,6 +359,13 @@ all used to be handled by ``blastall``), ``psiblast`` (replacing
 ``rpsblast``). We don’t include a wrapper for the ``makeblastdb`` used
 in BLAST+ to build a local BLAST database from FASTA file, nor the
 equivalent tool ``formatdb`` in “legacy” BLAST.
+
+`NCBI “新版本”的
+BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download>`__
+在2009年发布。它替代了原来老版本的BLAST程序包。``Bio.Blast.Applications`` 模块
+包装了这些新工具像 ``blastn``, ``blastp``, ``blastx``, ``tblastn``, ``tblastx``
+(这些以前都是由 ``blastall``  处理)。而 ``rpsblast`` 和 ``rpstblastn`` （替代了
+原来的 ``rpsblast`` ）。
 
 This section will show briefly how to use these tools from within
 Python. If you have already read or tried the alignment tool examples in
