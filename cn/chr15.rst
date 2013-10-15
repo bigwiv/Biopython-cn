@@ -1122,7 +1122,7 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 计算SOM的第一步是随机分配数据向量到每个类别中，如果使用行进行聚类，那么每个数据向量中的元素
 个数等于列数。
 
-一个SOM 会一次读入整行，并且找到该向量最近的拓扑聚类结构。之后利用找到的数据向量对
+一个SOM 会一次读入一行，并且找到该向量最近的拓扑聚类结构。之后利用找到的数据向量对
 这个类别的数据向量和相邻的类别的数据向量进行调整。调整如下：
 
 Δ 
@@ -1272,8 +1272,8 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 主成分分析 (PCA) 被广泛的用于分析多维数据，一个将主成分分析应用于表达谱数据的请见
 Yeung and Ruzzo (2001) [`33 <#yeung2001>`__\ ].
 
-简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分利用
-线性关系显示。主成分的选择是基于是残差尽可能的小。例如，一个 *n* × 3 的数据矩阵可以表示为三维
+简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分的
+线性关系显示。主成分的选择是基于是残差尽可能的小的原则。例如，一个 *n* × 3 的数据矩阵可以表示为三维
 空间内的一个椭圆球形的点的云。第一主成分是这个椭圆球形的最长轴，第二主成分是次长轴，第三主成分
 是最短的轴。矩阵中，每一行都可以用主成分的线性关系展示。一般而言，为了对数据进行降维，只保留最
 重要的几个主成分。剩余的残差认为是不可解释的方差。
@@ -1281,7 +1281,7 @@ Yeung and Ruzzo (2001) [`33 <#yeung2001>`__\ ].
 可以通过计算数据的协方差矩阵的特征向量来得到主成分。每个主成分对应的特征值决定了
 其在数据中代表的方差的大小。
 
-在进行主成分分析前，矩阵的数据每一列都要减去其平均值。在上面的例子中，椭圆球形云在3D
+在进行主成分分析前，矩阵的数据每一列都要减去其平均值。在上面椭圆球形云的例子中，数据在3D
 空间中，围绕着其中心分布，而主成分则显示着每个点对其中心的变化。
 
 函数 ``pca`` 首先使用奇异值分解（singular value decomposition）来计算矩阵的特征值和
@@ -1297,13 +1297,12 @@ Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据�
     >>> from Bio.Cluster import pca
     >>> columnmean, coordinates, components, eigenvalues = pca(data)
 
-函数会返回一个元组：
-``columnmean, coordinates, components, eigenvalues``:
+函数会返回一个元组 ``columnmean, coordinates, components, eigenvalues`` :
 
 -  ``columnmean``
     包含 ``data`` 每列均值的数组 .
 -  ``coordinates``
-     数据 ``data`` 中每行在主成分上对应的坐标。
+    ``data`` 中每行数据在主成分上对应的坐标。
 -  ``components``
     主成分
 -  ``eigenvalues``
@@ -1358,8 +1357,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``data``
     包含基因表达数据的矩阵，每行为基因，每列为芯片。
 -  ``mask``
-    用来表示数据是否缺失的整型数组。如果
-   ``mask[i,j]==0``, 那么 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
+    缺失值的整型数组。如果 ``mask[i,j]==0``, 则 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
    那么没有数据缺失。
 -  ``geneid``
     包含每个基因的独特说明的列表 (例如 ORF 数目).
@@ -1397,7 +1395,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 其中，包含以下参数：
 
 -  ``transpose`` (默认: ``0``)
-       选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择对 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
     选择合适的元素距离算法 (见
    `15.1 <#sec:distancefunctions>`__).
@@ -1415,13 +1413,11 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     >>> cdata, cmask = record.clustercentroids()
 
 -  ``clusterid`` (默认: ``None``)
-    用于显示每个元素属于哪类的整型的向量。如果缺少 ``clusterid``,
-    那么所有的元素属于同一类。
+    展示每个元素所属类的整型向量。如果缺少 ``clusterid``,默认所有的元素属于同一类。
 -  ``method`` (默认: ``'a'``)
-    选择是否使用算术平均值 (``method=='a'``) 或者中值 (``method=='m'``) 
-    来计算聚类中心。
+    选择使用算术平均值 (``method=='a'``) 或者中值 (``method=='m'``)来计算聚类中心。
 -  ``transpose`` (默认: ``0``)
-    选择计算``data`` 的行的中心 (``transpose==0``), 或者计算列的中心 (``transpose==1``).
+    选择计算``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算中心。
 
 函数返回元组 ``cdata, cmask``; 见 section
 `15.2 <#subsec:clustercentroids>`__ for a description.
@@ -1429,7 +1425,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 计算两类间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-为了计算存储在record中，两类的距离，利用：
+为了计算存储在record中的两类的距离，利用：
 
 .. code:: verbatim
 
@@ -1456,7 +1452,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     选择使用的距离函数 (见
    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (默认: ``0``)
-        选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``)..
+    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
 
 进行系统聚类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1480,8 +1476,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
    -  ``method=='a'``: 类平均法
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择使用的距离函数(见
-   `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
 -  ``transpose``
     选择使用基因或者芯片进行聚类，如果是 ``transpose==0``,则使用基因 (行) 进行聚类，如果使用
    ``transpose==1``, 芯片 (列) 用于聚类.
@@ -1503,9 +1498,9 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 包含以下参数:
 
 -  ``nclusters`` (默认: ``2``)
-    聚类的数目 *k*.
+    类的数目 *k*.
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
 -  ``npass`` (默认: ``1``)
     *k*-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
     如果指定了 ``initialid`` , ``npass`` 的值会忽略，并且聚类算法只会运行一次。
@@ -1520,9 +1515,8 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     选择使用的距离函数 (see
    `15.1 <#sec:distancefunctions>`__).
 
-这个函数返回的是一个元组 ``(clusterid, error, nfound)``, 其中 ``clusterid`` 是一个包含
-该类中所有的行或者类别的数目（还是id）， ``error`` 是最优解的类内的距离和， ``nfound`` 
-是最优解被发现的次数。
+这个函数返回的是一个元组 ``(clusterid, error, nfound)``, 其中 ``clusterid`` 是一个每行或则列对应的类的编号。
+``error`` 是最优解的类内的距离和， ``nfound`` 是最优解被发现的次数。
 
 计算Self-Organizing Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1536,7 +1530,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 包含以下参数:
 
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行行之间计算距离 (``transpose==0``), 或者列与列计算距离 (``transpose==1``).
+    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离.
 -  ``nxgrid, nygrid`` (默认: ``2, 1``)
     当Self-Organizing Map计算时，在矩形网格里的横向和纵向格子数目
 -  ``inittau`` (默认: ``0.02``)
@@ -1545,14 +1539,12 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``niter`` (默认: ``1``)
     迭代运行的次数。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择使用的距离函数(see
-   `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
 
 函数返回一个元组 ``(clusterid, celldata)``:
 
 -  ``clusterid``:
-    一个二维数组，行数同待聚类的元素数目相同。每行的内容对应着该元素在矩形SOM方格内 *x* 和
-   *y* 的坐标。
+    一个二维数组，行数同待聚类的元素数目相同。每行的内容对应着该元素在矩形SOM方格内 *x* 和 *y* 的坐标。
 -  ``celldata``:
     格式为一个矩阵，如果是对行聚类，内容为 (``nxgrid``, ``nygrid``, 列数)，如果是对列聚类，
     那么内容为 (``nxgrid``, ``nygrid``, 行数) 。矩阵中，坐标 ``[ix][iy]`` 对应的是该坐标的网格里的
@@ -1587,9 +1579,9 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 以下是一个系统聚类的例子，其中使用最短距离法对基因进行聚类，用最大距离法对实验条件进行聚类。
 由于使用 Euclidean 距离对基因进行聚类，因此需要将节点距离 ``genetree`` 进行调整，使其处于0和1之间。
-这种调整对于Java TreeView正确显示树结构也是很必须的。为了对实验条件进行聚类，使用了 非中心的关联分析（uncentered 
-correlation）。在这种情况下，不需要任何的调整，因为 ``exptree`` 中的结果已经位于0和2之间。 示例中使用的
-文件 ``cyano.txt`` 可以再 ``data`` 文件夹中找到。
+这种调整对于Java TreeView正确显示树结构也是很必须的。为了对实验条件进行聚类，使用了 uncentered 
+correlation。在这种情况下，不需要任何的调整，因为 ``exptree`` 中的结果已经位于0和2之间。 示例中使用的
+文件 ``cyano.txt`` 可以从 ``data`` 文件夹中找到。
 
 .. code:: verbatim
 
