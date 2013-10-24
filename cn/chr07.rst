@@ -374,10 +374,23 @@ straightforward. First, we construct a command line string (as you would
 type in at the command line prompt if running standalone BLAST by hand).
 Then we can execute this command from within Python.
 
+这个章主要是简洁地介绍了怎样从Python来使用这些工具。如果你已经阅读了并试过
+ \ `6.4 <#sec:alignment-tools>`__ 章节的序列联配（alignment）工具，下面介绍
+ 的方法应该是很简单直接的。首先，我们构建一个命令行字符串（就像你使用单机版
+ BLAST的时候，在终端打入命令行一样）。然后，我们通过Python来运行这个命令。
+
 For example, taking a FASTA file of gene nucleotide sequences, you might
 want to run a BLASTX (translation) search against the non-redundant (NR)
 protein database. Assuming you (or your systems administrator) has
 downloaded and installed the NR database, you might run:
+
+举个例子，你有个FASTA格式的核酸序列文件，你想用它通过BLASTX（翻译）来搜索
+非冗余蛋白质数据库。如果你（或者你的系统管理员）下载并安装好了这个数据库，
+那么你只要通过如下的命令行运行：
+
+.. code:: verbatim
+
+blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
 
 .. code:: verbatim
 
@@ -389,9 +402,16 @@ cut-off value of 0.001 and produce XML output to the specified file
 a good reason to save the output to a file so you and repeat any
 analysis as needed.
 
+这样就完成了运行BLASTX查找非冗余蛋白质数据库，用0.001的e值并产生XML格式的
+输出结果文件（这样我们可以继续下一步解析）。在我的电脑上运行这条命令花了6分钟
+- 这是为什么我们需要保存结果到文件。保存了结果我们就可以重复多次的分析这个结果。
+
 From within Biopython we can use the NCBI BLASTX wrapper from the
 ``Bio.Blast.Applications`` module to build the command line string, and
 run it:
+
+用Biopython，我们可以用NCBI BLASTX包装模块  ``Bio.Blast.Applications`` 来构建
+命令行字符串并运行它：
 
 .. code:: verbatim
 
@@ -411,13 +431,24 @@ In this example there shouldn’t be any output from BLASTX to the
 terminal, so stdout and stderr should be empty. You may want to check
 the output file ``opuntia.xml`` has been created.
 
+在这个例子中，终端里应该没有任何从BLASTX的输出，所以stdout和stderr是空的。
+也许你可以看下，输出文件 ``opuntia.xml`` 是否已经创建。
+
 As you may recall from earlier examples in the tutorial, the
 ``opuntia.fasta`` contains seven sequences, so the BLAST XML output
 should contain multiple results. Therefore use
 ``Bio.Blast.NCBIXML.parse()`` to parse it as described below in
 Section \ `7.3 <#sec:parsing-blast>`__.
 
+如果你回想下这个指南的中的早先的例子，``opuntia.fasta`` 包含7条序列，
+所以BLAST XML 格式的结果输出文件应该包括多个结果。因此，我们在
+下面的`7.3 <#sec:parsing-blast>`__ 节将用 ``Bio.Blast.NCBIXML.parse()`` 来
+解析这个结果文件。
+
 7.2.4  WU-BLAST and AB-BLAST
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+7.2.4  WU-BLAST 和 AB-BLAST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may also come across `Washington University
@@ -426,10 +457,21 @@ BLAST <http://blast.wustl.edu/>`__ (WU-BLAST), and its successor,
 released in 2009, not free/open source). These packages include the
 command line tools ``wu-blastall`` and ``ab-blastall``.
 
+你也许会碰到 `Washington University BLAST <http://blast.wustl.edu/>`__ (WU-BLAST)，
+和它的后继版本`Advanced Biocomputing BLAST <http://blast.advbiocomp.com>`__ (AB-BLAST,
+在2009年发布，免费但是没有开源）。这些程序包包括了命令工具行
+``wu-blastall`` 和 ``ab-blastall`` .
+
 Biopython does not currently provide wrappers for calling these tools,
 but should be able to parse any NCBI compatible output from them.
 
+Biopython 目前还没有提供调用这些工具的包装程序，但是应该可以解析它们
+与NCBI兼容的输出结果。
+
 7.3  Parsing BLAST output
+-------------------------
+
+7.3  解析BLAST 输出
 -------------------------
 
 As mentioned above, BLAST can generate output in various formats, such
