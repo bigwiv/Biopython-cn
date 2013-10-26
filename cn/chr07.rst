@@ -688,6 +688,9 @@ Ok, 我猜你现在在想BLAST搜索记录中到底有什么。
 7.4  The BLAST record class
 ---------------------------
 
+7.4  BLAST 记录类
+---------------------------
+
 A BLAST Record contains everything you might ever want to extract from
 the BLAST output. Right now we’ll just show an example of how to get
 some info out of the BLAST report, but if you want something in
@@ -696,9 +699,18 @@ class in detail, and take a gander into the code or automatically
 generated documentation – the docstrings have lots of good info about
 what is stored in each piece of information.
 
+一个BLAST搜索结果记录包括了所有你想要从中提取出来的信息。现在，我们将
+用一个例子说明你怎么从BLAST搜索结果提取出一些信息。但是，如果你想从BLAST
+搜索结果获得的信息没有在这里提到，你可以具体看看BLAST搜索结果有什么信息，
+并且可以参考下源代码 或者 是自动生成的文档 - 文档字符串里面包含了许多
+关于各部分源代码是什么的很有用的信息。
+
 To continue with our example, let’s just print out some summary info
 about all hits in our blast report greater than a particular threshold.
 The following code does this:
+
+为了继续讲解我们的例子，让我们打印出一些大于某一阈值BLAST命中结果的信息。
+代码如下：
 
 .. code:: verbatim
 
@@ -717,6 +729,8 @@ The following code does this:
 
 This will print out summary reports like the following:
 
+上面代码会打印出如下图的总结报告：
+
 .. code:: verbatim
 
 ****Alignment****
@@ -733,22 +747,37 @@ report once you have parsed it. This will, of course, depend on what you
 want to use it for, but hopefully this helps you get started on doing
 what you need to do!
 
+本质上来说，一旦你解析了BLAST搜索结果文件，你可以提取任何你需要的信息。
+当然，这取决于你想要获得什么信息。但是希望这里的例子能够帮助你开始工作。
+
 An important consideration for extracting information from a BLAST
 report is the type of objects that the information is stored in. In
 Biopython, the parsers return ``Record`` objects, either ``Blast`` or
 ``PSIBlast`` depending on what you are parsing. These objects are
 defined in ``Bio.Blast.Record`` and are quite complete.
 
+在用Biopython提取BLAST搜索结果信息的时候，你需要考虑到信息存储在什么
+（Biopython）对象中。在Biopython中，解析器返回 ``Record``  对象，这个对象
+可以是 ``Blast`` 类型的，也可以是 ``PSIBlast`` 类型的，具体哪个取决你
+解析什么。这些对象的定义都可以在  ``Bio.Blast.Record`` 找到 并且很完整。
+
 Here are my attempts at UML class diagrams for the ``Blast`` and
 ``PSIBlast`` record classes. If you are good at UML and see
 mistakes/improvements that can be made, please let me know. The Blast
 class diagram is shown in Figure \ `7.4 <#fig:blastrecord>`__.
+
+下面是 ``Blast`` 和 ``PSIBlast`` 记录类的UML图。如果你对UML图很熟悉，不妨
+看看下面的UML图是否有错误或者可以改进的地方，如果有，请联系我。
+BLAST类的图在这里  `7.4 <#fig:blastrecord>`__ 。
 
 |image1|
 
 The PSIBlast record object is similar, but has support for the rounds
 that are used in the iteration steps of PSIBlast. The class diagram for
 PSIBlast is shown in Figure \ `7.4 <#fig:psiblastrecord>`__.
+
+PSIBlast 记录类类似，但是支持用在迭代器中的rounds方法。PSIBlast类的图在这里
+ \ `7.4 <#fig:psiblastrecord>`__.
 
 |image2|
 
