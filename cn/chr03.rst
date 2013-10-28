@@ -26,19 +26,19 @@ Biopython处理这些序列的机制-- ``Seq`` 对象。第 `4 <#chapter:SeqReco
 来处理我们比较青睐的对象：DNA、RNA和蛋白质对象。
 
  ``Bio.Alphabet.IUPAC`` 提供了蛋白质、DNA和RNA的基本定义，并且提供了扩展
-和定制基本定义的能力。例如蛋白质，有一个基本的IUPACProtein类，另外还有
+和定制基本定义的功能。例如蛋白质，有一个基本的IUPACProtein类，另外还有
 一个ExtendedIUPACProtein类。这个类包含除20种常见氨基酸外的其他氨基酸元素，
 比如 “U” （或 “Sec”代表硒代半胱氨酸），“O”（或“Pyl” 代表吡咯赖氨酸），
-还有模糊字母“B” （或“Asx”代表天冬酰胺或者天冬氨酸），“Z”（或“Glx”代表谷
+还有歧意字母“B” （或“Asx”代表天冬酰胺或者天冬氨酸），“Z”（或“Glx”代表谷
 氨酰胺或者谷氨酸），“J” （或“Xle”代表亮氨酸或异亮氨酸），“X” （或“Xxx”代
 表未知氨基酸）。同理，对于DNA有IUPACUnambiguousDNA、IUPACAmbiguousDNA和
-ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母和修饰后的碱基。
+ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母和修饰后的碱基。
 同样地，RNA可以使用IUPACAmbiguousRNA和IUPACUnambiguousRNA类。
 
-使用字母表类的优点是双重的。首先，明确了Seq对象包含的信息的类型；其次通过
+使用字母表类有两方面的优势。首先，明确了Seq对象包含的信息的类型；其次通过
 类型检查，它提供了约束信息的工具。
 
-我们已经知道了将要处理的东西，现在让我们看看怎么使用这些类做一些有意思的事情。
+我们已经知道了将要处理的对象，现在让我们看看怎么使用这些类做一些有意思的事情。
 你可以创建一条有通用字母组成的模糊序列，如下：
 
 .. code:: verbatim
@@ -107,7 +107,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母�
     >>> print my_seq[-1] #last letter
     G
 
- ``Seq`` 对象有一个 ``.count()`` 方法，类似于字符串。记住这意味就像Python的
+``Seq`` 对象有一个 ``.count()`` 方法，类似于字符串。记住这意味就像Python的
 字符串一样进行着非重叠的计数。
 
 .. code:: verbatim
@@ -145,7 +145,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母�
     >>> GC(my_seq)
     46.875
 
-注意在使用 ``Bio.SeqUtils.GC()`` 函数时会自动处理序列和可代表G或者C的模糊核苷酸
+注意在使用 ``Bio.SeqUtils.GC()`` 函数时会自动处理序列和可代表G或者C的歧意核苷酸
 字母S混合的情况。
 
 然后还要注意，就像正常的Python字符串， ``Seq`` 对象在某些方式下是只读的。如果需要
@@ -174,7 +174,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母�
  ``Seq`` 对象的字母表信息。
 
 同样和Python字符串一样，你可以通过设置起始位置、终止位置和 *步幅* （间隔数，默认为1）
-进行切片。例如，我们可以分别获取下面DNA序列的第一、第二、第三位密码子的位置。
+进行切片。例如，我们可以分别获取下面DNA序列密码子第一、第二、第三位的碱基。
 
 .. code:: verbatim
 
@@ -204,7 +204,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母�
     >>> str(my_seq)
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
 
-尽管调用 ``Seq`` 对象的 ``str()`` 方法将以字符串的形式返回全长序列，但是你经常不需要
+尽管对 ``Seq`` 对象调用 ``str()`` 方法将以字符串的形式返回全长序列，但是你经常不需要
 特地做这个转换。当使用print打印声明是，Python会自动转换。
 
 .. code:: verbatim
@@ -224,12 +224,12 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的模糊字母�
     <BLANKLINE>
 
 这一行代码展示的是一个简单的FASTA格式的记录（不用关心自动换行）。
-\ `4.5 <#sec:SeqRecord-format>`__部分将介绍一个简洁的方式从 ``SeqRecord`` 
+\ `4.5 <#sec:SeqRecord-format>`__ 部分将介绍一个简洁的方式从 ``SeqRecord`` 
 对象中获取FASTA格式的字符串，更详细的读写FASTA格式的序列文件将在第
-\ `5 <#chapter:Bio.SeqIO>`__章介绍。
+\ `5 <#chapter:Bio.SeqIO>`__ 章介绍。
 
  *注意：*  如果你使用Biopython 1.44或者更旧的版本，使用 ``str(my_seq)`` 只会
-返回一个截短了的陈述。这时候可以使用 ``my_seq.tostring()`` ，为了保持向后兼
+返回一个截短了的序列。这时候可以使用 ``my_seq.tostring()`` ，为了保持向后兼
 容性，这一方法在当前的Biopython版本中还有保留。
 
 .. code:: verbatim
@@ -321,7 +321,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
     >>> dna_seq.lower()
     Seq('acgt', DNAAlphabet())
 
-3.7  核苷酸序列和（反向）互补
+3.7  核苷酸序列和（反向）互补序列
 ---------------------------------------------------
 
 对于核苷酸序列，你可以使用 ``Seq`` 对象内置的方法很容易地获得 ``Seq`` 
@@ -437,7 +437,7 @@ T → U的转换获得mRNA。
     >>> template_dna.reverse_complement().transcribe()
     Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
 
- ``Seq`` 对象还包含了从mRNA逆向转录橙DNA编码链的方法。同样，这仅仅是从U
+``Seq`` 对象还包含了从mRNA逆向转录为DNA编码链的方法。同样，这仅仅是从U
 → T的替代并伴随着字母表的变化：
 
 .. code:: verbatim
@@ -450,7 +450,7 @@ T → U的转换获得mRNA。
     >>> messenger_rna.back_transcribe()
     Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
 
- *注意：* ``Seq`` 对象的 ``transcribe`` 和 ``back_transcribe`` 方法直到
+*注意：* ``Seq`` 对象的 ``transcribe`` 和 ``back_transcribe`` 方法直到
 Biopython 1.49版本才出现，在较早的版本中你需要使用 ``Bio.Seq`` 模块的函
 数替代，详见 \ `3.14 <#sec:seq-module-functions>`__ 部分。
 
@@ -670,7 +670,7 @@ K12中的基因yaaX：
 
 序列之间的比较实际上是一个比较复杂的话题，没有简单的方法来判断两个序列是等同的。
 核心的问题是字母的意义是依赖于上下文的。字母 “A” 既可以是DNA、RNA也可以使蛋白质序
-列的一部分。 Biopython在 ``Seq`` 对象中包含了字母表对象，以此尝试加入这些信息。所
+列的一部分。 Biopython在 ``Seq`` 对象中包含了字母表对象，以此尝试获得这些信息。所
 以比较两个 ``Seq`` 对象意味着既要考虑两个序列的字符串 *又要* 考虑字母表。
 
 举个例子，你可能会觉得 ``Seq("ACGT", IUPAC.unambiguous_dna)`` 和
