@@ -1,7 +1,7 @@
 第14章   使用Bio.motifs进行模体序列分析
 ====================================================
 
-这章为Biopython中的``Bio.motifs`` 包进行一个主要的介绍。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
+这章主要的介绍Biopython中的``Bio.motifs`` 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
 
 这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 ``Bio.motifs`` 包，该包替代了Biopython 1.50版本中的 ``Bio.Motif`` 包，而``Bio.Motif`` 包是基于较早版本的Biopython 中的两个模块 ``Bio.AlignAce`` 和 ``Bio.MEME`` 。``Bio.motifs`` 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。
 
@@ -10,7 +10,7 @@
 14.1  模体对象
 -------------------
 
-由于我们感兴趣的是模体分析，所以我们需要先看看 ``Motif`` 对象。对此我们需要先导入Bio.motifs库：
+由于我们感兴趣的是模体分析，所以我们需要先看看 ``Motif`` 对象。对此我们需要先导入Bio.motifs包：
 
 .. code:: verbatim
 
@@ -133,14 +133,14 @@
     >>> m.anticonsensus
     Seq('GGGTG', IUPACUnambiguousDNA())
 
-你也可以利用降级的一致序列，用不确定核苷酸来表示序列某一位置的所有核苷酸：
+你也可以利用简并一致序列，用不确定核苷酸来表示序列某一位置的所有核苷酸：
 
 .. code:: verbatim
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
-在这，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [`10 <#cornish1985>`__\ ] 。这些降级一致序列是按照Cavener指定的规则[`11 <#cavener1987>`__\ ]来建立的。
+此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [`10 <#cornish1985>`__\ ] 。这些简并一致序列是按照Cavener指定的规则[`11 <#cavener1987>`__\ ]来建立的。
 
 .. code:: verbatim
 
@@ -159,12 +159,12 @@
     GCATT
     <BLANKLINE>
 
-反向互补序列和降级一致序列都只在DNA模体中有。
+反向互补序列和简并一致序列都只在DNA模体中有。
 
 14.1.2  读取模体
 ~~~~~~~~~~~~~~~~~~~~~~
 
-从实例手动创建一个模体确实有点无趣，所以用一些I/O函数来读写模体是很有用的。目前对于如何存储模体还没有一些真正的标准，不过有一些格式用得比其他一些经常。这其中最重要的区别在于模体表示是基于实例还是某种PWM矩阵。
+从实例手动创建一个模体确实有点无趣，所以用一些I/O函数来读写模体是很有用的。目前对于如何存储模体还没有一些真正的标准，不过有一些格式用得比其他更经常。这其中最重要的区别在于模体表示是基于实例还是某种PWM矩阵。
 
 JASPAR
 ^^^^^^
@@ -188,7 +188,7 @@ JASPAR
     >MA0004 ARNT    20
     aggaatCGCGTGc
 
-那些用大字字母表示的序列的一部分就是被开来互相比对的模体实例。
+那些用大字字母表示的序列的一部分就是被用来相互比对的模体实例。
 
 我们可以从下面的实例创建一个 ``Motif`` 对象：
 
@@ -227,7 +227,7 @@ JASPAR
     AACGTG
     CGCGTG
 
-这个模体的计数矩阵可以自动的由这些实例中计算出来：
+这个模体的计数矩阵可以从这些实例中自动计算出来：
 
 .. code:: verbatim
 
@@ -248,7 +248,7 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
     39  2  1  0  0  0  0  0  0  0 44 43
      4  2  0  0 13 42  0 45  3 30  0  0
 
-我们可以像下面那样为计数矩阵创建一个模体：
+我们可以如下为计数矩阵创建一个模体：
 
 .. code:: verbatim
 
@@ -261,7 +261,7 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
     T:   4.00   2.00   0.00   0.00  13.00  42.00   0.00  45.00   3.00  30.00   0.00   0.00
     <BLANKLINE>
 
-由于这个模体是由计数矩阵直接创建的，所以它没有相关和实例：
+由于这个模体是由计数矩阵直接创建的，所以它没有相关的实例：
 
 .. code:: verbatim
 
@@ -280,7 +280,7 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
 MEME
 ^^^^
 
-MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。以下是一个例子。
+MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。例子如下。
 
 在输出文件的开头，有一些MEME生成的关于MEME和所用MEME版本的背景信息：
 
@@ -292,7 +292,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
     MEME version 3.0 (Release date: 2004/08/18 09:07:01)
     ...
 
-往下，简要概括了输入的训练序列集：
+再往下，简要概括了输入的训练序列集：
 
 .. code:: verbatim
 
@@ -337,7 +337,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
     probability       G  ::::1::94:4:
     matrix            T  aa:1::9::11:
 
-读取这个文件（以 ``meme.dna.oops.txt`` 存储），使用下面的方法：
+使用下面的方法来读取这个文件（以 ``meme.dna.oops.txt`` 存储）：
 
 .. code:: verbatim
 
@@ -372,7 +372,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
     >>> print motif.degenerate_consensus
     TTCACATGSCNC
 
-除了一般的模体属性外，每个模体同时还保存着它们由MEME计算的各自特异信息。例如：
+除了一般的模体属性外，每个模体还同时保存着它们由MEME计算的各自特异信息。例如：
 
 .. code:: verbatim
 
@@ -392,7 +392,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
     >>> motif = record['Motif 1']
 
-每个模体都有一个 ``.instances`` 拥有创建这个模体序列实例的属性，能够为每个实例提供一些信息：
+每个模体都有一个 ``.instances`` 属性与在这个被发现模体中的序列实例，能够为每个实例提供一些信息：
 
 .. code:: verbatim
 
@@ -423,7 +423,7 @@ MAST
 TRANSFAC
 ^^^^^^^^
 
-TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [`27 <#matys2003>`__\ ]。TRANSFAC数据库中所用的文件格式在今天还被其他地方所用到，我们下面将介绍TRANSFAC文件格式。
+TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [`27 <#matys2003>`__\ ]。TRANSFAC数据库中所用的文件格式至今还被其他工具所使用，我们下面将介绍TRANSFAC文件格式。
 
 TRANSFAC文件格式简单概括如下：
 
@@ -470,7 +470,7 @@ TRANSFAC文件格式简单概括如下：
     10      0      2      0      3      Y
     //
 
-可用下面的方法读取TRANSFAC文件：
+可用如下方法读取TRANSFAC文件：
 
 .. code:: verbatim
 
@@ -485,7 +485,7 @@ TRANSFAC文件格式简单概括如下：
     >>> record.version
     'EXAMPLE January 15, 2013'
 
-每个在 ``record`` 中的模体都是 ``Bio.motifs.transfac.Motif`` 类的实例，这些实例同时继承 ``Bio.motifs.Motif`` 类和Python字典的特性。这些字典用双字母的键来存储关于这个模体的其他附加信息：
+每个在 ``record`` 中的模体都是 ``Bio.motifs.transfac.Motif`` 类的实例，这些实例同时继承 ``Bio.motifs.Motif`` 类和Python字典的属性。这些字典用双字母的键来存储关于这个模体的其他附加信息：
 
 .. code:: verbatim
 
@@ -495,7 +495,7 @@ TRANSFAC文件格式简单概括如下：
     >>> motif['ID'] # Using motif as a dictionary
     'motif1'
 
-TRANSFAC文件一般比这些例子更好的详细，包含了许多关于模体的附加信息。表格 `14.1.2 <#table:transfaccodes>`__ 列出了在TRANSFAC文件常见的双字母含义：
+TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附加信息。表格 `14.1.2 <#table:transfaccodes>`__ 列出了在TRANSFAC文件常见的双字母含义：
 
     --------------
 
@@ -539,7 +539,7 @@ TRANSFAC文件一般比这些例子更好的详细，包含了许多关于模体
     +----------+---------------------------------------------------+
     | ``OV``   | Older version 旧版本                              |
     +----------+---------------------------------------------------+
-    | ``PV``   | Preferred version 首先版本                        |
+    | ``PV``   | Preferred version 首选版本                        |
     +----------+---------------------------------------------------+
     | ``TY``   | Type 类型                                         |
     +----------+---------------------------------------------------+
@@ -549,8 +549,6 @@ TRANSFAC文件一般比这些例子更好的详细，包含了许多关于模体
 
     --------------
 
-Each motif also has an attribute ``.references`` containing the
-references associated with the motif, using these two-letter keys:
 每个模体同时也有一个包含与这个模体相关参考资料的 ``references`` 属性，用下面的双字母键来获得：
 
     --------------
@@ -624,7 +622,7 @@ references associated with the motif, using these two-letter keys:
     >>> handle.write(text)
     >>> handle.close()
 
-14.1.3  模体写入
+14.1.3  模体写出
 ~~~~~~~~~~~~~~~~~~~~~~
 
 说到导出，我们可以先看看导出函数。以JASPAR ``.pfm`` 格式导出模体文件，可以用：
@@ -638,7 +636,7 @@ references associated with the motif, using these two-letter keys:
     4       0       2       0       0
     <BLANKLINE>
 
-用TRANSFAC类似的格式导出一个模体，可以用：
+用类似TRANSFAC的格式导出一个模体：
 
 .. code:: verbatim
 
@@ -653,7 +651,7 @@ references associated with the motif, using these two-letter keys:
     //
     <BLANKLINE>
 
-你可以用 ``motifs.write`` 来写入多个模体。这个函数在使用的时候不必担心这些模体来自于TRANSFAC文件。比如：
+你可以用 ``motifs.write`` 来写出多个模体。这个函数在使用的时候不必担心这些模体来自于TRANSFAC文件。比如：
 
 .. code:: verbatim
 
@@ -688,7 +686,7 @@ references associated with the motif, using these two-letter keys:
 14.1.4  绘制序列标识图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如何能够联网，我们可以在该网址 `weblogo <http://weblogo.berkeley.edu>`__ 创建一个：
+如果能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
 
 .. code:: verbatim
 
@@ -701,7 +699,7 @@ references associated with the motif, using these two-letter keys:
 
 模体对象的 ``.counts`` 属性能够显示在序列上每个位置核苷酸出现的次数。我们可以把这矩阵除以序列中的实例数目来标准化这矩阵，得到每个核苷酸在序列位置上出现概率。我们把这概率看作位置权重矩阵。不过，要知道在字面上，这个术语也可以用来说明位置特异性得分矩阵，这个我们将会在下面讨论。
 
-通常来说，伪计数（pseudocounts）在归一化之前都加到了每个位置中。这样可以避免在这序列上过度拟合位置权重矩阵以至趋向于模体的实例的有限数量，还可以避免概率为0。向每个位置的核苷酸添加一个固定的伪计数，可以为 ``pseudocounts`` 参数指定一个数值：
+通常来说，伪计数（pseudocounts）在归一化之前都已经加到每个位置中。这样可以避免在这序列上过度拟合位置权重矩阵以至趋向于模体的实例的有限数量，还可以避免概率为0。向每个位置的核苷酸添加一个固定的伪计数，可以为 ``pseudocounts`` 参数指定一个数值：
 
 .. code:: verbatim
 
@@ -727,7 +725,7 @@ references associated with the motif, using these two-letter keys:
     T:   0.51   0.07   0.29   0.07   0.07
     <BLANKLINE>
 
-位置权重矩阵有它自己的方法计算一致序列、反向一致序列和降级的一致序列（degenerate consensus sequences)：
+位置权重矩阵有它自己的方法计算一致序列、反向一致序列和简并一致序列：
 
 .. code:: verbatim
 
@@ -738,7 +736,7 @@ references associated with the motif, using these two-letter keys:
     >>> pwm.degenerate_consensus
     Seq('WACNC', IUPACAmbiguousDNA())
 
-应当注意到由于伪计数的原因，由位置仅重矩阵计算得到的降级一致序列和由模体中实例计算得到的降级一致序列有一点不同：
+应当注意到由于伪计数的原因，由位置仅重矩阵计算得到的简并一致序列和由模体中实例计算得到的简并一致序列有一点不同：
 
 .. code:: verbatim
 
@@ -774,7 +772,7 @@ references associated with the motif, using these two-letter keys:
     T:   1.03  -1.91   0.21  -1.91  -1.91
     <BLANKLINE>
 
-这时我们可以更经常看到特定标记和背景下的正值和负值。0.0意味着在模体和在背景中看到一个标记的可能性是一样的。
+这时我们可以更经常看到特定标记和背景下的正值和负值。0.0意味着在模体和背景中观察到一个标记有相等的可能性。
 
 上面是假设A,C,G和T在背景中出现的概率是相同的。那在A,C,G和T出现概率不同的情况下，为了计算特定背景下的位置特异性得分矩阵，可以使用 ``background`` 参数。例如，在40%GC含量的背景下，可以用：
 
@@ -799,7 +797,7 @@ references associated with the motif, using these two-letter keys:
     >>> print "%4.2f" % pssm.min
     -10.85
 
-在特定背景下计算平均值和标准方差可以使用 ``.mean`` 和 ``.std`` 方法。
+在特定背景下计算平均值和标准方差使用 ``.mean`` 和 ``.std`` 方法。
 
 .. code:: verbatim
 
@@ -815,7 +813,7 @@ references associated with the motif, using these two-letter keys:
 14.4  搜索实例
 -----------------------------
 
-模体最常用的功能就是在一些序列中的查找它的实例。在这节，我们会用以下一个人造序列：
+模体最常用的功能就是在序列中的查找它的实例。在这节，我们会用如下的序列作为例子：
 
 .. code:: verbatim
 
@@ -877,7 +875,7 @@ references associated with the motif, using these two-letter keys:
             -8.73414803,  -0.09919716,  -0.6016975 ,  -2.39429784,
            -10.84962463,  -3.65614533], dtype=float32)
 
-通常来说，上面是计算PSSM得分的最快方法。这些得分只能由前导链用 ``pssm.calculate`` 。为了得到互补链的PSSM值，你可以利用PSSM的互补矩阵：
+通常来说，上述是计算PSSM得分的最快方法。这些得分只能由前导链用 ``pssm.calculate`` 计算得到。为了得到互补链的PSSM值，你可以利用PSSM的互补矩阵：
 
 .. code:: verbatim
 
@@ -890,16 +888,16 @@ references associated with the motif, using these two-letter keys:
             -5.64668512,  -8.73414803,  -4.15613794,  -5.6796999 ,
              4.60124254,  -4.2480607 ], dtype=float32)
 
-14.4.3  选择一个得分阀值
+14.4.3  选择得分阀值
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果不想那么随意设定一个阀值，你可以探究一下PSSM得分的分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于一个给定精度值来使计算成本可管理：
+如果不想刚才那么随意设定一个阀值，你可以探究一下PSSM得分的分布。由于得分的空间分布随着模体长度而成倍增长，我们用一个近似于给定精度值来计算，如此可使计算成本更容易控制：
 
 .. code:: verbatim
 
     >>> distribution = pssm.distribution(background=background, precision=10**4)
 
-``distribution`` 对象可以用来决定许多不同的阀值。我们可以指定一个所要求的假阳性率（找到一个由这个序列在这个背景下产生的一个模体实例的概率）：
+``distribution`` 对象可以用来决定许多不同的阀值。我们可以指定一个需要的的假阳性率（找到一个由序列在此背景下产生的模体实例的概率）：
 
 .. code:: verbatim
 
@@ -923,7 +921,7 @@ references associated with the motif, using these two-letter keys:
     >>> print "%5.3f" % threshold
     6.241
 
-或者一个阀值能够大体满足假阳性率和信息含量的 −\ *log* 值之间的相等关系（像Hertz和Stormo的Patser软件所用的一样）：
+或者一个阀值能够大体满足假阳性率和信息含量的 −\ *log* 值之间的相等关系（与Hertz和Stormo的Patser软件所用的一样）：
 
 .. code:: verbatim
 
@@ -981,7 +979,7 @@ references associated with the motif, using these two-letter keys:
     T:   -inf   -inf   -inf   -inf   2.00   -inf
     <BLANKLINE>
 
-在这出现的负无穷大是由于在频率矩阵中相关项的值为0,并且我们默认使用为作为伪计数：
+在这出现的负无穷大是由于在频率矩阵中相关项的值为0,并且我们默认使用0作为伪计数：
 
 .. code:: verbatim
 
@@ -993,7 +991,7 @@ references associated with the motif, using these two-letter keys:
     G: 0.00
     T: 0.00
 
-如果你更改了 ``.pseudocouts`` 属性，那位置频率矩阵和位置特异性得分矩阵都会自动地重新计算：
+如果你更改了 ``.pseudocouts`` 属性，那么位置频率矩阵和位置特异性得分矩阵就都会自动重新计算：
 
 .. code:: verbatim
 
@@ -1053,7 +1051,7 @@ references associated with the motif, using these two-letter keys:
     T:  -1.09  -1.09  -1.09  -1.09   1.85  -1.09
     <BLANKLINE>
 
-把 ``motif.backgroud`` 设为 ``None`` 将重置为均一的分布。
+把 ``motif.backgroud`` 设为 ``None`` 后会将其重置为均一的分布。
 
 .. code:: verbatim
 
@@ -1079,7 +1077,7 @@ references associated with the motif, using these two-letter keys:
     G: 0.40
     T: 0.10
 
-应当注意到你能够在基于它计算的在背景下计算PSSM的平均值：
+应当注意到你能够在当前计算背景下计算PSSM的平均值：
 
 .. code:: verbatim
 
@@ -1102,7 +1100,7 @@ references associated with the motif, using these two-letter keys:
     >>> print "%f" % threshold
     3.854375
 
-请注意，每当你调用 ``motif.pwm`` 或 ``motif.pssm`` 时，位置仅重矩阵和位置特异性得分矩阵都会重新计算。如果看重速度并且你要重复用到PWM或PSSM时，你可以把他们保存成变量，像下面那样：
+请注意，每当你调用 ``motif.pwm`` 或 ``motif.pssm`` ，位置仅重矩阵和位置特异性得分矩阵都会重新计算。如果看重速度并且需要重复用到PWM或PSSM时，你可以把他们保存成变量，如下所示：
 
 .. code:: verbatim
 
@@ -1111,16 +1109,16 @@ references associated with the motif, using these two-letter keys:
 14.6  模体比较
 ----------------------
 
-当我们有多个模体的时候，我们就会想比较他们。
+当有多个模体时，我们就会想去比较它们。
 
-在我们开始比较之前，应当要指出模体的边界通常相当模糊。这也就是说我们需要比较不同长度的模体，因此这些比较也要涉及到相关的比对。所以我们需要考虑两个东西：
+在我们开始比较之前，应当要指出模体的边界通常比较模糊。这也就是说我们需要比较不同长度的模体，因此这些比较也要涉及到相关的比对。所以我们需要考虑两个东西：
 
--   模体的比对
+-   模体比对
 -   比较比对后模体的相关函数
 
-为了比对模体，我们使用PSSMs的不含间隔的比对，并且用0来代替矩阵开始和结束位置缺失的列。这说明我们能够有效地利用利用背景分布来代替PSSM中缺失的列。距离函数然后可以返回模体间最小的距离，以及比对中相应的偏移量。
+为了比对模体，我们使用PSSMs的不含间隔的比对，并且用0来代替矩阵开始和结束位置缺失的列。这说明我们能够有效地利用背景分布来代替PSSM中缺失的列。距离函数然后可以返回模体间最小的距离，以及比对中相应的偏移量。
 
-让我们举个例子，先载入另外的模体，这个模体和我们的测试模体 ``m`` 相似：
+举个例子，先导入和测试模体 ``m`` 相似的模体：
 
 .. code:: verbatim
 
@@ -1135,7 +1133,7 @@ references associated with the motif, using these two-letter keys:
     T:  10.00 100.00 100.00   0.00   0.00   0.00   0.00  40.00  15.00
     <BLANKLINE>
 
-为了让模体能够进行相互比较，我们选择和模体 ``m`` 相同伪计数和背景值：
+为了让模体能够进行相互比较，选择和模体 ``m`` 相同伪计数和背景值：
 
 .. code:: verbatim
 
@@ -1150,7 +1148,7 @@ references associated with the motif, using these two-letter keys:
     T:  -1.53   1.72   1.72  -5.67  -5.67  -5.67  -5.67   0.41  -0.97
     <BLANKLINE>
 
-我们将用Pearson相关来比较这些模体。由于我们想要让它偏向于一个距离长度，我们实际上取1−\ *r* ，其中 *r* 是Pearson相关系数（PCC）：
+我们将用皮尔逊相关（Pearson correlation）来比较这些模体。由于我们想要让它偏向于一个距离长度，我们实际上取1−\ *r* ，其中 *r* 是皮尔逊相关系数（Pearson correlation coefficient，PCC）：
 
 .. code:: verbatim
 
@@ -1173,12 +1171,12 @@ references associated with the motif, using these two-letter keys:
 14.7  查找 *De novo* 模体
 -----------------------------
 
-如今，Biopython对 *De novo* 模体查找只有有限的支持。也就是说，我们支持AlignAce和MEME的运行和读取。由于模体查找工具如雨后春笋般出现，所以很欢迎新的分析程序加入进来。
+如今，Biopython对 *De novo* 模体查找的支持是有限的。也就是说，我们支持AlignAce和MEME的运行和读取。由于模体查找工具如雨后春笋般出现，所以很欢迎新的分析程序加入进来。
 
 14.7.1  MEME
 ~~~~~~~~~~~~
 
-假设你用MEME以你喜欢的参数设置来跑序列，并把结果保存在文件 ``meme.out`` 。你可以用以下的命令来得到MEME输出的模体：
+假设用MEME以你喜欢的参数设置来跑序列，并把结果保存在文件 ``meme.out`` 中。你可以用以下的命令来得到MEME输出的模体：
 
 .. code:: verbatim
 
@@ -1240,7 +1238,7 @@ references associated with the motif, using these two-letter keys:
     >>> motifsM[0].reverse_complement().consensus
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
-如果在你的机器上安装了AlignAce，你可以直接从Biopython中运行AlignAce。下面就是一个如何运行AlignAce的简单例子（其他参数可以用关键字参数来调用）：
+如果你的机器上安装了AlignAce，你可以直接从Biopython中运行AlignAce。下面就是一个如何运行AlignAce的简单例子（其他参数可以用关键字参数来调用）：
 
 .. code:: verbatim
 
@@ -1272,9 +1270,9 @@ references associated with the motif, using these two-letter keys:
 14.9  旧版Bio.Motif模块
 -------------------------------
 
-这章剩下的部分将介绍Biopython 1.61版本前的 ``Bio.Motifs`` 模块，该模块取代了Biopython 1.50版本中基于两个早期Biopython模块—— ``Bio.AlignAce`` 和 ``Bio.MEME`` 的 ``Bio.Motif`` 模块。
+本章剩下部分将介绍Biopython 1.61版本前的 ``Bio.Motifs`` 模块，该模块取代了Biopython 1.50版本中基于两个早期Biopython模块—— ``Bio.AlignAce`` 和 ``Bio.MEME`` 的 ``Bio.Motif`` 模块。
 
-为了平滑的过渡，早期的 ``Bio.Motif`` 模块将会和它的取代者 ``Bio.Motifs`` 一同维护到至少发行两个版本，并且最少一年时间。
+为了平滑的过渡，早期的 ``Bio.Motif`` 模块将会和它的取代者 ``Bio.Motifs`` 一同维护到至少发行两个版本，并且持续至少一年。
 
 14.9.1  模体对象
 ~~~~~~~~~~~~~~~~~~~~~
@@ -1285,14 +1283,14 @@ references associated with the motif, using these two-letter keys:
 
     >>> from Bio import Motif
 
-然后我可以开始创建我们的第一个模体对象。让我们创建一个DNA模体：
+然后可以开始创建第一个模体对象。创建一个DNA模体：
 
 .. code:: verbatim
 
     >>> from Bio.Alphabet import IUPAC
     >>> m = Motif.Motif(alphabet=IUPAC.unambiguous_dna)
 
-现在这里面什么也没有，让我往新建的模体加入一些序列：
+现在这里面什么也没有，往新建的模体加入一些序列：
 
 .. code:: verbatim
 
@@ -1331,7 +1329,7 @@ references associated with the motif, using these two-letter keys:
     >>> print "%0.2f" % m.ic()
     5.27
 
-这给我们提供了模体中信息容量的比特数，知道和背景有多少不同。
+这给我们提供了模体中信息容量的比特数，这指出和背景有多少不同。
 
 展示模体最常用的就是PWM（位置仅重矩阵）。它概括了在模体上任意位置出现一个符号（这里指核苷酸）的概率。这个可以用 ``.pwm()`` 方法来计算：
 
@@ -1346,7 +1344,7 @@ references associated with the motif, using these two-letter keys:
 
 模体的PWM中的概率是基于实例中的计数，但我们发现，虽然模体中没有出现G和C，可是它们的概率仍然是非0的。这主要是因为有伪计数的存在，简单地说，就是一种常用的方式来承认我们认知的不完备以及为了避免使用0进行对数运算而出现的技术问题。
 
-我可以调整伪计数添加到模体对象两个属性的方式。 ``.background`` 是我们假设代表背景分布的所有字符的概率分布，是非模体序列（通常基于各自基因组的GC含量）。在模体创建的时候，就默认的设置为一个统一的分布：
+我可以调整伪计数添加到模体对象两个属性的方式。 ``.background`` 是我们假设代表背景分布的所有字符的概率分布，是非模体序列（通常基于各自基因组的GC含量）。在模体创建的时候，就默认的设置为一个统一分布：
 
 .. code:: verbatim
 
@@ -1362,7 +1360,7 @@ references associated with the motif, using these two-letter keys:
 
 所以输入伪计数的总量等于一个实例的输入总量。
 
-使用背景分布和附加了伪计数的pwm，可以很容易的计算log-odd比率，告诉我们在背景下，一个来自模体特定碱基的log-odd值。我们可以使用 ``.log_odds()`` 方法：
+使用背景分布和附加了伪计数的pwm，可以很容易的计算log-odd比率，这告诉我们在背景下，一个来自模体特定碱基的log-odd值。我们可以使用 ``.log_odds()`` 方法：
 
 .. code:: verbatim
 
@@ -1389,12 +1387,12 @@ references associated with the motif, using these two-letter keys:
       'G': -2.3219280948873622}
     ]
 
-在这，我们可以看到如果模体中的碱基比背景中出现频率更高，其值为正值，反之则为负值。0.0说明在背景和模体中出现的概率是相同的（如第二个位置的“T”）。
+此处，我们可以看出如果模体中的碱基比背景中出现频率更高，其值为正值，反之则为负值。0.0说明在背景和模体中出现的概率是相同的（如第二个位置的“T”）。
 
 14.9.1.1  模体读写
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-手动从实例创建一个模体确实没什么技术含量，所以很有必要有一些读写功能来读取和写入模体。对于如何存储模体还没有一个固定的标准，但是有一些格式比其他格式更流行。这些格式的主要区别在于模体的创建是基于实例还是一些PWM矩阵。其中一个最流行的模体数据库就是 `JASPAR <http://jaspar.genereg.net>`__ ，该数据库保存了上面提到的两种类型的格式，所以让我看看我们是如何从实例中导入JASPAR模体：
+手动从实例创建一个模体确实没什么技术含量，所以很有必要有一些读写功能来读取和写出模体。对于如何存储模体还没有一个固定的标准，但是有一些格式比其他格式更流行。这些格式的主要区别在于模体的创建是基于实例还是一些PWM矩阵。其中一个最流行的模体数据库就是 `JASPAR <http://jaspar.genereg.net>`__ ，该数据库保存了上述两种类型的格式，所以让我们看看是如何从实例中导入JASPAR模体：
 
 .. code:: verbatim
 
@@ -1442,7 +1440,7 @@ references associated with the motif, using these two-letter keys:
      Seq('GACCAAATAAGG', IUPACUnambiguousDNA()),
     ....
 
-在这里要注意的是 ``make_instances_from_counts()`` 方法创建的是假实例，因为按照相同的pwm能够得到许多不同的实例，所以不能够反过来重建原来的矩阵。不过这对我们利用PWM来展现模体没有什么影响，但从基于计数的模体中导出实例时要小心。
+在这里需要注意的是 ``make_instances_from_counts()`` 方法创建的是假实例，因为按照相同的pwm能够得到许多不同的实例，所以不能反过来重建原来的矩阵。不过这对我们利用PWM来展现模体没有什么影响，但从基于计数的模体中导出实例时要小心。
 
 说到导出，让我们看看导出函数。我们可以按fasta的格式导出：
 
@@ -1475,7 +1473,7 @@ references associated with the motif, using these two-letter keys:
     05 0 4 0 0
     XX
 
-最后，如果我们能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
+最后，如果能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
 
 .. code:: verbatim
 
@@ -1486,7 +1484,7 @@ references associated with the motif, using these two-letter keys:
 14.9.2  查找实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-模体中最常用的就是在一些序列中查找实例。为了说明这章，我们将手动创建一个下面一个序列：
+模体中最常用的就是在一些序列中查找实例。为解释这部分，我们将手动创建一个如下的序列：
 
 .. code:: verbatim
 
@@ -1513,8 +1511,7 @@ references associated with the motif, using these two-letter keys:
     12 TAATA
     20 TTATA
 
-It’s just as easy to look for positions, giving rise to high log-odds
-scores against our motif:
+提高模体的log-odds值能让查为位置更加简单:
 
 
 .. code:: verbatim
@@ -1530,7 +1527,7 @@ scores against our motif:
 
 你可能注意到阀值参数，在这里随意地设为5.0。按 *log*\ :sub:`2` 来算，我们应当查找那些在模体中出现概率为背景中出现概率32倍的序列。默认的阀值是0.0,在些阀值下，会把所有比背景中出现概率大的模体实例都找出来。
 
-如果你不想那么随意的选择一个阀值，你可以研究一下 ``Motif.score_distribution`` 类，它为模体提供一个相应的得分分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于一个给定精度值来使计算成本变得可管理：
+如果不想那么随意的选择一个阀值，你可以研究一下 ``Motif.score_distribution`` 类，它为模体提供一个相应的得分分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于给定精度值计算，从而使计算成本易于控制：
 
 .. code:: verbatim
 
@@ -1538,7 +1535,7 @@ scores against our motif:
 
 上面那个sd对象可以用来决定许多不同的阀值。
 
-我们可以设定一个需要的假阳性率（找到一个由这个序列在这个背景下产生的一个模体实例的概率）：
+我们可以设定一个需要的假阳性率（找到一个由此序列在这个背景下产生的模体实例的概率）：
 
 .. code:: verbatim
 
@@ -1576,16 +1573,16 @@ scores against our motif:
 14.9.3  模体比较
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-当我们有多个模体的时候，我们就会想比较他们。对此， ``Bio.Motif`` 有三种不同的方法来进行模体比较。
+当有多个模体时，我们就会想去比较他们。对此， ``Bio.Motif`` 有三种不同的方法来进行模体比较。
 
 在我们开始比较之前，应当指出模体的边界通常是相当模糊的。也就是说我们经常需要比较不同长度的模体，因此这些比较涉及到相关的比对。所以我们需要考虑两个要点：
 
--   模体的比对
+-   模体比对
 -   比较比对后模体的相关函数
 
 在 ``Bio.Motif`` 中有三种比较方法，这些方法都是基于来源于模体比对的想法，而采用不同方式。简单来说，我们使用不含间隔的PSSMs比对，并且用0来代替矩阵同背景相比，在开始和结束位置出现缺失的列。这三种比较方法都可以解释成距离估量，但是只有一个（ ``dist——dpq`` ）满足三角不等式。这些方法都返回距离的最小值和模体相应的偏移量。
 
-为了展示这些比较功能是如何实现的，让我加载和测试模体 ``m`` 相似的其他模体：
+为了展示这些比较功能是如何实现的，导入和测试模体 ``m`` 相似的其他模体：
 
 .. code:: verbatim
 
@@ -1594,7 +1591,7 @@ scores against our motif:
     >>> ubx.consensus()
     Seq('TAAT', IUPACUnambiguousDNA())
 
-我们第一个展示的功能是基于Pearson相关的。因为我们想让它类似于一个距离估量，所以我们实际上取 1−\ *r* ，其中的 *r* 是Pearson相关系数（PCC）：
+第一个展示的功能是基于皮尔逊相关（Pearson correlation）的。因为我们想让它类似于一个距离估量，所以我们实际上取 1−\ *r* ，其中的 *r* 是皮尔逊相关系数（Pearson correlation coefficient，PCC）：
 
 .. code:: verbatim
 
@@ -1629,7 +1626,7 @@ scores against our motif:
     >>> m.dist_dpq(ubx.reverse_complement())
     (0.49292358382899853, 1)
 
-还有 ``dist_product`` 方法，它是基于概率的产物，这概率可以看成是两个模体独立产生两个相同实例的概率。
+还有 ``dist_product`` 方法，它是基于概率的方法，这概率可以看成是两个模体独立产生两个相同实例的概率。
 
 .. code:: verbatim
 
@@ -1652,7 +1649,7 @@ scores against our motif:
     >>> motifsM
     [<Bio.Motif.MEMEMotif.MEMEMotif object at 0xc356b0>]
 
-除了那一系列想要的模体外，结果对象中还有很多有用的信息，可以那些一目了然的属性名来获取：
+除了那一系列想要的模体外，结果对象中还有很多有用的信息，可以用那些一目了然的属性名来获取：
 
 -  ``.alphabet``
 -  ``.datafile``
@@ -1699,7 +1696,7 @@ MEME解析器得到的模体可以像通常模体（含有实例）一样进行�
     >>> motifsM[0].reverse_complement().consensus()
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
-如果在你的机器上安装了AlignAce，你也可以直接从Biopython中启动。下面就是一个如何启动的小例子（其他参数可以用关键字参数指定）：
+如果你的机器上安装了AlignAce，你也可以直接从Biopython中启动。下面就是一个如何启动的小例子（其他参数可以用关键字参数指定）：
 
 .. code:: verbatim
 
