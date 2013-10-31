@@ -2,7 +2,7 @@
 ============================================
 
 Entrez
-(```http://www.ncbi.nlm.nih.gov/Entrez`` <http://www.ncbi.nlm.nih.gov/Entrez>`__)
+(`http://www.ncbi.nlm.nih.gov/Entrez <http://www.ncbi.nlm.nih.gov/Entrez>`__)
 is a data retrieval system that provides users access to NCBI’s
 databases such as PubMed, GenBank, GEO, and many others. You can access
 Entrez from a web browser to manually enter queries, or you can use
@@ -13,7 +13,7 @@ records from within a Python script.
 The ``Bio.Entrez`` module makes use of the Entrez Programming Utilities
 (also known as EUtils), consisting of eight tools that are described in
 detail on NCBI’s page at
-```http://www.ncbi.nlm.nih.gov/entrez/utils/`` <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
+`http://www.ncbi.nlm.nih.gov/entrez/utils/ <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
 Each of these tools corresponds to one Python function in the
 ``Bio.Entrez`` module, as described in the sections below. This module
 makes sure that the correct URL is used for the queries, and that not
@@ -79,7 +79,7 @@ To paraphrase:
 -  For any series of more than 100 requests, do this at weekends or
    outside USA peak times. This is up to you to obey.
 -  Use the
-   ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__
+   `http://eutils.ncbi.nlm.nih.gov <http://eutils.ncbi.nlm.nih.gov>`__
    address, not the standard NCBI Web address. Biopython uses this web
    address.
 -  Make no more than three requests every seconds (relaxed from at most
@@ -1268,7 +1268,7 @@ more details.
 
 If you are in the medical field or interested in human issues (and many
 times even if you are not!), PubMed
-(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
+(`http://www.ncbi.nlm.nih.gov/PubMed/ <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 is an excellent source of all kinds of goodies. So like other things,
 we’d like to be able to grab information from it and use it in Python
 scripts.
@@ -1492,7 +1492,7 @@ The GenBank record format is a very popular method of holding
 information about sequences, sequence features, and other associated
 sequence information. The format is a good way to get information from
 the NCBI databases at
-```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__.
+`http://www.ncbi.nlm.nih.gov/ <http://www.ncbi.nlm.nih.gov/>`__.
 
 In this example we’ll show how to query the NCBI databases,to retrieve
 the records from the query, and then parse them using ``Bio.SeqIO`` -

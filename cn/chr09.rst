@@ -2,13 +2,13 @@
 ============================================
 
 Entrez
-(```http://www.ncbi.nlm.nih.gov/Entrez`` <http://www.ncbi.nlm.nih.gov/Entrez>`__)
+(`http://www.ncbi.nlm.nih.gov/Entrez <http://www.ncbi.nlm.nih.gov/Entrez>`__)
 是一个给客户提供NCBI各个数据库（如PubMed, GeneBank, GEO等等）访问的检索系统。
 用户可以通过浏览器手动输入查询条目访问Entrez，也可以使用Biopython的 ``Bio.Entrez`` 模块以编程方式访问来访问Entrez。
 如果使用第二种方法，用户用一个Python脚本就可以实现在PubMed里面搜索或者从GenBank下载数据。
 
 ``Bio.Entrez`` 模块利用了Entrez Programming Utilities（也称作EUtils），包含八个工具，详情请见NCBI的网站：
-```http://www.ncbi.nlm.nih.gov/entrez/utils/`` <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
+`http://www.ncbi.nlm.nih.gov/entrez/utils/ <http://www.ncbi.nlm.nih.gov/entrez/utils/>`__.
 每个工具都能在Python的 ``Bio.Entrez`` 模块中找到对应函数，后面会详细讲到。这个模块可以保证用来查询的URL
 的正确性，并且向NCBI要求的一样，每三秒钟查询的次数不超过一。
 
@@ -48,7 +48,7 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
 
 详细规范如下：
 -  对任何连续超过100次的访问请求，请在周末时间或者避开美国的使用高峰时间。这个取决于你是否遵从。
--  使用这个网址 ```http://eutils.ncbi.nlm.nih.gov`` <http://eutils.ncbi.nlm.nih.gov>`__ ，
+-  使用这个网址 `http://eutils.ncbi.nlm.nih.gov <http://eutils.ncbi.nlm.nih.gov>`__ ，
    而不是通常的NCBI网址。Biopython使用的是这个网址。
 -  每秒钟不要超过三次请求（比2009年年初的每三秒钟最多一次请求要宽松）。这个由Biopython自动强制实行。
 -  使用email参数，这样如果遇到什么问题，NCBI可以通过邮件联系到你。你可以在每次请求Entrez的时候明确的设置
@@ -1093,7 +1093,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 9.14.1  PubMed和Medline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你是在医药领域或者对人类的问题感兴趣（或者尽管并你不感兴趣，大多数情况下也适用!），PubMed(```http://www.ncbi.nlm.nih.gov/PubMed/`` <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
+如果你是在医药领域或者对人类的问题感兴趣（或者尽管并你不感兴趣，大多数情况下也适用!），PubMed(`http://www.ncbi.nlm.nih.gov/PubMed/ <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。
 
 在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(see section \ `2.3 <#sec:orchids>`__ for our motivation)。
@@ -1284,7 +1284,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GenBank record 格式是保存序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库 
-```http://www.ncbi.nlm.nih.gov/`` <http://www.ncbi.nlm.nih.gov/>`__ 获取信息非常好的一种方式 .
+`http://www.ncbi.nlm.nih.gov/ <http://www.ncbi.nlm.nih.gov/>`__ 获取信息非常好的一种方式 .
 
 在这个例子当中，我们将展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 解析他们 ——
 在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__ 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性

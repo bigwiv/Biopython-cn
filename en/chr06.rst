@@ -48,7 +48,7 @@ Both functions expect two mandatory arguments:
 #. The second argument is a lower case string specifying the alignment
    format. As in ``Bio.SeqIO`` we don’t try and guess the file format
    for you! See
-   ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
+   `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
    for a full listing of supported formats.
 
 There is also an optional ``seq_count`` argument which is discussed in
@@ -98,7 +98,7 @@ in the PFAM or Stockholm file format:
 
 This is the seed alignment for the Phage\_Coat\_Gp8 (PF05371) PFAM
 entry, downloaded from a now out of date release of PFAM from
-```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__. We can
+`http://pfam.sanger.ac.uk/ <http://pfam.sanger.ac.uk/>`__. We can
 load this file as follows (assuming it has been saved to disk as
 “PF05371\_seed.sth” in the current working directory):
 
@@ -167,7 +167,7 @@ To have a look at all the sequence annotation, try this:
     ...     print record
 
 Sanger provide a nice web interface at
-```http://pfam.sanger.ac.uk/family?acc=PF05371`` <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
+`http://pfam.sanger.ac.uk/family?acc=PF05371 <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
 which will actually let you download this alignment in several other
 formats. This is what the file looks like in the FASTA file format:
 
@@ -213,7 +213,7 @@ With any supported file format, you can load an alignment in exactly the
 same way just by changing the format string. For example, use “phylip”
 for PHYLIP files, “nexus” for NEXUS files or “emboss” for the alignments
 output by the EMBOSS tools. There is a full listing on the wiki page
-(```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__)
+(`http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__)
 and in the built in documentation (also
 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__):
 

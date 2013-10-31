@@ -20,7 +20,7 @@
 
 #. 第一个参数为包含有多序列比对数据的 *句柄（handle）* 。在实际操作中，这往往是一个打开的文件（详细信息请见 `22.1 <#sec:appendix-handles>`__ ）或者文件名。
 
-#. 第二个参数为多序列比对文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块支持的多序列比对数据格式可以在 ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__ 中找到。
+#. 第二个参数为多序列比对文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块支持的多序列比对数据格式可以在 `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__ 中找到。
 
 ``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 `6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。
 
@@ -61,7 +61,7 @@
     #=GC seq_cons                 AEssss...AptAhDSLpspAT-hIu.sWshVsslVsAsluIKLFKKFsSKA
     //
 
-这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ ```http://pfam.sanger.ac.uk/`` <http://pfam.sanger.ac.uk/>`__ ），但这并不影响我们的例子（假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下）：
+这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ `http://pfam.sanger.ac.uk/ <http://pfam.sanger.ac.uk/>`__ ），但这并不影响我们的例子（假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下）：
 
 .. code:: verbatim
 
@@ -122,7 +122,7 @@
     ...     print record
 
 Sanger网站
-```http://pfam.sanger.ac.uk/family?acc=PF05371`` <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
+`http://pfam.sanger.ac.uk/family?acc=PF05371 <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
 可以让你下载各种不同的序列比对的格式。以下例子为FASTA格式：
 
 .. code:: verbatim
@@ -154,7 +154,7 @@ Sanger网站
 
 此外，除了使用Sanger网站，你也可以利用 ``Bio.AlignIO`` 来将原始的Stockholm格式转换成FASTA文件格式（见下文）。
 
-对于任何一种Biopython支持的格式，你都可以用同样的方式读取它（通过指定文件的格式）。例如，你可以使用“phylip”来表示PHYLIP格式文件，用"nexus"来指定NEXUS格式文件或者用“emboss”来指定EMBOSS工具箱的输出文件。读者可以在以下链接中找到所有支持的格式（ ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__ ），或者内置的帮助中（以及在线文档 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__ ）：
+对于任何一种Biopython支持的格式，你都可以用同样的方式读取它（通过指定文件的格式）。例如，你可以使用“phylip”来表示PHYLIP格式文件，用"nexus"来指定NEXUS格式文件或者用“emboss”来指定EMBOSS工具箱的输出文件。读者可以在以下链接中找到所有支持的格式（ `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__ ），或者内置的帮助中（以及在线文档 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__ ）：
 
 .. code:: verbatim
 

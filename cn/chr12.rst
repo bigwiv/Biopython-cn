@@ -359,3 +359,8 @@ FDist通过对由下例公式得到的迁移率进行溯祖模拟估计期望的
 最期望的是您的参与！
 
 尽管如此，已经完成的功能模块正在逐步加入到Bio.PopGen，这些代码覆盖了程序FDist和SimCoal2，HapMap和UCSC Table Browser数据库，以及一些简单的统计计算，如 *F*\ :sub:`*st*` ， 或等位基因数。
+
+
+
+
+.. |image4| image:: ../images/bottle.png

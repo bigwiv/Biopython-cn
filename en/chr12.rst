@@ -16,7 +16,7 @@ stable.
 -------------
 
 GenePop
-(```http://genepop.curtin.edu.au/`` <http://genepop.curtin.edu.au/>`__)
+(`http://genepop.curtin.edu.au/ <http://genepop.curtin.edu.au/>`__)
 is a popular population genetics software package supporting
 Hardy-Weinberg tests, linkage desiquilibrium, population diferentiation,
 basic statistics, *F*\ :sub:`*st*` and migration estimates, among
@@ -132,7 +132,7 @@ mapping.
 The strategy followed in the Biopython implementation of the coalescent
 was not to create a new, built-in, simulator from scratch but to use an
 existing one, SIMCOAL2
-(```http://cmpg.unibe.ch/software/simcoal2/`` <http://cmpg.unibe.ch/software/simcoal2/>`__).
+(`http://cmpg.unibe.ch/software/simcoal2/ <http://cmpg.unibe.ch/software/simcoal2/>`__).
 SIMCOAL2 allows for, among others, population structure, multiple
 demographic events, simulation of multiple types of loci (SNPs,
 sequences, STRs/microsatellites and RFLPs) with recombination, diploidy
@@ -605,3 +605,8 @@ That being said, already existing fully functional code is currently
 being incorporated in Bio.PopGen, that code covers the applications
 FDist and SimCoal2, the HapMap and UCSC Table Browser databases and some
 simple statistics like *F*\ :sub:`*st*`, or allele counts.
+
+
+
+
+.. |image4| image:: ../images/bottle.png

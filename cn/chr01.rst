@@ -214,5 +214,5 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
     信息：
 
-对于更一般的问题，Python FAQ页面`http://www.python.org/doc/faq/ <http://www.python.org/doc/faq/>`__
+对于更一般的问题，Python FAQ页面 `http://www.python.org/doc/faq/ <http://www.python.org/doc/faq/>`__
 可能会有帮助。

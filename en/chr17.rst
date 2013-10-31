@@ -22,7 +22,7 @@ on Biopython. GenomeDiagram is described in the Bioinformatics journal
 publication by Pritchard et al. (2006) [`2 <#pritchard2006>`__\ ], which
 includes some examples images. There is a PDF copy of the old manual
 here,
-```http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf`` <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__
+`http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__
 which has some more examples. As the name might suggest, GenomeDiagram
 was designed for drawing whole genomes, in particular prokaryotic
 genomes, either as linear diagrams (optionally broken up into fragments
@@ -70,7 +70,7 @@ from a GenBank file (see Chapter \ `5 <#chapter:Bio.SeqIO>`__). This
 example uses the pPCP1 plasmid from *Yersinia pestis biovar Microtus*,
 the file is included with the Biopython unit tests under the GenBank
 folder, or online
-```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
 from our website.
 
 .. code:: verbatim
@@ -935,3 +935,18 @@ create a colorful PDF file, shown here:
 
 |image25|
 
+
+
+.. |image13| image:: ../images/plasmid_linear.png
+.. |image14| image:: ../images/plasmid_circular.png
+.. |image15| image:: ../images/GD_sigil_labels.png
+.. |image16| image:: ../images/GD_sigils.png
+.. |image17| image:: ../images/GD_sigil_arrow_shafts.png
+.. |image18| image:: ../images/GD_sigil_arrow_heads.png
+.. |image19| image:: ../images/plasmid_linear_nice.png
+.. |image20| image:: ../images/plasmid_circular_nice.png
+.. |image21| image:: ../images/three_track_simple.png
+.. |image22| image:: ../images/three_track_cl.png
+.. |image23| image:: ../images/three_track_cl2a.png
+.. |image24| image:: ../images/simple_chrom.png
+.. |image25| image:: ../images/tRNA_chrom.png
