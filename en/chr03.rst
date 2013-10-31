@@ -31,7 +31,7 @@ The alphabet object is perhaps the important thing that makes the
 ``Seq`` object more than just a string. The currently available
 alphabets for Biopython are defined in the ``Bio.Alphabet`` module.
 We’ll use the IUPAC alphabets
-(```http://www.chem.qmw.ac.uk/iupac/`` <http://www.chem.qmw.ac.uk/iupac/>`__)
+(`http://www.chem.qmw.ac.uk/iupac/ <http://www.chem.qmw.ac.uk/iupac/>`__)
 here to deal with some of our favorite objects: DNA, RNA and Proteins.
 
 ``Bio.Alphabet.IUPAC`` provides basic definitions for proteins, DNA and
@@ -646,7 +646,7 @@ method (and mentioned the equivalent function in the ``Bio.Seq`` module
 use codon table objects derived from the NCBI information at
 ```ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt`` <ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt>`__,
 also shown on
-```http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi`` <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__
+`http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__
 in a much more readable layout.
 
 As before, let’s just focus on two choices: the Standard translation

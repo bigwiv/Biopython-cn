@@ -22,7 +22,7 @@ Biopython处理这些序列的机制-- ``Seq`` 对象。第 `4 <#chapter:SeqReco
 
 字母对象可能是使得``Seq``对象不仅仅是字符串的重要因素。目前，Biopython的字母表
 定义在``Bio.Alphabet``模块。我们将会使用IUPAC字母表
-（ ```http://www.chem.qmw.ac.uk/iupac/`` <http://www.chem.qmw.ac.uk/iupac/>`__ ）
+（ `http://www.chem.qmw.ac.uk/iupac/ <http://www.chem.qmw.ac.uk/iupac/>`__ ）
 来处理我们比较青睐的对象：DNA、RNA和蛋白质对象。
 
  ``Bio.Alphabet.IUPAC`` 提供了蛋白质、DNA和RNA的基本定义，并且提供了扩展
@@ -575,7 +575,7 @@ K12中的基因yaaX：
 中的等效函数--参见第 \ `3.14 <#sec:seq-module-functions>`__ 章节）。实质上
 使用的这些密码子表对象来自与NCBI的 ```ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt`` 
 <ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt>`__ ，还有
- ```http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi`` <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__ 
+ `http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__ 
 以一种更易读的形式呈现。
 
 和前面一样，让我们仅仅关注两个选择：标准的翻译表和脊椎动物线粒体DNA的翻译表。

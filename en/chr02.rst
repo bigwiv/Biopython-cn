@@ -8,7 +8,7 @@ working knowledge of Python, and that you have successfully installed
 Biopython on your system. If you think you need to brush up on your
 Python, the main Python web site provides quite a bit of free
 documentation to get started with
-(```http://www.python.org/doc/`` <http://www.python.org/doc/>`__).
+(`http://www.python.org/doc/ <http://www.python.org/doc/>`__).
 
 Since much biological work on the computer involves connecting with
 databases on the internet, some of the examples will also require a
@@ -157,16 +157,16 @@ an online search for our friends, the lady slipper orchids. To keep this
 introduction simple, we’re just using the NCBI website by hand. Let’s
 just take a look through the nucleotide databases at NCBI, using an
 Entrez online search
-(```http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide`` <http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide>`__)
+(`http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide <http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?db=Nucleotide>`__)
 for everything mentioning the text Cypripedioideae (this is the
 subfamily of lady slipper orchids).
 
 When this tutorial was originally written, this search gave us only 94
 hits, which we saved as a FASTA formatted text file and as a GenBank
 formatted text file (files
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 and
-```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__,
+```ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__,
 also included with the Biopython source code under
 ``docs/tutorial/examples/``).
 
@@ -181,7 +181,7 @@ look at how to do a search like this from within Python.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you open the lady slipper orchids FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 in your favourite text editor, you’ll see that the file starts like
 this:
 
@@ -224,7 +224,7 @@ Notice that the FASTA format does not specify the alphabet, so
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now let’s load the GenBank file
-```ls_orchid.gbk`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+```ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
 instead - notice that the code to do this is almost identical to the
 snippet used above for the FASTA file - the only difference is we change
 the filename and the format string:
@@ -266,9 +266,9 @@ While the most popular file formats have parsers integrated into
 ``Bio.SeqIO`` and/or ``Bio.AlignIO``, for some of the rarer and unloved
 file formats there is either no parser at all, or an old parser which
 has not been linked in yet. Please also check the wiki pages
-```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
+`http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
 and
-```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
+`http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
 for the latest information, or ask on the mailing list. The wiki pages
 should include an up to date list of supported file types, and some
 additional examples.
@@ -320,7 +320,7 @@ something similar to what you want to do.
 
 If you know what you want to do, but can’t figure out how to do it,
 please feel free to post questions to the main Biopython list (see
-```http://biopython.org/wiki/Mailing_lists`` <http://biopython.org/wiki/Mailing_lists>`__).
+`http://biopython.org/wiki/Mailing_lists <http://biopython.org/wiki/Mailing_lists>`__).
 This will not only help us answer your question, it will also allow us
 to improve the documentation so it can help the next person do what you
 want to do.

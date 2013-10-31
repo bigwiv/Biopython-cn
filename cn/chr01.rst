@@ -4,11 +4,11 @@
 1.1  什么是Biopython？
 -----------------------
 
-Biopython工程是一个使用Python来开发计算分子生物学工具的国际团体。(```http://www.python.org`` <http://www.python.org>`__)
+Biopython工程是一个使用Python来开发计算分子生物学工具的国际团体。(`http://www.python.org <http://www.python.org>`__)
 Python是一种面向对象的、解释型的、灵活的语言，在计算机科学中日益流行。Python易学，语法明晰，并且能很容易的使用以C，C++或
 者FORTRAN编写的模块实现扩展。
 
-Biopython官网(```http://www.biopython.org`` <http://www.biopython.org>`__)为使用和研究生物信息学的开发者提供了一个在线的
+Biopython官网(`http://www.biopython.org <http://www.biopython.org>`__)为使用和研究生物信息学的开发者提供了一个在线的
 资源库，包括模块、脚本以及一些基于Python的软件的网站链接。一般来讲，Biopython致力于通过创造高质量的和可重复利用的模块及
 类，从而使得Python在生物信息学中的应用变得更加容易。Biopython的特点包括解析各种生物信息学格式的文件(BLAST， Clustalw， FASTA，
 Genbank...)，访问在线的服务器(NCBI，Expasy...)，常见和不那么常见程序的接口(Clustalw， DSSP，MSMS...)，标准的序列类，各
@@ -61,7 +61,7 @@ Genbank...)，访问在线的服务器(NCBI，Expasy...)，常见和不那么常
 
 Biopython的所有安装信息在此文档中分开，以便于更容易保持更新。
 
-简短的版本去我们的下载页面(```http://biopython.org/wiki/Download`` <http://biopython.org/wiki/Download>`__),
+简短的版本去我们的下载页面(`http://biopython.org/wiki/Download <http://biopython.org/wiki/Download>`__),
 下载并安装所列举的dependencies，然后下载并安装Biopython。Biopython能在多种平台上运行（Windows，Mac，各种版本的Linux和Unix）。
 对于Windows我们提供预编译的一键式安装程序，而对Unix和其他操作系统，你必须按照附带的README文件从源开始安装。这通常
 是很简单的，只要标准命令：
@@ -75,9 +75,9 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 （事实上你可以跳过build和test，直接install。但最好是确保所有的东西看起来都没问题。）
 
 我们的安装说明的详细版本包括了Python的安装，Biopython dependencies的安装以及Biopython本身的安装。可从PDF
-(```http://biopython.org/DIST/docs/install/Installation.pdf`` <http://biopython.org/DIST/docs/install/Installation.pdf>`__)
+(`http://biopython.org/DIST/docs/install/Installation.pdf <http://biopython.org/DIST/docs/install/Installation.pdf>`__)
 和HTML格式获得。
-(```http://biopython.org/DIST/docs/install/Installation.html`` <http://biopython.org/DIST/docs/install/Installation.html>`__)。
+(`http://biopython.org/DIST/docs/install/Installation.html <http://biopython.org/DIST/docs/install/Installation.html>`__)。
 
 1.4  常见问答（FAQ）
 -------------------------------------
@@ -122,19 +122,19 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
     的相应版本。此文档最新出版的版本可通过在线获得（每个版本的更新）：
 
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial.html <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
 
    如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
    的教程的拷贝：
 
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
 #. *我需要哪一个“Numerical Python”？*
    对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
    及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
-   装。也可以访问： ```http://numpy.scipy.org/`` <http://numpy.scipy.org/>`__
+   装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
 #. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation
     方法？*
     你需要Biopython 1.49或更新的版本。或者，使用以下 \ `3.14 <#sec:seq-module-functions>`__ 部分中的 ``Bio.Seq`` 模块
@@ -154,9 +154,9 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 #.  ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
     请检查内建文档（``from Bio import SeqIO``，然后 ``help(SeqIO)`` ），或见wiki上的最
     新条目：
-   ```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
+   `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    以及
-   ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
+   `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *的input函数不让我提供一个序列字母？*
     你需要Biopython 1.49或更新版本。
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse`` *，* ``read`` *和
@@ -214,5 +214,5 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
     信息：
 
-对于更一般的问题，Python FAQ页面```http://www.python.org/doc/faq/`` <http://www.python.org/doc/faq/>`__
+对于更一般的问题，Python FAQ页面`http://www.python.org/doc/faq/ <http://www.python.org/doc/faq/>`__
 可能会有帮助。

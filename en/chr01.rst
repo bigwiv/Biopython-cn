@@ -6,14 +6,14 @@
 
 The Biopython Project is an international association of developers of
 freely available Python
-(```http://www.python.org`` <http://www.python.org>`__) tools for
+(`http://www.python.org <http://www.python.org>`__) tools for
 computational molecular biology. Python is an object oriented,
 interpreted, flexible language that is becoming increasingly popular for
 scientific computing. Python is easy to learn, has a very clear syntax
 and can easily be extended with modules written in C, C++ or FORTRAN.
 
 The Biopython web site
-(```http://www.biopython.org`` <http://www.biopython.org>`__) provides
+(`http://www.biopython.org <http://www.biopython.org>`__) provides
 an online resource for modules, scripts, and web links for developers of
 Python-based software for bioinformatics use and research. Basically,
 the goal of Biopython is to make it as easy as possible to use Python
@@ -90,7 +90,7 @@ All of the installation information for Biopython was separated from
 this document to make it easier to keep updated.
 
 The short version is go to our downloads page
-(```http://biopython.org/wiki/Download`` <http://biopython.org/wiki/Download>`__),
+(`http://biopython.org/wiki/Download <http://biopython.org/wiki/Download>`__),
 download and install the listed dependencies, then download and install
 Biopython. Biopython runs on many platforms (Windows, Mac, and on the
 various flavors of Linux and Unix). For Windows we provide pre-compiled
@@ -110,9 +110,9 @@ is usually as simple as the standard commands:
 The longer version of our installation instructions covers installation
 of Python, Biopython dependencies and Biopython itself. It is available
 in PDF
-(```http://biopython.org/DIST/docs/install/Installation.pdf`` <http://biopython.org/DIST/docs/install/Installation.pdf>`__)
+(`http://biopython.org/DIST/docs/install/Installation.pdf <http://biopython.org/DIST/docs/install/Installation.pdf>`__)
 and HTML formats
-(```http://biopython.org/DIST/docs/install/Installation.html`` <http://biopython.org/DIST/docs/install/Installation.html>`__).
+(`http://biopython.org/DIST/docs/install/Installation.html <http://biopython.org/DIST/docs/install/Installation.html>`__).
 
 1.4  Frequently Asked Questions (FAQ)
 -------------------------------------
@@ -161,20 +161,20 @@ and HTML formats
    relevant version in both HTML and PDF formats. The latest published
    version of this document (updated at each release) is online:
 
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial.html <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
 
    If you are using the very latest unreleased code from our repository
    you can find copies of the in-progress tutorial here:
 
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
-   -  ```http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf`` <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
+   -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
 #. *Which “Numerical Python” do I need?*
     For Biopython 1.48 or earlier, you needed the old Numeric module.
    For Biopython 1.49 onwards, you need the newer NumPy instead. Both
    Numeric and NumPy can be installed on the same machine fine. See
-   also: ```http://numpy.scipy.org/`` <http://numpy.scipy.org/>`__
+   also: `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
 #. *Why is the* ``Seq`` *object missing the (back) transcription &
    translation methods described in this Tutorial?*
     You need Biopython 1.49 or later. Alternatively, use the ``Bio.Seq``
@@ -204,9 +204,9 @@ and HTML formats
    write?*
     Check the built in docstrings (``from Bio import SeqIO``, then
    ``help(SeqIO)``), or see
-   ```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
+   `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    and
-   ```http://biopython.org/wiki/AlignIO`` <http://biopython.org/wiki/AlignIO>`__
+   `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
    on the wiki for the latest listing.
 #. *Why don’t the* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *input functions
    let me provide a sequence alphabet?*
@@ -302,5 +302,5 @@ and HTML formats
    git instead. See our website for more details.
 
 For more general questions, the Python FAQ pages
-```http://www.python.org/doc/faq/`` <http://www.python.org/doc/faq/>`__
+`http://www.python.org/doc/faq/ <http://www.python.org/doc/faq/>`__
 may be useful.
