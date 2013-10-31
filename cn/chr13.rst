@@ -209,7 +209,7 @@ Or:
 本章的其余部分将更加细致的介绍Bio.Phylo核心功能。关于Bio.Phylo的更多例
 子，请参见Biopython.org上的Cookbook手册页面。
 
-```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
+`http://biopython.org/wiki/Phylo_cookbook <http://biopython.org/wiki/Phylo_cookbook>`__
 
 13.2  I/O 函数
 -------------------
@@ -367,7 +367,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 树为NetworkX图对象（ ``to_networkx`` ）时重新获得。
 
 查看Biopython维基的Phylo页面
-(```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
+(`http://biopython.org/wiki/Phylo <http://biopython.org/wiki/Phylo>`__)
 以获得关于 ``draw_ascii`` 、 ``draw_graphviz`` 和 ``to_networkx`` 的更加高级的功能的描述
 和例子。
 
@@ -550,7 +550,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
     例如，分割名为“A”的进化枝将生成子进化枝“A0”和“A1”。
 
 查看Biopython维基的Phylo页面
-(```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
+(`http://biopython.org/wiki/Phylo <http://biopython.org/wiki/Phylo>`__)
 以获得更多已有方法的使用示例。
 
 13.4.4  PhyloXML树的特性
@@ -559,7 +559,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 phyloXML文件格式包含用来注释树的，采用额外数据格式和图像提示的字段。
 
 参加Biopython维基上的PhyloXML页面
-(```http://biopython.org/wiki/PhyloXML`` <http://biopython.org/wiki/PhyloXML>`__)
+(`http://biopython.org/wiki/PhyloXML <http://biopython.org/wiki/PhyloXML>`__)
 以查看关于使用PhyloXML提供的额外注释特性的描述和例子。
 
 13.5  运行外部程序
@@ -570,7 +570,7 @@ phyloXML文件格式包含用来注释树的，采用额外数据格式和图像
  ``Bio.Align.Applications`` 以及其他模块相同的通用框架。
 
 Biopython 1.58引入了一个PhyML的打包程序（wrapper）
-(```http://www.atgc-montpellier.fr/phyml/`` <http://www.atgc-montpellier.fr/phyml/>`__)。
+(`http://www.atgc-montpellier.fr/phyml/ <http://www.atgc-montpellier.fr/phyml/>`__)。
 该程序接受一个 ``phylip-relaxed`` 格式（它是Phylip格式，然而没有对分类名称的10个字符的限制）
 的比对输入和多种参数。一个快速的例子是：
 
@@ -591,7 +591,7 @@ Biopython 1.58引入了一个PhyML的打包程序（wrapper）
     >>> Phylo.draw_ascii(tree)
 
 一个类似的RAxML打包程序
-(```http://sco.h-its.org/exelixis/software.html`` <http://sco.h-its.org/exelixis/software.html>`__)
+(`http://sco.h-its.org/exelixis/software.html <http://sco.h-its.org/exelixis/software.html>`__)
 也已经被添加到Biopython 1.60中。
 
 注意，如果你系统中已经安装了EMBOSS的Phylip扩展，一些常用的Phylip程序，包括 ``dnaml`` 和 ``protml`` 
@@ -602,7 +602,7 @@ Biopython 1.58引入了一个PhyML的打包程序（wrapper）
 ----------------------
 
 Biopython 1.58引入了对PAML的支持
-(```http://abacus.gene.ucl.ac.uk/software/paml.html`` <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
+(`http://abacus.gene.ucl.ac.uk/software/paml.html <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
 它是一个采用最大似然法（maximum likelihood）进行系统进化分析的程序包。目前，对程序codeml、baseml和yn00的支持
 已经实现。由于PAML使用控制文件而不是命令行参数来控制运行时选项，这个打包程序（wrapper）的使用格式和Biopython
 的其他应用打包程序有些差异。
@@ -646,7 +646,7 @@ Biopython 1.58引入了对PAML的支持
     >>> print results.get("lnL max")
 
 这个新模块的详细介绍目前在Biopython维基上可以看到：
-```http://biopython.org/wiki/PAML`` <http://biopython.org/wiki/PAML>`__
+`http://biopython.org/wiki/PAML <http://biopython.org/wiki/PAML>`__
 
 13.7  未来计划
 ------------------
@@ -656,7 +656,7 @@ Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版�
  **新方法**
     通常用来操作Tree和Clade对象的有用方法会首先出现在Biopython维基上，这样常规用户
     就能在我们添加到Bio.Phylo之前测试这些方法，看看它们是否有用：
-    ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
+    `http://biopython.org/wiki/Phylo_cookbook <http://biopython.org/wiki/Phylo_cookbook>`__
 
 **Bio.Nexus port**
     这个模块的大部分是在2009年NESCent主办的谷歌编程夏令营中写的，作为实现Python对phyloXML数据格式（见
@@ -667,3 +667,15 @@ Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版�
     如果你发现某些功能Bio.Phylo中没有，试试在Bio.Nexus中能不能找到。
 
 我们乐意接受任何增强该模块功能和使用性的建议；如果有，只需要通过邮件列表或我们的bug数据库让我们知道。
+
+
+
+
+.. |image5| image:: ../images/phylo-simple-draw.png
+.. |image6| image:: ../images/phylo-color-draw.png
+.. |image7| image:: ../images/phylo-draw-example.png
+.. |image8| image:: ../images/phylo-dot.png
+.. |image9| image:: ../images/phylo-rooted.png
+.. |image10| image:: ../images/phylo-color.png
+.. |image11| image:: ../images/phylo-apaf.png
+.. |image12| image:: ../images/phylo-apaf-zoom.png

@@ -234,7 +234,7 @@ The rest of this chapter covers the core functionality of Bio.Phylo in
 greater detail. For more examples of using Bio.Phylo, see the cookbook
 page on Biopython.org:
 
-```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
+`http://biopython.org/wiki/Phylo_cookbook <http://biopython.org/wiki/Phylo_cookbook>`__
 
 13.2  I/O functions
 -------------------
@@ -416,7 +416,7 @@ retained when exporting a tree as a NetworkX graph object
 (``to_networkx``), however.
 
 See the Phylo page on the Biopython wiki
-(```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
+(`http://biopython.org/wiki/Phylo <http://biopython.org/wiki/Phylo>`__)
 for descriptions and examples of the more advanced functionality in
 ``draw_ascii``, ``draw_graphviz`` and ``to_networkx``.
 
@@ -670,7 +670,7 @@ tree intact, make a complete copy of the tree first, using Python’s
     sub-clades “A0” and “A1”.
 
 See the Phylo page on the Biopython wiki
-(```http://biopython.org/wiki/Phylo`` <http://biopython.org/wiki/Phylo>`__)
+(`http://biopython.org/wiki/Phylo <http://biopython.org/wiki/Phylo>`__)
 for more examples of using the available methods.
 
 13.4.4  Features of PhyloXML trees
@@ -680,7 +680,7 @@ The phyloXML file format includes fields for annotating trees with
 additional data types and visual cues.
 
 See the PhyloXML page on the Biopython wiki
-(```http://biopython.org/wiki/PhyloXML`` <http://biopython.org/wiki/PhyloXML>`__)
+(`http://biopython.org/wiki/PhyloXML <http://biopython.org/wiki/PhyloXML>`__)
 for descriptions and examples of using the additional annotation
 features provided by PhyloXML.
 
@@ -693,7 +693,7 @@ module ``Bio.Phylo.Applications``, using the same general framework as
 ``Bio.Emboss.Applications``, ``Bio.Align.Applications`` and others.
 
 Biopython 1.58 introduced a wrapper for PhyML
-(```http://www.atgc-montpellier.fr/phyml/`` <http://www.atgc-montpellier.fr/phyml/>`__).
+(`http://www.atgc-montpellier.fr/phyml/ <http://www.atgc-montpellier.fr/phyml/>`__).
 The program accepts an input alignment in ``phylip-relaxed`` format
 (that’s Phylip format, but without the 10-character limit on taxon
 names) and a variety of options. A quick example:
@@ -716,7 +716,7 @@ format:
     >>> Phylo.draw_ascii(tree)
 
 A similar wrapper for RAxML
-(```http://sco.h-its.org/exelixis/software.html`` <http://sco.h-its.org/exelixis/software.html>`__)
+(`http://sco.h-its.org/exelixis/software.html <http://sco.h-its.org/exelixis/software.html>`__)
 was added in Biopython 1.60.
 
 Note that some popular Phylip programs, including ``dnaml`` and
@@ -729,7 +729,7 @@ for some examples and clues on how to use programs like these.
 ----------------------
 
 Biopython 1.58 brought support for PAML
-(```http://abacus.gene.ucl.ac.uk/software/paml.html`` <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
+(`http://abacus.gene.ucl.ac.uk/software/paml.html <http://abacus.gene.ucl.ac.uk/software/paml.html>`__),
 a suite of programs for phylogenetic analysis by maximum likelihood.
 Currently the programs codeml, baseml and yn00 are implemented. Due to
 PAML’s usage of control files rather than command line arguments to
@@ -779,7 +779,7 @@ function:
 
 Detailed documentation for this new module currently lives on the
 Biopython wiki:
-```http://biopython.org/wiki/PAML`` <http://biopython.org/wiki/PAML>`__
+`http://biopython.org/wiki/PAML <http://biopython.org/wiki/PAML>`__
 
 13.7  Future plans
 ------------------
@@ -792,7 +792,7 @@ add in future releases:
     appear on the Biopython wiki first, so that casual users can test
     them and decide if they’re useful before we add them to Bio.Phylo:
 
-    ```http://biopython.org/wiki/Phylo_cookbook`` <http://biopython.org/wiki/Phylo_cookbook>`__
+    `http://biopython.org/wiki/Phylo_cookbook <http://biopython.org/wiki/Phylo_cookbook>`__
 
 **Bio.Nexus port**
     Much of this module was written during Google Summer of Code 2009,
@@ -810,3 +810,14 @@ add in future releases:
 We’re open to any suggestions for improving the functionality and
 usability of this module; just let us know on the mailing list or our
 bug database.
+
+
+
+.. |image5| image:: ../images/phylo-simple-draw.png
+.. |image6| image:: ../images/phylo-color-draw.png
+.. |image7| image:: ../images/phylo-draw-example.png
+.. |image8| image:: ../images/phylo-dot.png
+.. |image9| image:: ../images/phylo-rooted.png
+.. |image10| image:: ../images/phylo-color.png
+.. |image11| image:: ../images/phylo-apaf.png
+.. |image12| image:: ../images/phylo-apaf-zoom.png
