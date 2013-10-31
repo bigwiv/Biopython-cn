@@ -602,7 +602,7 @@ or:
 我们用 *Arabidopsis
 thaliana* 来展示一个简单示例。
 
-首先从NCBI的FTP服务器 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ 下载拟南芥已测序的五个染色体文件，利用 ``Bio.SeqIO`` 函数计算它们的长度。你可以利用GenBank文件，但是对于染色体来说，FASTA文件的处理速度会快点。
+首先从NCBI的FTP服务器 `ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ 下载拟南芥已测序的五个染色体文件，利用 ``Bio.SeqIO`` 函数计算它们的长度。你可以利用GenBank文件，但是对于染色体来说，FASTA文件的处理速度会快点。
 
 .. code:: verbatim
 
@@ -672,7 +672,7 @@ thaliana* 来展示一个简单示例。
 17.2.2 染色体注释
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-继续前面的示例，我们可以同时展示tRNA基因。通过解析 *Arabidopsis thaliana* 的5个染色体GenBank文件，我们可以对他们进行定位。你需要从NCBI的FTP服务器下载这些文件 ```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ ，也可以保存子目录名称或者添加如下的路径：
+继续前面的示例，我们可以同时展示tRNA基因。通过解析 *Arabidopsis thaliana* 的5个染色体GenBank文件，我们可以对他们进行定位。你需要从NCBI的FTP服务器下载这些文件 `ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ ，也可以保存子目录名称或者添加如下的路径：
 
 .. code:: verbatim
 

@@ -796,7 +796,7 @@ thaliana*.
 
 You can skip this bit, but first I downloaded the five sequenced
 chromosomes from the NCBI’s FTP site
-```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__
+`ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__
 and then parsed them with ``Bio.SeqIO`` to find out their lengths. You
 could use the GenBank files for this, but it is faster to use the FASTA
 files for the whole chromosomes:
@@ -874,7 +874,7 @@ Continuing from the previous example, let’s also show the tRNA genes.
 We’ll get their locations by parsing the GenBank files for the five
 *Arabidopsis thaliana* chromosomes. You’ll need to download these files
 from the NCBI FTP site
-```ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana`` <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__,
+`ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__,
 and preserve the subdirectory names or edit the paths below:
 
 .. code:: verbatim
