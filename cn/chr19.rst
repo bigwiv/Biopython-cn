@@ -132,8 +132,8 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 一个 print-and-compare 风格的测试对于初学者和新手来说是很容易写的- 本质上它只是一个使用你的模块的示例脚本。
 
-为了做一个关于 ``Biospam`` 的 print-and-compare 测试，这是你应该
-做的。
+为了写一个关于 ``Biospam`` 的 print-and-compare 测试，这是你应该
+做的：
 
 #. 编写一个叫 ``test_Biospam.py`` 的脚本
 
