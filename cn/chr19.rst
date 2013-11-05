@@ -163,7 +163,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
    #. 快速方法:
 
       -  运行 ``python run_tests.py -g test_Biospam.py`` 。回归测试框架
-         实在俏皮，它会以他喜欢的方式把输出放在恰当的地方。
+         很聪明的会以他喜欢的方式把输出放在恰当的地方。
       -  转到输出（应该在 ``Tests/output/test_Biospam``）并复查输出以确
          保其完全正确。
 
@@ -215,7 +215,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 什么麻烦。你也许发现，寻找Biopython中的现成例子很有帮助。
 
 这是关于 ``Biospam`` 的一个 ``unittest`` 风格的极小测试脚本，你可以
-复制粘贴过去启动它：
+复制粘贴过去运行它：
 
 .. code:: verbatim
 
@@ -253,7 +253,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 
 这里是基于 ``unittest`` 的测试的一些关键点：
 
--  测试实例存储在 ``unittest.TestCase`` 诱导出的类中并代替了你的代码
+-  测试实例存储在 ``unittest.TestCase`` 的子类中并涵盖了你的代码
     的一个基本方面。
 -  对于任何在每个测试方法前后都要运行的重复代码，你可以使用方法 
    ``setUp`` 和 ``tearDown`` 。例如 ``setUp`` 方法可用于创建你正在
@@ -269,7 +269,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
            runner = unittest.TextTestRunner(verbosity = 2)
            unittest.main(testRunner=runner)
 
-   来执行测试，当脚本自己运行（而不是从 ``run_tests.py`` 导入）时。
+   来执行测试脚本，当脚本是从	自己运行（而不是从 ``run_tests.py`` 导入）时。
    如果你运行该脚本，那么你会见到类似下面的东西:
 
    .. code:: verbatim
@@ -351,7 +351,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
         runner.run(suite)
 
 这只与你执行 ``python test_Biospam.py`` 时是否想要运行 docstring 测试
-有关；用 ``python run_tests.py`` ，docstring 测试会自动运行（假设他们
+有关；运行 ``python run_tests.py`` ，docstring 测试会自动运行（假设他们
 被包含在 ``run_tests.py`` 中的 docstring 测试列表中，见下面的小节）。
 
 19.3  编写 doctests
