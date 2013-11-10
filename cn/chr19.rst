@@ -13,8 +13,8 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 -----------------------
 
 在你下载Biopython源码或者从我们的源码仓库签出时，你会发现一
-个子目录调用 ``Tests``。 这包括关键脚本 ``run_tests.py``、名为
- ``test_XXX.py`` 的很多独立脚本、一个叫 ``output`` 的子目录和
+个子目录调用 ``Tests``。 这包括关键脚本 ``run_tests.py``、
+名为 ``test_XXX.py`` 的很多独立脚本、一个叫 ``output`` 的子目录和
  很多其他包含测试套件输入文件的子目录。
 
 作为构建和安装Biopython的一部分，你通常会在命令行上从Biopython
@@ -53,7 +53,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
 如果一单个测试失败了，你还可以尝试直接运行它，它会给出更多信息。
 
-重要的是，要注意单个单元测试有两种类型的作用：
+重要的是，要注意单个单元测试有两类作用：
 
 -  简单打印和比较脚本。 这些单元测试本质上是简短的 Python 示例
    程序，它们会打印出各种输出文本。对于一个名为 ``test_XXX.py`` 
@@ -70,14 +70,13 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
 直接运行一个简单的 print-and-compare 测试通常会在屏幕上给出大量
 输出，但是并不检查输出是否跟期望的一样。如果测试以一个意外的错误
-而失败，那么应该很容易精确定位脚本失败的位置。例如，对于一个
- print-and-compare 测试，试一下：
+而失败，那么应该很容易精确定位脚本失败的位置。例如，对于一个print-and-compare 测试，试一下：
 
 .. code:: verbatim
 
     python test_SeqIO.py
 
-基于 ``unittest`` 的测试反倒是精确地展示给你测试的那一个小节失败了。
+基于 ``unittest`` 的测试反倒是精确地显示你测试的哪一个小块失败了。
 例如，
 
 .. code:: verbatim
@@ -100,9 +99,8 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 #. ``output/Biospam`` – [只针对 print-and-compare 测试] 这个文件
    包括运行 ``test_Biospam.py`` 的期望输出。这个文件对于 ``unittest`` 
    风格的测试不是必须的，因为测试脚本 ``test_Biospam.py`` 会自己做验证。
-
-你要自己决定你是想编写一个 print-and-compare 测试脚本还是一个
- ``unittest`` 风格的测试脚本。重要的是你不能把这两种风格混合在一个
+你要自己决定你是想编写一个 print-and-compare 测试脚本还是一个 ``unittest`` 
+风格的测试脚本。重要的是你不能把这两种风格混合在一个
 测试脚本中。尤其是，不要在一个 print-and-compare 测试中使用``unittest`` 
 特征。
 
@@ -132,12 +130,10 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
 19.2.1  编写一个 print-and-compare 测试
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+一个 print-and-compare 风格的测试对于初学者和新手来说是很容易写的- 本质上它只是一个使用你的模块的示例脚本。
 
-一个 print-and-compare 风格的测试对于初学者和新手来说是很容易写的
- - 本质上它只是一个使用你的模块的示例脚本。
-
-为了做一个关于 ``Biospam`` 的 print-and-compare 测试，这是你应该
-做的。
+为了写一个关于 ``Biospam`` 的 print-and-compare 测试，这是你应该
+做的：
 
 #. 编写一个叫 ``test_Biospam.py`` 的脚本
 
@@ -167,7 +163,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
    #. 快速方法:
 
       -  运行 ``python run_tests.py -g test_Biospam.py`` 。回归测试框架
-         实在俏皮，它会以他喜欢的方式把输出放在恰当的地方。
+         很聪明的会以他喜欢的方式把输出放在恰当的地方。
       -  转到输出（应该在 ``Tests/output/test_Biospam``）并复查输出以确
          保其完全正确。
 
@@ -219,7 +215,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 什么麻烦。你也许发现，寻找Biopython中的现成例子很有帮助。
 
 这是关于 ``Biospam`` 的一个 ``unittest`` 风格的极小测试脚本，你可以
-复制粘贴过去启动它：
+复制粘贴过去运行它：
 
 .. code:: verbatim
 
@@ -257,7 +253,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 
 这里是基于 ``unittest`` 的测试的一些关键点：
 
--  测试实例存储在 ``unittest.TestCase`` 诱导出的类中并代替了你的代码
+-  测试实例存储在 ``unittest.TestCase`` 的子类中并涵盖了你的代码
     的一个基本方面。
 -  对于任何在每个测试方法前后都要运行的重复代码，你可以使用方法 
    ``setUp`` 和 ``tearDown`` 。例如 ``setUp`` 方法可用于创建你正在
@@ -273,7 +269,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
            runner = unittest.TextTestRunner(verbosity = 2)
            unittest.main(testRunner=runner)
 
-   来执行测试，当脚本自己运行（而不是从 ``run_tests.py`` 导入）时。
+   来执行测试脚本，当脚本是从	自己运行（而不是从 ``run_tests.py`` 导入）时。
    如果你运行该脚本，那么你会见到类似下面的东西:
 
    .. code:: verbatim
@@ -355,7 +351,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
         runner.run(suite)
 
 这只与你执行 ``python test_Biospam.py`` 时是否想要运行 docstring 测试
-有关；用 ``python run_tests.py`` ，docstring 测试会自动运行（假设他们
+有关；运行 ``python run_tests.py`` ，docstring 测试会自动运行（假设他们
 被包含在 ``run_tests.py`` 中的 docstring 测试列表中，见下面的小节）。
 
 19.3  编写 doctests
