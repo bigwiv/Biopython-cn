@@ -75,20 +75,20 @@ call the online version of BLAST. This has three non-optional arguments:
 -  The first argument is the blast program to use for the search, as a
 lower case string. The options and descriptions of the programs are
 available at
-```http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
+`http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
 Currently ``qblast`` only works with blastn, blastp, blastx, tblast
 and tblastx.
 
 -  第一个参数是用来搜索的blast程序，这是小写的字符串。对这个参数的选项和描述可以在
-```http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
+`http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
 查到。目前 ``qblast`` 只支持 blastn, blastp, blastx, tblast 和 tblastx.
 
 -  The second argument specifies the databases to search against. Again,
 the options for this are available on the NCBI web pages at
-```http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
+`http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
 
 -  第二个参数指定了将要搜索的数据库。同样地，这个参数的选项也可以在
-```http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
+`http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
 查到
 
 -  The third argument is a string containing your query sequence. This
@@ -1169,3 +1169,8 @@ current versions of RPS-BLAST.
 
 你可以通过 ``Bio.Blast.NCBIXML`` 这个解析器来读入并解析当前版本的RPS-BLAST的
 XML格式的输出。
+
+
+
+.. |image1| image:: ../images/BlastRecord.png
+.. |image2| image:: ../images/PSIBlastRecord.png

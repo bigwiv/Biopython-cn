@@ -1316,7 +1316,7 @@ Cluster/TreeView 是一个对基因表达数据可视化的工具。他们最初
 Eisen <http://rana.lbl.gov>`__ 在 Stanford University 完成。``Bio.Cluster`` 
 包含着读写 Cluster/TreeView 对应的文件格式的函数。因此，将结果保存为该格式后，
 可以用Treeview对结果进行直接的查看。我们推荐使用 Alok Saldanha 的
-```http://jtreeview.sourceforge.net/`` <http://jtreeview.sourceforge.net/>`__\ Java
+`http://jtreeview.sourceforge.net/ <http://jtreeview.sourceforge.net/>`__\ Java
 TreeView 程序。这个软件可以显示系统聚类和 *k*-means 聚类的结果。
 
 类 ``Record`` 的一个对象包含着一个 Cluster/TreeView-type数据文件需要的所有信息。

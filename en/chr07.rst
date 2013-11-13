@@ -43,12 +43,12 @@ call the online version of BLAST. This has three non-optional arguments:
 -  The first argument is the blast program to use for the search, as a
    lower case string. The options and descriptions of the programs are
    available at
-   ```http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
+   `http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml>`__.
    Currently ``qblast`` only works with blastn, blastp, blastx, tblast
    and tblastx.
 -  The second argument specifies the databases to search against. Again,
    the options for this are available on the NCBI web pages at
-   ```http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml`` <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
+   `http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml <http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml>`__.
 -  The third argument is a string containing your query sequence. This
    can either be the sequence itself, the sequence in fasta format, or
    an identifier like a GI number.
@@ -746,3 +746,8 @@ an RPS-BLAST search via the internet.
 
 You can use the ``Bio.Blast.NCBIXML`` parser to read the XML output from
 current versions of RPS-BLAST.
+
+
+
+.. |image1| image:: ../images/BlastRecord.png
+.. |image2| image:: ../images/PSIBlastRecord.png

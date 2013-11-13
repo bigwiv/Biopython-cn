@@ -1626,7 +1626,7 @@ that correspond to the format specified for Cluster/TreeView. In
 particular, by saving a clustering result in that format, TreeView can
 be used to visualize the clustering results. We recommend using Alok
 Saldanha’s
-```http://jtreeview.sourceforge.net/`` <http://jtreeview.sourceforge.net/>`__\ Java
+`http://jtreeview.sourceforge.net/ <http://jtreeview.sourceforge.net/>`__\ Java
 TreeView program, which can display hierarchical as well as *k*-means
 clustering results.
 
