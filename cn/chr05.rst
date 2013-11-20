@@ -1,7 +1,7 @@
 ﻿第5章  序列输入和输出
 ================================
 
-本章将详细讨论 ``Bio.SeqIO`` 模块，该模块在第 \ `2 <#chapter:quick-start>`__ 章已经做过简单的介绍并在第 \ `4 <#chapter:SeqRecord>`__ 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 ``Bio.SeqIO`` 维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）或者内置文档（ `SeqIO <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）:
+本章将详细讨论 ``Bio.SeqIO`` 模块，该模块在第 \ `2 <#chapter:quick-start>`__ 章已经做过简单的介绍并在第 \ `4 <#chapter:SeqRecord>`__ 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 ``Bio.SeqIO`` 维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `SeqIO <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）:
 
 .. code:: verbatim
 
@@ -9,7 +9,7 @@
     >>> help(SeqIO)
     ...
 
-学习本章的要领是你需要不断处理 ``SeqRecord`` 对象（请见第\ `4 <#chapter:SeqRecord>`__ 章），该对象包含一个 ``Seq`` 对象（请见第 \ `3 <#chapter:Bio.Seq>`__ 章）和注释信息（如序列ID和描述信息）。
+学习本章的要领是学会使用 ``SeqRecord`` 对象（请见第\ `4 <#chapter:SeqRecord>`__ 章），该对象包含一个 ``Seq`` 对象（请见第 \ `3 <#chapter:Bio.Seq>`__ 章）和注释信息（如序列ID和描述信息）。
 
 5.1 解析/读取序列
 ---------------------------------
@@ -19,7 +19,7 @@
 #. 第一个参数是一个文件名或者一个句柄（ *handle* ）。句柄可以是打开的文件，命令行程序的输出，或者来自下载的数据(请见第 \ `5.3 <#sec:SeqIO_Online>`__ 节)。更多关于句柄的信息请见第 \ `22.1 <#sec:appendix-handles>`__ 节。
 #. 第二个参数是一个小写字母字符串，用于指定序列格式（我们并不推测文件格式！），支持的文件格式请见 `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ 。
 
-还有一个用于指定字符集的 ``alphabet`` 参数，这对某些文件格式如FASTA非常有用，其默认参数为字母表。
+还有一个用于指定字符集的 ``alphabet`` 参数，这对FASTA这样的文件格式非常有用，在这里 ``Bio.SeqIO`` 默认参数为字母表。
 
 ``Bio.SeqIO.parse()`` 函数返回一个 ``SeqRecord`` 对象迭代器（ *iterator* ），迭代器通常用在循环中。
 
@@ -48,9 +48,9 @@
         print seq_record.seq
         print len(seq_record)
 
-相同地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）或内置文档（`在线文档<http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
+同样地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（`在线文档<http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
 
-另外一个非常常见的使用Python迭代器的地方是在列表推导（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：
+另外一个非常常见的使用Python迭代器的地方是在列表解析（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：
 
 .. code:: verbatim
 
@@ -85,7 +85,7 @@
 
 注意：如果使用 ``.next()`` 方法，当没有序列条目时，将抛出 ``StopIteration`` 异常。
 
-一种特殊情形是，当序列文件包含多个序列条目，而你只需要第一个条目。在这种情况下，用以下代码可以非常简洁：
+一种特殊情形是，序列文件包含多个序列条目，而你只需要第一个条目。在这种情况下，可使用以下代码，非常简洁：
 
 .. code:: verbatim
 
@@ -97,7 +97,7 @@
 5.1.3  获得序列文件中序列条目列表
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在上一节中，我们讨论了 ``Bio.SeqIO.parse()`` 返回一个 ``SeqRecord`` 迭代器，然后顺序地获取序列条目。往往我们需要以任意顺序获取序列条目，Python列表数据类型便可以达到这个目的。使用Python内置函数 ``list()`` ，我们可以将序列条目迭代器转变成 ``SeqRecord`` 对象列表，如下：
+在上一节中，我们讨论了如何使用 ``Bio.SeqIO.parse()`` 返回一个 ``SeqRecord`` 迭代器，然后顺序地获取序列条目。往往我们需要以任意顺序获取序列条目，Python列表数据类型便可以达到这个目的。使用Python内置函数 ``list()`` ，我们可以将序列条目迭代器转变成 ``SeqRecord`` 对象列表，如下：
 
 .. code:: verbatim
 
@@ -132,12 +132,12 @@
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
     740
 
-当然，你仍然可以对 ``SeqRecord`` 对象列表使用for循环。使用列表比使用迭代器灵活得多（例如，可以根据列表大小知道序列条目数量），但缺点是需要更多的内存空间用于同时存储所有的序列条目。
+当然，你仍然可以对 ``SeqRecord`` 对象列表使用for循环。使用列表比使用迭代器灵活得多（例如，可以根据列表大小知道序列条目数量），但缺点是for循环要同时读取所有的内容，需要更多的内存空间。
 
 5.1.4 提取数据
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``SeqRecord`` 对象及其注释信息在第 \ `4 <#chapter:SeqRecord>`__ 章中有更详细的介绍。为了解释注释信息是如果存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并输出：
+``SeqRecord`` 对象及其注释信息在第 \ `4 <#chapter:SeqRecord>`__ 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
 
 .. code:: verbatim
 
@@ -200,7 +200,7 @@
     >>> print first_record.annotations["organism"]
     Cypripedium irapeanum
 
-通常，‘organism’ 用于学名（拉丁名，e.g. *Arabidopsis thaliana* ），而 ‘source’ 用于俗名（common name）（e.g. thale cress）。在此例中，在大多数情况下也是，这两个相同。
+通常，‘organism’ 用于学名（拉丁名，e.g. *Arabidopsis thaliana* ），而 ‘source’ 用于俗名（common name）（e.g. thale cress）。在此例中，以及在通常情况下，这两个字段是相同的。
 
 现在，让我们遍历所有的序列条目， 创建一个包含所有兰花序列的物种列表：
 
@@ -212,7 +212,7 @@
         all_species.append(seq_record.annotations["organism"])
     print all_species
 
-另外一种方式是使用列表推导：
+另外一种方式是使用列表解析：
 
 .. code:: verbatim
 
@@ -254,7 +254,7 @@
 
     ['C.irapeanum', 'C.californicum', 'C.fasciculatum', 'C.margaritaceum', ..., 'P.barbatum']
 
-使用更简洁的列表推导：
+使用更简洁的列表解析：
 
 .. code:: verbatim
 
@@ -329,7 +329,7 @@
 
 在上一节中，我们研究了从文件（使用文件名或者文件句柄）和压缩文件（使用文件句柄）解析序列数据。这里我们将使用 ``Bio.SeqIO`` 的另一种类型句柄，网络连接，从网络下载和解析序列。
 
-请注意，你可以一气呵成地下载序列并解析成为 ``SeqRecord`` 对象，这并不意味这是一个好注意。通常，你可能需要下载序列并存入文件以重复使用。
+请注意，你可以一气呵成地下载序列并解析成为 ``SeqRecord`` 对象，这并不意味这是一个好主意。通常，你可能需要下载序列并存入文件以重复使用。
 
 5.3.1 解析来自网络的GenBank序列条目
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -354,7 +354,7 @@
 
     gi|6273291|gb|AF191665.1|AF191665 with 0 features
 
-NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见`EFetch for Sequence and other Molecular Biology Databases<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
+NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见`EFetch for Sequence and other Molecular Biology Databases<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
 
 .. code:: verbatim
 
@@ -438,7 +438,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 我们将介绍 ``Bio.SeqIO`` 模块中3个相关函数，用于随机读取多序列文件。这里需要权衡灵活性和内存使用。总之：
 
--   ``Bio.SeqIO.to_dict()`` 最灵活但内存需求最大 （请见第 \ `5.4.1 <#SeqIO:to_dict>`__ 节）。这基本上是一个辅助函数，用于建立Python `` 字典 `` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
+-   ``Bio.SeqIO.to_dict()`` 最灵活但内存占用最大 （请见第 \ `5.4.1 <#SeqIO:to_dict>`__ 节）。这基本上是一个辅助函数，用于建立Python `` 字典 `` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
 -   ``Bio.SeqIO.index()`` 处于中间水平，类似于只读字典，当需要时解析序列到``SeqRecord`` 对象（请见第 \ `5.4.2 <#sec:SeqIO-index>`__ 节）。
 -   ``Bio.SeqIO.index_db()`` 也类似于只读字典，但是将文件中的ID和文件偏移值存储到硬盘（SQLite3数据库），这意味着它对内存需求很低（请见第 \ `5.4.3 <#sec:SeqIO-index-db>`__ 节），但会慢一点。
 
@@ -447,9 +447,9 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 5.4.1 序列文件作为字典-在内存中
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-我们对兰花数据文件接下来的处理将用于展示如何对他们建立索引，以及使用Python的 ``dictionary``  数量类型（与Perl中hash类似）以类似于数据库的方式读取数据。这常用于只需要读取某些元素的中等大小文件，形成一个很好的快速数据库。如果处理较大的文件，内存将是个问题，请见下面第 \ `5.4.2 <#sec:SeqIO-index>`__ 节。
+我们对兰花数据文件接下来的处理将用于展示如何对他们建立索引，以及使用Python的 ``dictionary``  数量类型（与Perl中hash类似）以类似于数据库的方式读取数据。这常用于从中等大小的文件中读取某些特定元素，形成一个很好的快速数据库。如果处理较大的文件，内存将是个问题，请见下面第 \ `5.4.2 <#sec:SeqIO-index>`__ 节。
 
-你可以使用 ``Bio.SeqIO.to_dict()`` 函数创建一个 ``SeqRecord`` 字典（是偶那个内存）。默认会使用每条序列条目的ID（i.e.  ``.id`` 属性）作为键。让我们用GenBank文件试一试：
+你可以使用 ``Bio.SeqIO.to_dict()`` 函数创建一个 ``SeqRecord`` 字典（在内存中）。默认会使用每条序列条目的ID（i.e.  ``.id`` 属性）作为键。让我们用GenBank文件试一试：
 
 .. code:: verbatim
 
@@ -487,7 +487,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
     >>> print repr(seq_record.seq)
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT', IUPACAmbiguousDNA())
 
-因此，可以用我们的GenBank序列条目轻松地创建一个内存数据库（in memory “database”）。接下来我们将尝试使用FASTA文件。
+因此，可以用我们的GenBank序列条目轻松地在内存中创建一个数据库（in memory “database”）。接下来我们将尝试使用FASTA文件。
 
 值得注意的是，对有Python使用经验的人来说，可以轻松地创建一个类似的字典。然而，典型的字典构建方法不能很好地处理重复键的情况。使用 ``Bio.SeqIO.to_dict()`` 函数将明确检查重复键，如果发现任何重复键将引发异常并退出。
 
@@ -583,9 +583,9 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 5.4.2 序列文件作为字典 - 索引文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-之前众多示例试图解释的是使用 ``Bio.SeqIO.to_dict()`` 非常灵活。然而，因为它将所有的信息都存储在内存中，你能处理的文件大小受限于电脑的RAM。通常，这仅能处理一些小文件或中等大小文件。
+之前众多示例试图解释的是使用 ``Bio.SeqIO.to_dict()`` 的灵活性。然而，因为它将所有的信息都存储在内存中，你能处理的文件大小受限于电脑的RAM。通常，这仅能处理一些小文件或中等大小文件。
 
-对于更大的文件，应该考虑使用 ``Bio.SeqIO.index()`` ，工作原理上略有不同。尽管仍然是返回一个类似于字典的对象，它并不将所有的信息存储在内存中。相反，它仅仅记录每条序列条目在文件中的位置 - 当你需要读取某条特定序列条目时，它才解析。
+对于更大的文件，应该考虑使用 ``Bio.SeqIO.index()`` ，工作原理上略有不同。尽管仍然是返回一个类似于字典的对象，它并不将所有的信息存储在内存中。相反，它仅仅记录每条序列条目在文件中的位置 - 当你需要读取某条特定序列条目时，它才进行解析。
 
 让我们使用之前相同的GenBank文件作为示例：
 
@@ -691,7 +691,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> print "%i sequences indexed" % len(gb_vrl)
     958086 sequences indexed
 
-在我个人电脑上，运行大约需要2分钟。如果你重新运行，索引文件（这里为 ``gbvrl.idx`` ）将在不到一秒的时间内加载。你可以将这个索引作为一个只读的Python字典，并不需要去操心序列来自哪个文件，e.g.:
+在我个人电脑上，运行大约需要2分钟。如果你重新运行，索引文件（这里为 ``gbvrl.idx`` ）将在不到一秒的时间内加载。你可以将这个索引作为一个只读的Python字典，并不需要去担心序列来自哪个文件，e.g.:
 
 .. code:: verbatim
 
@@ -716,7 +716,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 5.4.4 对压缩文件建立索引
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-经常你要建立索引的文件可能非常大，因此你想压缩它。不幸的是，对常规的文件格式如gzip和bzip2高效的随机读取通常很困难。在这种情况下，BGZF (Blocked GNU Zip Format)非常有用。它是gzip变体（也可以使用标准的gzip工具解压），因BAM文件格式得到推广，`samtools <http://samtools.sourceforge.net/>`__ 和`tabix <http://samtools.sourceforge.net/tabix.shtml>`__ ；
+经常你要建立索引的文件可能非常大，因此你想对它进行压缩。不幸的是，对常规的文件格式如gzip和bzip2高效的随机读取通常很困难。在这种情况下，BGZF (Blocked GNU Zip Format)非常有用。它是gzip变体（也可以使用标准的gzip工具解压），因BAM文件格式得到推广，`samtools <http://samtools.sourceforge.net/>`__ 和`tabix <http://samtools.sourceforge.net/tabix.shtml>`__ ；
 
 你可以使用samtools的命令行工具 ``bgzip`` 创建BGZF格式压缩文件。在我们的示例中，使用文件扩展名 `` *.bgz `` ，以区分于普通的压缩文件（命名为 `` *.gz `` ）。你也可以在Python中使用 ``Bio.bgzf`` 模块读写BGZF文件。
 
@@ -753,14 +753,14 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> len(orchid_dict)
     94
 
-`SeqIO `` 建立索引时自动检测是否为BGZF。注意：不能同时使用压缩文件和未压缩文件建立索引。
+`SeqIO `` 建立索引时自动检测是否为BGZF压缩格式。注意：压缩文件和未压缩文件不能使用相同的索引文件。
 
 5.4.5 讨论
 ~~~~~~~~~~~~~~~~~
 
-这些方法你该使用哪种，为什么呢？这取决于你要做什么（以及你要处理的数据有多大）。然而，通常 ``Bio.SeqIO.index()`` 是个不错的选择。如果你正在处理上百万条序列条目，多个文件，或者重复性分析，那么看看 ``Bio.SeqIO.index_db()`` 。
+这些方法你该使用哪种及其原因，取决于你要做什么（以及你要处理的数据有多大）。然而，通常 ``Bio.SeqIO.index()`` 是个不错的选择。如果你正在处理上百万条序列条目，多个文件，或者重复性分析，那么看看 ``Bio.SeqIO.index_db()`` 。
 
-选择 ``Bio.SeqIO.to_dict()`` 而不选择 ``Bio.SeqIO.index()`` 或 ``Bio.SeqIO.index_db()`` 的原因可归结为需要灵活性，尽管它需要更多内存。存储 ``SeqRecord`` 对象到内存的优势在于可以随意被改变，添加或者删除。除了高内存消耗这个缺点外，建立索引也可能花费更长的时间，因为所有的条目都需要被完全解析。
+选择 ``Bio.SeqIO.to_dict()`` 而不选择 ``Bio.SeqIO.index()`` 或 ``Bio.SeqIO.index_db()`` 的原因主要是它的灵活性，尽管会占用更多内存。存储 ``SeqRecord`` 对象到内存的优势在于可以随意被改变，添加或者删除。除了高内存消耗这个缺点外，建立索引也可能花费更长的时间，因为所有的条目都需要被完全解析。
 
 ``Bio.SeqIO.index()`` 和 ``Bio.SeqIO.index_db()`` 都是在需要时才解析序列条目。当建立索引时，他们扫描文件，寻找每个序列条目的起始，并做尽可能少的工作提取出ID信息。
 
@@ -919,7 +919,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 现在，如果我们想保存这些反向互补序列到某个文件，需要创建 ``SeqRecord`` 对象。我们可以使用 ``SeqRecord`` 对象的内置方法 ``.reverse_complement()`` （请见第 \ `4.8 <#sec:SeqRecord-reverse-complement>`__ 节），但是我们必须决定新的序列条目怎么命名。
 
-这是一个绝好的展示列表推导效率地方，列表推导通过在内存中创建一个列表实现：
+这是一个绝好的展示列表解析效率地方，列表解析通过在内存中创建一个列表实现：
 
 .. code:: verbatim
 
@@ -928,7 +928,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     ...            for rec in SeqIO.parse("ls_orchid.fasta", "fasta")]
     >>> len(records)
 
-现在，在列表推导可以添加一个条件语句：
+这时就用到了列表解析的绝妙之处，在其中添加一个条件语句：
 
 .. code:: verbatim
 
@@ -937,14 +937,14 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> len(records)
     18
 
-这将在内存中创建一个序列小于700bp的反向互补序列列表。我们可以以相同的方式使用生成器表达式 - 但是更有优势，因为不需要同时在内存中创建所有序列条目的列表：
+这将在内存中创建一个序列小于700bp的反向互补序列列表。我们可以以相同的方式使用生成器表达式 - 但是更有优势的是，它不需要同时在内存中创建所有序列条目的列表：
 
 .. code:: verbatim
 
     >>> records = (rec.reverse_complement(id="rc_"+rec.id, description = "reverse complement") \
     ...           for rec in SeqIO.parse("ls_orchid.fasta", "fasta") if len(rec)<700)
 
-完整的示例：
+完整的示例如下：
 
 .. code:: verbatim
 
