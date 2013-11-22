@@ -169,7 +169,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 2.4.3  我爱解析——请别停止讨论它！
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Biopython有很多的解析器，基于它们所解析的文件格式，每一个都有自己独特的作用。第\ `5 <#chapter:Bio.SeqIO>`__章包含 ``Bio.SeqIO`` 更详细的内容，而第
+Biopython有很多的解析器，基于它们所解析的文件格式，每一个都有自己独特的作用。第 `5 <#chapter:Bio.SeqIO>`__ 章包含 ``Bio.SeqIO`` 更详细的内容，而第
 `6 <#chapter:Bio.AlignIO>`__ 章将介绍用于序列比对的 ``Bio.AlignIO`` 。
 
 由于最主流的文件格式都有解析器整合在 ``Bio.SeqIO`` 和/或 ``Bio.AlignIO`` 中，对于一些比较罕见的或者不被人们喜爱的文件格式，要么根本就没有解析器，要么就是一些没有链接的老的解析器。请到wiki页面 `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
@@ -187,7 +187,7 @@ Biopython有从以下数据库中获取信息的代码：
 -  NCBI的 `Entrez <http://www.ncbi.nlm.nih.gov/Entrez/>`__ （和 `PubMed <http://www.ncbi.nlm.nih.gov/PubMed/>`__）
    ——见第 `9 <#chapter:entrez>`__ 章。
 -  `ExPASy <http://www.expasy.org/>`__ ——见第 `10 <#chapter:swiss_prot>`__ 章。
--  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__——见 ``Bio.SCOP.search()`` 方法。
+-  `SCOP <http://scop.mrc-lmb.cam.ac.uk/scop/>`__ ——见 ``Bio.SCOP.search()`` 方法。
 
 使用模块里的代码基本上可以容易地写出与这些页面中CGI脚本交互的Python代码，因此你能很方便地获得想要的结果。在某些情况下，结果能很好地整合到Biopython解析器中从而使得提取信息更加简单。
 
