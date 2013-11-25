@@ -1,13 +1,13 @@
 第11章  走向3D：PDB模块
 =========================================================
 
-Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的类之外，Bio.PDB包含PDBParser类，此类能够产生一个Structure对象，以一种较方便的方式获取文件中的原子数据。在处理PDB文件头包含的信息的时候有一定的局限性。
+Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的类之外，Bio.PDB包含PDBParser类，此类能够产生一个Structure对象，以一种较方便的方式获取文件中的原子数据。只是在处理PDB文件头所包含的信息时，该类有一定的局限性。
 
 
-11.1  结构文件的读与写 
+11.1  晶体结构文件的读与写 
 ----------------------
 
-11.1.1  PDB文件的读取 
+11.1.1  读取PDB文件 
 ~~~~~~~~~~~~~~~~~~~~~
 
 首先，我们创建一个 ``PDBParser`` 对象：
@@ -16,20 +16,20 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> p = PDBParser(PERMISSIVE=1)
 
-``PERMISSIV`` 标签表示一些和PDB文件相关的问题(见 `11.7.1 <#problem%20structures>`__ )会被忽略，注意某些原子和/或残基会丢失。如果这个标签没有产生 ``PDBConstructionException`` ，则会在解析器运行期间有问题被检测到的时候生成。
+``PERMISSIV`` 标签表示一些与PDB文件相关的问题（见 `11.7.1 <#problem%20structures>`__ ）会被忽略（注意某些原子和/或残基会丢失）。如果没有这个标签，则会在解析器运行期间有问题被检测到的时候生成一个 ``PDBConstructionException`` 标签。
 
 
-Structure对象由 ``PDBParser`` 解析PDB文件产生（在此例子中，PDB文件为'pdb1fat.ent'，'1fat'是用户的定义的结构名字）:
+接着通过 ``PDBParser`` 解析PDB文件，就产生了Structure对象（在此例子中，PDB文件为'pdb1fat.ent'，'1fat'是用户定义的结构名称）:
 
 
     >>> structure_id = "1fat"
     >>> filename = "pdb1fat.ent"
     >>> s = p.get_structure(structure_id, filename)
 
-你可以通过PDBParser的 ``get_header`` 和 ``get_trailer`` 方法来提取PDB文件中的文件头和文件尾（简单字符串的列表）。然而许多PDB文件包含不完整或错误信息的文件头。许多错误在mmCIF格式文件得到修正。* 因此，如果你对文件头的信息感兴趣，可以用下面即将讲到的 ``MMCIF2Dict`` 来提取信息，而不是直接处理PDB文件文件头。* 
+你可以从PDBParser对象中用 ``get_header`` 和 ``get_trailer`` 方法来提取PDB文件中的文件头和文件尾（简单的字符串列表）。然而许多PDB文件头包含不完整或错误的信息。许多错误在等价的mmCIF格式文件中得到修正。* 因此，如果你对文件头信息感兴趣，可以用下面即将讲到的 ``MMCIF2Dict`` 来提取信息，而不用处理PDB文件文件头。* 
 
 
-让我们回到解析PDB文件头。结构对象有个属性叫 ``header`` ，这是一个Python字典将文件头的记录与他们的值关联起来。
+现在澄清了，让我们回到解析PDB文件头这件事上。结构对象有个属性叫 ``header`` ，这是一个将头记录映射到其相应值的Python字典。
 
 
 例子：
@@ -37,14 +37,9 @@ Structure对象由 ``PDBParser`` 解析PDB文件产生（在此例子中，PDB�
     >>> resolution = structure.header['resolution']
     >>> keywords = structure.header['keywords']
 
-在这个字典中可用的键有 ``name`` 、 ``head`` 、 ``deposition_date`` 、 ``release_date`` 、 ``structure_method`` 、 ``resolution`` 、 ``structure_reference`` （这关联到一个参考文献的列表）、 ``journal_reference`` 、 ``author`` 、和 ``compound`` （关联一个包含各种晶体成分的各种信息）。
-The available keys are ``name``, ``head``, ``deposition_date``,
-``release_date``, ``structure_method``, ``resolution``,
-``structure_reference`` (which maps to a list of references),
-``journal_reference``, ``author``, and ``compound`` (which maps to a
-dictionary with various information about the crystallized compound).
+在这个字典中可用的关键字有 ``name`` 、 ``head`` 、 ``deposition_date`` 、 ``release_date`` 、 ``structure_method`` 、 ``resolution`` 、 ``structure_reference`` （映射到一个参考文献列表）、 ``journal_reference`` 、 ``author`` 、和 ``compound`` （映射到一个字典，其中包含结晶化合物的各种信息）。
 
-这个字典也能在没有创建 ``Structure`` 对象的时候被创建，比如直接从PDB文件创建:
+没有创建 ``Structure`` 对象的时候，也可以创建这个字典，比如直接从PDB文件创建:
 
     >>> file = open(filename,'r')
     >>> header_dict = parse_pdb_header(file)
@@ -53,53 +48,53 @@ dictionary with various information about the crystallized compound).
 11.1.2  读取mmCIF文件 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-与PDB文件类似的也是先创建一个 ``MMCIFParser`` 对象：
+与PDB文件的情形类似，先创建一个 ``MMCIFParser`` 对象：
 
     >>> from Bio.PDB.MMCIFParser import MMCIFParser
     >>> parser = MMCIFParser()
 
-然后用这个解析器从mmCIF文件闯将创建一个结构对象：
+然后用这个解析器从mmCIF文件创建一个结构对象：
 
     >>> structure = parser.get_structure('1fat', '1fat.cif')
 
-为了获得最少次数访问mmCIF文件，可以用 ``MMCIF2Dict`` 类类创建一个Python字典来储存所有mmCIF文件中各种标签和他们对应的值。如果有多个值（ ``_atom_site.Cartn_y`` 标签储存的是所有原子的y坐标的坐标值），这个标签会与一个值的列表关联。如下所示从mmCIF文件创建字典：
+为了尽量少访问mmCIF文件，可以用 ``MMCIF2Dict`` 类创建一个Python字典来将所有mmCIF文件中各种标签映射到其对应的值上。若有多个值（像 ``_atom_site.Cartn_y`` 标签，储存的是所有原子的*y*坐标值），则这个标签映射到一个值列表。从mmCIF文件创建字典如下：
 
     >>> from Bio.PDB.MMCIF2Dict import MMCIF2Dict
     >>> mmcif_dict = MMCIF2Dict('1FAT.cif')
 
-例：从mmCIF文件获取溶剂成分:
+例：从mmCIF文件获取溶剂含量:
 
     >>> sc = mmcif_dict['_exptl_crystal.density_percent_sol']
 
-例：获取所有包含所有原子y坐标的列表:
+例：获取包含所有原子*y*坐标的列表:
 
     >>> y_list = mmcif_dict['_atom_site.Cartn_y']
 
 11.1.3  读取PDB XML格式的文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-这部分暂时还未支持，正在开发中。如果你需要的话联系Biopython开发人员( `biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__ )。
+这个功能暂时还不支持，不过我们确实计划在未来支持这个功能（这项任务并不大）。如果你需要的话联系Biopython开发人员（ `biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__ ）。
 
 11.1.4  写PDB文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-用类PDBIO可以实现PDB文件输出，也能很方便的输出结构的某个特定部分。
+可以用PDBIO类实现。当然也可很方便地输出一个结构的特定部分。
 
-例子：保存结构：
+例子：保存一个结构
 
 
     >>> io = PDBIO()
     >>> io.set_structure(s)
     >>> io.save('out.pdb')
 
-如果你想输出结构的一部分，可以用 `Select` 类（也是在 ``PDBIO`` 中）来实现。 `Select` 有如下四种方法：
+如果你想写出结构的一部分，可以用 `Select` 类（也在 ``PDBIO`` 中）来实现。 `Select` 有如下四种方法：
 
 -  ``accept_model(model)``
 -  ``accept_chain(chain)``
 -  ``accept_residue(residue)``
 -  ``accept_atom(atom)``
 
-在默认情况下，每种方法的返回值都为1（表示model/chain/residue/atom被包含在输出结果中）。通过子类 ``Select`` 和返回值0你可以排除结构域、链等。也许比较麻烦笨重，但是还是很强大的。接下来的代码将只输出甘氨酸残基：
+在默认情况下，每种方法的返回值都为1（表示model/chain/residue/atom被包含在输出结果中）。通过子类化 ``Select`` 和返回值0，你可以从输出中排除model、chain等。也许麻烦，但很强大。接下来的代码将只输出甘氨酸残基：
 
 
 
@@ -114,18 +109,18 @@ dictionary with various information about the crystallized compound).
     >>> io.set_structure(s)
     >>> io.save('gly_only.pdb', GlySelect())
 
-如果这部分对你来说太复杂， ``Dice`` 模块有一个很方便的函数 ``extract`` ，它可以输出一条链的起始和终止氨基酸残基之间的所有氨基酸残基。
+如果这部分对你来说太复杂，那么 ``Dice`` 模块有一个很方便的 ``extract`` 函数，它可以输出一条链中起始和终止氨基酸残基之间的所有氨基酸残基。
 
-11.2  结构表示方法 
+11.2  结构的表示 
 -------------------------------------------
 
-一个 ``Structure`` 对象的整体布局由称为SMCRA（Structure结构/Model域/Chain链/Residue残基/Atom原子）：
- -  结构有域组成
- -  域由多条链组成
+一个 ``Structure`` 对象的整体布局遵循称为SMCRA（Structure/Model/Chain/Residue/Atom，结构/模型/链/残基/原子）的体系架构：
+ -  结构由模型组成
+ -  模型由多条链组成
  -  链由残基组成
  -  多个原子构成残基
 
-这是很多结构生物学家/生物信息学家看待结构的方法，也是一种简单并有效的途径处理结构。额外的信息在需要的时候加载。一个 ``Structure`` 对象的UML图如下图所示 `11.1 <#fig:smcra>`__ 。这样的数据结构不是必须合适这样一个结构的生物大分子内容的展示，但对于描述结构的文件（最典型的就是PDB或MMCIF文件了）必然是个很好的途径来展示数据。如果这样层次结构不能描述结构文件的内容，那么很确定的是这个文件有错误或至少描述结构不够明确。一旦SMCRA数据结构不能产生，有理由怀疑这个问题。解析PDB文件时能够检测到这样类似的问题。我们将在这节给出一些例子 `11.7.1 <#problem%20structures>`__ 。
+这是很多结构生物学家/生物信息学家看待结构的方法，也是处理结构的一种简单而有效的方法。在需要的时候加上额外的材料。一个 ``Structure`` 对象的UML图如下图所示 `11.1 <#fig:smcra>`__ 。这样的数据结构不是必须合适这样一个结构的生物大分子内容的展示，但对于描述结构的文件（最典型的就是PDB或MMCIF文件了）必然是个很好的途径来展示数据。如果这样层次结构不能描述结构文件的内容，那么很确定的是这个文件有错误或至少描述结构不够明确。一旦SMCRA数据结构不能产生，有理由怀疑这个问题。解析PDB文件时能够检测到这样类似的问题。我们将在这节给出一些例子 `11.7.1 <#problem%20structures>`__ 。
 
     --------------
 
