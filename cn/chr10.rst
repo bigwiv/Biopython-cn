@@ -6,9 +6,9 @@
 
 Swiss-Prot
 ( ```http://www.expasy.org/sprot`` <http://www.expasy.org/sprot>`__ )是一个
-人工管理的蛋白质序列数据库。 Biopython能够解析纯文本的Swiss-Prot文件格式,
-这种格式也被联接Swiss-Prot，TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
-不支持UniProKB的XML文件格式。
+蛋白质序列数据库。 Biopython能够解析纯文本的Swiss-Prot文件,
+这种格式也被Swiss-Prot、TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
+不支持UniProKB的XML格式文件。
 
 10.1.1  Parsing Swiss-Prot records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,12 +17,12 @@ Swiss-Prot
 Swiss-Prot记录中的序列提出来作为一个 ``SeqRecord`` 对象。 此外，你可以将
 Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Swiss-Prot记录
 中所包含的的全部信息。在这部分我们将介绍怎样从一个Swiss-Prot文件中提
-取  ``Bio.SwissProt.Record`` 对象。
+取 ``Bio.SwissProt.Record`` 对象。
 
 为了解析Swiss-Prot记录，我们首先需要得到一个Swiss-Prot记录文件。根据该Swiss-Prot
-记录的储存地方和储存方式，取得该记录文件的方式也有所不同：
+记录的储存位置和储存方式，获取该记录文件的方式也有所不同：
 
--  本地打开Swiss-Prot记录文件：
+-  本地打开Swiss-Prot文件：
     ``>>> handle = open("myswissprotfile.dat")``
 -  打开使用gzip压缩的Swiss-Prot文件：
 
@@ -38,7 +38,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
        >>> import urllib
        >>> handle = urllib.urlopen("http://www.somelocation.org/data/someswissprotfile.dat")
 
--  从ExPASy数据库上在线打开一个Swiss-Prot文件
+-  从ExPASy数据库在线打开Swiss-Prot文件
    (见 `10.5.1 <#subsec:expasy_swissprot>`__ 章节):
 
    .. code:: verbatim
@@ -46,13 +46,13 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
        >>> from Bio import ExPASy
        >>> handle = ExPASy.get_sprot_raw(myaccessionnumber)
 
-对于解析来说，关键点在于只要Swiss-Prot格式的数据，而不是获取它的方式。
+对于解析来说，关键点在于Swiss-Prot格式的数据，而不是获取它的方式。
 
 我们可以用\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
-通过 ``Bio.SeqIO`` 来获取格式未知的``SeqRecord``对象。此外，我们也可以
+通过 ``Bio.SeqIO`` 来获取格式未知的 ``SeqRecord`` 对象。此外，我们也可以
 用 ``Bio.SwissProt`` 来获取更加匹配基本文件格式的 ``Bio.SwissProt.Record``对象。
 
-我们使用``read()``函数来从得到的文件中读取一个Swiss-Prot记录：
+我们使用 ``read()`` 函数来从文件中读取一个Swiss-Prot记录：
 
 .. code:: verbatim
 
@@ -84,26 +84,26 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 比如，我们要解析整个Swiss-Prot数据库并且收集所有的描述。你可以从
 `ExPAYs FTP
 site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__ 
-下载这些数据的gzip压缩文件 ``uniprot_sprot.dat.gz`` (大约 300MB)。文件中含有
-仅含有 ``uniprot_sprot.dat`` 一个文件(至少1.5GB)。
+下载这些gzip压缩文件 ``uniprot_sprot.dat.gz`` (大约 300MB)。文件中含有
+ ``uniprot_sprot.dat`` 一个文件(至少1.5GB)。
 
 如同这一部分刚开始所描述的，你可以按照如下所示的方法使用python
-的``gzip``模块打开并解压``.gz`` 文件:
+的 ``gzip`` 模块打开并解压 ``.gz`` 文件:
 
 .. code:: verbatim
 
     >>> import gzip
     >>> handle = gzip.open("uniprot_sprot.dat.gz")
 
-然而，解压一个大文件总是耗时的，而且每次用这种方式打开一个
-文件都是比较忙忙碌碌的。所以，如果你有空闲的硬盘空间并且在
-最开始就在硬盘里通过解压到来得到 ``uniprot_sprot.dat`` ，这样能够一劳永逸地像平常那样来打开文件：
+然而，解压一个大文件比较耗时，而且每次用这种方式打开一个
+文件都是比较慢的。所以，如果你有空闲的硬盘空间并且在
+最开始就在硬盘里通过解压到来得到 ``uniprot_sprot.dat`` ，这样能够在以后就可以像平常那样来打开文件：
 
 .. code:: verbatim
 
     >>> handle = open("uniprot_sprot.dat")
 
-直到2009年6月，从ExPASy下载下来的整个Swiss-Prot数据库一共
+到2009年6月为止，从ExPASy下载下来的整个Swiss-Prot数据库一共
 有468851个Swiss-Prot记录，一种建立关于这些记录的描述列表的
 间接方式就是使用一种列表解析：
 
@@ -137,7 +137,7 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
 由于输入文件太大，这两种方法在我的新台式机上花费大约十一分钟（用解压好的
  ``uniprot_sprot.dat`` 作为输入文件）。
 
-从Swiss-Prot记录中提取你想要的任何信息也同样简单。比如你想看看一个
+从Swiss-Prot记录中提取任何你想要的信息也同样简单。比如你想看看一个
 Swiss-Prot记录中的成员，就输入：
 
 .. code:: verbatim
@@ -216,7 +216,7 @@ Prosite是一个包含了蛋白质结构域、蛋白家族、功能位点以及�
 
 一般来说，一个Prosite文件可以包含多个Prosite记录。比如，从 `ExPASy FTP
 site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
-下来的、容纳了整个Prosite记录的``prosite.dat``文件，含有2073条记录（2007年12月发布的第20.24版本）。
+下来的、容纳了整个Prosite记录的 ``prosite.dat`` 文件，含有2073条记录（2007年12月发布的第20.24版本）。
 为了解析这样一个文件，我们再次使用一个迭代器：
 
 .. code:: verbatim
@@ -267,7 +267,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     ...
     >>> print n
     2073
-为了从这些数据中读取某一条特定的记录，你可以使用``read``函数：
+为了从这些数据中读取某一条特定的记录，可以使用 ``read`` 函数：
 
 
 .. code:: verbatim
@@ -276,7 +276,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     >>> handle = open("mysingleprositerecord.dat")
     >>> record = Prosite.read(handle)
 
-如果并不存在或存在多个你想要找的Prosite记录时，这个函数将会输出一个ValueError提示。
+如果并不存在或存在多个你想要找的Prosite记录时，这个函数将会输出一个“ValueError”提示。
 
 10.3  解析Prosite文件记录
 -------------------------------------------
@@ -295,7 +295,7 @@ Prosite文档记录的编号列表，你可以使用：
     >>> records = Prodoc.parse(handle)
     >>> accessions = [record.accession for record in records]
 
-进一步可以使用 ``read()`` 函数来对这些数据中具体某一条文档记录来进行查询阅读。
+进一步可以使用 ``read()`` 函数来对这些数据中具体某一条文档记录来进行查询。
 
 10.4  解析酶记录
 ----------------------------
@@ -360,7 +360,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 如果没有找到或者找到多个酶记录时，``read``函数会反馈一个ValueError提示。
 
 所有酶记录都可以从 `ExPASy FTP site <ftp://ftp.expasy.org/databases/enzyme/enzyme.dat>`__ 网站下载
-为单个文件（ ``enzyme.dat`` ），该文件包含了4877个记录（2009年3月发布的第三版）。为了接卸含有多个
+为单个文件（ ``enzyme.dat`` ），该文件包含了4877个记录（2009年3月发布的第三版）。为了打开含有多个
 酶记录的文件，你可以使用 ``Bio.ExPASy.Enzyme`` 中的 ``parse`` 函数来获得一个迭代器：
 
 .. code:: verbatim
@@ -400,15 +400,15 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 10.5.1  获取一个Swiss-Prot记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-现在让我们来寻找一个关于兰花的查儿酮合酶（对于寻找和兰花相关的有趣东西的理由
-请看 \ `2.3 <#sec:orchids>`__ 章节）。查儿酮合酶参与了植物中类黄酮的生物合成，
-类黄酮能够合成包含色素和UV保护分子等很酷的东西。
+现在让我们来寻找一个关于兰花的查儿酮合成酶（对于寻找和兰花相关的有趣东西的理由
+请看 \ `2.3 <#sec:orchids>`__ 章节）。查儿酮合成酶参与了植物中类黄酮的生物合成，
+类黄酮能够合成包含色素和UV保护分子等物质。
 
-如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合酶的兰花蛋白，id编号
-为O23729, O23730, O23731。现在我们要写一个能够攫取这些蛋白并能够找到一些有趣
+如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合成酶的兰花蛋白，id编号
+为O23729, O23730, O23731。现在我们要写一个能够获取这些蛋白并能够找到一些有趣
 的信息的脚本。
 
-首先，我们使用 ``Bio.ExPASy`` 中的 ``get_sprot_raw()`` 函数来攫取这些记录。这个函
+首先，我们使用 ``Bio.ExPASy`` 中的 ``get_sprot_raw()`` 函数来获取这些记录。这个函
 数非常棒，因为你可以给它提供一个id然后得到一个原始文本记录（不会受到HTML的干扰）。
 然后我们可以使用 ``Bio.SwissProt.read`` 来提取对应的Swiss-Prot记录，也可以使用 ``Bio.SeqIO.read`` 来
 得到一个序列记录SeqRecord。下列代码能够实现我刚刚提到的任务：
@@ -555,7 +555,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     >>> from Bio.ExPASy import ScanProsite
     >>> handle = ScanProsite.scan(seq=sequence)
 
-你可以通过执行 ``handle.read()`` 获取原始XML格式 的搜索结果。此外，我们可以使用 ``Bio.ExPASy.ScanProsite.read``
+你可以通过执行 ``handle.read()`` 获取原始XML格式的搜索结果。此外，我们可以使用 ``Bio.ExPASy.ScanProsite.read``
 来将原始的XML数据解析到一个python对象：
 
 .. code:: verbatim
@@ -589,7 +589,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
 
 其他的ScanProsite参数可以以关键词参数的形式被传递，更多的信息详见`程序性访问
 ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
-比如，传递``lowscore=1``可以帮我们找到一个新的低分值hit：
+比如，传递 ``lowscore=1`` 可以帮我们找到一个新的低分值hit：
 
 .. code:: verbatim
 
