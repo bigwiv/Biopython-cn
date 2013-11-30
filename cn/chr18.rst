@@ -1,7 +1,7 @@
 第18章  Cookbook – 用它做一些很酷的事情
 ================================================
 
-Biopython目前有两个版本的“cookbook”示例——本章（本章包含在教程中许多年，并渐渐成熟），和在Biopython维基上的由用户贡献的集合： ```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__ 。
+Biopython目前有两个版本的“cookbook”示例——本章（本章包含在教程中许多年，并渐渐成熟），和在Biopython维基上的由用户贡献的集合： `http://biopython.org/wiki/Category:Cookbook <http://biopython.org/wiki/Category:Cookbook>`__ 。
 
 我们在试着鼓励Biopython用户在维基上贡献他们自己的示例。除了能帮助社区之外，分享像这样的示例的一个直接的好处是，你也能从其他Biopython用户和开发者中获得一些关于代码的意见反馈——这或许能帮助你改进自己的Python代码。
 
@@ -40,7 +40,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 假设你在检视一个基因组序列，寻找一些序列特征——或许是极端局部GC含量偏差，或者可能的限制性酶切位点。一旦你使你的Python代码在真实的基因组上运行后，尝试在相同的随机化版本基因组上运行，并进行统计分析或许是明智的选择（毕竟，任何你发现的“特性”都可能只是偶然事件）。
 
-在这一讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__. 该文件仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
+在这一讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， ```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__. 该文件仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
 
 .. code:: verbatim
 
@@ -218,7 +218,7 @@ FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列
 
 一个常见的工作是输入一个大的测序读长集合，并根据它们的质量分数过滤它们（或修剪它们）。下面的例子非常简单，然而足以展示处理 ``SeqRecord`` 对象中质量数据的基本用法。我们所有要做的事情是读入一个FASTQ文件，过滤并取出那些PHRED质量分数在某个阈值（这里为20）以上的序列。
 
-在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ (2MB) ，解压后为19MB的文件 ``SRR020192.fastq`` 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 ```http://www.ebi.ac.uk/ena/data/view/SRS004476`` <见http://www.ebi.ac.uk/ena/data/view/SRS004476>`__ ）。
+在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ (2MB) ，解压后为19MB的文件 ``SRR020192.fastq`` 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 `http://www.ebi.ac.uk/ena/data/view/SRS004476`` <见http://www.ebi.ac.uk/ena/data/view/SRS004476>`__ ）。
 
 首先，让我们来统计reads的数目：
 
@@ -248,7 +248,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 18.1.7  切除引物序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在这个例子中，假设我们需要寻找一个FASTQ数据中以 ``GATGACGGTGT`` 为5’端的引物序列的reads。同上面的例子一样，我们将使用从ENA下载的 ``SRR020192.fastq`` 文件（ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。该方式同样适用于任何其他Biopython支持的格式（例如FASTA文件）。
+在这个例子中，假设我们需要寻找一个FASTQ数据中以 ``GATGACGGTGT`` 为5’端的引物序列的reads。同上面的例子一样，我们将使用从ENA下载的 ``SRR020192.fastq`` 文件（ `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。该方式同样适用于任何其他Biopython支持的格式（例如FASTA文件）。
 
 这个代码使用 ``Bio.SeqIO`` 和一个生成器表达式（避免一次加载所有的序列到内存中），以及 ``Seq`` 对象的 ``startswith`` 方法来检查读长是否以引物序列开始：
 
@@ -320,7 +320,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 18.1.8  切除接头序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-这实际上是前面例子的一个简单扩展。我们将假设 ``GATGACGGTGT`` 是某个FASTQ格式数据的一个接头序列，并再次使用来自NCBI的 ``SRR020192.fastq`` 文件 （ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。
+这实际上是前面例子的一个简单扩展。我们将假设 ``GATGACGGTGT`` 是某个FASTQ格式数据的一个接头序列，并再次使用来自NCBI的 ``SRR020192.fastq`` 文件 （ `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ ）。
 
 然而在本例中，我们将在读长的 *任何位置* 查找序列，不仅仅是最开始：
 
@@ -500,7 +500,7 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 ``Bio.SeqIO.index()`` 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 \ `5.4.2 <#sec:SeqIO-index>`__ ）。
 
-我们将再次使用来自 ENA (```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__) 的文件 ``SRR020192.fastq`` ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：
+我们将再次使用来自 ENA (`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__) 的文件 ``SRR020192.fastq`` ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：
 
 .. code:: verbatim
 
@@ -572,7 +572,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要关心内含子。然而，这种方法在病毒和原核生物中仍然有效。
 
-为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： ```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
+为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： ```NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
 
 .. code:: verbatim
 
@@ -682,7 +682,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.2.1  序列长度柱状图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ ，它只包含94条序列。
+在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 ```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ ，它只包含94条序列。
 
 首先，我们使用 ``Bio.SeqIO`` 来解析这个FASTA文件，并创建一个序列长度的列表。你可以用一个for循环来实现，然而我觉得列表解析（list comprehension）更简洁：
 
@@ -721,7 +721,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.2.2  序列GC%含量作图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-对于核酸序列，另一个经常计算的值是GC含量。例如，你可能想要查看一个细菌基因组中所有基因的GC%，并研究任何离群值来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用兰花FASTA文件 ```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 。
+对于核酸序列，另一个经常计算的值是GC含量。例如，你可能想要查看一个细菌基因组中所有基因的GC%，并研究任何离群值来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用兰花FASTA文件 ```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 。
 
 首先，我们使用 ``Bio.SeqIO`` 解析这个FASTA文件并创建一个GC百分含量的列表。你可以使用for循环，但我更喜欢这样：
 
@@ -755,7 +755,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 点线图是可视化比较两条核苷酸序列的相似性的一种方式。采用一个滑动窗来相互比较较短的子序列（比较通常根据一个不匹配阈值来实现）。为了简单起见，此处我们将只查找完全匹配（如下图黑色所示）。
 
-我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
+我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
 .. code:: verbatim
 
@@ -854,7 +854,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.2.4  绘制序列读长数据的质量图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你在处理二代测序数据，你可能希望绘制数据的质量图。这里使用两个包含双末端（paired end）读长的FASTQ文件作为例子，其中 ``SRR001666_1.fastq`` 为正向读长， ``SRR001666_2.fastq`` 为反向读长。它们可以从ENA序列读长档案的FTP站点下载（ ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__ 和 ```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__ ）， 且来自 *E. coli* —— 参见 ```http://www.ebi.ac.uk/ena/data/view/SRR001666`` <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__ 的详细介绍。在下面的代码中， ``pylab.subplot(...)`` 函数被用来在两个子图中展示正向和反向的质量。这里也有少量的代码来保证仅仅展示前50个读长的质量。
+如果你在处理二代测序数据，你可能希望绘制数据的质量图。这里使用两个包含双末端（paired end）读长的FASTQ文件作为例子，其中 ``SRR001666_1.fastq`` 为正向读长， ``SRR001666_2.fastq`` 为反向读长。它们可以从ENA序列读长档案的FTP站点下载（ `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__ 和 `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__ ）， 且来自 *E. coli* —— 参见 `http://www.ebi.ac.uk/ena/data/view/SRR001666 <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__ 的详细介绍。在下面的代码中， ``pylab.subplot(...)`` 函数被用来在两个子图中展示正向和反向的质量。这里也有少量的代码来保证仅仅展示前50个读长的质量。
 
 .. code:: verbatim
 
@@ -1003,7 +1003,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 一个潜在而有用的衡量进化保守性的测度是序列的信息量。
 
-一个有用的针对分子生物学家的信息论的介绍可以在这里找到： ```http://www.lecb.ncifcrf.gov/~toms/paper/primer/`` <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__ 。对于我们的目地，我们将查看保守序列或其部分序列的信息量。我们使用下面的公式计算多序列比对中某个特定的列的信息量：
+一个有用的针对分子生物学家的信息论的介绍可以在这里找到： `http://www.lecb.ncifcrf.gov/~toms/paper/primer/ <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__ 。对于我们的目地，我们将查看保守序列或其部分序列的信息量。我们使用下面的公式计算多序列比对中某个特定的列的信息量：
 
 *IC*\ :sub:`*j*` = 
 
@@ -1181,4 +1181,12 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 `BioSQL <http://www.biosql.org/>`__ 是 `OBF <http://open-bio.org/>`__ 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 ``Bio.SeqIO`` （第 `5 <#chapter:Bio.SeqIO>`__ 章）加载GenBank文件为SeqRecord相同的东西。
 
-Biopython中BioSQL模块的文档目前放在 ```http://biopython.org/wiki/BioSQL`` <http://biopython.org/wiki/BioSQL>`__ ，是我们维基页面的一部分。
+Biopython中BioSQL模块的文档目前放在 `http://biopython.org/wiki/BioSQL <http://biopython.org/wiki/BioSQL>`__ ，是我们维基页面的一部分。
+
+
+
+.. |image26| image:: ../images/hist_plot.png
+.. |image27| image:: ../images/gc_plot.png
+.. |image28| image:: ../images/dot_plot.png
+.. |image29| image:: ../images/dot_plot_scatter.png
+.. |image30| image:: ../images/SRR001666.png

@@ -4,7 +4,7 @@ Chapter 18  Cookbook – Cool things to do with it
 Biopython now has two collections of “cookbook” examples – this chapter
 (which has been included in this tutorial for many years and has
 gradually grown), and
-```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__
+`http://biopython.org/wiki/Category:Cookbook <http://biopython.org/wiki/Category:Cookbook>`__
 which is a user contributed collection on our wiki.
 
 We’re trying to encourage Biopython users to contribute their own
@@ -66,7 +66,7 @@ For this discussion, we’ll use the GenBank file for the pPCP1 plasmid
 from *Yersinia pestis biovar Microtus*. The file is included with the
 Biopython unit tests under the GenBank folder, or you can get it from
 our website,
-```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__.
+```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__.
 This file contains one and only one record, so we can read it in as a
 ``SeqRecord`` using the ``Bio.SeqIO.read()`` function:
 
@@ -326,11 +326,11 @@ records whose PHRED quality scores are all above some threshold (here
 
 For this example we’ll use some real data downloaded from the ENA
 sequence read archive,
-```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__
+`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__
 (2MB) which unzips to a 19MB file ``SRR020192.fastq``. This is some
 Roche 454 GS FLX single end data from virus infected California sea
 lions (see
-```http://www.ebi.ac.uk/ena/data/view/SRS004476`` <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__
+`http://www.ebi.ac.uk/ena/data/view/SRS004476 <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__
 for details).
 
 First, let’s count the reads:
@@ -370,7 +370,7 @@ For this example we’re going to pretend that ``GATGACGGTGT`` is a 5’
 primer sequence we want to look for in some FASTQ formatted read data.
 As in the example above, we’ll use the ``SRR020192.fastq`` file
 downloaded from the ENA
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
+(`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
 The same approach would work with any other supported file format (e.g.
 FASTA files).
 
@@ -466,7 +466,7 @@ This is essentially a simple extension to the previous example. We are
 going to going to pretend ``GATGACGGTGT`` is an adaptor sequence in some
 FASTQ formatted read data, again the ``SRR020192.fastq`` file from the
 NCBI
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
+(`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__).
 
 This time however, we will look for the sequence *anywhere* in the
 reads, not just at the very beginning:
@@ -722,7 +722,7 @@ may prove very helpful, as it allows you to access any read in the FASTQ
 file by its name (see Section \ `5.4.2 <#sec:SeqIO-index>`__).
 
 Again we’ll use the ``SRR020192.fastq`` file from the ENA
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__),
+(`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__),
 although this is actually quite a small FASTQ file with less than 50,000
 reads:
 
@@ -824,7 +824,7 @@ To show how you might approach this with Biopython, we’ll need a
 sequence to search, and as an example we’ll again use the bacterial
 plasmid – although this time we’ll start with a plain FASTA file with no
 pre-marked genes:
-```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
+```NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
 This is a bacterial sequence, so we’ll want to use NCBI codon table 11
 (see Section \ `3.9 <#sec:translation>`__ about translation).
 
@@ -966,7 +966,7 @@ There are lots of times when you might want to visualise the
 distribution of sequence lengths in a dataset – for example the range of
 contig sizes in a genome assembly project. In this example we’ll reuse
 our orchid FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 which has only 94 sequences.
 
 First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
@@ -1018,7 +1018,7 @@ You might want to look at the GC% of all the genes in a bacterial genome
 for example, and investigate any outliers which could have been recently
 acquired by horizontal gene transfer. Again, for this example we’ll
 reuse our orchid FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
+```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
 
 First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
 compile a list of all the GC percentages. Again, you could do this with
@@ -1064,7 +1064,7 @@ plot below).
 
 To start off, we’ll need two sequences. For the sake of argument, we’ll
 just take the first two from our orchid FASTA file
-```ls_orchid.fasta`` <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
+```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
 .. code:: verbatim
 
@@ -1191,11 +1191,11 @@ to try plotting the quality data. Here is an example using two FASTQ
 files containing paired end reads, ``SRR001666_1.fastq`` for the forward
 reads, and ``SRR001666_2.fastq`` for the reverse reads. These were
 downloaded from the ENA sequence read archive FTP site
-(```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__
+(`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__
 and
-```ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz`` <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__),
+`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__),
 and are from *E. coli* – see
-```http://www.ebi.ac.uk/ena/data/view/SRR001666`` <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__
+`http://www.ebi.ac.uk/ena/data/view/SRR001666 <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__
 for details. In the following code the ``pylab.subplot(...)`` function
 is used in order to show the forward and reverse qualities on two
 subplots, side by side. There is also a little bit of code to only plot
@@ -1410,7 +1410,7 @@ information content of a sequence.
 
 A useful introduction to information theory targeted towards molecular
 biologists can be found at
-```http://www.lecb.ncifcrf.gov/~toms/paper/primer/`` <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__.
+`http://www.lecb.ncifcrf.gov/~toms/paper/primer/ <http://www.lecb.ncifcrf.gov/~toms/paper/primer/>`__.
 For our purposes, we will be looking at the information content of a
 consesus sequence, or a portion of a consensus sequence. We calculate
 information content at a particular column in a multiple sequence
@@ -1670,5 +1670,13 @@ GenBank file directly as a SeqRecord using ``Bio.SeqIO``
 (Chapter `5 <#chapter:Bio.SeqIO>`__).
 
 Biopython’s BioSQL module is currently documented at
-```http://biopython.org/wiki/BioSQL`` <http://biopython.org/wiki/BioSQL>`__
+`http://biopython.org/wiki/BioSQL <http://biopython.org/wiki/BioSQL>`__
 which is part of our wiki pages.
+
+
+
+.. |image26| image:: ../images/hist_plot.png
+.. |image27| image:: ../images/gc_plot.png
+.. |image28| image:: ../images/dot_plot.png
+.. |image29| image:: ../images/dot_plot_scatter.png
+.. |image30| image:: ../images/SRR001666.png

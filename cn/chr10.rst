@@ -5,7 +5,7 @@
 ------------------------------
 
 Swiss-Prot
-( ```http://www.expasy.org/sprot`` <http://www.expasy.org/sprot>`__ )是一个
+( `http://www.expasy.org/sprot <http://www.expasy.org/sprot>`__ )是一个
 蛋白质序列数据库。 Biopython能够解析纯文本的Swiss-Prot文件,
 这种格式也被Swiss-Prot、TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
 不支持UniProKB的XML格式文件。
@@ -379,7 +379,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 ---------------------------------
 
 Swiss-Prot、Prosite和Prosite文档记录可以从
- ```http://www.expasy.org`` <http://www.expasy.org>`__ 的ExPASy网络服务器下载到。在ExPASy服
+ `http://www.expasy.org <http://www.expasy.org>`__ 的ExPASy网络服务器下载到。在ExPASy服
 务器上可以进行六种查询：
 
  **get\_prodoc\_entry**
@@ -447,9 +447,9 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 ``sprot_search_de()`` 在ID, DE, GN, OS和OG行进行搜索；
 ``sprot_search_ful()`` 则在所有行进行搜索。具体相关细节分别在
- ```http://www.expasy.org/cgi-bin/sprot-search-de`` <http://www.expasy.org/cgi-bin/sprot-search-de>`__ 
+ `http://www.expasy.org/cgi-bin/sprot-search-de <http://www.expasy.org/cgi-bin/sprot-search-de>`__ 
 和
- ```http://www.expasy.org/cgi-bin/sprot-search-ful`` <http://www.expasy.org/cgi-bin/sprot-search-ful>`__ 上有说明。
+ `http://www.expasy.org/cgi-bin/sprot-search-ful <http://www.expasy.org/cgi-bin/sprot-search-ful>`__ 上有说明。
 注意它们的默认情况下并不搜索TrEMBL（参数为 ``trembl`` ）。还要注意它们返回的是html网页，然而编号却可以很容易从中得到：
 
 .. code:: verbatim

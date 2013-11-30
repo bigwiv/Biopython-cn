@@ -5,7 +5,7 @@
 ------------------------------
 
 Swiss-Prot
-(```http://www.expasy.org/sprot`` <http://www.expasy.org/sprot>`__) is a
+(`http://www.expasy.org/sprot <http://www.expasy.org/sprot>`__) is a
 hand-curated database of protein sequences. Biopython can parse the
 “plain text” Swiss-Prot file format, which is still used for the UniProt
 Knowledgebase which combined Swiss-Prot, TrEMBL and PIR-PSD. We do not
@@ -417,7 +417,7 @@ make a list of all EC numbers for which an Enzyme record is available:
 
 Swiss-Prot, Prosite, and Prosite documentation records can be downloaded
 from the ExPASy web server at
-```http://www.expasy.org`` <http://www.expasy.org>`__. Six kinds of
+`http://www.expasy.org <http://www.expasy.org>`__. Six kinds of
 queries are available from ExPASy:
 
  **get\_prodoc\_entry**
@@ -495,9 +495,9 @@ the ``sprot_search_de()`` or ``sprot_search_ful()`` functions.
 ``sprot_search_de()`` searches in the ID, DE, GN, OS and OG lines;
 ``sprot_search_ful()`` searches in (nearly) all the fields. They are
 detailed on
-```http://www.expasy.org/cgi-bin/sprot-search-de`` <http://www.expasy.org/cgi-bin/sprot-search-de>`__
+`http://www.expasy.org/cgi-bin/sprot-search-de <http://www.expasy.org/cgi-bin/sprot-search-de>`__
 and
-```http://www.expasy.org/cgi-bin/sprot-search-ful`` <http://www.expasy.org/cgi-bin/sprot-search-ful>`__
+`http://www.expasy.org/cgi-bin/sprot-search-ful <http://www.expasy.org/cgi-bin/sprot-search-ful>`__
 respectively. Note that they don’t search in TrEMBL by default (argument
 ``trembl``). Note also that they return html pages; however, accession
 numbers are quite easily extractable:
