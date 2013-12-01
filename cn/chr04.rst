@@ -1,11 +1,11 @@
 Chapter 4  序列注释对象
 ======================================
 
-Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接上章的 ``Seq`` 类，这章主要讲Sequence record 或称之为 ``SeqRecord`` 类, 该类在 ``Bio.SeqRecord``模块中有定义。 它（见``SeqFeature``对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 ``Bio.SeqIO``过程中 （详见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。
+Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接上章的 ``Seq`` 类，这章主要讲Sequence record 或称之为 ``SeqRecord`` 类, 该类在 ``Bio.SeqRecord`` 模块中有定义。 它（见 ``SeqFeature`` 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 ``Bio.SeqIO`` 过程中 （详见Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）。
 
 如读者只需处理FASTA格式的序列文件等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。
 
-尽管本章内容涵盖了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__ ),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__ 和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__ )，获取更多信息:
+尽管本章内容涵盖了 ``SeqRecord`` 和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__ ),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__ 和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__ )，获取更多信息:
 
 .. code:: verbatim
 
@@ -16,7 +16,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 4.1  SeqRecord对象
 -------------------------
 
-``SeqRecord`` (Sequence Record) 类包含在``Bio.SeqRecord`` 模块中。该类是``Bio.SeqIO``序列输入/输出交互界面 (详见Chapter \ `5 <#chapter:Bio.SeqIO>`__)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见Chapter \ `3 <#chapter:Bio.Seq>`__)。
+``SeqRecord`` (Sequence Record) 类包含在 ``Bio.SeqRecord`` 模块中。该类是 ``Bio.SeqIO`` 序列输入/输出交互界面 (详见Chapter \ `5 <#chapter:Bio.SeqIO>`__)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见Chapter \ `3 <#chapter:Bio.Seq>`__)。
 
 ``SeqRecord`` 类非常简单,包括下列属性:
 
@@ -40,12 +40,12 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 4.2  创建 SeqRecord
 -------------------------
 
-使用 ``SeqRecord`` 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用``Bio.SeqIO``从序列文件读取即可（见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。 当然新建``SeqRecord`` 也不复杂。
+使用 ``SeqRecord`` 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用 ``Bio.SeqIO`` 从序列文件读取即可（见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。 当然新建 ``SeqRecord`` 也不复杂。
 
 4.2.1  从头新建SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``SeqRecord`` 最少只需包含``Seq`` 对象:
+``SeqRecord`` 最少只需包含 ``Seq`` 对象:
 
 .. code:: verbatim
 
@@ -67,7 +67,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     >>> simple_seq_r.seq
     Seq('GATC', Alphabet())
 
-标识符对输出``SeqRecord``内容到文件很重要，可随SeqRecord同时建立:
+标识符对输出 ``SeqRecord`` 内容到文件很重要，可随SeqRecord同时建立:
 
 .. code:: verbatim
 
@@ -76,7 +76,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     >>> from Bio.SeqRecord import SeqRecord
     >>> simple_seq_r = SeqRecord(simple_seq, id="AC12345")
 
-上述章节已提到，``SeqRecord``含有一个``annotations`` 属性，用于储存各种杂乱注释的字典。添加annotations示例如下:
+上述章节已提到，``SeqRecord`` 含有一个 ``annotations`` 属性，用于储存各种杂乱注释的字典。添加annotations示例如下:
 
 .. code:: verbatim
 
@@ -86,7 +86,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     >>> print simple_seq_r.annotations["evidence"]
     None. I just made it up.
 
-``letter_annotations``也是字典，其值为与序列等长的内置Python字符串、列表或元组:
+``letter_annotations`` 也是字典，其值为与序列等长的内置Python字符串、列表或元组:
 
 .. code:: verbatim
 
@@ -96,7 +96,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     >>> print simple_seq_r.letter_annotations["phred_quality"]
     [40, 40, 38, 30]
 
-``dbxrefs`` 和 ``features``分别是字符串和 ``SeqFeature`` 对象的Python列表，将在后续章节讨论。
+``dbxrefs`` 和 ``features`` 分别是字符串和 ``SeqFeature`` 对象的Python列表，将在后续章节讨论。
 
 4.2.2  根据FASTA文件创建SeqRecord对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,7 +111,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
     ...
 
-回顾 Chapter \ `2 <#chapter:quick-start>`__ 的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历``SeqRecord`` 对象中的所有记录。 此处，我们介绍``Bio.SeqIO``模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
+回顾 Chapter \ `2 <#chapter:quick-start>`__ 的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历 ``SeqRecord`` 对象中的所有记录。 此处，我们介绍 ``Bio.SeqIO`` 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
 
 .. code:: verbatim
 
@@ -123,14 +123,14 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     description='gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... sequence',
     dbxrefs=[])
 
-现在让我们逐个介绍 ``SeqRecord`` 对象中的主要属性，从给予我们序列属性的 ``Seq``对象 开始:
+现在让我们逐个介绍 ``SeqRecord`` 对象中的主要属性，从给予我们序列属性的 ``Seq`` 对象 开始:
 
 .. code:: verbatim
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
 
-此处 ``Bio.SeqIO`` 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__用法)。
+此处 ``Bio.SeqIO`` 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__ 用法)。
 
 接下来介绍 identifiers 和 description:
 
@@ -169,7 +169,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
 4.2.3  从 GenBank文件创建 SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 ```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
 下载。
 
 该文件只含一条记录 (只有一个 LOCUS 行):
@@ -184,7 +184,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
     PROJECT     GenomeProject:10638
     ...
 
-同样使用``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见
+同样使用 ``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见
 Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 .. code:: verbatim
@@ -197,7 +197,7 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处``Bio.SeqIO``可自动识别序列类型 （详见 chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
+你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 ``Bio.SeqIO`` 可自动识别序列类型 （详见 chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
 
 .. code:: verbatim
 
@@ -245,7 +245,7 @@ GenBank 文件中per-letter annotations为空:
     >>> len(record.features)
     29
 
-接下来，我们将在 Section \ `4.3 <#sec:seq_features>`__介绍 ``SeqFeature`` 对象。
+接下来，我们将在 Section \ `4.3 <#sec:seq_features>`__ 介绍 ``SeqFeature`` 对象。
 
 4.3  Feature, location 和 position对象
 -------------------------------------------
@@ -533,7 +533,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     >>> len(record.features)
     41
 
-本例中，我们关注 ``YP_pPCP05`` 质粒上的 ``pim`` 基因。从GenBank文件可直接看出 ``pim`` gene/CDS location是 ``4343..4780``（相应的Python 位置是 ``4342:4780`` ）。Location信息位于GenBank文件第12和13 entries中, 由于python以0开始计数，因此python中，它们是 ``features`` 列表中的 entries 11和12:
+本例中，我们关注 ``YP_pPCP05`` 质粒上的 ``pim`` 基因。从GenBank文件可直接看出 ``pim`` gene/CDS location是 ``4343..4780`` （相应的Python 位置是 ``4342:4780`` ）。Location信息位于GenBank文件第12和13 entries中, 由于python以0开始计数，因此python中，它们是 ``features`` 列表中的 entries 11和12:
 
 .. code:: verbatim
 
@@ -614,7 +614,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 注意：locations已被调整至对应生成的新父序列!
 
-尽可能灵敏和直观地获取子记录的相关特征（和任意的per-letter annotation），但是对于其余注释，Biopython无法判断是否仍然适用于子记录。因此子记录忽略了``annotations`` 和``dbxrefs``以避免引起歧义。
+尽可能灵敏和直观地获取子记录的相关特征（和任意的per-letter annotation），但是对于其余注释，Biopython无法判断是否仍然适用于子记录。因此子记录忽略了 ``annotations`` 和 ``dbxrefs`` 以避免引起歧义。
 
 .. code:: verbatim
 
@@ -644,7 +644,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     ...
 
 FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
-和 \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__（此例中per-letter annotations (read质量分数) 也被取切片）。
+和 \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__ （此例中per-letter annotations (read质量分数) 也被取切片）。
 
 4.7  SeqRecord对象相加
 -----------------------------
