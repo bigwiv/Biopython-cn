@@ -84,8 +84,8 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 
 #. *在科学出版中我怎样引用Biopython？*
     请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
-   引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
-   （更多信息可在我们网站上获得）：
+    引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
+    （更多信息可在我们网站上获得）：
 
    -  对于官方项目声明: [`13 <#chapman2000>`__,
       Chapman and Chang, 2000];
@@ -104,8 +104,8 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     正确的大写是“Biopython”而不是“BioPython”（虽然对于BioPerl，BioRuby
     和BioJava是这样）。
 
-#. | *我怎样查看自己安装的Biopython的版本？*
-   |  使用以下代码：
+#. *我怎样查看自己安装的Biopython的版本？*
+    使用以下代码：
 
    .. code:: verbatim
 
@@ -114,9 +114,9 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
          ...
          
 
-   如果 “\ ``import Bio``\ ” 这行报错，说明Biopython未被安装。如果第二行报错，
-   你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
-   是开发代码的快照。
+    如果 “\ ``import Bio``\ ” 这行报错，说明Biopython未被安装。如果第二行报错，
+    你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
+    是开发代码的快照。
 
 #. *此文档的最新版本在哪里？*
     如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
@@ -125,18 +125,17 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial.html <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
 
-   如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
-   的教程的拷贝：
+    如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
+    的教程的拷贝：
 
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
 #. *我需要哪一个“Numerical Python”？*
-   对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
-   及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
-   装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
-#. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation
-    方法？*
+    对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
+    及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
+    装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
+#. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation方法？*
     你需要Biopython 1.49或更新的版本。或者，使用以下 \ `3.14 <#sec:seq-module-functions>`__ 部分中的 ``Bio.Seq`` 模块
     功能。
 #. *为什么* ``Seq`` *对象缺少了这篇教程中的upper和lower方法？*
@@ -154,16 +153,15 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 #.  ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
     请检查内建文档（``from Bio import SeqIO``，然后 ``help(SeqIO)`` ），或见wiki上的最
     新条目：
-   `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
-   以及
-   `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
+    `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
+    以及
+    `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *的input函数不让我提供一个序列字母？*
     你需要Biopython 1.49或更新版本。
-#. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse`` *，* ``read`` *和
-   * ``write`` *不能使用文件名？它们坚持句柄！*
+#. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse`` *，* ``read`` *和* ``write`` *不能使用文件名？它们坚持句柄！*
     你需要Biopython 1.54或更新的版本。或者明确使用句柄。
-   (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
-   出句柄。
+    (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
+    出句柄。
 #. *为什么* ``Bio.SeqIO.write()`` *和* ``Bio.AlignIO.write()`` *函数不接受单个记录
    或比对？它们坚持需要一个列表或迭代器！*
     你需要Biopython 1.54或更新版本，或将该条目以 ``[...]`` 包起来形成一个单元素的列表。
@@ -200,7 +198,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     你需要Biopython 1.52或更新版本。
 #. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有*\ * ``index_db`` *\ *函数！*
     你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）
-#. ** ``MultipleSeqAlignment`` *对象在哪里？* ``Bio.Align`` *模块导入正常但是这个类不在那里！*
+#. ``MultipleSeqAlignment`` *对象在哪里？* ``Bio.Align`` *模块导入正常但是这个类不在那里！*
     你需要Biopython 1.54或更新版本。或者，较早的 ``Bio.Align.Generic.Alignment`` 类支持它的一些功能，
     但是现在不推荐使用这个。
 #. *为什么我不能直接从应用程序包装器上运行命令行工具？*
