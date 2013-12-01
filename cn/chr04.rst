@@ -313,15 +313,11 @@ position的不同，我们用5个类分别描述:
 **ExactPosition**
     – 精确位点，用一个数字表示。从该对象的 ``position`` 属性可得知精确位点信息。
 **BeforePosition**
-    – 位于某个特定位点前。如 ```<13'`` , 在GenBank/EMBL中代表实际位点位于13之前。
-      从该对象的 ``position`` 属性可得知上边界信息。 
+    – 位于某个特定位点前。如 ```<13'`` , 在GenBank/EMBL中代表实际位点位于13之前。从该对象的 ``position`` 属性可得知上边界信息。 
 **AfterPosition**
-    – 与 ``BeforePosition`` 相反,如 ```>13'`` , 在GenBank/EMBL中代表实际位点位于13以
-      后。从该对象的 ``position`` 属性可获知下边界信息。
+    – 与 ``BeforePosition`` 相反,如 ```>13'`` , 在GenBank/EMBL中代表实际位点位于13以后。从该对象的 ``position`` 属性可获知下边界信息。
 **WithinPosition**
-    – 介于两个特定位点之间，偶尔在GenBank/EMBL locations用到。如 ‘(1.5)’, GenBank/EMBL中代表实际位点位于1到5之间。
-      该对象需要两个position属性表示，第一个 ``position`` 表示下边界（本例为1），
-      ``extension`` 表示上边界与下边界的差值（本例为4）。因此在WithinPosition中， ``object.position`` 表示下边界， ``object.position + object.extension`` 表示上边界。
+    – 介于两个特定位点之间，偶尔在GenBank/EMBL locations用到。如 ‘(1.5)’, GenBank/EMBL中代表实际位点位于1到5之间。该对象需要两个position属性表示，第一个 ``position`` 表示下边界（本例为1）， ``extension`` 表示上边界与下边界的差值（本例为4）。因此在WithinPosition中， ``object.position`` 表示下边界， ``object.position + object.extension`` 表示上边界。
 **OneOfPosition**
     – 表示几个位点中的一个（GenBank/EMBL文件中偶尔能看到），比如在基因起始位点不明确或者有两个候选位点的时候可以使用，或者用于明确表示两个相关基因特征时使用。 
 **UnknownPosition**
