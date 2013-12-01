@@ -5,7 +5,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 如读者只需处理FASTA格式的序列文件等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。
 
-尽管本章内容涵盖了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (```http://biopython.org/wiki/SeqRecord`` <http://biopython.org/wiki/SeqRecord>`__),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__)，获取更多信息:
+尽管本章内容涵盖了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__)，获取更多信息:
 
 .. code:: verbatim
 
@@ -101,7 +101,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 4.2.2  根据FASTA文件创建SeqRecord对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-本节以鼠疫耶尔森菌株（*Yersinia pestis biovar Microtus* str. 91001 ）的pPCP1质粒全长序列为例,说明从FASTA文件创建SeqRecord的过程。该序列原始文件来自NCBI，可在Biopython单元测试GenBank文件夹下找到，也可点击 ```NC_005816.fna`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__下载。
+本节以鼠疫耶尔森菌株（*Yersinia pestis biovar Microtus* str. 91001 ）的pPCP1质粒全长序列为例,说明从FASTA文件创建SeqRecord的过程。该序列原始文件来自NCBI，可在Biopython单元测试GenBank文件夹下找到，也可点击 ```NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__下载。
 
 序列以大于号开头，该文件只包含一条序列:
 
@@ -169,7 +169,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
 4.2.3  从 GenBank文件创建 SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 ```NC_005816.gb`` <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 ```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
 下载。
 
 该文件只含一条记录 (只有一个 LOCUS 行):
