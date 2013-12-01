@@ -6,7 +6,7 @@ which was briefly introduced in Chapter \ `2 <#chapter:quick-start>`__
 and also used in Chapter \ `4 <#chapter:SeqRecord>`__. This aims to
 provide a simple interface for working with assorted sequence file
 formats in a uniform way. See also the ``Bio.SeqIO`` wiki page
-(```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__),
+(`http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__),
 and the built in documentation (also
 `online <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__):
 
@@ -34,7 +34,7 @@ data as SeqRecord objects. This function expects two arguments:
    Section \ `22.1 <#sec:appendix-handles>`__ for more about handles.
 #. The second argument is a lower case string specifying sequence format
    – we don’t try and guess the file format for you! See
-   ```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__
+   `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    for a full listing of supported formats.
 
 There is an optional argument ``alphabet`` to specify the alphabet to be
@@ -86,7 +86,7 @@ assuming ``Bio.SeqIO.parse()`` supports it you would just need to change
 the format string as appropriate, for example “swiss” for SwissProt
 files or “embl” for EMBL text files. There is a full listing on the wiki
 page
-(```http://biopython.org/wiki/SeqIO`` <http://biopython.org/wiki/SeqIO>`__)
+(`http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__)
 and in the built in documentation (also
 `online <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__).
 
@@ -884,7 +884,7 @@ Biopython does not yet preserve every last bit of annotation).
 
 Let’s suppose you have download the whole of UniProt in the plain text
 SwissPort file format from their FTP site
-(```ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz`` <ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__)
+(`ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz <ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__)
 and uncompressed it as the file ``uniprot_sprot.dat``, and you want to
 extract just a few records from it:
 
@@ -920,7 +920,7 @@ The ``Bio.SeqIO.index()`` function takes three required arguments:
 
 As an example, consider the GenBank flat file releases from the NCBI FTP
 site,
-```ftp://ftp.ncbi.nih.gov/genbank/`` <ftp://ftp.ncbi.nih.gov/genbank/>`__,
+`ftp://ftp.ncbi.nih.gov/genbank/ <ftp://ftp.ncbi.nih.gov/genbank/>`__,
 which are gzip compressed GenBank files. As of GenBank release 182,
 there are 16 files making up the viral sequences, ``gbvrl1.seq``, …,
 ``gbvrl16.seq``, containing in total almost one million records. You can
