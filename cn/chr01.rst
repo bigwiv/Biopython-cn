@@ -83,9 +83,9 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 -------------------------------------
 
 #. *在科学出版中我怎样引用Biopython？*
-    请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
-    引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
-    （更多信息可在我们网站上获得）：
+   请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
+   引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
+   （更多信息可在我们网站上获得）：
 
    -  对于官方项目声明: [`13 <#chapman2000>`__,
       Chapman and Chang, 2000];
@@ -150,7 +150,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
     你需要Biopython 1.45或更新的版本。或者，使用 ``Bio.SeqIO.parse(...).next()`` 来代替。
 #. *为什么没有* ``Bio.AlignIO`` *？模块导入失败！*
     你需要Biopython 1.46或更新的版本。 
-#.  ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
+#. ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
     请检查内建文档（``from Bio import SeqIO``，然后 ``help(SeqIO)`` ），或见wiki上的最
     新条目：
     `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
