@@ -703,7 +703,7 @@ HSE有两种风味：HSEα和HSEβ。前者仅用到Cα原子的位置，而后�
 11.6.8  确定二级结构
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-为了这个功能，你需要安装DSSP（并获得一个对学术性使用免费的证书，参见 ```http://www.cmbi.kun.nl/gv/dssp/`` <http://www.cmbi.kun.nl/gv/dssp/>`__ ）。然后用 ``DSSP`` 类，可以映射 ``Residue`` 对象到其二级结构上（和溶剂可及表面区域）。DSSP代码如下表所列表 `11.1 <#cap:DSSP-codes>`__ 。注意DSSP（程序及其相应的类）不能处理多个模型！
+为了这个功能，你需要安装DSSP（并获得一个对学术性使用免费的证书，参见 `http://www.cmbi.kun.nl/gv/dssp/ <http://www.cmbi.kun.nl/gv/dssp/>`__ ）。然后用 ``DSSP`` 类，可以映射 ``Residue`` 对象到其二级结构上（和溶剂可及表面区域）。DSSP代码如下表所列表 `11.1 <#cap:DSSP-codes>`__ 。注意DSSP（程序及其相应的类）不能处理多个模型！
 
     --------------
 
@@ -739,7 +739,7 @@ HSE有两种风味：HSEα和HSEβ。前者仅用到Cα原子的位置，而后�
 11.6.9  计算残基深度
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-残基深度是残基原子到溶剂可及表面的平均距离。它是溶剂可及性的一种相当新颖和非常强大的参数化。为了这个功能，你需要安装Michel Sanner的 MSMS程序（ ```http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html`` <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__ ）。然后使用 ``ResidueDepth`` 类。这个类像字典一样将 ``Residue`` 对象映射到相应的（残基深度，Cα深度）元组。Cα深度是残基的Cα原子到溶剂可及表面的距离。
+残基深度是残基原子到溶剂可及表面的平均距离。它是溶剂可及性的一种相当新颖和非常强大的参数化。为了这个功能，你需要安装Michel Sanner的 MSMS程序（ `http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__ ）。然后使用 ``ResidueDepth`` 类。这个类像字典一样将 ``Residue`` 对象映射到相应的（残基深度，Cα深度）元组。Cα深度是残基的Cα原子到溶剂可及表面的距离。
 
 
 例子：
@@ -861,7 +861,7 @@ PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP
 
 下载的文件将以 ``pdb1fat.ent`` 为名保存在当前工作目录。注意 ``retrieve_pdb_file`` 方法还有个可选参数 ``pdir`` 用来指定一个特定的路径来保存所下载的PDB文件。
 
-``retrieve_pdb_file`` 方法还有其他选项可以指定下载所用的压缩格式（默认的 ``.Z`` 格式和 ``gunzip`` 格式）。另外，在创建 ``PDBList`` 对象时还可以指定PDB ftp站点。默认使用Worldwide Protein Data Bank（ ```ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/`` <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__ ）。详细内容参见API文档。再次感谢Kristian Rother对此模块的所做的贡献。
+``retrieve_pdb_file`` 方法还有其他选项可以指定下载所用的压缩格式（默认的 ``.Z`` 格式和 ``gunzip`` 格式）。另外，在创建 ``PDBList`` 对象时还可以指定PDB ftp站点。默认使用Worldwide Protein Data Bank（ `ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/ <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__ ）。详细内容参见API文档。再次感谢Kristian Rother对此模块的所做的贡献。
 
 11.8.2  下载整个PDB
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -911,27 +911,29 @@ PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP
 不直接支持，很大程度上是因为已有相当多基于Python或Python-aware的解决方案，也可能会用到Bio.PDB。顺便说一下，我的选择是Pymol（我在Pymol中使用Bio.PDB非常成功，将来Bio.PDB中会有特定的PyMol模块）。基于Python或Python-aware的分子图形解决方案包括：
 
 -  PyMol:
-   ```http://pymol.sourceforge.net/`` <http://pymol.sourceforge.net/>`__
+   `http://pymol.sourceforge.net/ <http://pymol.sourceforge.net/>`__
 -  Chimera:
-   ```http://www.cgl.ucsf.edu/chimera/`` <http://www.cgl.ucsf.edu/chimera/>`__
+   `http://www.cgl.ucsf.edu/chimera/ <http://www.cgl.ucsf.edu/chimera/>`__
 -  PMV:
-   ```http://www.scripps.edu/~sanner/python/`` <http://www.scripps.edu/~sanner/python/>`__
+   `http://www.scripps.edu/~sanner/python/ <http://www.scripps.edu/~sanner/python/>`__
 -  Coot:
-   ```http://www.ysbl.york.ac.uk/~emsley/coot/`` <http://www.ysbl.york.ac.uk/~emsley/coot/>`__
+   `http://www.ysbl.york.ac.uk/~emsley/coot/ <http://www.ysbl.york.ac.uk/~emsley/coot/>`__
 -  CCP4mg:
-   ```http://www.ysbl.york.ac.uk/~lizp/molgraphics.html`` <http://www.ysbl.york.ac.uk/~lizp/molgraphics.html>`__
--  mmLib: ```http://pymmlib.sourceforge.net/`` <http://pymmlib.sourceforge.net/>`__ 
+   `http://www.ysbl.york.ac.uk/~lizp/molgraphics.html <http://www.ysbl.york.ac.uk/~lizp/molgraphics.html>`__
+-  mmLib: `http://pymmlib.sourceforge.net/ <http://pymmlib.sourceforge.net/>`__ 
 -  VMD:
-   ```http://www.ks.uiuc.edu/Research/vmd/`` <http://www.ks.uiuc.edu/Research/vmd/>`__
+   `http://www.ks.uiuc.edu/Research/vmd/ <http://www.ks.uiuc.edu/Research/vmd/>`__
 -  MMTK:
-   ```http://starship.python.net/crew/hinsen/MMTK/`` <http://starship.python.net/crew/hinsen/MMTK/>`__
+   `http://starship.python.net/crew/hinsen/MMTK/ <http://starship.python.net/crew/hinsen/MMTK/>`__
 
 11.9.4  谁在用Bio.PDB？ 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的紊乱区域的web服务器( ```http://dis.embl.de/`` <http://dis.embl.de/>`__ )；COLUMBA，一个提供注释过的蛋白结构的站点( ```http://www.columba-db.de/`` <http://www.columba-db.de/>`__ )。Bio.PDB也用于进行PDB中蛋白质间有效位点的大规模相似性搜索[`19 <#hamelryck2003b>`__, Hamelryck, 2003]，用于开发新的算法来鉴别线性二级结构元件[`26 <#majumdar2005>`__, Majumdar *et al.*, 2005]。
+Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的紊乱区域的web服务器( `http://dis.embl.de/ <http://dis.embl.de/>`__ )；COLUMBA，一个提供注释过的蛋白结构的站点( `http://www.columba-db.de/ <http://www.columba-db.de/>`__ )。Bio.PDB也用于进行PDB中蛋白质间有效位点的大规模相似性搜索[`19 <#hamelryck2003b>`__, Hamelryck, 2003]，用于开发新的算法来鉴别线性二级结构元件[`26 <#majumdar2005>`__, Majumdar *et al.*, 2005]。
 
 从对特征和信息的需求判断，许多大型制药公司也使用Bio.PDB。
 
 
 
+
+.. |image3| image:: ../images/smcra.png

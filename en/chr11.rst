@@ -996,7 +996,7 @@ Example:
 
 For this functionality, you need to install DSSP (and obtain a license
 for it — free for academic use, see
-```http://www.cmbi.kun.nl/gv/dssp/`` <http://www.cmbi.kun.nl/gv/dssp/>`__).
+`http://www.cmbi.kun.nl/gv/dssp/ <http://www.cmbi.kun.nl/gv/dssp/>`__).
 Then use the ``DSSP`` class, which maps ``Residue`` objects to their
 secondary structure (and accessible surface area). The DSSP codes are
 listed in Table `11.1 <#cap:DSSP-codes>`__. Note that DSSP (the program,
@@ -1041,7 +1041,7 @@ Residue depth is the average distance of a residue’s atoms from the
 solvent accessible surface. It’s a fairly new and very powerful
 parameterization of solvent accessibility. For this functionality, you
 need to install Michel Sanner’s MSMS program
-(```http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html`` <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__).
+(`http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html <http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html>`__).
 Then use the ``ResidueDepth`` class. This class behaves as a dictionary
 which maps ``Residue`` objects to corresponding (residue depth, Cα
 depth) tuples. The Cα depth is the distance of a residue’s Cα atom to
@@ -1228,7 +1228,7 @@ compression format used for the download, and the program used for local
 decompression (default ``.Z`` format and ``gunzip``). In addition, the
 PDB ftp site can be specified upon creation of the ``PDBList`` object.
 By default, the server of the Worldwide Protein Data Bank
-(```ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/`` <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__)
+(`ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/ <ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/>`__)
 is used. See the API documentation for more details. Thanks again to
 Kristian Rother for donating this module.
 
@@ -1305,30 +1305,30 @@ there will probably be specific PyMol modules in Bio.PDB soon/some day).
 Python based/aware molecular graphics solutions include:
 
 -  PyMol:
-   ```http://pymol.sourceforge.net/`` <http://pymol.sourceforge.net/>`__
+   `http://pymol.sourceforge.net/ <http://pymol.sourceforge.net/>`__
 -  Chimera:
-   ```http://www.cgl.ucsf.edu/chimera/`` <http://www.cgl.ucsf.edu/chimera/>`__
+   `http://www.cgl.ucsf.edu/chimera/ <http://www.cgl.ucsf.edu/chimera/>`__
 -  PMV:
-   ```http://www.scripps.edu/~sanner/python/`` <http://www.scripps.edu/~sanner/python/>`__
+   `http://www.scripps.edu/~sanner/python/ <http://www.scripps.edu/~sanner/python/>`__
 -  Coot:
-   ```http://www.ysbl.york.ac.uk/~emsley/coot/`` <http://www.ysbl.york.ac.uk/~emsley/coot/>`__
+   `http://www.ysbl.york.ac.uk/~emsley/coot/ <http://www.ysbl.york.ac.uk/~emsley/coot/>`__
 -  CCP4mg:
-   ```http://www.ysbl.york.ac.uk/~lizp/molgraphics.html`` <http://www.ysbl.york.ac.uk/~lizp/molgraphics.html>`__
+   `http://www.ysbl.york.ac.uk/~lizp/molgraphics.html <http://www.ysbl.york.ac.uk/~lizp/molgraphics.html>`__
 -  mmLib:
-   ```http://pymmlib.sourceforge.net/`` <http://pymmlib.sourceforge.net/>`__
+   `http://pymmlib.sourceforge.net/ <http://pymmlib.sourceforge.net/>`__
 -  VMD:
-   ```http://www.ks.uiuc.edu/Research/vmd/`` <http://www.ks.uiuc.edu/Research/vmd/>`__
+   `http://www.ks.uiuc.edu/Research/vmd/ <http://www.ks.uiuc.edu/Research/vmd/>`__
 -  MMTK:
-   ```http://starship.python.net/crew/hinsen/MMTK/`` <http://starship.python.net/crew/hinsen/MMTK/>`__
+   `http://starship.python.net/crew/hinsen/MMTK/ <http://starship.python.net/crew/hinsen/MMTK/>`__
 
 11.9.4  Who’s using Bio.PDB?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bio.PDB was used in the construction of DISEMBL, a web server that
 predicts disordered regions in proteins
-(```http://dis.embl.de/`` <http://dis.embl.de/>`__), and COLUMBA, a
+(`http://dis.embl.de/ <http://dis.embl.de/>`__), and COLUMBA, a
 website that provides annotated protein structures
-(```http://www.columba-db.de/`` <http://www.columba-db.de/>`__). Bio.PDB
+(`http://www.columba-db.de/ <http://www.columba-db.de/>`__). Bio.PDB
 has also been used to perform a large scale search for active sites
 similarities between protein structures in the PDB
 [`19 <#hamelryck2003b>`__, Hamelryck, 2003], and to develop a new
@@ -1339,3 +1339,5 @@ Judging from requests for features and information, Bio.PDB is also used
 by several LPCs (Large Pharmaceutical Companies :-).
 
 
+
+.. |image3| image:: ../images/smcra.png
