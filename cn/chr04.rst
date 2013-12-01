@@ -5,7 +5,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 如读者只需处理FASTA格式的序列文件等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。
 
-尽管本章内容涵盖了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__)，获取更多信息:
+尽管本章内容涵盖了 ``SeqRecord``和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__ ),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__ 和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__ )，获取更多信息:
 
 .. code:: verbatim
 
@@ -18,24 +18,24 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 ``SeqRecord`` (Sequence Record) 类包含在``Bio.SeqRecord`` 模块中。该类是``Bio.SeqIO``序列输入/输出交互界面 (详见Chapter \ `5 <#chapter:Bio.SeqIO>`__)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见Chapter \ `3 <#chapter:Bio.Seq>`__)。
 
- ``SeqRecord`` 类非常简单,包括下列属性:
+``SeqRecord`` 类非常简单,包括下列属性:
 
 **.seq**
-    -序列自身（即 ``Seq`` 对象）。
+    – 序列自身（即 ``Seq`` 对象）。
 **.id**
-   -序列主ID（-字符串类型）。通常类同于accession number。
+    – 序列主ID（-字符串类型）。通常类同于accession number。
 **.name**
-   -序列名/id （-字符串类型）。 可以是accession number, 也可是clone名（类似GenBank record中的LOCUS id）。
+    – 序列名/id （-字符串类型）。 可以是accession number, 也可是clone名（类似GenBank record中的LOCUS id）。
 **.description**
-   -序列描述（-字符串类型）。
+    – 序列描述（-字符串类型）。
 **.letter\_annotations**
-   -对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter\_annotations可用于质量分数(如    Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。
+    – 对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter\_annotations可用于质量分数(如    Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。
 **.annotations**
-    -用于储存附加信息的字典。信息名为键（keys），信息内容为值（value）。用于保存序列的零散信息（如unstructured information）。
+    – 用于储存附加信息的字典。信息名为键（keys），信息内容为值（value）。用于保存序列的零散信息（如unstructured information）。
 **.features**
-    - ``SeqFeature`` 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ Section \ `4.3 <#sec:seq_features>`__）。
+    – ``SeqFeature`` 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ Section \ `4.3 <#sec:seq_features>`__）。
 **.dbxrefs**
-    - 储存数据库交叉引用信息（cross-references）的字符串列表。
+    – 储存数据库交叉引用信息（cross-references）的字符串列表。
 
 4.2  创建 SeqRecord
 -------------------------
@@ -261,21 +261,21 @@ GenBank 文件中per-letter annotations为空:
 ``SeqFeature`` 对象含大量属性，首先一一例出，然后在后续章节举例说明其用法:
 
 **.type**
-    - 用文字描述的feature类型 (如 ‘CDS’ 或 ‘gene’)。
+    – 用文字描述的feature类型 (如 ‘CDS’ 或 ‘gene’)。
 **.location**
-    - ``SeqFeature`` 在序列中所处的位置。见Section \ `4.3.2 <#sec:locations>`__。``SeqFeature`` 设计了众多针对location对象的功能，包含一系列简写的属性。
+    – ``SeqFeature`` 在序列中所处的位置。见Section \ `4.3.2 <#sec:locations>`__。``SeqFeature`` 设计了众多针对location对象的功能，包含一系列简写的属性。
 
     **.ref**
-        - ``.location.ref``简写 --location对象相关的参考序列。通常为空（None）。
+        – ``.location.ref``简写 --location对象相关的参考序列。通常为空（None）。
     **.ref\_db**
-        - ``.location.ref_db``简写 -- 指定``.ref``相关数据库名称。通常为空（None）。
+        – ``.location.ref_db``简写 -- 指定``.ref``相关数据库名称。通常为空（None）。
     **.strand**
-        - ``.location.strand``简写 -- 表示feature所处序列的strand。在双链核酸序列中，1表示正链, -1表示负链, 0 表示strand信息很重要但未知, None表示strand信息未知且不重要。蛋白和单链核酸序列为None。 
+        – ``.location.strand``简写 -- 表示feature所处序列的strand。在双链核酸序列中，1表示正链, -1表示负链, 0 表示strand信息很重要但未知, None表示strand信息未知且不重要。蛋白和单链核酸序列为None。 
 
 **.qualifiers**
-    - 存储feature附加信息（Python字典）。键（key）为值（value）所存信息的单字简要描述，值为实际信息。比如，键为 “evidence” ，而值为 “computational (non-experimental)”。 这只是为了提醒人们注意，该feature没有被实验所证实（湿实验）。Note：为与GenBank/EMBL文件中的feature tables对应，规定.qualifiers 中值为字符串数组（即使只有一个字符串）。
+    – 存储feature附加信息（Python字典）。键（key）为值（value）所存信息的单字简要描述，值为实际信息。比如，键为 “evidence” ，而值为 “computational (non-experimental)”。 这只是为了提醒人们注意，该feature没有被实验所证实（湿实验）。Note：为与GenBank/EMBL文件中的feature tables对应，规定.qualifiers 中值为字符串数组（即使只有一个字符串）。
 **.sub\_features**
-    - 只有在描述复杂位置时才使用，如 GenBank/EMBL文件中的 ‘joins’ 位置。 已被 ``CompoundLocation`` 对象取代，因此略过不提。
+    – 只有在描述复杂位置时才使用，如 GenBank/EMBL文件中的 ‘joins’ 位置。 已被 ``CompoundLocation`` 对象取代，因此略过不提。
     
 4.3.2  Positions和locations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -283,9 +283,9 @@ GenBank 文件中per-letter annotations为空:
 ``SeqFeature``对象主要用于描述相对于父序列中的位置（region）信息。Region用location对象表示，通常是两个position间的范围。为了区分location和position，我们定义如下:
 
 **position**
-    - 表示位于序列中的单一位置, 可以是精确的也可以是不确定的位置（如5, 20, ``<100``和 ``>200``）。
+    – 表示位于序列中的单一位置, 可以是精确的也可以是不确定的位置（如5, 20, ``<100``和 ``>200``）。
 **location**
-    - 介于两个positions间的区域。比如5..20 (5到20)。
+    – 介于两个positions间的区域。比如5..20 (5到20)。
 
 之所以特意提及这两个概念是因为我经常混淆两者。
 
@@ -311,22 +311,22 @@ GenBank 文件中per-letter annotations为空:
 position的不同，我们用5个类分别描述:
 
 **ExactPosition**
-    - 精确位点，用一个数字表示。从该对象的``position``属性可得知精确位点信息。
+    – 精确位点，用一个数字表示。从该对象的``position``属性可得知精确位点信息。
 **BeforePosition**
-    - 位于某个特定位点前。如 ```<13'``, 在GenBank/EMBL中代表实际位点位于13之前。
+    – 位于某个特定位点前。如 ```<13'``, 在GenBank/EMBL中代表实际位点位于13之前。
 从该对象的``position``属性可得知上边界信息。 
 **AfterPosition**
-    - 与``BeforePosition``相反,如 ```>13'``, 在GenBank/EMBL中代表实际位点位于13以
+    – 与``BeforePosition``相反,如 ```>13'``, 在GenBank/EMBL中代表实际位点位于13以
 后。从该对象的``position``属性可获知下边界信息。
 **WithinPosition**
-    - 介于两个特定位点之间，偶尔在GenBank/EMBL locations用到。如 ‘(1.5)’, GenBank/EMBL中代表实际位点位于1到5之间。
+    – 介于两个特定位点之间，偶尔在GenBank/EMBL locations用到。如 ‘(1.5)’, GenBank/EMBL中代表实际位点位于1到5之间。
 该对象需要两个position属性表示，第一个``position``表示下边界（本例为1），
 ``extension``表示上边界与下边界的差值（本例为4）。因此在WithinPosition中，`
 `object.position``表示下边界， ``object.position + object.extension``表示上边界。
 **OneOfPosition**
-   -表示几个位点中的一个（GenBank/EMBL文件中偶尔能看到），比如在基因起始位点不明确或者有两个候选位点的时候可以使用，或者用于明确表示两个相关基因特征时使用。 
+    – 表示几个位点中的一个（GenBank/EMBL文件中偶尔能看到），比如在基因起始位点不明确或者有两个候选位点的时候可以使用，或者用于明确表示两个相关基因特征时使用。 
 **UnknownPosition**
-    - 代表未知位点。在GenBank/EMBL文件中没有使用，对应 UniProt中的 ‘?’ feature坐标。
+    – 代表未知位点。在GenBank/EMBL文件中没有使用，对应 UniProt中的 ‘?’ feature坐标。
 
 举例说明创建一个fuzzy end points:
 
