@@ -20,7 +20,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
  ``SeqRecord`` 类非常简单,包括下列属性:
 
- **.seq**
+**.seq**
     -序列自身（即 ``Seq`` 对象）。
 **.id**
    -序列主ID（-字符串类型）。通常类同于accession number。
@@ -260,12 +260,12 @@ GenBank 文件中per-letter annotations为空:
 
 ``SeqFeature`` 对象含大量属性，首先一一例出，然后在后续章节举例说明其用法:
 
- **.type**
+**.type**
     - 用文字描述的feature类型 (如 ‘CDS’ 或 ‘gene’)。
 **.location**
     - ``SeqFeature`` 在序列中所处的位置。见Section \ `4.3.2 <#sec:locations>`__。``SeqFeature`` 设计了众多针对location对象的功能，包含一系列简写的属性。
 
-     **.ref**
+    **.ref**
         - ``.location.ref``简写 --location对象相关的参考序列。通常为空（None）。
     **.ref\_db**
         - ``.location.ref_db``简写 -- 指定``.ref``相关数据库名称。通常为空（None）。
@@ -282,7 +282,7 @@ GenBank 文件中per-letter annotations为空:
 
 ``SeqFeature``对象主要用于描述相对于父序列中的位置（region）信息。Region用location对象表示，通常是两个position间的范围。为了区分location和position，我们定义如下:
 
- **position**
+**position**
     - 表示位于序列中的单一位置, 可以是精确的也可以是不确定的位置（如5, 20, ``<100``和 ``>200``）。
 **location**
     - 介于两个positions间的区域。比如5..20 (5到20)。
@@ -310,7 +310,7 @@ GenBank 文件中per-letter annotations为空:
 个位点信息。为了处理类似情况，我们用模糊位点（fuzzy position）表示。根据fuzzy 
 position的不同，我们用5个类分别描述:
 
- **ExactPosition**
+**ExactPosition**
     - 精确位点，用一个数字表示。从该对象的``position``属性可得知精确位点信息。
 **BeforePosition**
     - 位于某个特定位点前。如 ```<13'``, 在GenBank/EMBL中代表实际位点位于13之前。

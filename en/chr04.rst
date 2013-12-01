@@ -42,7 +42,7 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__).
 The ``SeqRecord`` class itself is quite simple, and offers the following
 information as attributes:
 
- **.seq**
+**.seq**
     – The sequence itself, typically a ``Seq`` object.
 **.id**
     – The primary ID used to identify the sequence – a string. In most
@@ -76,7 +76,7 @@ information as attributes:
     features is described below in
     Section \ `4.3 <#sec:seq_features>`__.
 **.dbxrefs**
-    - A list of database cross-references as strings.
+    – A list of database cross-references as strings.
 
 4.2  Creating a SeqRecord
 -------------------------
@@ -373,7 +373,7 @@ them and their general features, and then later in the chapter work
 through examples to show how this applies to a real life example. The
 attributes of a SeqFeature are:
 
- **.type**
+**.type**
     – This is a textual description of the type of feature (for
     instance, this will be something like ‘CDS’ or ‘gene’).
 **.location**
@@ -383,7 +383,7 @@ attributes of a SeqFeature are:
     object, and includes a number of shortcut attributes for properties
     of the location:
 
-     **.ref**
+    **.ref**
         – shorthand for ``.location.ref`` – any (different) reference
         sequence the location is referring to. Usually just None.
     **.ref\_db**
@@ -422,7 +422,7 @@ a parent sequence, for which we use a location object, typically
 describing a range between two positions. Two try to clarify the
 terminology we’re using:
 
- **position**
+**position**
     – This refers to a single position on a sequence, which may be fuzzy
     or not. For instance, 5, 20, ``<100`` and ``>200`` are all
     positions.
@@ -465,7 +465,7 @@ help us deal with this, we have the concept of fuzzy positions.
 Basically there are several types of fuzzy positions, so we have five
 classes do deal with them:
 
- **ExactPosition**
+**ExactPosition**
     – As its name suggests, this class represents a position which is
     specified as exact along the sequence. This is represented as just a
     number, and you can get the position by looking at the ``position``
