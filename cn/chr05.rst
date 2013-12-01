@@ -48,7 +48,7 @@
         print seq_record.seq
         print len(seq_record)
 
-同样地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `在线文档<http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
+同样地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `在线文档 <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
 
 另外一个非常常见的使用Python迭代器的地方是在列表解析（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：
 
@@ -354,7 +354,7 @@
 
     gi|6273291|gb|AF191665.1|AF191665 with 0 features
 
-NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见 `EFetch for Sequence and other Molecular Biology Databases<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
+NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见 `EFetch for Sequence and other Molecular Biology Databases <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
 
 .. code:: verbatim
 
