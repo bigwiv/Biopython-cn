@@ -243,7 +243,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 
    你需要Biopython 1.52或更新版本。
 
-#. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有* * ``index_db`` * *函数！*
+#. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有* ``index_db`` *函数！*
 
    你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）
 
