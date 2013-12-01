@@ -118,7 +118,8 @@ and HTML formats
 -------------------------------------
 
 #. *How do I cite Biopython in a scientific publication?*
-    Please cite our application note [`1 <#cock2009>`__, Cock *et al.*,
+   
+   Please cite our application note [`1 <#cock2009>`__, Cock *et al.*,
    2009] as the main Biopython reference. In addition, please cite any
    publications from the following list if appropriate, in particular as
    a reference for specific modules within Biopython (more information
@@ -139,10 +140,13 @@ and HTML formats
       2010].
 
 #. *How should I capitalize “Biopython”? Is “BioPython” OK?*
-    The correct capitalization is “Biopython”, not “BioPython” (even
+   
+   The correct capitalization is “Biopython”, not “BioPython” (even
    though that would have matched BioPerl, BioJava and BioRuby).
-#. | *How do I find out what version of Biopython I have installed?*
-   |  Use this:
+
+#. *How do I find out what version of Biopython I have installed?*
+   
+   Use this:
 
    .. code:: verbatim
 
@@ -157,7 +161,8 @@ and HTML formats
    but a snapshot of the in development code.
 
 #. *Where is the latest version of this document?*
-    If you download a Biopython source code archive, it will include the
+   
+   If you download a Biopython source code archive, it will include the
    relevant version in both HTML and PDF formats. The latest published
    version of this document (updated at each release) is online:
 
@@ -171,131 +176,186 @@ and HTML formats
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
 #. *Which “Numerical Python” do I need?*
-    For Biopython 1.48 or earlier, you needed the old Numeric module.
+   
+   For Biopython 1.48 or earlier, you needed the old Numeric module.
    For Biopython 1.49 onwards, you need the newer NumPy instead. Both
    Numeric and NumPy can be installed on the same machine fine. See
    also: `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
+
 #. *Why is the* ``Seq`` *object missing the (back) transcription &
    translation methods described in this Tutorial?*
-    You need Biopython 1.49 or later. Alternatively, use the ``Bio.Seq``
+   
+   You need Biopython 1.49 or later. Alternatively, use the ``Bio.Seq``
    module functions described in
    Section \ `3.14 <#sec:seq-module-functions>`__.
+
 #. *Why is the* ``Seq`` *object missing the upper & lower methods
    described in this Tutorial?*
-    You need Biopython 1.53 or later. Alternatively, use
+   
+   You need Biopython 1.53 or later. Alternatively, use
    ``str(my_seq).upper()`` to get an upper case string. If you need a
    Seq object, try ``Seq(str(my_seq).upper())`` but be careful about
    blindly re-using the same alphabet.
+
 #. *Why doesn’t the* ``Seq`` *object translation method support the*
    ``cds`` *option described in this Tutorial?*
-    You need Biopython 1.51 or later.
+  
+  You need Biopython 1.51 or later.
+
 #. *Why doesn’t* ``Bio.SeqIO`` *work? It imports fine but there is no
    parse function etc.*
-    You need Biopython 1.43 or later. Older versions did contain some
+   
+   You need Biopython 1.43 or later. Older versions did contain some
    related code under the ``Bio.SeqIO`` name which has since been
    removed - and this is why the import “works”.
+
 #. *Why doesn’t* ``Bio.SeqIO.read()`` *work? The module imports fine but
    there is no read function!*
-    You need Biopython 1.45 or later. Or, use
+   
+   You need Biopython 1.45 or later. Or, use
    ``Bio.SeqIO.parse(...).next()`` instead.
+
 #. *Why isn’t* ``Bio.AlignIO`` *present? The module import fails!*
-    You need Biopython 1.46 or later.
+   
+   You need Biopython 1.46 or later.
+
 #. *What file formats do* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *read and
    write?*
-    Check the built in docstrings (``from Bio import SeqIO``, then
+   
+   Check the built in docstrings (``from Bio import SeqIO``, then
    ``help(SeqIO)``), or see
    `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    and
    `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
    on the wiki for the latest listing.
+
 #. *Why don’t the* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *input functions
    let me provide a sequence alphabet?*
-    You need Biopython 1.49 or later.
+   
+   You need Biopython 1.49 or later.
+
 #. *Why won’t the* ``Bio.SeqIO`` *and* ``Bio.AlignIO`` *functions*
    ``parse``\ *,* ``read`` *and* ``write`` *take filenames? They insist
    on handles!*
-    You need Biopython 1.54 or later, or just use handles explicitly
+   
+   You need Biopython 1.54 or later, or just use handles explicitly
    (see Section \ `22.1 <#sec:appendix-handles>`__). It is especially
    important to remember to close output handles explicitly after
    writing your data.
+
 #. *Why won’t the* ``Bio.SeqIO.write()`` *and* ``Bio.AlignIO.write()``
    *functions accept a single record or alignment? They insist on a list
    or iterator!*
-    You need Biopython 1.54 or later, or just wrap the item with
+
+   You need Biopython 1.54 or later, or just wrap the item with
    ``[...]`` to create a list of one element.
+
 #. *Why doesn’t* ``str(...)`` *give me the full sequence of a* ``Seq``
    *object?*
-    You need Biopython 1.45 or later. Alternatively, rather than
+
+   You need Biopython 1.45 or later. Alternatively, rather than
    ``str(my_seq)``, use ``my_seq.tostring()`` (which will also work on
    recent versions of Biopython).
+
 #. *Why doesn’t* ``Bio.Blast`` *work with the latest plain text NCBI
    blast output?*
-    The NCBI keep tweaking the plain text output from the BLAST tools,
+
+   The NCBI keep tweaking the plain text output from the BLAST tools,
    and keeping our parser up to date is/was an ongoing struggle. If you
    aren’t using the latest version of Biopython, you could try
    upgrading. However, we (and the NCBI) recommend you use the XML
    output instead, which is designed to be read by a computer program.
+
 #. *Why doesn’t* ``Bio.Entrez.read()`` *work? The module imports fine
    but there is no read function!*
-    You need Biopython 1.46 or later.
+
+   You need Biopython 1.46 or later.
+
 #. *Why doesn’t* ``Bio.Entrez.parse()`` *work? The module imports fine
    but there is no parse function!*
-    You need Biopython 1.52 or later.
+
+   You need Biopython 1.52 or later.
+
 #. *Why has my script using* ``Bio.Entrez.efetch()`` *stopped working?*
-    This could be due to NCBI changes in February 2012 introducing
+
+   This could be due to NCBI changes in February 2012 introducing
    EFetch 2.0. First, they changed the default return modes - you
    probably want to add ``retmode="text"`` to your call. Second, they
    are now stricter about how to provide a list of IDs – Biopython 1.59
    onwards turns a list into a comma separated string automatically.
+
 #. *Why doesn’t* ``Bio.Blast.NCBIWWW.qblast()`` *give the same results
    as the NCBI BLAST website?*
-    You need to specify the same options – the NCBI often adjust the
+
+   You need to specify the same options – the NCBI often adjust the
    default settings on the website, and they do not match the QBLAST
    defaults anymore. Check things like the gap penalties and expectation
    threshold.
+
 #. *Why doesn’t* ``Bio.Blast.NCBIXML.read()`` *work? The module imports
    but there is no read function!*
-    You need Biopython 1.50 or later. Or, use
+
+   You need Biopython 1.50 or later. Or, use
    ``Bio.Blast.NCBIXML.parse(...).next()`` instead.
+
 #. *Why doesn’t my* ``SeqRecord`` *object have a* ``letter_annotations``
    *attribute?*
-    Per-letter-annotation support was added in Biopython 1.50.
+
+   Per-letter-annotation support was added in Biopython 1.50.
+
 #. *Why can’t I slice my* ``SeqRecord`` *to get a sub-record?*
+
     You need Biopython 1.50 or later.
+
 #. *Why can’t I add* ``SeqRecord`` *objects together?*
+
     You need Biopython 1.53 or later.
+
 #. *Why doesn’t* ``Bio.SeqIO.convert()`` *or* ``Bio.AlignIO.convert()``
    *work? The modules import fine but there is no convert function!*
-    You need Biopython 1.52 or later. Alternatively, combine the
+
+   You need Biopython 1.52 or later. Alternatively, combine the
    ``parse`` and ``write`` functions as described in this tutorial (see
    Sections \ `5.5.2 <#sec:SeqIO-conversion>`__
    and \ `6.2.1 <#sec:converting-alignments>`__).
+
 #. *Why doesn’t* ``Bio.SeqIO.index()`` *work? The module imports fine
    but there is no index function!*
-    You need Biopython 1.52 or later.
+
+   You need Biopython 1.52 or later.
+
 #. *Why doesn’t* ``Bio.SeqIO.index_db()`` *work? The module imports fine
    but there is no*\ *``index_db``*\ *function!*
-    You need Biopython 1.57 or later (and a Python with SQLite3
+
+   You need Biopython 1.57 or later (and a Python with SQLite3
    support).
+
 #. *Where is the* ``MultipleSeqAlignment`` *object? The* ``Bio.Align``
    *module imports fine but this class isn’t there!*
-    You need Biopython 1.54 or later. Alternatively, the older
+
+   You need Biopython 1.54 or later. Alternatively, the older
    ``Bio.Align.Generic.Alignment`` class supports some of its
    functionality, but using this is now discouraged.
+
 #. *Why can’t I run command line tools directly from the application
    wrappers?*
-    You need Biopython 1.55 or later. Alternatively, use the Python
+
+   You need Biopython 1.55 or later. Alternatively, use the Python
    ``subprocess`` module directly.
+
 #. *I looked in a directory for code, but I couldn’t find the code that
    does something. Where’s it hidden?*
-    One thing to know is that we put code in ``__init__.py`` files. If
+
+   One thing to know is that we put code in ``__init__.py`` files. If
    you are not used to looking for code in this file this can be
    confusing. The reason we do this is to make the imports easier for
    users. For instance, instead of having to do a “repetitive” import
    like ``from Bio.GenBank import GenBank``, you can just use
    ``from Bio import GenBank``.
+
 #. *Why does the code from CVS seem out of date?*
-    In late September 2009, just after the release of Biopython 1.52, we
+
+   In late September 2009, just after the release of Biopython 1.52, we
    switched from using CVS to git, a distributed version control system.
    The old CVS server will remain available as a static and read only
    backup, but if you want to grab the latest code, you’ll need to use
