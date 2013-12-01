@@ -2,7 +2,7 @@ Chapter 4  Sequence annotation objects
 ======================================
 
 Chapter \ `3 <#chapter:Bio.Seq>`__ introduced the sequence classes.
-Immediately °∞above°± the ``Seq`` class is the Sequence Record or
+Immediately ‚Äúabove‚Äù the ``Seq`` class is the Sequence Record or
 ``SeqRecord`` class, defined in the ``Bio.SeqRecord`` module. This class
 allows higher level features such as identifiers and features (as
 ``SeqFeature`` objects) to be associated with the sequence, and is used
@@ -18,7 +18,7 @@ While this chapter should cover most things to do with the ``SeqRecord``
 and ``SeqFeature`` objects in this chapter, you may also want to read
 the ``SeqRecord`` wiki page
 (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__),
-and the built in documentation (also online ®C
+and the built in documentation (also online ‚Äì
 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__
 and
 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__):
@@ -43,20 +43,20 @@ The ``SeqRecord`` class itself is quite simple, and offers the following
 information as attributes:
 
  **.seq**
-    ®C The sequence itself, typically a ``Seq`` object.
+    ‚Äì The sequence itself, typically a ``Seq`` object.
 **.id**
-    ®C The primary ID used to identify the sequence ®C a string. In most
+    ‚Äì The primary ID used to identify the sequence ‚Äì a string. In most
     cases this is something like an accession number.
 **.name**
-    ®C A °∞common°± name/id for the sequence ®C a string. In some cases this
+    ‚Äì A ‚Äúcommon‚Äù name/id for the sequence ‚Äì a string. In some cases this
     will be the same as the accession number, but it could also be a
     clone name. I think of this as being analogous to the LOCUS id in a
     GenBank record.
 **.description**
-    ®C A human readable description or expressive name for the sequence ®C
+    ‚Äì A human readable description or expressive name for the sequence ‚Äì
     a string.
 **.letter\_annotations**
-    ®C Holds per-letter-annotations using a (restricted) dictionary of
+    ‚Äì Holds per-letter-annotations using a (restricted) dictionary of
     additional information about the letters in the sequence. The keys
     are the name of the information, and the information is contained in
     the value as a Python sequence (i.e. a list, tuple or string) with
@@ -65,12 +65,12 @@ information as attributes:
     Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) or secondary
     structure information (e.g. from Stockholm/PFAM alignment files).
 **.annotations**
-    ®C A dictionary of additional information about the sequence. The
+    ‚Äì A dictionary of additional information about the sequence. The
     keys are the name of the information, and the information is
     contained in the value. This allows the addition of more
-    °∞unstructured°± information to the sequence.
+    ‚Äúunstructured‚Äù information to the sequence.
 **.features**
-    ®C A list of ``SeqFeature`` objects with more structured information
+    ‚Äì A list of ``SeqFeature`` objects with more structured information
     about the features on a sequence (e.g. position of genes on a
     genome, or domains on a protein sequence). The structure of sequence
     features is described below in
@@ -82,8 +82,8 @@ information as attributes:
 -------------------------
 
 Using a ``SeqRecord`` object is not very complicated, since all of the
-information is presented as attributes of the class. Usually you won°Øt
-create a ``SeqRecord`` °∞by hand°±, but instead use ``Bio.SeqIO`` to read
+information is presented as attributes of the class. Usually you won‚Äôt
+create a ``SeqRecord`` ‚Äúby hand‚Äù, but instead use ``Bio.SeqIO`` to read
 in a sequence file for you (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ and
 the examples below). However, creating ``SeqRecord`` can be quite
 simple.
@@ -128,7 +128,7 @@ the object:
 
 As mentioned above, the ``SeqRecord`` has an dictionary attribute
 ``annotations``. This is used for any miscellaneous annotations that
-doesn°Øt fit under one of the other more specific attributes. Adding
+doesn‚Äôt fit under one of the other more specific attributes. Adding
 annotations is easy, and just involves dealing directly with the
 annotation dictionary:
 
@@ -179,7 +179,7 @@ present (i.e. only one line starting with a greater than symbol):
 Back in Chapter \ `2 <#chapter:quick-start>`__ you will have seen the
 function ``Bio.SeqIO.parse(...)`` used to loop over all the records in a
 file as ``SeqRecord`` objects. The ``Bio.SeqIO`` module has a sister
-function for use on files which contain just one record which we°Øll use
+function for use on files which contain just one record which we‚Äôll use
 here (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 .. code:: verbatim
@@ -192,8 +192,8 @@ here (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
     description='gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... sequence',
     dbxrefs=[])
 
-Now, let°Øs have a look at the key attributes of this ``SeqRecord``
-individually ®C starting with the ``seq`` attribute which gives you a
+Now, let‚Äôs have a look at the key attributes of this ``SeqRecord``
+individually ‚Äì starting with the ``seq`` attribute which gives you a
 ``Seq`` object:
 
 .. code:: verbatim
@@ -217,7 +217,7 @@ Next, the identifiers and description:
     >>> record.description
     'gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... pPCP1, complete sequence'
 
-As you can see above, the first word of the FASTA record°Øs title line
+As you can see above, the first word of the FASTA record‚Äôs title line
 (after removing the greater than symbol) is used for both the ``id`` and
 ``name`` attributes. The whole title line (after removing the greater
 than symbol) is used for the record description. This is deliberate,
@@ -248,12 +248,12 @@ In this case our example FASTA file was from the NCBI, and they have a
 fairly well defined set of conventions for formatting their FASTA lines.
 This means it would be possible to parse this information and extract
 the GI number and accession for example. However, FASTA files from other
-sources vary, so this isn°Øt possible in general.
+sources vary, so this isn‚Äôt possible in general.
 
 4.2.3  SeqRecord objects from GenBank files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As in the previous example, we°Øre going to look at the whole sequence
+As in the previous example, we‚Äôre going to look at the whole sequence
 for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
 originally downloaded from the NCBI, but this time as a GenBank file.
 Again, this file is included with the Biopython unit tests under the
@@ -274,7 +274,7 @@ starts:
     PROJECT     GenomeProject:10638
     ...
 
-Again, we°Øll use ``Bio.SeqIO`` to read this file in, and the code is
+Again, we‚Äôll use ``Bio.SeqIO`` to read this file in, and the code is
 almost identical to that for used above for the FASTA file (see
 Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
@@ -311,7 +311,7 @@ version suffix. The description comes from the DEFINITION line:
     >>> record.description
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
-GenBank files don°Øt have any per-letter annotations:
+GenBank files don‚Äôt have any per-letter annotations:
 
 .. code:: verbatim
 
@@ -344,7 +344,7 @@ objects in the ``features`` list.
     >>> len(record.features)
     29
 
-We°Øll talk about ``SeqFeature`` objects next, in
+We‚Äôll talk about ``SeqFeature`` objects next, in
 Section \ `4.3 <#sec:seq_features>`__.
 
 4.3  Feature, location and position objects
@@ -355,12 +355,12 @@ Section \ `4.3 <#sec:seq_features>`__.
 
 Sequence features are an essential part of describing a sequence. Once
 you get beyond the sequence itself, you need some way to organize and
-easily get at the more °∞abstract°± information that is known about the
+easily get at the more ‚Äúabstract‚Äù information that is known about the
 sequence. While it is probably impossible to develop a general sequence
 feature class that will cover everything, the Biopython ``SeqFeature``
 class attempts to encapsulate as much of the information about the
 sequence as possible. The design is heavily based on the GenBank/EMBL
-feature tables, so if you understand how they look, you°Øll probably have
+feature tables, so if you understand how they look, you‚Äôll probably have
 an easier time grasping the structure of the Biopython classes.
 
 The key idea about each ``SeqFeature`` object is to describe a region on
@@ -368,49 +368,49 @@ a parent sequence, typically a ``SeqRecord`` object. That region is
 described with a location object, typically a range between two
 positions (see Section \ `4.3.2 <#sec:locations>`__ below).
 
-The ``SeqFeature`` class has a number of attributes, so first we°Øll list
+The ``SeqFeature`` class has a number of attributes, so first we‚Äôll list
 them and their general features, and then later in the chapter work
 through examples to show how this applies to a real life example. The
 attributes of a SeqFeature are:
 
  **.type**
-    ®C This is a textual description of the type of feature (for
-    instance, this will be something like °ÆCDS°Ø or °Ægene°Ø).
+    ‚Äì This is a textual description of the type of feature (for
+    instance, this will be something like ‚ÄòCDS‚Äô or ‚Äògene‚Äô).
 **.location**
-    ®C The location of the ``SeqFeature`` on the sequence that you are
+    ‚Äì The location of the ``SeqFeature`` on the sequence that you are
     dealing with, see Section \ `4.3.2 <#sec:locations>`__ below. The
     ``SeqFeature`` delegates much of its functionality to the location
     object, and includes a number of shortcut attributes for properties
     of the location:
 
      **.ref**
-        ®C shorthand for ``.location.ref`` ®C any (different) reference
+        ‚Äì shorthand for ``.location.ref`` ‚Äì any (different) reference
         sequence the location is referring to. Usually just None.
     **.ref\_db**
-        ®C shorthand for ``.location.ref_db`` ®C specifies the database
+        ‚Äì shorthand for ``.location.ref_db`` ‚Äì specifies the database
         any identifier in ``.ref`` refers to. Usually just None.
     **.strand**
-        ®C shorthand for ``.location.strand`` ®C the strand on the
+        ‚Äì shorthand for ``.location.strand`` ‚Äì the strand on the
         sequence that the feature is located on. For double stranded
         nucleotide sequence this may either be 1 for the top strand, ?1
         for the bottom strand, 0 if the strand is important but is
-        unknown, or ``None`` if it doesn°Øt matter. This is None for
+        unknown, or ``None`` if it doesn‚Äôt matter. This is None for
         proteins, or single stranded sequences.
 
 **.qualifiers**
-    ®C This is a Python dictionary of additional information about the
+    ‚Äì This is a Python dictionary of additional information about the
     feature. The key is some kind of terse one-word description of what
     the information contained in the value is about, and the value is
     the actual information. For example, a common key for a qualifier
-    might be °∞evidence°± and the value might be °∞computational
-    (non-experimental).°± This is just a way to let the person who is
+    might be ‚Äúevidence‚Äù and the value might be ‚Äúcomputational
+    (non-experimental).‚Äù This is just a way to let the person who is
     looking at the feature know that it has not be experimentally
     (i. e. in a wet lab) confirmed. Note that other the value will be a
     list of strings (even when there is only one string). This is a
     reflection of the feature tables in GenBank/EMBL files.
 **.sub\_features**
-    ®C This used to be used to represent features with complicated
-    locations like °Æjoins°Ø in GenBank/EMBL files. This has been
+    ‚Äì This used to be used to represent features with complicated
+    locations like ‚Äòjoins‚Äô in GenBank/EMBL files. This has been
     deprecated with the introduction of the ``CompoundLocation`` object,
     and should now be ignored.
 
@@ -420,14 +420,14 @@ attributes of a SeqFeature are:
 The key idea about each ``SeqFeature`` object is to describe a region on
 a parent sequence, for which we use a location object, typically
 describing a range between two positions. Two try to clarify the
-terminology we°Øre using:
+terminology we‚Äôre using:
 
  **position**
-    ®C This refers to a single position on a sequence, which may be fuzzy
+    ‚Äì This refers to a single position on a sequence, which may be fuzzy
     or not. For instance, 5, 20, ``<100`` and ``>200`` are all
     positions.
 **location**
-    ®C A location is region of sequence bounded by some positions. For
+    ‚Äì A location is region of sequence bounded by some positions. For
     instance 5..20 (i. e. 5 to 20) is a location.
 
 I just mention this because sometimes I get confused between the two.
@@ -437,7 +437,7 @@ I just mention this because sometimes I get confused between the two.
 
 Unless you work with eukaryotic genes, most ``SeqFeature`` locations are
 extremely simple - you just need start and end coordinates and a strand.
-That°Øs essentially all the basic ``FeatureLocation`` object does.
+That‚Äôs essentially all the basic ``FeatureLocation`` object does.
 
 In practise of course, things can be more complicated. First of all we
 have to handle compound locations made up of several regions. Secondly,
@@ -448,15 +448,15 @@ the positions themselves may be fuzzy (inexact).
 
 Biopython 1.62 introduced the ``CompoundLocation`` as part of a
 restructuring of how complex locations made up of multiple regions are
-represented. The main usage is for handling °Æjoin°Ø locations in
+represented. The main usage is for handling ‚Äòjoin‚Äô locations in
 EMBL/GenBank files.
 
 4.3.2.3  Fuzzy Positions
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-So far we°Øve only used simple positions. One complication in dealing
+So far we‚Äôve only used simple positions. One complication in dealing
 with feature locations comes in the positions themselves. In biology
-many times things aren°Øt entirely certain (as much as us wet lab
+many times things aren‚Äôt entirely certain (as much as us wet lab
 biologists try to make them certain!). For instance, you might do a
 dinucleotide priming experiment and discover that the start of mRNA
 transcript starts at one of two sites. This is very useful information,
@@ -466,26 +466,26 @@ Basically there are several types of fuzzy positions, so we have five
 classes do deal with them:
 
  **ExactPosition**
-    ®C As its name suggests, this class represents a position which is
+    ‚Äì As its name suggests, this class represents a position which is
     specified as exact along the sequence. This is represented as just a
     number, and you can get the position by looking at the ``position``
     attribute of the object.
 **BeforePosition**
-    ®C This class represents a fuzzy position that occurs prior to some
+    ‚Äì This class represents a fuzzy position that occurs prior to some
     specified site. In GenBank/EMBL notation, this is represented as
     something like ```<13'``, signifying that the real position is
     located somewhere less than 13. To get the specified upper boundary,
     look at the ``position`` attribute of the object.
 **AfterPosition**
-    ®C Contrary to ``BeforePosition``, this class represents a position
+    ‚Äì Contrary to ``BeforePosition``, this class represents a position
     that occurs after some specified site. This is represented in
     GenBank as ```>13'``, and like ``BeforePosition``, you get the
     boundary number by looking at the ``position`` attribute of the
     object.
 **WithinPosition**
-    ®C Occasionally used for GenBank/EMBL locations, this class models a
+    ‚Äì Occasionally used for GenBank/EMBL locations, this class models a
     position which occurs somewhere between two specified nucleotides.
-    In GenBank/EMBL notation, this would be represented as °Æ(1.5)°Ø, to
+    In GenBank/EMBL notation, this would be represented as ‚Äò(1.5)‚Äô, to
     represent that the position is somewhere within the range 1 to 5. To
     get the information in this class you have to look at two
     attributes. The ``position`` attribute specifies the lower boundary
@@ -495,17 +495,17 @@ classes do deal with them:
     the lower boundary and ``object.position + object.extension`` is the
     upper boundary.
 **OneOfPosition**
-    ®C Occasionally used for GenBank/EMBL locations, this class deals
+    ‚Äì Occasionally used for GenBank/EMBL locations, this class deals
     with a position where several possible values exist, for instance
     you could use this if the start codon was unclear and there where
     two candidates for the start of the gene. Alternatively, that might
     be handled explicitly as two related gene features.
 **UnknownPosition**
-    ®C This class deals with a position of unknown location. This is not
-    used in GenBank/EMBL, but corresponds to the °Æ?°Ø feature coordinate
+    ‚Äì This class deals with a position of unknown location. This is not
+    used in GenBank/EMBL, but corresponds to the ‚Äò?‚Äô feature coordinate
     used in UniProt.
 
-Here°Øs an example where we create a location with fuzzy end points:
+Here‚Äôs an example where we create a location with fuzzy end points:
 
 .. code:: verbatim
 
@@ -543,7 +543,7 @@ attributes of the location:
     >>> print my_location.end
     (8^9)
 
-If you don°Øt want to deal with fuzzy positions and just want numbers,
+If you don‚Äôt want to deal with fuzzy positions and just want numbers,
 they are actually subclasses of integers so should work like integers:
 
 .. code:: verbatim
@@ -569,7 +569,7 @@ fuzzy locations.
 
 Similarly, to make it easy to create a position without worrying about
 fuzzy positions, you can just pass in numbers to the ``FeaturePosition``
-constructors, and you°Øll get back out ``ExactPosition`` objects:
+constructors, and you‚Äôll get back out ``ExactPosition`` objects:
 
 .. code:: verbatim
 
@@ -614,12 +614,12 @@ just check all the features one by one in a loop:
     CDS ['GI:45478716', 'GeneID:2767712']
 
 Note that gene and CDS features from GenBank or EMBL files defined with
-joins are the union of the exons ®C they do not cover any introns.
+joins are the union of the exons ‚Äì they do not cover any introns.
 
 4.3.3  Sequence described by a feature or location
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A ``SeqFeature`` or location object doesn°Øt directly contain a sequence,
+A ``SeqFeature`` or location object doesn‚Äôt directly contain a sequence,
 instead the location (see Section \ `4.3.2 <#sec:locations>`__)
 describes how to get this from the parent sequence. For example consider
 a (short) gene sequence with location 5:18 on the reverse strand, which
@@ -635,7 +635,7 @@ in GenBank/EMBL notation using 1-based counting would be
 
 You could take the parent sequence, slice it to extract 5:18, and then
 take the reverse complement. If you are using Biopython 1.59 or later,
-the feature location°Øs start and end are integer like so this works:
+the feature location‚Äôs start and end are integer like so this works:
 
 .. code:: verbatim
 
@@ -643,7 +643,7 @@ the feature location°Øs start and end are integer like so this works:
     >>> print feature_seq
     AGCCTTTGCCGTC
 
-This is a simple example so this isn°Øt too bad ®C however once you have
+This is a simple example so this isn‚Äôt too bad ‚Äì however once you have
 to deal with compound features (joins) this is rather messy. Instead,
 the ``SeqFeature`` object has an ``extract`` method to take care of all
 this:
@@ -677,7 +677,7 @@ the length is the sum of the constituent regions.
 
 Another common annotation related to a sequence is a reference to a
 journal or other published work dealing with the sequence. We have a
-fairly simple way of representing a Reference in Biopython ®C we have a
+fairly simple way of representing a Reference in Biopython ‚Äì we have a
 ``Bio.SeqFeature.Reference`` class that stores the relevant information
 about a reference as attributes of an object.
 
@@ -694,8 +694,8 @@ gene located on a BAC, and want to specify that it only refers to this
 position exactly. The ``location`` is a potentially fuzzy location, as
 described in section \ `4.3.2 <#sec:locations>`__.
 
-Any reference objects are stored as a list in the ``SeqRecord`` object°Øs
-``annotations`` dictionary under the key °∞references°±. That°Øs all there
+Any reference objects are stored as a list in the ``SeqRecord`` object‚Äôs
+``annotations`` dictionary under the key ‚Äúreferences‚Äù. That‚Äôs all there
 is too it. References are meant to be easy to deal with, and hopefully
 general enough to cover lots of usage cases.
 
@@ -735,7 +735,7 @@ This ``format`` method takes a single mandatory argument, a lower case
 string which is supported by ``Bio.SeqIO`` as an output format (see
 Chapter \ `5 <#chapter:Bio.SeqIO>`__). However, some of the file formats
 ``Bio.SeqIO`` can write to *require* more than one record (typically the
-case for multiple sequence alignment formats), and thus won°Øt work via
+case for multiple sequence alignment formats), and thus won‚Äôt work via
 this ``format()`` method. See also
 Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__.
 
@@ -769,8 +769,8 @@ For example, taking the same GenBank file used earlier:
     >>> len(record.features)
     41
 
-For this example we°Øre going to focus in on the ``pim`` gene,
-``YP_pPCP05``. If you have a look at the GenBank file directly you°Øll
+For this example we‚Äôre going to focus in on the ``pim`` gene,
+``YP_pPCP05``. If you have a look at the GenBank file directly you‚Äôll
 find this gene/CDS has location string ``4343..4780``, or in Python
 counting ``4342:4780``. From looking at the file you can work out that
 these are the twelfth and thirteenth entries in the file, so in Python
@@ -803,7 +803,7 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
 
-Let°Øs slice this parent record from 4300 to 4800 (enough to include the
+Let‚Äôs slice this parent record from 4300 to 4800 (enough to include the
 ``pim`` gene/CDS), and see how many features we get:
 
 .. code:: verbatim
@@ -885,7 +885,7 @@ The same point could be made about the record ``id``, ``name`` and
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
 This illustrates the problem nicely though, our new sub-record is *not*
-the complete sequence of the plasmid, so the description is wrong! Let°Øs
+the complete sequence of the plasmid, so the description is wrong! Let‚Äôs
 fix this and then view the sub-record as a reduced GenBank file using
 the ``format`` method described above in
 Section \ `4.5 <#sec:SeqRecord-format>`__:
@@ -910,7 +910,7 @@ also added, all the features are preserved (with their locations
 adjusted), and any other common annotation is also kept (like the id,
 name and description).
 
-For an example with per-letter annotation, we°Øll use the first record in
+For an example with per-letter annotation, we‚Äôll use the first record in
 a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
 ``SeqIO`` functions:
 
@@ -929,9 +929,9 @@ a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 26, 23, 23]
 
-Let°Øs suppose this was Roche 454 data, and that from other information
+Let‚Äôs suppose this was Roche 454 data, and that from other information
 you think the ``TTT`` should be only ``TT``. We can make a new edited
-record by first slicing the ``SeqRecord`` before and after the °∞extra°±
+record by first slicing the ``SeqRecord`` before and after the ‚Äúextra‚Äù
 third ``T``:
 
 .. code:: verbatim
@@ -969,7 +969,7 @@ Easy and intuitive? We hope so! You can make this shorter with just:
 
     >>> edited = record[:20] + record[21:]
 
-Now, for an example with features, we°Øll use a GenBank file. Suppose you
+Now, for an example with features, we‚Äôll use a GenBank file. Suppose you
 have a circular genome:
 
 .. code:: verbatim
@@ -1019,7 +1019,7 @@ You can shift the origin like this:
     >>> len(shifted)
     9609
 
-Note that this isn°Øt perfect in that some annotation like the database
+Note that this isn‚Äôt perfect in that some annotation like the database
 cross references and one of the features (the source feature) have been
 lost:
 
@@ -1054,12 +1054,12 @@ unmodified sequence.
 4.8  Reverse-complementing SeqRecord objects
 --------------------------------------------
 
-One of the new features in Biopython 1.57 was the ``SeqRecord`` object°Øs
+One of the new features in Biopython 1.57 was the ``SeqRecord`` object‚Äôs
 ``reverse_complement`` method. This tries to balance easy of use with
 worries about what to do with the annotation in the reverse complemented
 record.
 
-For the sequence, this uses the Seq object°Øs reverse complement method.
+For the sequence, this uses the Seq object‚Äôs reverse complement method.
 Any features are transferred with the location and strand recalculated.
 Likewise any per-letter-annotation is also copied but reversed (which
 makes sense for typical examples like quality scores). However, transfer
@@ -1068,11 +1068,11 @@ of most annotation is problematical.
 For instance, if the record ID was an accession, that accession should
 not really apply to the reverse complemented sequence, and transferring
 the identifier by default could easily cause subtle data corruption in
-downstream analysis. Therefore by default, the ``SeqRecord``\ °Øs id,
+downstream analysis. Therefore by default, the ``SeqRecord``\ ‚Äôs id,
 name, description, annotations and database cross references are all
 *not* transferred by default.
 
-The ``SeqRecord`` object°Øs ``reverse_complement`` method takes a number
+The ``SeqRecord`` object‚Äôs ``reverse_complement`` method takes a number
 of optional arguments corresponding to properties of the record. Setting
 these arguments to ``True`` means copy the old values, while ``False``
 means drop the old values and use the default value. You can
@@ -1087,7 +1087,7 @@ Consider this example record:
     >>> print record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)
     NC_005816.1 9609 41 1 11
 
-Here we take the reverse complement and specify a new identifier ®C but
+Here we take the reverse complement and specify a new identifier ‚Äì but
 notice how most of the annotation is dropped (but not the features):
 
 .. code:: verbatim
