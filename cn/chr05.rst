@@ -48,7 +48,7 @@
         print seq_record.seq
         print len(seq_record)
 
-同样地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（`在线文档<http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
+同样地，如果需要读取其他格式文件，并且 ``Bio.SeqIO.parse()`` 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `在线文档<http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）。
 
 另外一个非常常见的使用Python迭代器的地方是在列表解析（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：
 
@@ -320,7 +320,7 @@
     67518
     >>> handle.close()
 
-如果你在使用Python2.7及以上版本， ``with`` 也可以读取gzip和bz2文件。然而在这之前的版本中使用将中断程序(`Issue 3860 <http://bugs.python.org/issue3860>`__ ), 抛出 ``__exit__`` 缺失这类 `` 属性错误 `` （ ``AttributeError`` ）。
+如果你在使用Python2.7及以上版本， ``with`` 也可以读取gzip和bz2文件。然而在这之前的版本中使用将中断程序(`Issue 3860 <http://bugs.python.org/issue3860>`__ ), 抛出 ``__exit__`` 缺失这类 ``属性错误`` （ ``AttributeError`` ）。
 
 有一种gzip（GNU zip）变种称为BGZF（Blocked GNU Zip Format），它可以作为普通gzip文件被读取，但具有随机读取的优点，我们将在稍后的第 \ `5.4.4 <#sec:SeqIO-index-bgzf>`__ 节讨论。
 
@@ -354,7 +354,7 @@
 
     gi|6273291|gb|AF191665.1|AF191665 with 0 features
 
-NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见`EFetch for Sequence and other Molecular Biology Databases<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
+NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见 `EFetch for Sequence and other Molecular Biology Databases<http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
 
 .. code:: verbatim
 
@@ -438,8 +438,8 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 我们将介绍 ``Bio.SeqIO`` 模块中3个相关函数，用于随机读取多序列文件。这里需要权衡灵活性和内存使用。总之：
 
--   ``Bio.SeqIO.to_dict()`` 最灵活但内存占用最大 （请见第 \ `5.4.1 <#SeqIO:to_dict>`__ 节）。这基本上是一个辅助函数，用于建立Python `` 字典 `` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
--   ``Bio.SeqIO.index()`` 处于中间水平，类似于只读字典，当需要时解析序列到``SeqRecord`` 对象（请见第 \ `5.4.2 <#sec:SeqIO-index>`__ 节）。
+-   ``Bio.SeqIO.to_dict()`` 最灵活但内存占用最大 （请见第 \ `5.4.1 <#SeqIO:to_dict>`__ 节）。这基本上是一个辅助函数，用于建立Python ``字典`` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
+-   ``Bio.SeqIO.index()`` 处于中间水平，类似于只读字典，当需要时解析序列到 ``SeqRecord`` 对象（请见第 \ `5.4.2 <#sec:SeqIO-index>`__ 节）。
 -   ``Bio.SeqIO.index_db()`` 也类似于只读字典，但是将文件中的ID和文件偏移值存储到硬盘（SQLite3数据库），这意味着它对内存需求很低（请见第 \ `5.4.3 <#sec:SeqIO-index-db>`__ 节），但会慢一点。
 
 全面的概述请见讨论部分（第 \ `5.4.5 <#sec:SeqIO-indexing-discussion>`__ 节）。
@@ -716,9 +716,9 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 5.4.4 对压缩文件建立索引
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-经常你要建立索引的文件可能非常大，因此你想对它进行压缩。不幸的是，对常规的文件格式如gzip和bzip2高效的随机读取通常很困难。在这种情况下，BGZF (Blocked GNU Zip Format)非常有用。它是gzip变体（也可以使用标准的gzip工具解压），因BAM文件格式得到推广，`samtools <http://samtools.sourceforge.net/>`__ 和`tabix <http://samtools.sourceforge.net/tabix.shtml>`__ ；
+经常你要建立索引的文件可能非常大，因此你想对它进行压缩。不幸的是，对常规的文件格式如gzip和bzip2高效的随机读取通常很困难。在这种情况下，BGZF (Blocked GNU Zip Format)非常有用。它是gzip变体（也可以使用标准的gzip工具解压），因BAM文件格式得到推广，`samtools <http://samtools.sourceforge.net/>`__ 和 `tabix <http://samtools.sourceforge.net/tabix.shtml>`__ ；
 
-你可以使用samtools的命令行工具 ``bgzip`` 创建BGZF格式压缩文件。在我们的示例中，使用文件扩展名 `` *.bgz `` ，以区分于普通的压缩文件（命名为 `` *.gz `` ）。你也可以在Python中使用 ``Bio.bgzf`` 模块读写BGZF文件。
+你可以使用samtools的命令行工具 ``bgzip`` 创建BGZF格式压缩文件。在我们的示例中，使用文件扩展名 ``*.bgz`` ，以区分于普通的压缩文件（命名为 ``*.gz`` ）。你也可以在Python中使用 ``Bio.bgzf`` 模块读写BGZF文件。
 
 ``Bio.SeqIO.index()`` 和 ``Bio.SeqIO.index_db()`` 函数均可以用于BGZF压缩文件。例如，如果使用过未压缩的GenBank文件：
 
