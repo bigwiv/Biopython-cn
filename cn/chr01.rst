@@ -136,85 +136,137 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
 
 #. *我需要哪一个“Numerical Python”？*
-    对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
-    及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
-    装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
+    
+   对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
+   及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
+   装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
 #. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation方法？*
-    你需要Biopython 1.49或更新的版本。或者，使用以下 \ `3.14 <#sec:seq-module-functions>`__ 部分中的 ``Bio.Seq`` 模块
-    功能。
+    
+   你需要Biopython 1.49或更新的版本。或者，使用以下 \ `3.14 <#sec:seq-module-functions>`__ 部分中的 ``Bio.Seq`` 模块
+   功能。
 #. *为什么* ``Seq`` *对象缺少了这篇教程中的upper和lower方法？*
-    你需要Biopython 1.53或更新版本。或者，使用 ``str(my_seq).upper()`` 来获得
-    大写字符串。如果你需要一个Seq对象，试试 ``Seq(str(my_seq).upper())`` ，但是
-    要小心重用相同的字母。
+   
+   你需要Biopython 1.53或更新版本。或者，使用 ``str(my_seq).upper()`` 来获得
+   大写字符串。如果你需要一个Seq对象，试试 ``Seq(str(my_seq).upper())`` ，但是
+   要小心重用相同的字母。
+
 #. *为什么* ``Seq`` *对象的translation方法不支持本教程中描述的* ``cds`` *选项？*
-    你需要Biopython 1.51或更新版本。
+   
+   你需要Biopython 1.51或更新版本。
+
 #. *为什么* ``Bio.SeqIO`` *不能正常工作？它导入正常但是没有解析函数等。*
-    你需要Biopython 1.43或更新版本。较老的版本确实包含了一些相关的代码在 ``Bio.SeqIO`` 下面但是后来就被移除了——这就是为什么import是正常的。
+
+   你需要Biopython 1.43或更新版本。较老的版本确实包含了一些相关的代码在 ``Bio.SeqIO`` 下面但是后来就被移除了——这就是为什么import是正常的。
+
 #. *为什么* ``Bio.SeqIO.read()`` *不能正常工作？该模块导入正常但是并没有read函数！*
-    你需要Biopython 1.45或更新的版本。或者，使用 ``Bio.SeqIO.parse(...).next()`` 来代替。
+
+   你需要Biopython 1.45或更新的版本。或者，使用 ``Bio.SeqIO.parse(...).next()`` 来代替。
+
 #. *为什么没有* ``Bio.AlignIO`` *？模块导入失败！*
-    你需要Biopython 1.46或更新的版本。 
+
+   你需要Biopython 1.46或更新的版本。 
+
 #. ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *读写什么样的文件格式？*
-    请检查内建文档（``from Bio import SeqIO``，然后 ``help(SeqIO)`` ），或见wiki上的最
-    新条目：
-    `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
-    以及
-    `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
+
+   请检查内建文档（``from Bio import SeqIO``，然后 ``help(SeqIO)`` ），或见wiki上的最
+   新条目：
+   `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
+   以及
+   `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__
+
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *的input函数不让我提供一个序列字母？*
-    你需要Biopython 1.49或更新版本。
+
+   你需要Biopython 1.49或更新版本。
+
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse`` *，* ``read`` *和* ``write`` *不能使用文件名？它们坚持句柄！*
-    你需要Biopython 1.54或更新的版本。或者明确使用句柄。
-    (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
-    出句柄。
+
+   你需要Biopython 1.54或更新的版本。或者明确使用句柄。
+   (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
+   出句柄。
+
 #. *为什么* ``Bio.SeqIO.write()`` *和* ``Bio.AlignIO.write()`` *函数不接受单个记录
    或比对？它们坚持需要一个列表或迭代器！*
-    你需要Biopython 1.54或更新版本，或将该条目以 ``[...]`` 包起来形成一个单元素的列表。
+   
+   你需要Biopython 1.54或更新版本，或将该条目以 ``[...]`` 包起来形成一个单元素的列表。
+
 #. *为什么* ``str(...)`` *不给我一个* ``Seq`` *对象的全序列？*
-    你需要Biopython 1.45或更新的版本。或者，与其使用 ``str(my_seq)``，不如试试 ``my_seq.tostring()`` 这也能在最近的Biopython版本上工作）。
+
+   你需要Biopython 1.45或更新的版本。或者，与其使用 ``str(my_seq)``，不如试试 ``my_seq.tostring()`` 这也能在最近的Biopython版本上工作）。
+
 #. *为什么* ``Bio.Blast`` *不能处理最新的NCBI blast输出文本文件结果？*
-    NCBI在不断的调整BLAST工具的纯文本输出，导致我们的解析器需要不断更新。
-    如果你没使用最新版本的Biopython，你可以试试升级。但是，我们（还有NCBI）推荐你使用
-    HTML格式输出来代替，因为HTML是设计给电脑程序读取的。
+
+   NCBI在不断的调整BLAST工具的纯文本输出，导致我们的解析器需要不断更新。
+   如果你没使用最新版本的Biopython，你可以试试升级。但是，我们（还有NCBI）推荐你使用
+   HTML格式输出来代替，因为HTML是设计给电脑程序读取的。
+
 #. *为什么* ``Bio.Entrez.read()`` *不能正常工作？模块导入正常但是没有read函数！*
-    你需要Biopython 1.46或更新的版本。
+
+   你需要Biopython 1.46或更新的版本。
+
 #. *为什么* ``Bio.Entrez.parse()`` *不能正常工作？模块导入正常但是没有parse函数！*
-    你需要Biopython 1.52或更新的版本。
+
+   你需要Biopython 1.52或更新的版本。
+
 #. *为什么我的脚本使用了* ``Bio.Entrez.efetch()`` *便停止工作了？*
-    这可能是由于NCBI在2012年2月引进EFetch 2.0后发生了改变。首先，他们改变了默认的返回方式——
-    你可能想添加 ``retmode="text"`` 到你的call。其次，他们对于怎么提供一个ID列表变得更加严格——
-    Biopython 1.59及之后版本或自动将一个列表转换成逗号分隔的字符串。
+
+   这可能是由于NCBI在2012年2月引进EFetch 2.0后发生了改变。首先，他们改变了默认的返回方式——
+   你可能想添加 ``retmode="text"`` 到你的call。其次，他们对于怎么提供一个ID列表变得更加严格——
+   Biopython 1.59及之后版本或自动将一个列表转换成逗号分隔的字符串。
+
 #. *为什么* ``Bio.Blast.NCBIWWW.qblast()`` *没有给出与NCBI BLAST网站上相同的结果？*
-    你需要指定相同的选项——NCBI经常调整网站上的默认设置，并且他们不再匹配QBLAST的默认设置了。
-    请检查gap罚分和期望值阈值。
+
+   你需要指定相同的选项——NCBI经常调整网站上的默认设置，并且他们不再匹配QBLAST的默认设置了。
+   请检查gap罚分和期望值阈值。
+
 #. *为什么* ``Bio.Blast.NCBIXML.read()`` *不正常工作？模块导入了但是没有read函数！*
-    你需要Biopython 1.50或更新的版本。或者，使用 ``Bio.Blast.NCBIXML.parse(...).next()`` 代替。
+
+   你需要Biopython 1.50或更新的版本。或者，使用 ``Bio.Blast.NCBIXML.parse(...).next()`` 代替。
+
 #. *为什么我的* ``SeqRecord`` *对象没有一个* ``letter_annotations`` *的属性？*
-    Per-letter-annotation已经被加入到Biopython 1.50中。
+
+   Per-letter-annotation已经被加入到Biopython 1.50中。
+
 #. *为什么我无法切片我的* ``SeqRecord`` *来获取一个子记录？*
-    你需要Biopython 1.50或更新版本。
+   你需要Biopython 1.50或更新版本。
+
 #. *为什么我无法一起添加* ``SeqRecord`` *对象？*
-    你需要Biopython 1.53或更新版本。
+
+   你需要Biopython 1.53或更新版本。
+
 #. *为什么* ``Bio.SeqIO.convert()`` *或* ``Bio.AlignIO.convert()`` *不能正常工作？模块导入
-    正常但是没有convert函数！*
-    你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合 ``parse`` 和 ``write`` 函数。
-    （见 Sections \ `5.5.2 <#sec:SeqIO-conversion>`__ 和 \ `6.2.1 <#sec:converting-alignments>`__）。
+   正常但是没有convert函数！*
+
+   你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合 ``parse`` 和 ``write`` 函数。
+   （见 Sections \ `5.5.2 <#sec:SeqIO-conversion>`__ 和 \ `6.2.1 <#sec:converting-alignments>`__）。
+
 #. *为什么* ``Bio.SeqIO.index()`` *不能正常工作？模块导入正常但是没有index函数！*
-    你需要Biopython 1.52或更新版本。
-#. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有*\ * ``index_db`` *\ *函数！*
-    你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）
+
+   你需要Biopython 1.52或更新版本。
+
+#. *为什么* ``Bio.SeqIO.index_db()`` *不能正常工作？模块导入正常但是没有* *``index_db``* *函数！*
+
+   你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）
+
 #. ``MultipleSeqAlignment`` *对象在哪里？* ``Bio.Align`` *模块导入正常但是这个类不在那里！*
-    你需要Biopython 1.54或更新版本。或者，较早的 ``Bio.Align.Generic.Alignment`` 类支持它的一些功能，
-    但是现在不推荐使用这个。
+
+   你需要Biopython 1.54或更新版本。或者，较早的 ``Bio.Align.Generic.Alignment`` 类支持它的一些功能，
+   但是现在不推荐使用这个。
+
 #. *为什么我不能直接从应用程序包装器上运行命令行工具？*
-    你需要Biopython 1.55或更新版本。或者，直接使用Python的 ``subprocess`` 模块。
+
+   你需要Biopython 1.55或更新版本。或者，直接使用Python的 ``subprocess`` 模块。
+
 #. *我看到过一个代码的目录，但是我找不到那个能干嘛的代码了。它藏在哪儿了？*
-    我们知道，我们的代码存放在 ``__init__.py`` 文件里。如果你此前没有在这个文件里寻找代码那么这可能会
-    让人困惑。我们这样做的原因是为了让用户更容易导入。比如，不一定要像 ``from Bio.GenBank import GenBank``
-    来导入一个“repetitive”，你仅需使用 ``from Bio import GenBank`` 就行。
+
+   我们知道，我们的代码存放在 ``__init__.py`` 文件里。如果你此前没有在这个文件里寻找代码那么这可能会
+   让人困惑。我们这样做的原因是为了让用户更容易导入。比如，不一定要像 ``from Bio.GenBank import GenBank``
+   来导入一个“repetitive”，你仅需使用 ``from Bio import GenBank`` 就行。
+
 #. *为什么CVS的代码貌似过期了？*
-    2009年9月下旬，在Biopython 1.52发布之后，我们从使用CVS转变为使用git，git是一个分散式的版本控制系统。
-    旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
-    信息：
+
+   2009年9月下旬，在Biopython 1.52发布之后，我们从使用CVS转变为使用git，git是一个分散式的版本控制系统。
+   旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
+   信息。
 
 对于更一般的问题，Python FAQ页面 `http://www.python.org/doc/faq/ <http://www.python.org/doc/faq/>`__
 可能会有帮助。
