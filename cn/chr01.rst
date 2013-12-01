@@ -83,6 +83,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 -------------------------------------
 
 #. *在科学出版中我怎样引用Biopython？*
+   
    请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
    引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
    （更多信息可在我们网站上获得）：
@@ -101,11 +102,13 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
       式文件：[`7 <#cock2010>`__, Cock *et al.*, 2010].
 
 #. *我该怎样以大写字母写“Biopython”？写成“BioPython”可以吗？*
-    正确的大写是“Biopython”而不是“BioPython”（虽然对于BioPerl，BioRuby
-    和BioJava是这样）。
+    
+   正确的大写是“Biopython”而不是“BioPython”（虽然对于BioPerl，BioRuby
+   和BioJava是这样）。
 
 #. *我怎样查看自己安装的Biopython的版本？*
-    使用以下代码：
+    
+   使用以下代码：
 
    .. code:: verbatim
 
@@ -114,19 +117,20 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
          ...
          
 
-    如果 “\ ``import Bio``\ ” 这行报错，说明Biopython未被安装。如果第二行报错，
-    你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
-    是开发代码的快照。
+   如果 “\ ``import Bio``\ ” 这行报错，说明Biopython未被安装。如果第二行报错，
+   你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
+   是开发代码的快照。
 
 #. *此文档的最新版本在哪里？*
-    如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
-    的相应版本。此文档最新出版的版本可通过在线获得（每个版本的更新）：
+   
+   如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
+   的相应版本。此文档最新出版的版本可通过在线获得（每个版本的更新）：
 
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial.html <http://biopython.org/DIST/docs/tutorial/Tutorial.html>`__
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial.pdf>`__
 
-    如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
-    的教程的拷贝：
+   如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
+   的教程的拷贝：
 
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html>`__
    -  `http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf <http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf>`__
