@@ -200,7 +200,7 @@ and HTML formats
 #. *Why doesn’t the* ``Seq`` *object translation method support the*
    ``cds`` *option described in this Tutorial?*
   
-  You need Biopython 1.51 or later.
+   You need Biopython 1.51 or later.
 
 #. *Why doesn’t* ``Bio.SeqIO`` *work? It imports fine but there is no
    parse function etc.*
@@ -305,11 +305,11 @@ and HTML formats
 
 #. *Why can’t I slice my* ``SeqRecord`` *to get a sub-record?*
 
-    You need Biopython 1.50 or later.
+   You need Biopython 1.50 or later.
 
 #. *Why can’t I add* ``SeqRecord`` *objects together?*
 
-    You need Biopython 1.53 or later.
+   You need Biopython 1.53 or later.
 
 #. *Why doesn’t* ``Bio.SeqIO.convert()`` *or* ``Bio.AlignIO.convert()``
    *work? The modules import fine but there is no convert function!*
@@ -325,7 +325,7 @@ and HTML formats
    You need Biopython 1.52 or later.
 
 #. *Why doesn’t* ``Bio.SeqIO.index_db()`` *work? The module imports fine
-   but there is no*\ *``index_db``*\ *function!*
+   but there is no* ``index_db`` *function!*
 
    You need Biopython 1.57 or later (and a Python with SQLite3
    support).
