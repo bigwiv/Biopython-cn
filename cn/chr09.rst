@@ -31,13 +31,13 @@ DTD文件的时候，这种情况可能发生。如果发生这种情况，``Ent
 话，处理起来会更快。因此，为了更快的处理，我们可以通过警示信息里面的URL来下载对应的DTD文件，将文件放在DTD
 文件默认存放的文件夹 ``...site-packages/Bio/Entrez/DTDs`` 。如果你没有权限进入这个文件夹，你也可以把
 DTD文件放到 ``~/.biopython/Bio/Entrez/DTDs`` 这个目录，``~`` 表示的是你的Home目录。因为这个目录会先于
- ``...site-packages/Bio/Entrez/DTDs`` 被解析器读取，所以当 ``...site-packages/Bio/Entrez/DTDs`` 
+``...site-packages/Bio/Entrez/DTDs`` 被解析器读取，所以当 ``...site-packages/Bio/Entrez/DTDs`` 
 下面的DTD文件过时的时候，你也可以将最新版本的DTD文件放到Home目录的那个文件夹下面。当然也有其他方案，如果你
 是通过源码来安装的Biopython，你可以将DTD文件放到源码的 ``Bio/Entrez/DTDs`` 文件夹下，然后重新安装Biopython。
 这样会将新的DTD文件和之前的一样地安装到正确的位置。
 
 Entrez Programming Utilities也可以生成其他格式的输出文件，比如Fasta、序列数据库里面的GenBank文件格式
-或者文献数据库里面的MedLine格式，更多内容将会在 `9.12 <#sec:entrez-specialized-parsers>` 中讨论。
+或者文献数据库里面的MedLine格式，更多内容将会在 \ `9.12 <#sec:entrez-specialized-parsers>`__ 中讨论。
 
 9.1  Entrez 简介
 ----------------------
@@ -47,6 +47,7 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
 如果NCBI发现你在滥用他们的系统，他们会禁止你的访问。
 
 详细规范如下：
+
 -  对任何连续超过100次的访问请求，请在周末时间或者避开美国的使用高峰时间。这个取决于你是否遵从。
 -  使用这个网址 `http://eutils.ncbi.nlm.nih.gov <http://eutils.ncbi.nlm.nih.gov>`__ ，
    而不是通常的NCBI网址。Biopython使用的是这个网址。
@@ -207,7 +208,7 @@ Entrez获取所有数据库名字的列表：
     ...
 
 这是一个很长的列表，但是间接的告诉你在使用PubMed的时候，你可以通过 ``Jones[AUTH]`` 搜索作者，或者通过
- ``Sanger[AFFL]`` 将作者范围限制在Sanger Centre。这个会非常方便，特别是在你对某个数据库不太熟悉的时候。
+``Sanger[AFFL]`` 将作者范围限制在Sanger Centre。这个会非常方便，特别是在你对某个数据库不太熟悉的时候。
 
 9.3  ESearch: 搜索Entrez数据库
 --------------------------------------------
@@ -262,7 +263,7 @@ taxon ID，像 ``txid158330[Orgn]`` 这样。这个并没有记录在ESearch的�
 同样，我们可以通过EFetch来获得关于每个journal IDs更多的消息。
 
 ESearch有很多有用的参数——参见 `ESearch 帮助页面
- <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
+<http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
 来获取更多信息.
 
 9.4  EPost: 上传identifiers的列表
@@ -277,7 +278,7 @@ EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助�
 到服务器。如果IDs列表很长，URL也会很长，长的URL可能会断掉（比如，一些代理不能复制全部的内容）。
 
 另外，你也可以把以上分成两步来完成，首先用EPost来上传IDs的列表（这个使用了一个内部的 “HTML post” ，而不是
- “HTML get” ， 避开了long URL可能产生的问题）。由于历史记录的支持，你可以使用EFetch来指向这个长的IDs列表，
+“HTML get” ， 避开了long URL可能产生的问题）。由于历史记录的支持，你可以使用EFetch来指向这个长的IDs列表，
 并且下载相关的数据。
 
 让我们通过下面一个简单的例子来看看EPost是如何工作的——上传了一些PubMed的IDs：
@@ -333,13 +334,12 @@ ESummary可以通过一个primary IDs来获取文章的摘要（参见 `ESummary
 9.6  EFetch: 从Entrez下载更多的记录
 -------------------------------------------------
 
-当你想要从Entrez中提取完整的记录的时候，你可以使用EFetch。 在 `EFetch的帮助页面<http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
+当你想要从Entrez中提取完整的记录的时候，你可以使用EFetch。 在 `EFetch的帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
 可以查到EFetch可以起作用的数据库。
 
 NCBI大部分的数据库都支持多种不同的文件格式。当使用 ``Bio.Entrez.efetch()`` 从Entrez下载特定的某种格式的时候，
 需要 ``rettype`` 和或者 ``retmode`` 这些可选的参数。对于不同数据库类型不同的搭配在下面的网页中有描述：
-`NCBI efetch
-webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
+`NCBI efetch webpage <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__
 (例如：
 `literature <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchlit_help.html>`__,
 `sequences <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchseq_help.html>`__
@@ -433,11 +433,10 @@ and
 “gb” 或 “gbwithparts” （或者针对蛋白的“gp”) 返回类型。同样需要注意的是，直到2012年2月，
 Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的为XML格式。
 
-作为另外的选择，你也可以使用 ``rettype="fasta"`` 来获取Fasta格式的文件；参见 `EFetch Sequences 帮助页面
- <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。记住，可选的数据格式决定于你要下载的
- 数据库——请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
+作为另外的选择，你也可以使用 ``rettype="fasta"`` 来获取Fasta格式的文件；参见 `EFetch Sequences 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。
+记住，可选的数据格式决定于你要下载的数据库——请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
-如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(see Chapter \ `5 <#chapter:Bio.SeqIO>`__),
+如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(见章节 \ `5 <#chapter:Bio.SeqIO>`__),
 你可以直接将其解析为一个 ``SeqRecord`` ：
 
 .. code:: verbatim
@@ -512,7 +511,7 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
     >>> record = Entrez.read(Entrez.elink(dbfrom="pubmed", id=pmid))
 
 变量 ``record`` 包含了一个Python列表，列出了已经搜索过的数据库。因为我们特指了一个PubMed ID来搜索，所以
- ``record`` 只包含了一个条目。这个条目是一个字典变量，包含了我们需要寻找的条目的信息，以及能搜索到的所有相关
+``record`` 只包含了一个条目。这个条目是一个字典变量，包含了我们需要寻找的条目的信息，以及能搜索到的所有相关
 的内容：
 
 .. code:: verbatim
@@ -571,8 +570,8 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
 现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个——至少对PubMed
 Central的杂志来说是这样的（请见 Section \ `9.15.3 <#sec:elink-citations>`__）。
 
-关于ELink的帮助，请见`ELink 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__.
-这是一个关于`link names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__
+关于ELink的帮助，请见 `ELink 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__ 。
+这是一个关于 `link names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__
 的整个的子页面， 描述了不同的数据库可以怎样交叉的索引。
 
 9.8  EGQuery: 全局搜索- 统计搜索的条目
@@ -768,7 +767,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
             </DbInfo>
     </eInfoResult>
 
-在这个文件里面，因为一些原因，``<DocsumList>``（还有一些其他的）标签没有在DTD文件 ``eInfo_020511.dtd`` 
+在这个文件里面，因为一些原因，``<DocsumList>`` （还有一些其他的）标签没有在DTD文件 ``eInfo_020511.dtd`` 
 中列出来，XML文件对应DTD文件的第二行会特别的描述出来。默认情况下，如果没有找到DTD文件中的标签，解析器
 会中止并报ValidationError错误。
 
@@ -977,8 +976,8 @@ GEO ( `Gene Expression Omnibus <http://www.ncbi.nlm.nih.gov/geo/>`__ ) 是高通
 通过Entrez网站，UID “200000016” 是GDS16，其他的hit “100000028” 是相关的平台。不幸的是，在写
 这份指南的时候，NCBI貌似还不支持通过Entrez下载GEO文件（不论XML文件，还是SOFT格式的文件）。
 
-然而，可以相当直接的通过 FTP ```ftp://ftp.ncbi.nih.gov/pub/geo/`` <ftp://ftp.ncbi.nih.gov/pub/geo/>`__ 来下载 GEO 文件。
-在这个例子当中，你需要的文件应该是 ```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
+然而，可以相当直接的通过 FTP `ftp://ftp.ncbi.nih.gov/pub/geo/ <ftp://ftp.ncbi.nih.gov/pub/geo/>`__ 来下载 GEO 文件。
+在这个例子当中，你需要的文件应该是 `ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
 （一个压缩文件，参见Python的gzip 模块）。
 
 9.12.3  解析UniGene记录
@@ -1023,7 +1022,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     //
 
 这个记录展示了这个转录本（如 ``SEQUENCE`` 行展示）是来自人的NAT2基因，编码en N-acetyltransferase。
- ``PROTSIM`` 显示的是和NAT2显著相似的蛋白质， ``STS`` 展示的是基因组当中的STS位点。
+``PROTSIM`` 显示的是和NAT2显著相似的蛋白质， ``STS`` 展示的是基因组当中的STS位点。
 
 我们使用 ``Bio.UniGene`` 模块来解析UniGene文件：
 
@@ -1288,7 +1287,7 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
 
 在这个例子当中，我们将展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 解析他们 ——
 在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__ 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
- —— 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
+—— 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
 
 首先，我们想要查询找出要获取的记录的ID。这里我们快速的检索我们最喜欢的一个物种 *Opuntia* (多刺的梨型仙人掌)。我们
 可以做一个快速的检索来获得所有满足要求的GIs（GenBank标志符）。首先我们看看有多少个记录：
