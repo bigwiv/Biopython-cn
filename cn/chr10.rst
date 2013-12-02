@@ -23,7 +23,11 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 记录的储存位置和储存方式，获取该记录文件的方式也有所不同：
 
 -  本地打开Swiss-Prot文件：
-    ``>>> handle = open("myswissprotfile.dat")``
+
+   .. code:: verbatim
+      
+       >>> handle = open("myswissprotfile.dat")
+
 -  打开使用gzip压缩的Swiss-Prot文件：
 
    .. code:: verbatim
@@ -82,10 +86,9 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 文件中的记录进行循环迭代操作。
 
 比如，我们要解析整个Swiss-Prot数据库并且收集所有的描述。你可以从
-`ExPAYs FTP
-site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__ 
+`ExPAYs FTP site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__ 
 下载这些gzip压缩文件 ``uniprot_sprot.dat.gz`` (大约 300MB)。文件中含有
- ``uniprot_sprot.dat`` 一个文件(至少1.5GB)。
+``uniprot_sprot.dat`` 一个文件(至少1.5GB)。
 
 如同这一部分刚开始所描述的，你可以按照如下所示的方法使用python
 的 ``gzip`` 模块打开并解压 ``.gz`` 文件:
@@ -135,7 +138,7 @@ site <ftp://ftp.expasy.org/databases/uniprot/current_release/knowledgebase/compl
     468851
 
 由于输入文件太大，这两种方法在我的新台式机上花费大约十一分钟（用解压好的
- ``uniprot_sprot.dat`` 作为输入文件）。
+``uniprot_sprot.dat`` 作为输入文件）。
 
 从Swiss-Prot记录中提取任何你想要的信息也同样简单。比如你想看看一个
 Swiss-Prot记录中的成员，就输入：
@@ -379,10 +382,10 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 ---------------------------------
 
 Swiss-Prot、Prosite和Prosite文档记录可以从
- `http://www.expasy.org <http://www.expasy.org>`__ 的ExPASy网络服务器下载到。在ExPASy服
+`http://www.expasy.org <http://www.expasy.org>`__ 的ExPASy网络服务器下载到。在ExPASy服
 务器上可以进行六种查询：
 
- **get\_prodoc\_entry**
+**get\_prodoc\_entry**
     下载一个HTML格式的Prosite文档记录
 **get\_prosite\_entry**
     下载一个HTML格式的Prosite记录
@@ -447,9 +450,9 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 ``sprot_search_de()`` 在ID, DE, GN, OS和OG行进行搜索；
 ``sprot_search_ful()`` 则在所有行进行搜索。具体相关细节分别在
- `http://www.expasy.org/cgi-bin/sprot-search-de <http://www.expasy.org/cgi-bin/sprot-search-de>`__ 
+`http://www.expasy.org/cgi-bin/sprot-search-de <http://www.expasy.org/cgi-bin/sprot-search-de>`__ 
 和
- `http://www.expasy.org/cgi-bin/sprot-search-ful <http://www.expasy.org/cgi-bin/sprot-search-ful>`__ 上有说明。
+`http://www.expasy.org/cgi-bin/sprot-search-ful <http://www.expasy.org/cgi-bin/sprot-search-ful>`__ 上有说明。
 注意它们的默认情况下并不搜索TrEMBL（参数为 ``trembl`` ）。还要注意它们返回的是html网页，然而编号却可以很容易从中得到：
 
 .. code:: verbatim
@@ -534,7 +537,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 `ScanProsite <http://www.expasy.org/tools/scanprosite/>`__  允许你通过向Prosite数据库提供一个
 Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanProsite更多的信息，请阅
-读`ScanProsite文档 <http://www.expasy.org/tools/scanprosite/scanprosite-doc.html>`__ 以及
+读 `ScanProsite文档 <http://www.expasy.org/tools/scanprosite/scanprosite-doc.html>`__ 以及
 `程序性访问ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
 
 你也可以使用Biopython的 ``Bio.ExPASy.ScanProsite`` 模块来从python浏览Prosite数据库，这个模块既
@@ -587,7 +590,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
     >>> result[5]
     {'start': 106, 'stop': 111, 'sequence_ac': u'USERSEQ1', 'signature_ac': u'PS00008'}
 
-其他的ScanProsite参数可以以关键词参数的形式被传递，更多的信息详见`程序性访问
+其他的ScanProsite参数可以以关键词参数的形式被传递，更多的信息详见 `程序性访问
 ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
 比如，传递 ``lowscore=1`` 可以帮我们找到一个新的低分值hit：
 

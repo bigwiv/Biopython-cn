@@ -27,7 +27,11 @@ record. There are several ways to do so, depending on where and how the
 Swiss-Prot record is stored:
 
 -  Open a Swiss-Prot file locally:
-    ``>>> handle = open("myswissprotfile.dat")``
+  
+   .. code:: verbatim
+      
+       >>> handle = open("myswissprotfile.dat")
+
 -  Open a gzipped Swiss-Prot file:
 
    .. code:: verbatim
@@ -420,7 +424,7 @@ from the ExPASy web server at
 `http://www.expasy.org <http://www.expasy.org>`__. Six kinds of
 queries are available from ExPASy:
 
- **get\_prodoc\_entry**
+**get\_prodoc\_entry**
     To download a Prosite documentation record in HTML format
 **get\_prosite\_entry**
     To download a Prosite record in HTML format
