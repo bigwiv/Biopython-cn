@@ -135,18 +135,18 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 在本地运行BLAST（跟通过internet运行比，见 \ `7.1 <#sec:running-www-blast>`__ ）
 至少有2个主要优点：
 
-- 本地运行BLAST可能比通过internet运行更快；
+-  本地运行BLAST可能比通过internet运行更快；
 
-- 本地运行可以让你建立自己的数据库来对序列进行搜索。
+-  本地运行可以让你建立自己的数据库来对序列进行搜索。
 
 处理有版权的或者没有发表的序列数据也许是本地运行BLAST的另一个原因。你也许
 不能泄露这些序列数据，所以没法提交给NCBI来BLAST。
 
 不幸的是，本地运行也有些缺点 - 安装所有的东东并成功运行需要花些力气：
 
-- 本地运行BLAST需要你安装相关命令行工具。
+-  本地运行BLAST需要你安装相关命令行工具。
 
-- 本地运行BLAST需要安装一个很大的BLAST的数据库（并且需要保持数据更新）.
+-  本地运行BLAST需要安装一个很大的BLAST的数据库（并且需要保持数据更新）.
 
 更令人困惑的是，至少有4种不同的BLAST安装程序包，并且还有其他的一些工具能
 产生类似的BLAST 输出文件，比如BLAT。
@@ -252,18 +252,18 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 你可以通过好几个途径来获得XML格式的BLAST输出文件。对解析器来说，不管你是
 怎么生成输出的，只要是输出的格式是XML就行。
 
-- 你可以通过Biopython来运行因特网上的BLAST，就像 `7.1 <#sec:running-www-blast>`__
-  节描述的那样。
+-  你可以通过Biopython来运行因特网上的BLAST，就像 `7.1 <#sec:running-www-blast>`__
+   节描述的那样。
 
-- 你可以通过Biopython来运行本地的BLAST，就像 `7.2 <#sec:running-local-blast>`__
-  节描述的那样。
+-  你可以通过Biopython来运行本地的BLAST，就像 `7.2 <#sec:running-local-blast>`__
+   节描述的那样。
 
-- 你可以在通过浏览器在NCBI网站上进行BLAST搜索，然后保存结果文件。你需要选择输出
-  结果文件是XML格式的，并保存最终的结果网页（你知道，就是包含所有有趣结果的那个网页）
-  到文件。
+-  你可以在通过浏览器在NCBI网站上进行BLAST搜索，然后保存结果文件。你需要选择输出
+   结果文件是XML格式的，并保存最终的结果网页（你知道，就是包含所有有趣结果的那个网页）
+   到文件。
 
-- 你也可以直接运行本地电脑上的BlAST，不通过Biopython，保存输出结果到文件。
-  同样的你也需要选择输出文件格式为XML。
+-  你也可以直接运行本地电脑上的BlAST，不通过Biopython，保存输出结果到文件。
+   同样的你也需要选择输出文件格式为XML。
 
 关键点就是你不必用Biopython脚本来获取数据才能解析它。通过以上任何一种方式
 获取了结果输出，你然后需要获得文件句柄来处理它。在Python中，一个文件句柄就是一种
@@ -414,7 +414,7 @@ tacttgttggtgttggatcgaaccaattggaagacgaatatgctcacatcacttctcattccttacatcttcttc...
 
 下面是 我尝试画的 ``Blast`` 和 ``PSIBlast`` 记录类的UML图。如果你对UML图很熟悉，不妨
 看看下面的UML图是否有错误或者可以改进的地方，如果有，请联系我。
-BLAST类图在这里  `7.4 <#fig:blastrecord>`__ 。
+BLAST类图在这里 \ `7.4 <#fig:blastrecord>`__ 。
 
 |image1|
 
@@ -601,10 +601,10 @@ ValueError异常终止了。这是个严肃的问题。因为你无法分辨导�
    因为你使用解析器的版本和你BLAST命令的版本不一致。
 
 -  ``LowQualityBlastError`` - 当Blast一条低质量的序列时（比如，一条
-  只有1个核苷酸的短序列），似乎Blast会终止并屏蔽掉整个序列，所有就没有什么可以
-  解析了。 这种情况下，Blast就会产生一个不完整的报告导致解析器出现ValueError
-  错误。 ``LowQualityBlastError`` 错误在这种情况下产生。这个错误返回如下
-  信息：
+   只有1个核苷酸的短序列），似乎Blast会终止并屏蔽掉整个序列，所有就没有什么可以
+   解析了。 这种情况下，Blast就会产生一个不完整的报告导致解析器出现ValueError
+   错误。 ``LowQualityBlastError`` 错误在这种情况下产生。这个错误返回如下
+   信息：
 
    -  ``item[0]`` – The error message
    
