@@ -53,7 +53,7 @@ as well. However, until that is declared stable, for production code
 please continue to use the ``Bio.Blast`` module for dealing with NCBI
 BLAST.
 
-*注意*: 接下来的\ `第8章 <#chapter:searchio>`__ 介绍的``Bio.SearchIO``是一个
+*注意*: 接下来的 \ `第8章 <#chapter:searchio>`__ 介绍的 ``Bio.SearchIO`` 是一个
 Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bio.Blast`` 模块。
 因为它提供了一个更为通用的序列搜索相关的框架。不过，在这个模块的稳定版本发布之前，在实际工作中的代码里，请继续用 ``Bio.Blast``
 模块来处理NCBI BLAST。
@@ -69,7 +69,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 We use the function ``qblast()`` in the ``Bio.Blast.NCBIWWW`` module
 call the online version of BLAST. This has three non-optional arguments:
 
-我们使用 ``Bio.Blast.NCBIWWW``模块的函数 ``qblast()`` 来调用在线版本的BLAST。
+我们使用 ``Bio.Blast.NCBIWWW`` 模块的函数 ``qblast()`` 来调用在线版本的BLAST。
 这个函数有3个必需的参数:
 
 -  The first argument is the blast program to use for the search, as a
@@ -112,8 +112,8 @@ default is ``"XML"``, as that is the format expected by the parser,
 described in section \ `7.3 <#sec:parsing-blast>`__ below.
 
 - ``qblast`` 函数可以返回多种格式的BLAST结果。你可以通过可选参数 ``format_type`` 
-指定格式关键字为：``"HTML"``, ``"Text"``, ``"ASN.1"``, 或 ``"XML"``。默认
-格式是 ``"XML"``，这是解析器期望的格式，`7.3节 <#sec:parsing-blast>`__ 对其有详细的描述。
+指定格式关键字为：``"HTML"``, ``"Text"``, ``"ASN.1"``, 或 ``"XML"`` 。默认
+格式是 ``"XML"`` ，这是解析器期望的格式，`7.3节 <#sec:parsing-blast>`__ 对其有详细的描述。
 
 -  The argument ``expect`` sets the expectation or e-value threshold.
 
@@ -164,7 +164,7 @@ a string, and use that as the query argument:
 We could also have read in the FASTA file as a ``SeqRecord`` and then
 supplied just the sequence itself:
 
-我们同样可以读取FASTA文件为一个``SeqRecord``序列对象，然后以这个序列自身作为参数：
+我们同样可以读取FASTA文件为一个 ``SeqRecord`` 序列对象，然后以这个序列自身作为参数：
 
 .. code:: verbatim
 
@@ -178,7 +178,7 @@ for your sequence automatically. You might prefer to use the
 ``SeqRecord`` object’s format method to make a fasta string (which will
 include the existing identifier):
 
-只提供序列意味着BLAST会自动分配给你一个ID。你可能更喜欢用``SeqRecord``
+只提供序列意味着BLAST会自动分配给你一个ID。你可能更喜欢用 ``SeqRecord``
 对象的format方法来包装一个fasta字符串，因为这个对象会包含fasta文件中已有的ID
 
 .. code:: verbatim
@@ -192,7 +192,7 @@ This approach makes more sense if you have your sequence(s) in a
 non-FASTA file format which you can extract using ``Bio.SeqIO`` (see
 Chapter \ `5 <#chapter:Bio.SeqIO>`__).
 
-如果你的序列在一个非FASTA格式的文件中并且你用``Bio.SeqIO``(看第5章`5 <#chapter:Bio.SeqIO>`__)
+如果你的序列在一个非FASTA格式的文件中并且你用 ``Bio.SeqIO`` (看第5章`5 <#chapter:Bio.SeqIO>`__)
 把序列取出来了，那么这个方法更有用。
 
 Whatever arguments you give the ``qblast()`` function, you should get
@@ -204,7 +204,7 @@ this especially useful when debugging my code that extracts info from
 the BLAST results (because re-running the online search is slow and
 wastes the NCBI computer time).
 
-不论你给``qblast()`` 函数提供了什么参数，都应该返回一个handle object的结果(
+不论你给 ``qblast()`` 函数提供了什么参数，都应该返回一个handle object的结果(
 默认是XML格式)。下一步就是将这个XML输出解析为代表BLAST搜索结果的Python
 对象（`7.3 <#sec:parsing-blast>`__）。
 不过，也许你想先把这个XML输出保存一个本地文件副本。当调试从BLAST结果提取信息的代码的时候，我发现这样做
@@ -214,8 +214,8 @@ We need to be a bit careful since we can use ``result_handle.read()`` to
 read the BLAST output only once – calling ``result_handle.read()`` again
 returns an empty string.
 
-这里我们需要注意下：因为用``result_handle.read()``来读取BLAST结果只能用一次 -
-再次调用``result_handle.read()``会返回一个空的字符串.
+这里我们需要注意下：因为用 ``result_handle.read()`` 来读取BLAST结果只能用一次 -
+再次调用 ``result_handle.read()`` 会返回一个空的字符串.
 
 .. code:: verbatim
 
@@ -230,8 +230,8 @@ However, the ``parse`` function of the BLAST parser (described
 in \ `7.3 <#sec:parsing-blast>`__) takes a file-handle-like object, so
 we can just open the saved file for input:
 
-这些做好后，结果已经存储在 `my_blast.xml`` 文件中了并且原先的handle中的数据
-已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的``parse``函数（描述见\ `7.3 <#sec:parsing-blast>`__)
+这些做好后，结果已经存储在 ``my_blast.xml`` 文件中了并且原先的handle中的数据
+已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 ``parse`` 函数（描述见\ `7.3 <#sec:parsing-blast>`__)
 采用一个文件句柄类的对象，所以我们只需打开已经保存的文件作为输入。
 
 .. code:: verbatim
@@ -261,7 +261,7 @@ Running BLAST locally (as opposed to over the internet, see
 Section \ `7.1 <#sec:running-www-blast>`__) has at least major two
 advantages:
 
-在本地运行BLAST（跟通过internet运行比，见\ `7.1 <#sec:running-www-blast>`__ ）
+在本地运行BLAST（跟通过internet运行比，见 \ `7.1 <#sec:running-www-blast>`__ ）
 至少有2个主要优点：
 
 -  Local BLAST may be faster than BLAST over the internet;
@@ -315,7 +315,7 @@ This was the most widely used standalone BLAST tool up until its
 replacement BLAST+ was released by the NCBI.
 
 `NCBI “老版本” BLAST <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download>`__
-包括命令行工具 ``blastall``, ``blastpgp`` 和 ``rpsblast`` 。
+包括命令行工具 ``blastall`` ， ``blastpgp`` 和 ``rpsblast`` 。
 这是NCBI发布它的替代品BLAST+ 前使用最为广泛的单机版BLAST工具。
 
 The ``Bio.Blast.Applications`` module has wrappers for the “legacy” NCBI
@@ -324,7 +324,7 @@ are also helper functions in ``Bio.Blast.NCBIStandalone``. These are now
 considered obsolete, and will be deprecated and eventually removed from
 Biopython as people move over to the replacement BLAST+ suite.
 
-``Bio.Blast.Applications`` 模块有个对老版本NCBI BLAST 工具像 ``blastall``, ``blastpgp`` 
+``Bio.Blast.Applications`` 模块有个对老版本NCBI BLAST 工具像 ``blastall`` ， ``blastpgp`` 
 和 ``rpsblast`` 的封装， 并且在 ``Bio.Blast.NCBIStandalone`` 还有个辅助函数。
 这些东东现在都被认为是过时的，并且当用户们迁移到BLAST+程序套件后，这些都会被弃用，
 最终从Biopython删除。
@@ -336,7 +336,7 @@ the Tutorial PDF or HTML file in the Doc directory within
 ``biopython-1.52.tar.gz`` or ``biopython-1.52.zip``).
 
 为了减少你的困惑，我们在这个指南中不会提到怎么从Biopython调用这些老版本的工具。
-如果你有兴趣，可以看下在Biopython 1.52中包含的基本指南。（看下``biopython-1.52.tar.gz`` 
+如果你有兴趣，可以看下在Biopython 1.52中包含的基本指南。（看下 ``biopython-1.52.tar.gz`` 
 或者 ``biopython-1.52.zip`` 中Doc目录下的指南的PDF文件 或者 HTML 文件）。
 
 7.2.3  Standalone NCBI BLAST+
@@ -359,10 +359,10 @@ equivalent tool ``formatdb`` in “legacy” BLAST.
 `NCBI “新版本”的
 BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download>`__
 在2009年发布。它替代了原来老版本的BLAST程序包。``Bio.Blast.Applications`` 模块
-包装了这些新工具像 ``blastn``, ``blastp``, ``blastx``, ``tblastn``, ``tblastx``
+包装了这些新工具像 ``blastn`` , ``blastp`` , ``blastx`` , ``tblastn`` , ``tblastx``
 (这些以前都是由 ``blastall``  处理)。而 ``rpsblast`` 和 ``rpstblastn`` （替代了
-原来的 ``rpsblast`` ）。我们这里不包括对``makeblastdb``的包装，它在BLAST+中用于从FASTA文件
-建立一个本地BLAST数据库，还有其在老版本BLAST中的等效工具``formatdb``。
+原来的 ``rpsblast`` ）。我们这里不包括对 ``makeblastdb`` 的包装，它在BLAST+中用于从FASTA文件
+建立一个本地BLAST数据库，还有其在老版本BLAST中的等效工具 ``formatdb`` 。
 
 This section will show briefly how to use these tools from within
 Python. If you have already read or tried the alignment tool examples in
@@ -457,7 +457,7 @@ command line tools ``wu-blastall`` and ``ab-blastall``.
 你也许会碰到 `Washington University BLAST <http://blast.wustl.edu/>`__ (WU-BLAST)，
 和它的后继版本`Advanced Biocomputing BLAST <http://blast.advbiocomp.com>`__ (AB-BLAST,
 在2009年发布，免费但是没有开源）。这些程序包包括了命令工具行
-``wu-blastall`` 和 ``ab-blastall`` .
+``wu-blastall`` 和 ``ab-blastall`` 。
 
 Biopython does not currently provide wrappers for calling these tools,
 but should be able to parse any NCBI compatible output from them.
@@ -485,7 +485,7 @@ version you’re using.
 以前，Biopython有针对HTML 和纯文本格式输出文件的解析器，因为当时只有这两种
 格式的输出结果文件。不幸的是，这两种方式的BLAST 输出结果一直在变动，而每次
 变动就会导致解析器失效。 所以，我们删除了针对HTML格式的解析器，不过纯文本格式
-的解析还可以用（见\ `7.5 <#sec:parsing-blast-deprecated>`__）。使用这个解析器
+的解析还可以用（见 \ `7.5 <#sec:parsing-blast-deprecated>`__ ）。使用这个解析器
 有一定的风险，它可能能工作也可能无效，依赖于你正在使用哪个BLAST版本。
 
 As keeping up with changes in BLAST became a hopeless endeavor,
@@ -520,10 +520,10 @@ file.
 output in a file. Again, you need to choose XML as the format in
 which to receive the results.
 
-- 你可以通过Biopython来运行因特网上的BLAST，就像`7.1 <#sec:running-www-blast>`__
+- 你可以通过Biopython来运行因特网上的BLAST，就像 `7.1 <#sec:running-www-blast>`__
   节描述的那样。
 
-- 你可以通过Biopython来运行本地的BLAST，就像`7.2 <#sec:running-local-blast>`__
+- 你可以通过Biopython来运行本地的BLAST，就像 `7.2 <#sec:running-local-blast>`__
   节描述的那样。
 
 - 你可以在通过浏览器在NCBI网站上进行BLAST搜索，然后保存结果文件。你需要选择输出
@@ -631,7 +631,7 @@ StopIteration
 
 Or, you can use a ``for``-loop:
 
-或者，你也可以使用 ``for``- 循环
+或者，你也可以使用 ``for`` - 循环
 
 .. code:: verbatim
 
@@ -663,7 +663,7 @@ need to do is to pick up the first (and only) BLAST record in
 ``blast_records``:
 
 一般来说，你会一次运行一个BLAST搜索。然后，你只需提取第一条BLAST 搜索记录到
-``blast_records``:
+``blast_records`` :
 
 .. code:: verbatim
 
@@ -765,7 +765,7 @@ Here are my attempts at UML class diagrams for the ``Blast`` and
 mistakes/improvements that can be made, please let me know. The Blast
 class diagram is shown in Figure \ `7.4 <#fig:blastrecord>`__.
 
-下面是 我尝试画的``Blast`` 和 ``PSIBlast`` 记录类的UML图。如果你对UML图很熟悉，不妨
+下面是 我尝试画的 ``Blast`` 和 ``PSIBlast`` 记录类的UML图。如果你对UML图很熟悉，不妨
 看看下面的UML图是否有错误或者可以改进的地方，如果有，请联系我。
 BLAST类图在这里  `7.4 <#fig:blastrecord>`__ 。
 
@@ -776,7 +776,7 @@ that are used in the iteration steps of PSIBlast. The class diagram for
 PSIBlast is shown in Figure \ `7.4 <#fig:psiblastrecord>`__.
 
 PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里
- \ `7.4 <#fig:psiblastrecord>`__.
+ \ `7.4 <#fig:psiblastrecord>`__ 。
 
 |image2|
 
@@ -907,7 +907,7 @@ we’ll call ``result_handle``. Getting a handle is described in full
 detail above in the blast parsing sections.
 
 然后，我们假定我们有一个连接到一大堆blast记录的文件句柄，我们把这个文件句柄
-叫做  ``result_handle``. 怎么得到一个文件句柄在上面blast解析章节有详细
+叫做  ``result_handle`` 。 怎么得到一个文件句柄在上面blast解析章节有详细
 描述。
 
 Now that we’ve got a parser and a handle, we are ready to set up the
@@ -994,7 +994,7 @@ similar to the regular ``BlastParser``, but it adds an extra layer of
 work by catching ValueErrors that are generated by the parser, and
 attempting to diagnose the errors.
 
-我们以前必须写一些小脚本来解决这个问题。不过，现在``Bio.Blast``模块包含了 
+我们以前必须写一些小脚本来解决这个问题。不过，现在 ``Bio.Blast`` 模块包含了 
 ``BlastErrorParser`` ，可以更加简单地来解决这个问题。 ``BlastErrorParser``
 和常规的 ``BlastParser`` 类似，但是它加了特别一层来捕获由解析器产生的ValueErrors
 异常，并尝试来诊断这些错误。
@@ -1035,8 +1035,8 @@ parser. Specifically, we might want to make an iterator that goes
 through our blast records one at a time and parses them with the error
 parser:
 
-现在，我们可以像用常规的blast解析器一样地用``BlastErrorParser`` 。
-特别的是，我们也许想要一个一次读入一个记录的迭代器并用``BlastErrorParser`` 
+现在，我们可以像用常规的blast解析器一样地用 ``BlastErrorParser`` 。
+特别的是，我们也许想要一个一次读入一个记录的迭代器并用 ``BlastErrorParser`` 
 来解析它。
 
 .. code:: verbatim
@@ -1070,9 +1070,9 @@ Right now the ``BlastErrorParser`` can generate the following errors:
    some kind of discrepancy between the version of BLAST you are using
    and the versions the parser is able to handle.
 
-- ``ValueError`` - 这就是和常规BlastParser产生的一样的错误。这个错误产生
-  是因为解析器不能解析某个文件。通常是因为解析器有bug， 或者是
-  因为你使用解析器的版本和你BLAST命令的版本不一致。
+-  ``ValueError`` - 这就是和常规BlastParser产生的一样的错误。这个错误产生
+   是因为解析器不能解析某个文件。通常是因为解析器有bug， 或者是
+   因为你使用解析器的版本和你BLAST命令的版本不一致。
 
 -  ``LowQualityBlastError`` – When BLASTing a sequence that is of really
    bad quality (for example, a short sequence that is basically a
@@ -1090,14 +1090,14 @@ Right now the ``BlastErrorParser`` can generate the following errors:
 
    -  ``item[0]`` – The error message
    
-   - ``item[0]`` - 错误消息
+   -  ``item[0]`` - 错误消息
 
    -  ``item[1]`` – The id of the input record that caused the error.
       This is really useful if you want to record all of the records
       that are causing problems.
 
-   - ``item[1]`` - 导致错误产生的输入记录id。如果你想记录所有导致问题
-     记录的时候很有用。
+   -  ``item[1]`` - 导致错误产生的输入记录id。如果你想记录所有导致问题
+      记录的时候很有用。
 
 As mentioned, with each error generated, the BlastErrorParser will write
 the offending record to the specified ``error_handle``. You can then go
