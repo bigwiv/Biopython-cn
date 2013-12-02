@@ -151,9 +151,6 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 更令人困惑的是，至少有4种不同的BLAST安装程序包，并且还有其他的一些工具能
 产生类似的BLAST 输出文件，比如BLAT。
 
-7.2.2  Standalone NCBI “legacy” BLAST
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 7.2.2  单机版的NCBI老版本BLAST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -418,8 +415,7 @@ BLAST类图在这里 \ `7.4 <#fig:blastrecord>`__ 。
 
 |image1|
 
-PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里
- \ `7.4 <#fig:psiblastrecord>`__ 。
+PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里 \ `7.4 <#fig:psiblastrecord>`__ 。
 
 |image2|
 
