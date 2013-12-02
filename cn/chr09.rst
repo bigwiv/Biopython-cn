@@ -262,15 +262,13 @@ taxon ID，像 ``txid158330[Orgn]`` 这样。这个并没有记录在ESearch的�
 
 同样，我们可以通过EFetch来获得关于每个journal IDs更多的消息。
 
-ESearch有很多有用的参数——参见 `ESearch 帮助页面
-<http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
+ESearch有很多有用的参数——参见 `ESearch 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html>`__
 来获取更多信息.
 
 9.4  EPost: 上传identifiers的列表
 -------------------------------------------
 
-EPost上传在后续搜索中将会用到的IDs的列表，参见`EPost 帮助页面
-<http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html>`__
+EPost上传在后续搜索中将会用到的IDs的列表，参见 `EPost 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html>`__
 来获取更多信息. 通过 ``Bio.Entrez.epost()`` 函数可以在Biopython中实现。
 
 为了举一个关于此用法的例子，假设你有一个想通过EFetch下载的IDs的长长的列表（可能是序列，也有可能是引用的
