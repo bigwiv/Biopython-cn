@@ -54,9 +54,9 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> help(NCBIWWW.qblast)
-...
+    >>> from Bio.Blast import NCBIWWW
+    >>> help(NCBIWWW.qblast)
+    ...
 
 请注意，NCBI BLAST 网站上的默认参数和QBLAST的默认参数不完全相同。如果你得到了
 不同的结果，你就需要检查下参数设置 （比如，e-value阈值和gap值）.
@@ -66,35 +66,35 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
+    >>> from Bio.Blast import NCBIWWW
+    >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
 
 或者，我们想要查询的序列在FASTA文件中，那么我们只需打开这个文件并把这条记录读入到字符串，然后用这个字符串作为查询参数:
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> fasta_string = open("m_cold.fasta").read()
->>> result_handle = NCBIWWW.qblast("blastn", "nt", fasta_string)
+    >>> from Bio.Blast import NCBIWWW
+    >>> fasta_string = open("m_cold.fasta").read()
+    >>> result_handle = NCBIWWW.qblast("blastn", "nt", fasta_string)
 
 我们同样可以读取FASTA文件为一个 ``SeqRecord`` 序列对象，然后以这个序列自身作为参数：
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> from Bio import SeqIO
->>> record = SeqIO.read("m_cold.fasta", format="fasta")
->>> result_handle = NCBIWWW.qblast("blastn", "nt", record.seq)
+    >>> from Bio.Blast import NCBIWWW
+    >>> from Bio import SeqIO
+    >>> record = SeqIO.read("m_cold.fasta", format="fasta")
+    >>> result_handle = NCBIWWW.qblast("blastn", "nt", record.seq)
 
 只提供序列意味着BLAST会自动分配给你一个ID。你可能更喜欢用 ``SeqRecord``
 对象的format方法来包装一个fasta字符串，因为这个对象会包含fasta文件中已有的ID
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> from Bio import SeqIO
->>> record = SeqIO.read("m_cold.fasta", format="fasta")
->>> result_handle = NCBIWWW.qblast("blastn", "nt", record.format("fasta"))
+    >>> from Bio.Blast import NCBIWWW
+    >>> from Bio import SeqIO
+    >>> record = SeqIO.read("m_cold.fasta", format="fasta")
+    >>> result_handle = NCBIWWW.qblast("blastn", "nt", record.format("fasta"))
 
 如果你的序列在一个非FASTA格式的文件中并且你用 ``Bio.SeqIO`` (看第5章`5 <#chapter:Bio.SeqIO>`__)
 把序列取出来了，那么这个方法更有用。
@@ -110,10 +110,10 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 .. code:: verbatim
 
->>> save_file = open("my_blast.xml", "w")
->>> save_file.write(result_handle.read())
->>> save_file.close()
->>> result_handle.close()
+    >>> save_file = open("my_blast.xml", "w")
+    >>> save_file.write(result_handle.read())
+    >>> save_file.close()
+    >>> result_handle.close()
 
 这些做好后，结果已经存储在 ``my_blast.xml`` 文件中了并且原先的handle中的数据
 已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 ``parse`` 函数（描述见\ `7.3 <#sec:parsing-blast>`__)
@@ -121,7 +121,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 .. code:: verbatim
 
->>> result_handle = open("my_blast.xml")
+    >>> result_handle = open("my_blast.xml")
 
 既然现在已经把BLAST的结果又一次读回handle，我们可以分析下这些结果。所以我们正好可以去读
 关于结果解析的章节（看下面  \ `7.3 <#sec:parsing-blast>`__ ）。你现在也许想跳过去看吧 ...
@@ -182,9 +182,9 @@ BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_
 建立一个本地BLAST数据库，还有其在老版本BLAST中的等效工具 ``formatdb`` 。
 
 这节将简要地介绍怎样在Python中使用这些工具。如果你已经阅读了并试过
- \ `6.4 <#sec:alignment-tools>`__ 节的序列联配（alignment）工具，下面介绍
- 的方法应该是很简单直接的。首先，我们构建一个命令行字符串（就像你使用单机版
- BLAST的时候，在终端打入命令行一样）。然后，我们在Python中运行这个命令。
+\ `6.4 <#sec:alignment-tools>`__ 节的序列联配（alignment）工具，下面介绍
+的方法应该是很简单直接的。首先，我们构建一个命令行字符串（就像你使用单机版
+BLAST的时候，在终端打入命令行一样）。然后，我们在Python中运行这个命令。
 
 举个例子，你有个FASTA格式的核酸序列文件，你想用它通过BLASTX（翻译）来搜索
 非冗余（NR）蛋白质数据库。如果你（或者你的系统管理员）下载并安装好了这个数据库，
@@ -192,7 +192,7 @@ BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_
 
 .. code:: verbatim
 
-blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
+    blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
 
 这样就完成了运行BLASTX查找非冗余蛋白质数据库，用0.001的e值并产生XML格式的
 输出结果文件（这样我们可以继续下一步解析）。在我的电脑上运行这条命令花了大约6分钟
@@ -203,17 +203,17 @@ blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
 
 .. code:: verbatim
 
->>> from Bio.Blast.Applications import NcbiblastxCommandline
->>> help(NcbiblastxCommandline)
-...
->>> blastx_cline = NcbiblastxCommandline(query="opuntia.fasta", db="nr", evalue=0.001,
-...                                      outfmt=5, out="opuntia.xml")
->>> blastx_cline
-NcbiblastxCommandline(cmd='blastx', out='opuntia.xml', outfmt=5, query='opuntia.fasta',
-db='nr', evalue=0.001)
->>> print blastx_cline
-blastx -out opuntia.xml -outfmt 5 -query opuntia.fasta -db nr -evalue 0.001
->>> stdout, stderr = blastx_cline()
+    >>> from Bio.Blast.Applications import NcbiblastxCommandline
+    >>> help(NcbiblastxCommandline)
+    ...
+    >>> blastx_cline = NcbiblastxCommandline(query="opuntia.fasta", db="nr", evalue=0.001,
+    ...                                      outfmt=5, out="opuntia.xml")
+    >>> blastx_cline
+    NcbiblastxCommandline(cmd='blastx', out='opuntia.xml', outfmt=5, query='opuntia.fasta',
+    db='nr', evalue=0.001)
+    >>> print blastx_cline
+    blastx -out opuntia.xml -outfmt 5 -query opuntia.fasta -db nr -evalue 0.001
+    >>> stdout, stderr = blastx_cline()
 
 在这个例子中，终端里应该没有任何从BLASTX的输出，所以stdout和stderr是空的。
 你可能想要检查下输出文件 ``opuntia.xml`` 是否已经创建。
@@ -275,30 +275,30 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIWWW
->>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
+    >>> from Bio.Blast import NCBIWWW
+    >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
 
 如果你通过其他方式运行了BLAST，并且XML格式的BLAST结果输出文件是 ``my_blast.xml`` ,
 那么你只需要打开文件来读：
 
 .. code:: verbatim
 
->>> result_handle = open("my_blast.xml")
+    >>> result_handle = open("my_blast.xml")
 
 好的，现在我们已经有了个文件句柄，可以解析输出结果了。解析结果的代码
 很短。如果你想要一条BLAST输出结果（就是说，你只用了一条序列去搜索）：
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIXML
->>> blast_record = NCBIXML.read(result_handle)
+    >>> from Bio.Blast import NCBIXML
+    >>> blast_record = NCBIXML.read(result_handle)
 
 或者， 你有许多搜索结果（就是说，你用了多条序列去BLAST搜索）
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIXML
->>> blast_records = NCBIXML.parse(result_handle)
+    >>> from Bio.Blast import NCBIXML
+    >>> blast_records = NCBIXML.parse(result_handle)
 
 就像 ``Bio.SeqIO`` 和 ``Bio.AlignIO`` (参见 章节 \ `5 <#chapter:Bio.SeqIO>`__
 和 \ `6 <#chapter:Bio.AlignIO>`__), 我们有一对输入函数， ``read`` 和 
@@ -312,26 +312,26 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIXML
->>> blast_records = NCBIXML.parse(result_handle)
->>> blast_record = blast_records.next()
-# ... do something with blast_record
->>> blast_record = blast_records.next()
-# ... do something with blast_record
->>> blast_record = blast_records.next()
-# ... do something with blast_record
->>> blast_record = blast_records.next()
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-StopIteration
-# No further records
+    >>> from Bio.Blast import NCBIXML
+    >>> blast_records = NCBIXML.parse(result_handle)
+    >>> blast_record = blast_records.next()
+    # ... do something with blast_record
+    >>> blast_record = blast_records.next()
+    # ... do something with blast_record
+    >>> blast_record = blast_records.next()
+    # ... do something with blast_record
+    >>> blast_record = blast_records.next()
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
+    # No further records
 
 或者，你也可以使用 ``for`` - 循环
 
 .. code:: verbatim
 
->>> for blast_record in blast_records:
-...     # Do something with blast_record
+    >>> for blast_record in blast_records:
+    ...     # Do something with blast_record
 
 注意对每个BLAST搜索结果只能迭代一次。通常，对于每个BLAST记录，你可能会保存你
 感兴趣的信息。如果你想保存所有返回的BLAST记录，你可以把迭代
@@ -339,7 +339,7 @@ StopIteration
 
 .. code:: verbatim
 
->>> blast_records = list(blast_records)
+    >>> blast_records = list(blast_records)
 
 现在，你可以像通常的做法通过索引从这个列表中获得每一条BLAST结果。 如果你的BLAST输出
 结果文件很大，那么当把它们全部放入一个列表时，你也许会遇到内存不够的情况。
@@ -349,9 +349,9 @@ StopIteration
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIXML
->>> blast_records = NCBIXML.parse(result_handle)
->>> blast_record = blast_records.next()
+    >>> from Bio.Blast import NCBIXML
+    >>> blast_records = NCBIXML.parse(result_handle)
+    >>> blast_record = blast_records.next()
 
 or more elegantly:
 
@@ -359,8 +359,8 @@ or more elegantly:
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIXML
->>> blast_record = NCBIXML.read(result_handle)
+    >>> from Bio.Blast import NCBIXML
+    >>> blast_record = NCBIXML.read(result_handle)
 
 我猜你现在在想BLAST搜索记录中到底有什么。
 
@@ -378,31 +378,31 @@ or more elegantly:
 
 .. code:: verbatim
 
->>> E_VALUE_THRESH = 0.04
-
->>> for alignment in blast_record.alignments:
-...     for hsp in alignment.hsps:
-...         if hsp.expect < E_VALUE_THRESH:
-...             print '****Alignment****'
-...             print 'sequence:', alignment.title
-...             print 'length:', alignment.length
-...             print 'e value:', hsp.expect
-...             print hsp.query[0:75] + '...'
-...             print hsp.match[0:75] + '...'
-...             print hsp.sbjct[0:75] + '...'
+    >>> E_VALUE_THRESH = 0.04
+    
+    >>> for alignment in blast_record.alignments:
+    ...     for hsp in alignment.hsps:
+    ...         if hsp.expect < E_VALUE_THRESH:
+    ...             print '****Alignment****'
+    ...             print 'sequence:', alignment.title
+    ...             print 'length:', alignment.length
+    ...             print 'e value:', hsp.expect
+    ...             print hsp.query[0:75] + '...'
+    ...             print hsp.match[0:75] + '...'
+    ...             print hsp.sbjct[0:75] + '...'
 
 上面代码会打印出如下图的总结报告：
 
 .. code:: verbatim
 
-****Alignment****
-sequence: >gb|AF283004.1|AF283004 Arabidopsis thaliana cold acclimation protein WCOR413-like protein
-alpha form mRNA, complete cds
-length: 783
-e value: 0.034
-tacttgttgatattggatcgaacaaactggagaaccaacatgctcacgtcacttttagtcccttacatattcctc...
-||||||||| | ||||||||||| || ||||  || || |||||||| |||||| |  | |||||||| ||| ||...
-tacttgttggtgttggatcgaaccaattggaagacgaatatgctcacatcacttctcattccttacatcttcttc...
+    ****Alignment****
+    sequence: >gb|AF283004.1|AF283004 Arabidopsis thaliana cold acclimation protein WCOR413-like protein
+    alpha form mRNA, complete cds
+    length: 783
+    e value: 0.034
+    tacttgttgatattggatcgaacaaactggagaaccaacatgctcacgtcacttttagtcccttacatattcctc...
+    ||||||||| | ||||||||||| || ||||  || || |||||||| |||||| |  | |||||||| ||| ||...
+    tacttgttggtgttggatcgaaccaattggaagacgaatatgctcacatcacttctcattccttacatcttcttc...
 
 基本上，一旦你解析了BLAST搜索结果文件，你可以提取任何你需要的信息。
 当然，这取决于你想要获得什么信息。但是希望这里的例子能够帮助你开始工作。
@@ -446,16 +446,16 @@ BLAST， 并且如下处理：
 
 .. code:: verbatim
 
->>> result_handle = open("my_file_of_blast_output.txt")
+    >>> result_handle = open("my_file_of_blast_output.txt")
 
 好了，既然现在得到了个文件句柄（我们称它是 ``result_handle`` ），
 我们已经做好了解析它的准备。按下面的代码来解析：
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIStandalone
->>> blast_parser = NCBIStandalone.BlastParser()
->>> blast_record = blast_parser.parse(result_handle)
+    >>> from Bio.Blast import NCBIStandalone
+    >>> blast_parser = NCBIStandalone.BlastParser()
+    >>> blast_record = blast_parser.parse(result_handle)
 
 这样就能把BALST的搜索结果报告解析到Blast记录类中（取决你于你解析的对象，
 解析结果可能返回一条 Blast 或者 PSIBlast记录）。这样你就可以从中提取
@@ -464,17 +464,17 @@ BLAST， 并且如下处理：
 
 .. code:: verbatim
 
->>> E_VALUE_THRESH = 0.04
->>> for alignment in blast_record.alignments:
-...     for hsp in alignment.hsps:
-...         if hsp.expect < E_VALUE_THRESH:
-...             print '****Alignment****'
-...             print 'sequence:', alignment.title
-...             print 'length:', alignment.length
-...             print 'e value:', hsp.expect
-...             print hsp.query[0:75] + '...'
-...             print hsp.match[0:75] + '...'
-...             print hsp.sbjct[0:75] + '...'
+    >>> E_VALUE_THRESH = 0.04
+    >>> for alignment in blast_record.alignments:
+    ...     for hsp in alignment.hsps:
+    ...         if hsp.expect < E_VALUE_THRESH:
+    ...             print '****Alignment****'
+    ...             print 'sequence:', alignment.title
+    ...             print 'length:', alignment.length
+    ...             print 'e value:', hsp.expect
+    ...             print hsp.query[0:75] + '...'
+    ...             print hsp.match[0:75] + '...'
+    ...             print hsp.sbjct[0:75] + '...'
 
 如果你已经读过 \ `7.3 节 <#sec:parsing-blast>`__ 关于解析XML格式的部分，
 你将会发现上面的代码和那个章节的是一样的。一旦你把输出文件解析到记录类中，
@@ -491,8 +491,8 @@ BLAST， 并且如下处理：
 
 .. code:: verbatim
 
->>> from Bio.Blast import NCBIStandalone
->>> blast_parser = NCBIStandalone.BlastParser()
+    >>> from Bio.Blast import NCBIStandalone
+    >>> blast_parser = NCBIStandalone.BlastParser()
 
 然后，我们假定我们有一个连接到一大堆blast记录的文件句柄，我们把这个文件句柄
 叫做  ``result_handle`` 。 怎么得到一个文件句柄在上面blast解析章节有详细
@@ -503,7 +503,7 @@ BLAST， 并且如下处理：
 
 .. code:: verbatim
 
->>> blast_iterator = NCBIStandalone.Iterator(result_handle, blast_parser)
+    >>> blast_iterator = NCBIStandalone.Iterator(result_handle, blast_parser)
 
 第二个参数，解析器，是可选的。如果我们没有提供一个解析器，那么迭代器将会
 一次返回一个原始的BLAST搜索结果。
@@ -513,19 +513,19 @@ BLAST， 并且如下处理：
 
 .. code:: verbatim
 
->>> blast_record = blast_iterator.next()
+    >>> blast_record = blast_iterator.next()
 
 每次调用next都会返回一条我们能处理的新记录。现在我们可以遍历所有记录，并打印一
 个我们最爱、漂亮的、简洁的BLAST记录报告。
 
 .. code:: verbatim
 
->>> for blast_record in blast_iterator:
-...     E_VALUE_THRESH = 0.04
-...     for alignment in blast_record.alignments:
-...         for hsp in alignment.hsps:
-...             if hsp.expect < E_VALUE_THRESH:
-...                 print '****Alignment****'
+    >>> for blast_record in blast_iterator:
+    ...     E_VALUE_THRESH = 0.04
+    ...     for alignment in blast_record.alignments:
+    ...         for hsp in alignment.hsps:
+    ...             if hsp.expect < E_VALUE_THRESH:
+    ...                 print '****Alignment****'
     ...                 print 'sequence:', alignment.title
     ...                 print 'length:', alignment.length
     ...                 print 'e value:', hsp.expect
