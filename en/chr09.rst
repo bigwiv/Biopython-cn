@@ -1133,9 +1133,9 @@ using Entrez (not as XML, nor in the *Simple Omnibus Format in Text*
 
 However, it is actually pretty straight forward to download the GEO
 files by FTP from
-```ftp://ftp.ncbi.nih.gov/pub/geo/`` <ftp://ftp.ncbi.nih.gov/pub/geo/>`__
+`ftp://ftp.ncbi.nih.gov/pub/geo/ <ftp://ftp.ncbi.nih.gov/pub/geo/>`__
 instead. In this case you might want
-```ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz`` <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
+`ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz <ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz>`__
 (a compressed file, see the Python module gzip).
 
 9.12.3  Parsing UniGene records
