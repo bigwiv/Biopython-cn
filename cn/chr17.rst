@@ -1,7 +1,7 @@
 第17章 Graphics模块中的基因组可视化包—GenomeDiagram
 ==================================================
 
- ``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS（Encapsulated Postscript）文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
+``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS（Encapsulated Postscript）文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
 
 17.1  基因组可视化包—GenomeDiagram
 -------------------
@@ -9,7 +9,7 @@
 17.1.1  GenomeDiagram简介
 ~~~~~~~~~~~~~~~~~~~~
 
- ``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 `http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
+``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 `http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
 
 如果存储基因组信息的是从GenBank文件中下载的 ``SeqRecord`` 话，它会包含许多 ``SeqFeature`` ，那么用这个模块处理就很简单（详见
 第 \ `4 <#chapter:SeqRecord>`__ 章和第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。
@@ -24,7 +24,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 17.1.3 自上而下的实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， ```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
+我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
 
 .. code:: verbatim
 
@@ -594,7 +594,7 @@ or:
 17.2 染色体
 -----------------
 
- ``Bio.Graphics.BasicChromosome`` 模块可以绘制染色体，Jupe等人在2012发表的文章 [`6 <#jupe2012>`__\ ] 中利用不同的颜色来展示不同的基因家族。
+``Bio.Graphics.BasicChromosome`` 模块可以绘制染色体，Jupe等人在2012发表的文章 [`6 <#jupe2012>`__\ ] 中利用不同的颜色来展示不同的基因家族。
 
 17.2.1 简单染色体
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
