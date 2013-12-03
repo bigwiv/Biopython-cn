@@ -42,7 +42,9 @@ Contents
    cn/chr21
    cn/chr22
    cn/chr23
-   
+   index_en
+   README
+   Tutorial
 
 Indices and tables
 ==================
