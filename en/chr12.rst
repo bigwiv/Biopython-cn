@@ -174,7 +174,7 @@ for its use) per deme and deme size, i.e. subpopulation size
 parameters can be varied, each template has a system name. The
 prefedined demographies/templates are:
 
- **Single population, constant size**
+**Single population, constant size**
     The standard parameters are enough to specify it. Template name:
     simple.
 **Single population, bottleneck**
@@ -474,7 +474,7 @@ markers.
     sim_fst = ctrl.run_fdist(npops = 15, nsamples = fd_rec.num_pops, fst = fst,
         sample_size = samp_size, mut = 0, num_sims = 40000)
 
- **npops**
+**npops**
     Number of populations existing in nature. This is really a
     “guestimate”. Has to be lower than 100.
 **nsamples**
