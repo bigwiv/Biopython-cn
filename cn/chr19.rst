@@ -15,7 +15,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 在你下载Biopython源码或者从我们的源码仓库签出时，你会发现一
 个子目录调用 ``Tests``。 这包括关键脚本 ``run_tests.py``、
 名为 ``test_XXX.py`` 的很多独立脚本、一个叫 ``output`` 的子目录和
- 很多其他包含测试套件输入文件的子目录。
+很多其他包含测试套件输入文件的子目录。
 
 作为构建和安装Biopython的一部分，你通常会在命令行上从Biopython
 源码顶层目录运行整个测试套件如下：
@@ -104,7 +104,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 测试脚本中。尤其是，不要在一个 print-and-compare 测试中使用``unittest`` 
 特征。
 
- ``Tests`` 目录中任何具有 ``test_`` 前缀的脚本都会被 ``run_tests.py`` 
+``Tests`` 目录中任何具有 ``test_`` 前缀的脚本都会被 ``run_tests.py`` 
 找到并运行。下面，我们展示一个示例测试脚本 ``test_Biospam.py`` ，针对
 一个 print-and-compare 测试和一个基于 ``unittest`` 的测试。如果你把这个
 脚本放进 Biopython的 ``Tests`` 目录，那么 ``run_tests.py`` 就会找到它并
@@ -145,7 +145,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
 #. 如果脚本需要文件来进行测试，这些应转到目录 Tests/Biospam 中进行
    （如果你只需一些通用的东西，像一个 FASTA 序列文件，或者一条
-    GenBank 记录，试着用一个现存的样品输入文件来代替）。
+   GenBank 记录，试着用一个现存的样品输入文件来代替）。
 #. 写出测试输出并验证输出是正确的。
 
    有两种方法可以做到这一点：
@@ -157,7 +157,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
          这会把输出写到文件 ``test_Biospam`` 中。
       -  手动查看文件 ``test_Biospam`` 来确保输出正确。当你确定都没问
          题、没有bug后，你需要快速编辑 ``test_Biospam`` 文件使其首行为：
-          ‘\ ``test_Biospam``\ ’  （不含引号）。
+         ‘\ ``test_Biospam``\ ’  （不含引号）。
       -  复制文件 ``test_Biospam`` 到目录 Tests/output 中。
 
    #. 快速方法:
@@ -254,7 +254,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 这里是基于 ``unittest`` 的测试的一些关键点：
 
 -  测试实例存储在 ``unittest.TestCase`` 的子类中并涵盖了你的代码
-    的一个基本方面。
+   的一个基本方面。
 -  对于任何在每个测试方法前后都要运行的重复代码，你可以使用方法 
    ``setUp`` 和 ``tearDown`` 。例如 ``setUp`` 方法可用于创建你正在
    测试的对象的实例，或打开一个文件句柄。 ``tearDown`` 可做任何整理，
@@ -358,8 +358,8 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 ----------------------
 
 Python 模块、类和函数支持使用 docstrings 创建文档。 `doctest 框架
- <http://docs.python.org/library/doctest.html>`__ （包含在Python中）
- 允许开发者将工作例子嵌入在 docstrings 中，并自动测试这些例子。
+<http://docs.python.org/library/doctest.html>`__ （包含在Python中）
+允许开发者将工作例子嵌入在 docstrings 中，并自动测试这些例子。
 
 目前只有一小部分 Biopython 包含 doctests 。 ``run_tests.py`` 脚本
 看护着 doctests 的运行。为此， ``run_tests.py`` 脚本开头是要测试
@@ -367,7 +367,7 @@ Python 模块、类和函数支持使用 docstrings 创建文档。 `doctest 框
 外部依赖库的模块（例如 Reportlab 和 NumPy 库）。所以如果你在 Biopython 
 模块中加一些针对 dostrings 的 doctests ，为了把它们包含在 Biopython 
 套件中，你必须更新 ``run_tests.py`` 以包含你的模块。现在，
- ``run_tests.py`` 的相关部分看起来像下面这样：
+``run_tests.py`` 的相关部分看起来像下面这样：
 
 .. code:: verbatim
 
