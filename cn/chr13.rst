@@ -312,7 +312,7 @@ phyloXML和NeXML等树文件格式。
 
 ``draw_graphviz`` 则画出一个无根的进化分枝图（cladogram），但是它要求你安装有Graphviz、
 PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
- ``dot`` 程序，让我们来画一个有根树（见图. `13.3 <#fig:phylo-dot>`__ ）：
+``dot`` 程序，让我们来画一个有根树（见图. `13.3 <#fig:phylo-dot>`__ ）：
 
 .. code:: verbatim
 
@@ -343,7 +343,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 |image9|
 
 “prog”参数指定Graphviz的用来布局的引擎。默认的引擎 ``twopi`` 对任何大小的树都表现很好，
-很可靠的避免交叉的分支出现。``neato``程序可能画出更加好看的中等大小的树，但是有时候会
+很可靠的避免交叉的分支出现。``neato`` 程序可能画出更加好看的中等大小的树，但是有时候会
 有交叉分支出现（见图. `13.3 <#fig:phylo-color>`__ ）。 ``dot`` 程序或许对小型的树有用，
 但是对于大一点的树的布局易产生奇怪的事情。
 
@@ -390,7 +390,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 为了方便起见，我们提供了两个简化的方法来直接返回所有的外部或内部节点为列表：
 
- **``get_terminals``**
+**``get_terminals``**
     创建一个包含树的所有末端（叶子）节点的列表。
 **``get_nonterminals``**
     创建一个包含树的所有非末端（内部）节点的列表。
@@ -429,7 +429,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 在目标参数后面，有两个可选的关键词参数：
 
- **terminal**
+**terminal**
     — 用来选择或排除末端进化枝（或者叫叶子节点）的一个boolean值：True仅搜索末端进化枝，False则搜索
     非末端（内部）进化枝，而默认为None，同时搜索末端和非末端进化枝，包括没有 ``is_terminal`` 方法的
     任何树元素。
@@ -446,7 +446,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 现在我们已经掌握了“目标说明”，这里有一些遍历树的方法：
 
- **``find_clades``**
+**``find_clades``**
     查找每个包含匹配元素的进化枝。就是说，用 ``find_elements`` 查找每个元素，然而返回对应的clade对象。
     （这通常是你想要的。）
 
@@ -463,7 +463,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 另外两个用于帮助在树的节点间导航的方法：
 
- **``get_path``**
+**``get_path``**
     直接列出从树的根节点（或当前进化枝）到给定的目标间的所有clade。返回包含这个路径上所有clade对象的
     列表，以给定目标为结尾，但不包含根进化枝。
 **``trace``**
@@ -474,7 +474,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 这些方法提供关于整个树（或任何进化枝）的信息。
 
- **``common_ancestor``**
+**``common_ancestor``**
     查找所提供的所有目标的最近共同祖先（the most recent common ancestor）
     （这将是一个Clade对象）。如果没有提供任何目标，将返回当前Clade（调用该
     方法的那个）的根；如果提供一个目标，将返回目标本身。然而，如果有任何提供
@@ -494,7 +494,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 
 余下的方法是boolean检测方法：
 
- **``is_bifurcating``**
+**``is_bifurcating``**
     如果树是严格的二叉树；即，所有的节点有2个或者0个子代（对应的，内部或外部）。
     根节点可能有三个后代，然而仍然被认为是二叉树的一部分。
 **``is_monophyletic``**
@@ -520,7 +520,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
     import copy
     newtree = copy.deepcopy(tree)
 
- **``collapse``**
+**``collapse``**
     从树中删除目标，重新连接它的子代（children）到它的父亲节点（parent）。
 **``collapse_all``**
     删除这个树的所有后代（descendants），只保留末端节点（terminals）。
@@ -567,7 +567,7 @@ phyloXML文件格式包含用来注释树的，采用额外数据格式和图像
 
 尽管Bio.Phylo本身不从序列比对推断进化树，但这里有一些第三方的程序可以使用。
 他们通过 ``Bio.Phylo.Applications`` 模块获得支持，使用和 ``Bio.Emboss.Applications`` 、
- ``Bio.Align.Applications`` 以及其他模块相同的通用框架。
+``Bio.Align.Applications`` 以及其他模块相同的通用框架。
 
 Biopython 1.58引入了一个PhyML的打包程序（wrapper）
 (`http://www.atgc-montpellier.fr/phyml/ <http://www.atgc-montpellier.fr/phyml/>`__)。
@@ -653,7 +653,7 @@ Biopython 1.58引入了对PAML的支持
 
 Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版本中添加的特性：
 
- **新方法**
+**新方法**
     通常用来操作Tree和Clade对象的有用方法会首先出现在Biopython维基上，这样常规用户
     就能在我们添加到Bio.Phylo之前测试这些方法，看看它们是否有用：
     `http://biopython.org/wiki/Phylo_cookbook <http://biopython.org/wiki/Phylo_cookbook>`__

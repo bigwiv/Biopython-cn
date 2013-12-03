@@ -447,7 +447,7 @@ available on ``tree.root`` and any clade below it. (``Clade`` also has a
 For convenience, we provide a couple of simplified methods that return
 all external or internal nodes directly as a list:
 
- **``get_terminals``**
+**``get_terminals``**
     makes a list of all of this tree’s terminal (leaf) nodes.
 **``get_nonterminals``**
     makes a list of all of this tree’s nonterminal (internal) nodes.
@@ -503,7 +503,7 @@ the following types:
 
 After the target, there are two optional keyword arguments:
 
- **terminal**
+**terminal**
     — A boolean value to select for or against terminal clades (a.k.a.
     leaf nodes): True searches for only terminal clades, False for
     non-terminal (internal) clades, and the default, None, searches both
@@ -530,7 +530,7 @@ dictionary as the target specification:
 Now that we’ve mastered target specifications, here are the methods used
 to traverse a tree:
 
- **``find_clades``**
+**``find_clades``**
     Find each clade containing a matching element. That is, find each
     element as with ``find_elements``, but return the corresponding
     clade object. (This is usually what you want.)
@@ -552,7 +552,7 @@ to traverse a tree:
 
 Two more methods help navigating between nodes in the tree:
 
- **``get_path``**
+**``get_path``**
     List the clades directly between the tree root (or current clade)
     and the given target. Returns a list of all clade objects along this
     path, ending with the given target, but excluding the root clade.
@@ -565,7 +565,7 @@ Two more methods help navigating between nodes in the tree:
 
 These methods provide information about the whole tree (or any clade).
 
- **``common_ancestor``**
+**``common_ancestor``**
     Find the most recent common ancestor of all the given targets. (This
     will be a Clade object). If no target is given, returns the root of
     the current clade (the one this method is called from); if 1 target
@@ -593,7 +593,7 @@ These methods provide information about the whole tree (or any clade).
 
 The rest of these methods are boolean checks:
 
- **``is_bifurcating``**
+**``is_bifurcating``**
     True if the tree is strictly bifurcating; i.e. all nodes have either
     2 or 0 children (internal or external, respectively). The root may
     have 3 descendents and still be considered part of a bifurcating
@@ -626,7 +626,7 @@ tree intact, make a complete copy of the tree first, using Python’s
     import copy
     newtree = copy.deepcopy(tree)
 
- **``collapse``**
+**``collapse``**
     Deletes the target from the tree, relinking its children to its
     parent.
 **``collapse_all``**
@@ -787,7 +787,7 @@ Biopython wiki:
 Bio.Phylo is under active development. Here are some features we might
 add in future releases:
 
- **New methods**
+**New methods**
     Generally useful functions for operating on Tree or Clade objects
     appear on the Biopython wiki first, so that casual users can test
     them and decide if they’re useful before we add them to Bio.Phylo:
