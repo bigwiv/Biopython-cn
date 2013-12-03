@@ -20,7 +20,7 @@ lists <http://biopython.org/wiki/Mailing_lists>`__:
 
 Additionally, if you think you’ve found a bug, you can submit it to our
 bug-tracking page at
-```http://redmine.open-bio.org/projects/biopython`` <http://redmine.open-bio.org/projects/biopython>`__.
+`http://redmine.open-bio.org/projects/biopython <http://redmine.open-bio.org/projects/biopython>`__.
 This way, it won’t get buried in anyone’s Inbox and forgotten about.
 
 21.2  Mailing lists and helping newcomers
@@ -47,7 +47,7 @@ be able to help fill in any blanks.
 
 As explained in Chapter \ `18 <#chapter:cookbook>`__, Biopython now has
 a wiki collection of user contributed “cookbook” examples,
-```http://biopython.org/wiki/Category:Cookbook`` <http://biopython.org/wiki/Category:Cookbook>`__
+`http://biopython.org/wiki/Category:Cookbook <http://biopython.org/wiki/Category:Cookbook>`__
 – maybe you can add to this?
 
 21.5  Maintaining a distribution for a platform
@@ -92,7 +92,7 @@ with helping out:
 **RPMs**
     – RPMs are pretty popular package systems on some Linux platforms.
     There is lots of documentation on RPMs available at
-    ```http://www.rpm.org`` <http://www.rpm.org>`__ to help you get
+    `http://www.rpm.org <http://www.rpm.org>`__ to help you get
     started with them. To create an RPM for your platform is really
     easy. You just need to be able to build the package from source
     (having a C compiler that works is thus essential) – see the
@@ -145,7 +145,7 @@ The main Biopython release tries to be fairly uniform and interworkable,
 to make it easier for users. You can read about some of (fairly
 informal) coding style guidelines we try to use in Biopython in the
 contributing documentation at
-```http://biopython.org/wiki/Contributing`` <http://biopython.org/wiki/Contributing>`__.
+`http://biopython.org/wiki/Contributing <http://biopython.org/wiki/Contributing>`__.
 We also try to add code to the distribution along with tests (see
 Chapter \ `19 <#sec:regr_test>`__ for more info on the regression
 testing framework) and documentation, so that everything can stay as
@@ -174,7 +174,7 @@ Biopython like NumPy) would need further discussion.
 Additionally, if you have code that you don’t think fits in the
 distribution, but that you want to make available, we maintain Script
 Central
-(```http://biopython.org/wiki/Scriptcentral`` <http://biopython.org/wiki/Scriptcentral>`__)
+(`http://biopython.org/wiki/Scriptcentral <http://biopython.org/wiki/Scriptcentral>`__)
 which has pointers to freely available code in Python for
 bioinformatics.
 

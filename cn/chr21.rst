@@ -6,8 +6,7 @@
 
 对于biopython的开发者来说，从使用者得到反馈是非常重要的；来自于众多使用者的问题反馈、错误报告（以及补丁）对于biopython这样的开源项目有着莫大的帮助。
 
-Biopython邮件列表是一个讨论功能需求和潜在bugs的主要论坛:
- <http://biopython.org/wiki/Mailing_lists>__:
+`Biopython邮件列表 <http://biopython.org/wiki/Mailing_lists>`__ 是一个讨论功能需求和潜在bugs的主要论坛：
 
 -  `biopython@biopython.org <mailto:biopython@biopython.org>`__ – 讨论任何跟biopython有关的问题。
 -  `biopython-dev@biopython.org <mailto:biopython-dev@biopython.org>`__
@@ -57,7 +56,7 @@ Biopython邮件列表是一个讨论功能需求和潜在bugs的主要论坛:
 
 **RPMs**
     – RPMs在一些linux发行版中是非常流行的包管理系统，在RPMs主页（http://www.rpm.org）有很多关于RPMs的文档说明帮助你快速的开始。为你的系统创建一个RMP是很容易的一件事。你仅仅需要将源代码编译成包（需要一个能正常工作的C编译器），更多信息可以参考Biopython安装说明。
-	
+
     创建一个RPM,仅需做以下工作：
 
     .. code:: verbatim
@@ -68,7 +67,7 @@ Biopython邮件列表是一个讨论功能需求和潜在bugs的主要论坛:
 
 **Macintosh**
     – 由于Apple迁移到Mac OS X, 很多工作就简单多了。 一般来说，Mac操作系统相当于一个Unix变体，Biopython源码的安装同在linux上一样容易。安装Apple's X-code是安装所有GCC编译器最简易的方法。
-	我们或许会为Mac操作系统提供点击-安装的工具，但目前为止还没必要。
+    我们或许会为Mac操作系统提供点击-安装的工具，但目前为止还没必要。
 
 
 一旦得到一个安装包，务必在你的系统上检测并确保所有文件能够正确安装并能正常工作。在这一工作完成之后，你的工作就结束了，剩下的就是Biopython开发者的事了（如果不确定该发送给谁，可以给Biopython主邮件列表发送邮件），谢谢！
