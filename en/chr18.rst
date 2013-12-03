@@ -66,7 +66,7 @@ For this discussion, we’ll use the GenBank file for the pPCP1 plasmid
 from *Yersinia pestis biovar Microtus*. The file is included with the
 Biopython unit tests under the GenBank folder, or you can get it from
 our website,
-```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__.
+`NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__.
 This file contains one and only one record, so we can read it in as a
 ``SeqRecord`` using the ``Bio.SeqIO.read()`` function:
 
@@ -824,7 +824,7 @@ To show how you might approach this with Biopython, we’ll need a
 sequence to search, and as an example we’ll again use the bacterial
 plasmid – although this time we’ll start with a plain FASTA file with no
 pre-marked genes:
-```NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
+`NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__.
 This is a bacterial sequence, so we’ll want to use NCBI codon table 11
 (see Section \ `3.9 <#sec:translation>`__ about translation).
 
@@ -966,7 +966,7 @@ There are lots of times when you might want to visualise the
 distribution of sequence lengths in a dataset – for example the range of
 contig sizes in a genome assembly project. In this example we’ll reuse
 our orchid FASTA file
-```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 which has only 94 sequences.
 
 First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
@@ -1018,7 +1018,7 @@ You might want to look at the GC% of all the genes in a bacterial genome
 for example, and investigate any outliers which could have been recently
 acquired by horizontal gene transfer. Again, for this example we’ll
 reuse our orchid FASTA file
-```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
+`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
 
 First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
 compile a list of all the GC percentages. Again, you could do this with
@@ -1064,7 +1064,7 @@ plot below).
 
 To start off, we’ll need two sequences. For the sake of argument, we’ll
 just take the first two from our orchid FASTA file
-```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
+`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
 .. code:: verbatim
 
@@ -1299,7 +1299,7 @@ would give:
 You can adjust how ``dumb_consensus`` works by passing optional
 parameters:
 
- **the threshold**
+**the threshold**
     This is the threshold specifying how common a particular residue has
     to be at a position before it is added. The default is 0.7 (meaning
     70%).

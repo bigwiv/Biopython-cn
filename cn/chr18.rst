@@ -40,7 +40,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 假设你在检视一个基因组序列，寻找一些序列特征——或许是极端局部GC含量偏差，或者可能的限制性酶切位点。一旦你使你的Python代码在真实的基因组上运行后，尝试在相同的随机化版本基因组上运行，并进行统计分析或许是明智的选择（毕竟，任何你发现的“特性”都可能只是偶然事件）。
 
-在这一讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， ```NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__. 该文件仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
+在这一讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__. 该文件仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
 
 .. code:: verbatim
 
@@ -218,7 +218,7 @@ FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列
 
 一个常见的工作是输入一个大的测序读长集合，并根据它们的质量分数过滤它们（或修剪它们）。下面的例子非常简单，然而足以展示处理 ``SeqRecord`` 对象中质量数据的基本用法。我们所有要做的事情是读入一个FASTQ文件，过滤并取出那些PHRED质量分数在某个阈值（这里为20）以上的序列。
 
-在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ (2MB) ，解压后为19MB的文件 ``SRR020192.fastq`` 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 `http://www.ebi.ac.uk/ena/data/view/SRS004476`` <见http://www.ebi.ac.uk/ena/data/view/SRS004476>`__ ）。
+在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__ (2MB) ，解压后为19MB的文件 ``SRR020192.fastq`` 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 `http://www.ebi.ac.uk/ena/data/view/SRS004476 <http://www.ebi.ac.uk/ena/data/view/SRS004476>`__ ）。
 
 首先，让我们来统计reads的数目：
 
@@ -572,7 +572,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要关心内含子。然而，这种方法在病毒和原核生物中仍然有效。
 
-为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： ```NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
+为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： `NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
 
 .. code:: verbatim
 
@@ -682,7 +682,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.2.1  序列长度柱状图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 ```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ ，它只包含94条序列。
+在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 `ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ ，它只包含94条序列。
 
 首先，我们使用 ``Bio.SeqIO`` 来解析这个FASTA文件，并创建一个序列长度的列表。你可以用一个for循环来实现，然而我觉得列表解析（list comprehension）更简洁：
 
@@ -721,7 +721,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.2.2  序列GC%含量作图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-对于核酸序列，另一个经常计算的值是GC含量。例如，你可能想要查看一个细菌基因组中所有基因的GC%，并研究任何离群值来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用兰花FASTA文件 ```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 。
+对于核酸序列，另一个经常计算的值是GC含量。例如，你可能想要查看一个细菌基因组中所有基因的GC%，并研究任何离群值来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用兰花FASTA文件 `ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 。
 
 首先，我们使用 ``Bio.SeqIO`` 解析这个FASTA文件并创建一个GC百分含量的列表。你可以使用for循环，但我更喜欢这样：
 
@@ -755,7 +755,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 点线图是可视化比较两条核苷酸序列的相似性的一种方式。采用一个滑动窗来相互比较较短的子序列（比较通常根据一个不匹配阈值来实现）。为了简单起见，此处我们将只查找完全匹配（如下图黑色所示）。
 
-我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
+我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
 .. code:: verbatim
 
@@ -920,7 +920,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 你可以通过传入可选参数来调整 ``dumb_consensus`` 的工作方式：
 
- **the threshold**
+**the threshold**
     这是用来设定某个残基在某个位点出现的频率超过一定阈值，才将其添加到保守序列。默认为0.7（即70%）。
 **the ambiguous character**
     指定保守序列中的不确定字符。默认为’N’。
