@@ -5,13 +5,14 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 
 11.1  晶体结构文件的读与写 
-----------------------
+--------------------------
 
 11.1.1  读取PDB文件 
 ~~~~~~~~~~~~~~~~~~~~~
 
 首先，我们创建一个 ``PDBParser`` 对象：
-
+    
+.. code:: verbatim
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> p = PDBParser(PERMISSIVE=1)
@@ -21,6 +22,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 接着通过 ``PDBParser`` 解析PDB文件，就产生了Structure对象（在此例子中，PDB文件为'pdb1fat.ent'，'1fat'是用户定义的结构名称）:
 
+.. code:: verbatim
 
     >>> structure_id = "1fat"
     >>> filename = "pdb1fat.ent"
@@ -34,12 +36,16 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 例子：
 
+.. code:: verbatim
+
     >>> resolution = structure.header['resolution']
     >>> keywords = structure.header['keywords']
 
 在这个字典中可用的关键字有 ``name`` 、 ``head`` 、 ``deposition_date`` 、 ``release_date`` 、 ``structure_method`` 、 ``resolution`` 、 ``structure_reference`` （映射到一个参考文献列表）、 ``journal_reference`` 、 ``author`` 、和 ``compound`` （映射到一个字典，其中包含结晶化合物的各种信息）。
 
 没有创建 ``Structure`` 对象的时候，也可以创建这个字典，比如直接从PDB文件创建:
+
+.. code:: verbatim
 
     >>> file = open(filename,'r')
     >>> header_dict = parse_pdb_header(file)
@@ -50,23 +56,33 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 与PDB文件的情形类似，先创建一个 ``MMCIFParser`` 对象：
 
+.. code:: verbatim
+
     >>> from Bio.PDB.MMCIFParser import MMCIFParser
     >>> parser = MMCIFParser()
 
 然后用这个解析器从mmCIF文件创建一个结构对象：
 
+.. code:: verbatim
+
     >>> structure = parser.get_structure('1fat', '1fat.cif')
 
 为了尽量少访问mmCIF文件，可以用 ``MMCIF2Dict`` 类创建一个Python字典来将所有mmCIF文件中各种标签映射到其对应的值上。若有多个值（像 ``_atom_site.Cartn_y`` 标签，储存的是所有原子的*y*坐标值），则这个标签映射到一个值列表。从mmCIF文件创建字典如下：
+
+.. code:: verbatim
 
     >>> from Bio.PDB.MMCIF2Dict import MMCIF2Dict
     >>> mmcif_dict = MMCIF2Dict('1FAT.cif')
 
 例：从mmCIF文件获取溶剂含量:
 
+.. code:: verbatim
+
     >>> sc = mmcif_dict['_exptl_crystal.density_percent_sol']
 
 例：获取包含所有原子*y*坐标的列表:
+
+.. code:: verbatim
 
     >>> y_list = mmcif_dict['_atom_site.Cartn_y']
 
@@ -82,6 +98,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 例子：保存一个结构
 
+.. code:: verbatim
 
     >>> io = PDBIO()
     >>> io.set_structure(s)
@@ -97,6 +114,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 在默认情况下，每种方法的返回值都为1（表示model/chain/residue/atom被包含在输出结果中）。通过子类化 ``Select`` 和返回值0，你可以从输出中排除model、chain等。也许麻烦，但很强大。接下来的代码将只输出甘氨酸残基：
 
 
+.. code:: verbatim
 
     >>> class GlySelect(Select):
     ...     def accept_residue(self, residue):
@@ -120,11 +138,17 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
  -  链由残基组成
  -  多个原子构成残基
 
-这是很多结构生物学家/生物信息学家看待结构的方法，也是处理结构的一种简单而有效的方法。在需要的时候加上额外的材料。一个 ``Structure`` 对象的UML图（暂时忘掉 ``Disordered``吧）如下图所示 `11.1 <#fig:smcra>`__ 。这样的数据结构不一定最适用于表示一个结构的生物大分子内容，但要很好地解释一个描述结构的文件中所呈现的数据（最典型的如PDB或MMCIF文件），这样的数据结构就是必要的了。如果这种层次结构不能表示一个结构文件的内容，那么可以相当确定是这个文件有错误或至少描述结构不够明确。一旦不能生成SMCRA数据结构，就有理由怀疑出了故障。因此，解析PDB文件可用于检测可能的故障。我们将在 `11.7.1 <#problem%20structures>`__ 小节给出关于这一点的一些例子。
+这是很多结构生物学家/生物信息学家看待结构的方法，也是处理结构的一种简单而有效的方法。在需要的时候加上额外的材料。一个 ``Structure`` 对象的UML图（暂时忘掉 ``Disordered`` 吧）如下图所示 `11.1 <#fig:smcra>`__ 。这样的数据结构不一定最适用于表示一个结构的生物大分子内容，但要很好地解释一个描述结构的文件中所呈现的数据（最典型的如PDB或MMCIF文件），这样的数据结构就是必要的了。如果这种层次结构不能表示一个结构文件的内容，那么可以相当确定是这个文件有错误或至少描述结构不够明确。一旦不能生成SMCRA数据结构，就有理由怀疑出了故障。因此，解析PDB文件可用于检测可能的故障。我们将在 `11.7.1 <#problem%20structures>`__ 小节给出关于这一点的一些例子。
 
-|image3|
 
-图11.1：用来表示大分子结构的 ``Structure`` 类的SMCRA体系的UML图。带方块的实线表示集合，带箭头的实线表示引用，带三角形的实线表示继承，带三角形的虚线表示接口实现。
+--------------
+
+    |image3|
+
+     图11.1：用来表示大分子结构的 ``Structure`` 类的SMCRA体系的UML图。带方块的实线表示集合，带箭头的实线表示引用，带三角形的实线表示继承，带三角形的虚线表示接口实现。
+    
+--------------
+
 
 结构，模型，链，残基都是实体基类的子类。原子类仅仅（部分）实现了实体接口（因为原子类没有子类）。
 
@@ -134,17 +158,25 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 一般地，一个实体子类（即原子，残基，链，模型）能通过标识符作为键来从父类（分别为残基，链，模型，结构）中提取。
 
+.. code:: verbatim
+
     >>> child_entity = parent_entity[child_id]
 
 你可以从一个父实体对象获得所有子实体的列表。需要注意的是，这个列表以一种特定的方式排列（例如根据在模型对象中链对象的链标识符来排序）。
+
+.. code:: verbatim
 
     >>> child_list = parent_entity.get_list()
 
 你也可以从子类得到父类：
 
+.. code:: verbatim
+
     >>> parent_entity = child_entity.get_parent()
 
 在SMCRA的所有层次水平，你还可以提取一个 *完整id* 。完整id是包含所有从顶层对象（结构）到当前对象的id的一个元组。一个残基对象的完整id可以这么得到：
+
+.. code:: verbatim
 
     >>> full_id = residue.get_full_id()
     >>> print full_id
@@ -162,14 +194,19 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 要得到实体的id，用 ``get_id`` 方法即可：
 
+.. code:: verbatim
+
     >>> entity.get_id()
 
 可以用 ``has_id`` 方法来检查这个实体是否有子类具有给定id：
+
+.. code:: verbatim
 
     >>> entity.has_id(entity_id)
 
 实体的长度等于其子类的个数：
 
+.. code:: verbatim
 
     >>> nr_children = len(entity)
 
@@ -190,6 +227,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 举个例子，从一个结构对象中获取其第一个模型：
 
+.. code:: verbatim
 
     >>> first_model = structure[0]
 
@@ -201,6 +239,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 链对象的id来自PDB/mmCIF文件中的链标识符，是个单字符（通常是一个字母）。模型中的每个链都具有唯一的id。例如，从一个模型对象中取出标识符为“A”的链对象：
 
+.. code:: verbatim
 
     >>> chain_A = model["A"]
 
@@ -222,6 +261,8 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 因此，上述的葡萄酸残基id就是 ``(’H_GLC’, 100, ’A’)`` 。如果异质标签和插入码为空，那么可以只使用序列标识符：
 
+.. code:: verbatim
+
     # Full id
     >>> residue=chain[(' ', 100, ' ')]
     # Shortcut id
@@ -237,6 +278,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 大多数情况下，hetflag和插入码均为空，如 ``(’ ’, 10, ’ ’)`` 。在这些情况下，序列标识符可以用作完整id的快捷方式：
 
+.. code:: verbatim
 
     # use full id
     >>> res10 = chain[(' ', 10, ' ')]
@@ -248,7 +290,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 一个残基对象还有大量其它方法：
 
-
+.. code:: verbatim
 
     >>> residue.get_resname()       # returns the residue name, e.g. "ASN"
     >>> residue.is_disordered()     # returns 1 if the residue has disordered atoms
@@ -278,6 +320,7 @@ Bio.PDB是Biopython中处理生物大分子晶体结构的模块。除了别的�
 
 一个Atom对象还有如下其它方法：
 
+.. code:: verbatim
 
     >>> a.get_name()       # atom name (spaces stripped, e.g. "CA")
     >>> a.get_id()         # id (equals atom name)
@@ -298,6 +341,7 @@ siguij，各向异性B因子和sigatm Numpy阵列可以用来表示原子坐标�
 
 举个Bio.PDB的 ``Vector`` 模块功能的例子，假设你要查找Gly残基的Cβ原子的位置，如果存在的话。将Gly残基的N原子沿Cα-C化学键旋转-120度，能大致将其放在一个真正的Cβ原子的位置上。怎么做呢？就是下面这样使用 ``Vector`` 模块中的``rotaxis`` 方法（能用来构造一个绕特定坐标轴的旋转）：
 
+.. code:: verbatim
 
     # get atom coordinates as vectors
     >>> n = residue['N'].get_vector() 
@@ -322,7 +366,7 @@ siguij，各向异性B因子和sigatm Numpy阵列可以用来表示原子坐标�
 
 举些例子如下：
 
-
+.. code:: verbatim
 
     >>> model = structure[0]
     >>> chain = model['A']
@@ -330,6 +374,8 @@ siguij，各向异性B因子和sigatm Numpy阵列可以用来表示原子坐标�
     >>> atom = residue['CA']
 
 还可以用一个快捷方式：
+
+.. code:: verbatim
 
     >>> atom = structure[0]['A'][100]['CA']
 
@@ -353,7 +399,7 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 
 每个紊乱原子都有一个特征性的altloc标识符。你可以设定：一个 ``DisorderedAtom`` 对象表现得像与一个指定的altloc标识符相关的 ``Atom`` 对象：
 
-
+.. code:: verbatim
 
     >>> atom.disordered_select('A') # select altloc A atom
     >>> print atom.get_altloc()
@@ -385,7 +431,7 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 
 例子：假设一个链在位置10有一个由Ser和Cys残基构成的点突变。确信这个链的残基10表现为Cys残基。
 
-
+.. code:: verbatim
 
     >>> residue = chain[10]
     >>> residue.disordered_select('CYS')
@@ -419,9 +465,9 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 -------------------------------------------
 
 解析PDB文件，提取一些Model、Chain、Residue和Atom对象 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+.. code:: verbatim
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> parser = PDBParser()
@@ -432,9 +478,9 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     >>> atom = residue["CA"]
 
 迭代遍历一个结构中的所有原子
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+.. code:: verbatim
 
     >>> p = PDBParser()
     >>> structure = p.get_structure('X', 'pdb1fat.ent')
@@ -447,6 +493,7 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 
 有个快捷方式可以遍历一个结构中所有原子：
 
+.. code:: verbatim
 
     >>> atoms = structure.get_atoms()
     >>> for atom in atoms:
@@ -455,6 +502,7 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 
 类似地，遍历一条链中的所有原子，可以这么做：
 
+.. code:: verbatim
 
     >>> atoms = chain.get_atoms()
     >>> for atom in atoms:
@@ -462,10 +510,11 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     ...
 
 遍历模型中的所有残基
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 或者，如果你想遍历在一条模型中的所有残基：
 
+.. code:: verbatim
 
     >>> residues = model.get_residues()
     >>> for residue in residues:
@@ -474,16 +523,19 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 
 你也可以用 ``Selection.unfold_entities`` 函数来获取一个结构的所有残基：
 
+.. code:: verbatim
 
     >>> res_list = Selection.unfold_entities(structure, 'R')
 
 或者获得链上的所有原子：
 
+.. code:: verbatim
 
     >>> atom_list = Selection.unfold_entities(chain, 'A')
 
 明显的是， ``A=atom, R=residue, C=chain, M=model, S=structure`` 。你可以用这种标记返回层次中的上层，如从一个 ``Atoms`` 列表得到（唯一的） ``Residue`` 或 ``Chain`` 父类的列表：
 
+.. code:: verbatim
 
     >>> residue_list = Selection.unfold_entities(atom_list, 'R')
     >>> chain_list = Selection.unfold_entities(atom_list, 'C')
@@ -491,15 +543,17 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
 更多信息详见API文档。
 
 从链中提取异质残基（如resseq 10的葡萄糖（GLC）部分）
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. code:: verbatim
 
     >>> residue_id = ("H_GLC", 10, " ")
     >>> residue = chain[residue_id]
 
 打印链中所有异质残基
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. code:: verbatim
 
     >>> for residue in chain.get_list():
     ...    residue_id = residue.get_id()
@@ -509,8 +563,9 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     ...
 
 输出一个结构分子中所有B因子大于50的CA原子的坐标
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. code:: verbatim
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -522,8 +577,9 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     ...
 
 输出所有含紊乱原子的残基
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. code:: verbatim
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -537,9 +593,11 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     ...
 
 遍历所有紊乱原子，并选取所有具有altloc A的原子（如果有的话）
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 这将会保证，SMCRA数据结构会表现得如同只存在altloc A原子一样。
+
+.. code:: verbatim
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -552,9 +610,11 @@ Bio.PDB能够处理紊乱原子和点突变（比如Gly和Ala残基在相同位�
     ...
 
 从 ``Structure`` 对象中提取多肽
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 为了从一个结构中提取多肽，需要用 ``PolypeptideBuilder`` 从 ``Structure`` 构建一个 ``Polypeptide`` 对象的列表，如下所示：
+
+.. code:: verbatim
 
     >>> model_nr = 1
     >>> polypeptide_list = build_peptides(structure, model_nr)
@@ -567,6 +627,7 @@ Polypeptide对象正是Residue对象的一个UserList，总是从单结构域（
 
 例子：
 
+.. code:: verbatim
 
     # Using C-N 
     >>> ppb=PPBuilder()
@@ -583,13 +644,13 @@ Polypeptide对象正是Residue对象的一个UserList，总是从单结构域（
 
 
 获取结构的序列
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 要做的第一件事就是从结构中提取所有多肽（如上所述）。然后每条多肽的序列就容易从 ``Polypeptide`` 对象获得。该序列表示为一个Biopython ``Seq`` 对象，它的字母表由 ``ProteinAlphabet`` 对象来定义。
 
 例子：
 
-
+.. code:: verbatim
 
     >>> seq = polypeptide.get_sequence()
     >>> print seq
@@ -603,6 +664,7 @@ Polypeptide对象正是Residue对象的一个UserList，总是从单结构域（
 
 重载原子的减法运算来返回两个原子之间的距离。
 
+.. code:: verbatim
 
     # Get some atoms
     >>> ca1 = residue1['CA']
@@ -615,6 +677,7 @@ Polypeptide对象正是Residue对象的一个UserList，总是从单结构域（
 
 用原子坐标的向量表示，和 ``Vector`` 模块中的 ``calc_angle`` 函数可以计算角度。
 
+.. code:: verbatim
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
@@ -626,7 +689,7 @@ Polypeptide对象正是Residue对象的一个UserList，总是从单结构域（
 
 用原子坐标的向量表示，然后用 ``Vector`` 模块中的 ``calc_dihedral`` 函数可以计算角度。
 
-
+.. code:: verbatim
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
@@ -650,7 +713,7 @@ Golub & Van Loan]并使用了奇异值分解（这是通用 ``Bio.SVDSuperimpose
 
 例子：
 
-
+.. code:: verbatim
 
     >>> sup = Superimposer()
     # Specify the atom lists
@@ -682,7 +745,7 @@ HSE有两种风味：HSEα和HSEβ。前者仅用到Cα原子的位置，而后�
 
 例子：
 
-
+.. code:: verbatim
 
     >>> model = structure[0]
     >>> hse = HSExposure()
@@ -700,27 +763,32 @@ HSE有两种风味：HSEα和HSEβ。前者仅用到Cα原子的位置，而后�
 
 为了这个功能，你需要安装DSSP（并获得一个对学术性使用免费的证书，参见 `http://www.cmbi.kun.nl/gv/dssp/ <http://www.cmbi.kun.nl/gv/dssp/>`__ ）。然后用 ``DSSP`` 类，可以映射 ``Residue`` 对象到其二级结构上（和溶剂可及表面区域）。DSSP代码如下表所列表 `11.1 <#cap:DSSP-codes>`__ 。注意DSSP（程序及其相应的类）不能处理多个模型！
 
-+--------+-----------------------------+
-| Code   | Secondary structure         |
-+========+=============================+
-| H      | α-helix                     |
-+--------+-----------------------------+
-| B      | Isolated β-bridge residue   |
-+--------+-----------------------------+
-| E      | Strand                      |
-+--------+-----------------------------+
-| G      | 3-10 helix                  |
-+--------+-----------------------------+
-| I      | Π-helix                     |
-+--------+-----------------------------+
-| T      | Turn                        |
-+--------+-----------------------------+
-| S      | Bend                        |
-+--------+-----------------------------+
-| -      | Other                       |
-+--------+-----------------------------+
+--------------
 
-Table 11.1: Bio.PDB中的DSSP代码。
+    +--------+-----------------------------+
+    | Code   | Secondary structure         |
+    +--------+-----------------------------+
+    | H      | α-helix                     |
+    +--------+-----------------------------+
+    | B      | Isolated β-bridge residue   |
+    +--------+-----------------------------+
+    | E      | Strand                      |
+    +--------+-----------------------------+
+    | G      | 3-10 helix                  |
+    +--------+-----------------------------+
+    | I      | Π-helix                     |
+    +--------+-----------------------------+
+    | T      | Turn                        |
+    +--------+-----------------------------+
+    | S      | Bend                        |
+    +--------+-----------------------------+
+    | -      | Other                       |
+    +--------+-----------------------------+
+
+    Table 11.1: Bio.PDB中的DSSP代码。
+
+
+--------------
 
 ``DSSP`` 类也可以用来计算残基的溶剂可及表面。还请参考 `11.6.9 <#subsec:residue_depth>`__ 。
 
@@ -733,7 +801,7 @@ Table 11.1: Bio.PDB中的DSSP代码。
 
 例子：
 
-
+.. code:: verbatim
 
     >>> model = structure[0]
     >>> rd = ResidueDepth(model, pdb_file)
@@ -749,7 +817,7 @@ Table 11.1: Bio.PDB中的DSSP代码。
 
 例子:
 
-
+.. code:: verbatim
 
     # Permissive parser
     >>> parser = PDBParser(PERMISSIVE=1)
@@ -841,10 +909,14 @@ PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP
 
 结构可以从PDB（Protein Data Bank）通过 ``PDBList`` 对象的 ``retrieve_pdb_file`` 方法下载。这种方法的要点是结构的PDB标识符。
 
+.. code:: verbatim
+
     >>> pdbl = PDBList()
     >>> pdbl.retrieve_pdb_file('1FAT')
 
 ``PDBList`` 类也能用作命令行工具：
+
+.. code:: verbatim
 
     python PDBList.py 1fat
 
@@ -857,6 +929,7 @@ PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP
 
 下面的命令将会保存所有PDB文件至 ``/data/pdb`` 目录：
 
+.. code:: verbatim
 
     python PDBList.py all /data/pdb
 
@@ -870,6 +943,7 @@ PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP
 
 这也能通过 ``PDBList`` 对象来完成。可以简单的创建一个 ``PDBList`` 对象（指定本地PDB拷贝的目录），然后调用 ``update_pdb`` 方法：
 
+.. code:: verbatim
 
     >>> pl = PDBList(pdb='/data/pdb')
     >>> pl.update_pdb()

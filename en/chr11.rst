@@ -193,9 +193,13 @@ reason to suspect a problem. Parsing a PDB file can thus be used to
 detect likely problems. We will give several examples of this in section
 `11.7.1 <#problem%20structures>`__.
 
-|image3|
+--------------
 
-Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.   |
+    |image3|
+
+     Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.
+    
+--------------
 
 Structure, Model, Chain and Residue are all subclasses of the Entity
 base class. The Atom class only (partly) implements the Entity interface
@@ -653,7 +657,7 @@ would have hetfield “H\_GLC”. Its residue id could e.g. be (“H\_GLC”, 1,
 -------------------------------------------
 
 Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -666,7 +670,7 @@ Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
     >>> atom = residue["CA"]
 
 Iterating through all atoms of a structure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -699,7 +703,7 @@ Similarly, to iterate over all atoms in a chain, use
     ...
 
 Iterating over all residues of a model
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 or if you want to iterate over all residues in a model:
 
@@ -735,7 +739,7 @@ use this to go up in the hierarchy, e.g. to get a list of (unique)
 For more info, see the API documentation.
 
 Extract a hetero residue from a chain (e.g. a glucose (GLC) moiety with resseq 10)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -743,7 +747,7 @@ Extract a hetero residue from a chain (e.g. a glucose (GLC) moiety with resseq 1
     >>> residue = chain[residue_id]
 
 Print all hetero residues in chain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -755,7 +759,7 @@ Print all hetero residues in chain
     ...
 
 Print out the coordinates of all CA atoms in a structure with B factor greater than 50
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -769,7 +773,7 @@ Print out the coordinates of all CA atoms in a structure with B factor greater t
     ...
 
 Print out all the residues that contain disordered atoms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: verbatim
 
@@ -785,7 +789,7 @@ Print out all the residues that contain disordered atoms
     ...
 
 Loop over all disordered atoms, and select all atoms with altloc A (if present)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This will make sure that the SMCRA data structure will behave as if only
 the atoms with altloc A are present.
@@ -803,7 +807,7 @@ the atoms with altloc A are present.
     ...
 
 Extracting polypeptides from a ``Structure`` object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To extract polypeptides from a structure, construct a list of
 ``Polypeptide`` objects from a ``Structure`` object using
@@ -844,7 +848,7 @@ by ``PolypeptideBuilder``. However, it is possible to use
 and ``Chain`` objects as well.
 
 Obtaining the sequence of a structure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The first thing to do is to extract all polypeptides from the structure
 (as above). The sequence of each polypeptide can then easily be obtained
@@ -997,10 +1001,32 @@ secondary structure (and accessible surface area). The DSSP codes are
 listed in Table `11.1 <#cap:DSSP-codes>`__. Note that DSSP (the program,
 and thus by consequence the class) cannot handle multiple models!
 
+--------------
+
+    +--------+-----------------------------+
+    | Code   | Secondary structure         |
+    +--------+-----------------------------+
+    | H      | α-helix                     |
+    +--------+-----------------------------+
+    | B      | Isolated β-bridge residue   |
+    +--------+-----------------------------+
+    | E      | Strand                      |
+    +--------+-----------------------------+
+    | G      | 3-10 helix                  |
+    +--------+-----------------------------+
+    | I      | Π-helix                     |
+    +--------+-----------------------------+
+    | T      | Turn                        |
+    +--------+-----------------------------+
+    | S      | Bend                        |
+    +--------+-----------------------------+
+    | -      | Other                       |
+    +--------+-----------------------------+
+
+    Table 11.1: DSSP codes in Bio.PDB.
 
 
-Table 11.1: DSSP codes in Bio.PDB.
-
+--------------
 
 The ``DSSP`` class can also be used to calculate the accessible surface
 area of a residue. But see also section
