@@ -195,9 +195,9 @@ detect likely problems. We will give several examples of this in section
 
 --------------
 
-    |image3|
+|image3|
 
-     Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.
+Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.
     
 --------------
 
@@ -1003,27 +1003,27 @@ and thus by consequence the class) cannot handle multiple models!
 
 --------------
 
-    +--------+-----------------------------+
-    | Code   | Secondary structure         |
-    +--------+-----------------------------+
-    | H      | α-helix                     |
-    +--------+-----------------------------+
-    | B      | Isolated β-bridge residue   |
-    +--------+-----------------------------+
-    | E      | Strand                      |
-    +--------+-----------------------------+
-    | G      | 3-10 helix                  |
-    +--------+-----------------------------+
-    | I      | Π-helix                     |
-    +--------+-----------------------------+
-    | T      | Turn                        |
-    +--------+-----------------------------+
-    | S      | Bend                        |
-    +--------+-----------------------------+
-    | -      | Other                       |
-    +--------+-----------------------------+
++--------+-----------------------------+
+| Code   | Secondary structure         |
++--------+-----------------------------+
+| H      | α-helix                     |
++--------+-----------------------------+
+| B      | Isolated β-bridge residue   |
++--------+-----------------------------+
+| E      | Strand                      |
++--------+-----------------------------+
+| G      | 3-10 helix                  |
++--------+-----------------------------+
+| I      | Π-helix                     |
++--------+-----------------------------+
+| T      | Turn                        |
++--------+-----------------------------+
+| S      | Bend                        |
++--------+-----------------------------+
+| -      | Other                       |
++--------+-----------------------------+
 
-    Table 11.1: DSSP codes in Bio.PDB.
+Table 11.1: DSSP codes in Bio.PDB.
 
 
 --------------
