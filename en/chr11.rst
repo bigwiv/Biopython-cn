@@ -997,25 +997,7 @@ secondary structure (and accessible surface area). The DSSP codes are
 listed in Table `11.1 <#cap:DSSP-codes>`__. Note that DSSP (the program,
 and thus by consequence the class) cannot handle multiple models!
 
-+--------+-----------------------------+
-| Code   | Secondary structure         |
-+========+=============================+
-| H      | α-helix                     |
-+--------+-----------------------------+
-| B      | Isolated β-bridge residue   |
-+--------+-----------------------------+
-| E      | Strand                      |
-+--------+-----------------------------+
-| G      | 3-10 helix                  |
-+--------+-----------------------------+
-| I      | Π-helix                     |
-+--------+-----------------------------+
-| T      | Turn                        |
-+--------+-----------------------------+
-| S      | Bend                        |
-+--------+-----------------------------+
-| -      | Other                       |
-+--------+-----------------------------+
+
 
 Table 11.1: DSSP codes in Bio.PDB.
 
