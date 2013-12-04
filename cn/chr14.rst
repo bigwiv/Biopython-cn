@@ -1,11 +1,11 @@
 第14章   使用Bio.motifs进行模体序列分析
 ====================================================
 
-这章主要的介绍Biopython中的``Bio.motifs`` 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
+这章主要的介绍Biopython中的 ``Bio.motifs`` 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
 
-这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 ``Bio.motifs`` 包，该包替代了Biopython 1.50版本中的 ``Bio.Motif`` 包，而``Bio.Motif`` 包是基于较早版本的Biopython 中的两个模块 ``Bio.AlignAce`` 和 ``Bio.MEME`` 。``Bio.motifs`` 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。
+这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 ``Bio.motifs`` 包，该包替代了Biopython 1.50版本中的 ``Bio.Motif`` 包，而 ``Bio.Motif`` 包是基于较早版本的Biopython 中的两个模块 ``Bio.AlignAce`` 和 ``Bio.MEME`` 。``Bio.motifs`` 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。
 
-说到其他库，看到这里，你或许会对 `TAMO <http://fraenkel.mit.edu/TAMO/>`__ 感兴趣，这是另一个分析模体序列的Python库。它能提供更多关于*de-novo*模体的查找方式，不过它并没有纳入到Biopython中，而且在商业用途上还有一些限制。
+说到其他库，看到这里，你或许会对 `TAMO <http://fraenkel.mit.edu/TAMO/>`__ 感兴趣，这是另一个分析模体序列的Python库。它能提供更多关于 *de-novo* 模体的查找方式，不过它并没有纳入到Biopython中，而且在商业用途上还有一些限制。
 
 14.1  模体对象
 -------------------
@@ -808,7 +808,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果没有指定特定的背景，就会使用一个统一的背景。因为同KL散度或相对熵的值相同，所以平均值就显得特别重要，并且它也是同背景相比的模体信息含量的测量方法。由于在Biopython中用以2为底的对数来计算log-odds值，信息含量的的单位是bit。
 
-``.reverse_complement``, ``.consensus``, ``.anticonsensus`` 和``.degenerate_consensus`` 方法可以直接对PSSM使用。
+``.reverse_complement``, ``.consensus``, ``.anticonsensus`` 和 ``.degenerate_consensus`` 方法可以直接对PSSM使用。
 
 14.4  搜索实例
 -----------------------------
