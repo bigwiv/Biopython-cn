@@ -193,14 +193,13 @@ reason to suspect a problem. Parsing a PDB file can thus be used to
 detect likely problems. We will give several examples of this in section
 `11.7.1 <#problem%20structures>`__.
 
-    --------------
+--------------
 
     |image3|
-    +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-    | Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.   |
-    +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-
-    --------------
+    
+    Figure 11.1: UML diagram of SMCRA architecture of the ``Structure`` class used to represent a macromolecular structure. Full lines with diamonds denote aggregation, full lines with arrows denote referencing, full lines with triangles denote inheritance and dashed lines with triangles denote interface realization.   |
+    
+--------------
 
 Structure, Model, Chain and Residue are all subclasses of the Entity
 base class. The Atom class only (partly) implements the Entity interface
@@ -1002,11 +1001,11 @@ secondary structure (and accessible surface area). The DSSP codes are
 listed in Table `11.1 <#cap:DSSP-codes>`__. Note that DSSP (the program,
 and thus by consequence the class) cannot handle multiple models!
 
-    --------------
+--------------
 
     +--------+-----------------------------+
     | Code   | Secondary structure         |
-    +--------+-----------------------------+
+    +========+=============================+
     | H      | α-helix                     |
     +--------+-----------------------------+
     | B      | Isolated β-bridge residue   |
@@ -1024,11 +1023,10 @@ and thus by consequence the class) cannot handle multiple models!
     | -      | Other                       |
     +--------+-----------------------------+
 
-    +--------------------------------------+
-    | Table 11.1: DSSP codes in Bio.PDB.   |
-    +--------------------------------------+
 
-    --------------
+    Table 11.1: DSSP codes in Bio.PDB.
+
+--------------
 
 The ``DSSP`` class can also be used to calculate the accessible surface
 area of a residue. But see also section
