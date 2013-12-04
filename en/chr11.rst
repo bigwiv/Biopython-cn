@@ -1017,7 +1017,6 @@ and thus by consequence the class) cannot handle multiple models!
 | -      | Other                       |
 +--------+-----------------------------+
 
-
 Table 11.1: DSSP codes in Bio.PDB.
 
 
