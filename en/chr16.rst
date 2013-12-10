@@ -57,9 +57,11 @@ adjacent genes on the same strand of DNA belong to the same operon:
 In a logistic regression model, we use a weighted sum of these two
 predictors to calculate a joint score *S*:
 
-+-----------------------------------------------------------------------------------+
-| *S* = β:sub:`0` + β:sub:`1` *x*\ :sub:`1` + β:sub:`2` *x*\ :sub:`2`.     (16.1)   |
-+-----------------------------------------------------------------------------------+
+.. math::
+
+  \begin{equation}
+  S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
+  \end{equation}
 
 The logistic regression model gives us appropriate values for the
 parameters β\ :sub:`0`, β\ :sub:`1`, β\ :sub:`2` using two sets of
@@ -74,41 +76,12 @@ In the logistic regression model, the probability of belonging to a
 class depends on the score via the logistic function. For the two
 classes OP and NOP, we can write this as
 
-     
+.. math:: 
 
-Pr(\ *OP*\ \|\ *x*\ :sub:`1`, \ *x*\ :sub:`2`)
-
- =
-
- 
-
-+--------------------------------------------------------------------------+
-| exp(β\ :sub:`0` + β:sub:`1` *x*\ :sub:`1` + β:sub:`2` *x*\ :sub:`2`)     |
-+--------------------------------------------------------------------------+
-+--------------------------------------------------------------------------+
-| 1+exp(β\ :sub:`0` + β:sub:`1` *x*\ :sub:`1` + β:sub:`2` *x*\ :sub:`2`)   |
-+--------------------------------------------------------------------------+
-
-   
-
-    (16.2)
-
-Pr(\ *NOP*\ \|\ *x*\ :sub:`1`, \ *x*\ :sub:`2`)
-
- =
-
- 
-
-+--------------------------------------------------------------------------+
-| 1                                                                        |
-+--------------------------------------------------------------------------+
-+--------------------------------------------------------------------------+
-| 1+exp(β\ :sub:`0` + β:sub:`1` *x*\ :sub:`1` + β:sub:`2` *x*\ :sub:`2`)   |
-+--------------------------------------------------------------------------+
-
-   
-
-    (16.3)
+  \begin{eqnarray}
+  \Pr(\mathrm{OP}|x_1, x_2) & = & \frac{\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)}{1+\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} \label{eq:OP} \\
+  \Pr(\mathrm{NOP}|x_1, x_2) & = & \frac{1}{1+\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} \label{eq:NOP} 
+  \end{eqnarray}
 
 Using a set of gene pairs for which it is known whether they belong to
 the same operon (class OP) or to different operons (class NOP), we can
@@ -336,7 +309,7 @@ to different operons:
 
 To find out how confident we can be in these predictions, we can call
 the ``calculate`` function to obtain the probabilities (equations
-(`16.2 <#eq:OP>`__) and `16.3 <#eq:NOP>`__) for class OP and NOP. For
+(`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__)) for class OP and NOP. For
 *yxcE*, *yxcD* we find
 
 .. code:: verbatim
