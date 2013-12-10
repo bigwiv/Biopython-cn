@@ -2,7 +2,7 @@
 References
 ==========
 
- [1]
+[1]
     Peter J. A. Cock, Tiago Antao, Jeffrey T. Chang, Brad A. Chapman,
     Cymon J. Cox, Andrew Dalke, Iddo Friedberg, Thomas Hamelryck, Frank
     Kauff, Bartek Wilczynski, Michiel J. L. de Hoon: “Biopython: freely
