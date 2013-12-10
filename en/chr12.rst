@@ -387,7 +387,7 @@ genetics’ applications which arguably have a smaller user base.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FDist is a selection detection application suite based on computing
-(i.e. simulating) a “neutral” confidence interval based on :math:`F_{st}`
+(i.e. simulating) a “neutral” confidence interval based on
 :math:`F_{st}` and heterozygosity. Markers (which can be SNPs,
 microsatellites, AFLPs among others) which lie outside the “neutral”
 interval are to be considered as possible candidates for being under
