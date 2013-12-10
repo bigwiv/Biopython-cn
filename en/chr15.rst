@@ -1164,7 +1164,7 @@ This function returns a tuple
     Array containing the mean over each column in ``data``.
 -  ``coordinates``
     The coordinates of each row in ``data`` with respect to the
-   principal components.
+    principal components.
 -  ``components``
     The principal components.
 -  ``eigenvalues``

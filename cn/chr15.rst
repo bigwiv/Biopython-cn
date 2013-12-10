@@ -956,7 +956,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     选择对 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
     选择合适的元素距离算法 (见
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 函数会返回一个距离矩阵，每行的列数等于行数。(see section
 `15.1 <#subsec:distancematrix>`__).
