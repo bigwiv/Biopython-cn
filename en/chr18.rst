@@ -556,9 +556,11 @@ files and SFF files) have become a *de facto* standard for representing
 the probability of a sequencing error (here denoted by *P*\ :sub:`*e*`)
 at a given base using a simple base ten log transformation:
 
-+--------------------------------------------------------------------------+
-| *Q*\ :sub:`PHRED` = − 10 × log:sub:`10` ( *P*\ :sub:`*e*` )     (18.1)   |
-+--------------------------------------------------------------------------+
+.. math::
+
+  \begin{equation}
+  Q_{\textrm{PHRED}} = - 10 \times \textrm{log}_{10} ( P_e )
+  \end{equation}
 
 This means a wrong read (*P*\ :sub:`*e*` = 1) gets a PHRED quality of 0,
 while a very good read like *P*\ :sub:`*e*` = 0.00001 gets a PHRED
@@ -587,28 +589,11 @@ to distinguish...
 The Solexa quality scores are defined using a different log
 transformation:
 
-*Q*\ :sub:`Solexa` = − 10 × log:sub:`10` 
+.. math::
 
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+-----------------------+
-| *P*\ :sub:`*e*`       |
-+-----------------------+
-+-----------------------+
-| 1−\ *P*\ :sub:`*e*`   |
-+-----------------------+
-
- 
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-    (18.2)
+  \begin{equation}
+  Q_{\textrm{Solexa}} = - 10 \times \textrm{log}_{10} \left( \frac{P_e}{1-P_e} \right)
+  \end{equation}
 
 Given Solexa/Illumina have now moved to using PHRED scores in version
 1.3 of their pipeline, the Solexa quality scores will gradually fall out
@@ -1416,34 +1401,11 @@ consesus sequence, or a portion of a consensus sequence. We calculate
 information content at a particular column in a multiple sequence
 alignment using the following formula:
 
-*IC*\ :sub:`*j*` = 
+.. math::
 
-+-------------------+
-| *N*\ :sub:`*a*`   |
-+-------------------+
-| ∑                 |
-+-------------------+
-| *i*\ =1           |
-+-------------------+
-
- *P*\ :sub:`*ij*` *log*
-
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+--------------------+
-| *P*\ :sub:`*ij*`   |
-+--------------------+
-+--------------------+
-| *Q*\ :sub:`*i*`    |
-+--------------------+
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
+  \begin{equation}
+  IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
+  \end{equation}
 
 where:
 
