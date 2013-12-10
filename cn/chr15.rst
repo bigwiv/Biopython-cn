@@ -45,7 +45,7 @@ Maps (SOMs) 需要调用随机数生成器。在 ``Bio.Cluster`` 中，正态分
 
 15.1 距离函数
 ------------------------
-为了对元素根据相似度进行聚类，第一步需要定义相似度。``Bio.Cluster``提供了八种不同
+为了对元素根据相似度进行聚类，第一步需要定义相似度。``Bio.Cluster`` 提供了八种不同
 的距离函数来衡量相似度或者距离，分别用不同的字母代表：
 
 -  ``'e'``: Euclidean 距离;
@@ -392,7 +392,7 @@ expectation-maximization (EM) 算法通常用于将数据分成 *k* 组。在 EM
 
 由于起始阶段的每类中的元素分配是随机的，而通常当EM算法执行时，可能产生不同的聚类结果。为了找到最优的聚类结果，
 可以对进行 *k*-means 算法重复多次，每次都以不同的随机分配作为起始。每次运行后，都会保存所有元素距离
- 其中心距离之和，并且选择总距离最小的运行结果最为最终的结果。
+其中心距离之和，并且选择总距离最小的运行结果最为最终的结果。
 
 EM算法运行的次数取决于需要聚类元素的多少。一般而言，我们可以根据最优解被发现的次数来选择。
 这个次数会作为划分算法的返回值。如果最优解被多次返回，那么不太可能存在比这个
@@ -542,8 +542,8 @@ initialid=None)\|
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 系统聚类的结果是用树的结构展示所有节点，每个节点包含两个元素或者子节点。通常，我们既关心那个元素
-或者哪个子节点互相融合，也关心二者之间的距离（或者相似度）。我们可以调用 ``Bio.Cluster``中的
-``Node``类，来存储聚类树的一个节点。 ``Node``的实例包含以下三个属性：
+或者哪个子节点互相融合，也关心二者之间的距离（或者相似度）。我们可以调用 ``Bio.Cluster`` 中的
+``Node`` 类，来存储聚类树的一个节点。 ``Node`` 的实例包含以下三个属性：
 
 -  ``left``
 -  ``right``
@@ -821,8 +821,8 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
     格子的 *x* 和 *y* 的坐标。
 -  ``celldata``:
     当以行进行聚类时，生成的矩阵维度为 (``nxgrid``, ``nygrid``, number of columns)；
-   当以列进行聚类时，生成的矩阵维度为 (``nxgrid``, ``nygrid``, number of  rows)。
-   在这个矩阵里， ``[ix][iy]`` 表示着一个一维向量，其中用于计算该类中心的这基因的表达谱数据.
+    当以列进行聚类时，生成的矩阵维度为 (``nxgrid``, ``nygrid``, number of  rows)。
+    在这个矩阵里， ``[ix][iy]`` 表示着一个一维向量，其中用于计算该类中心的这基因的表达谱数据.
 
 15.6  主成分分析
 ----------------------------------
@@ -916,7 +916,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     包含基因表达数据的矩阵，每行为基因，每列为芯片。
 -  ``mask``
     缺失值的整型数组。如果 ``mask[i,j]==0``, 则 ``data[i,j]`` 是缺失的. 如果 ``mask==None``,
-   那么没有数据缺失。
+    那么没有数据缺失。
 -  ``geneid``
     包含每个基因的独特说明的列表 (例如 ORF 数目).
 -  ``genename``
@@ -924,7 +924,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     那么 ``genename`` 被设为 ``None``.
 -  ``gweight``
     计算表达谱数据中，基因间的距离使用的权重。如果文件中不含该信息，则
-   ``gweight`` 为 ``None``.
+    ``gweight`` 为 ``None``.
 -  ``gorder``
     期望输出文件中基因的排列的顺序。如果文件中不含该信息，则
     ``gorder`` 为``None``.
@@ -977,7 +977,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``transpose`` (默认: ``0``)
     选择计算``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算中心。
 
-函数返回元组 ``cdata, cmask``; 见 section
+函数返回元组 ``cdata, cmask`` ; 见 section
 `15.2 <#subsec:clustercentroids>`__ for a description.
 
 计算两类间的距离
@@ -995,7 +995,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     第一个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
     可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``index2`` (默认: ``0``)
-   第二个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
+    第二个类别所包含的元素的列表。如果一个类别只包含一个元素 *i* 
     可以为一个列表 ``[i]``, 或者整数 ``i``.
 -  ``method`` (默认: ``'a'``)
     选择计算类别间距离的方法:
@@ -1008,9 +1008,9 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
     选择使用的距离函数 (见
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
+    选择 使用 ``data`` 的行 ( ``transpose==0`` ), 或者列 ( ``transpose==1`` )计算距离。
 
 进行系统聚类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1024,7 +1024,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 包含以下参数:
 
 -  ``transpose`` (默认: ``0``)
-    选择使用行 (``transpose==0``) 或者列 (``transpose==1``) 用于聚类
+    选择使用行 ( ``transpose==0`` ) 或者列 ( ``transpose==1`` ) 用于聚类
 -  ``method`` (默认: ``'m'``)
     选择合适的节点距离计算方法:
 
@@ -1036,8 +1036,8 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
     选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
 -  ``transpose``
-    选择使用基因或者芯片进行聚类，如果是 ``transpose==0``,则使用基因 (行) 进行聚类，如果使用
-   ``transpose==1``, 芯片 (列) 用于聚类.
+    选择使用基因或者芯片进行聚类，如果是 ``transpose==0`` , 则使用基因 (行) 进行聚类，如果使用
+    ``transpose==1``, 芯片 (列) 用于聚类.
 
 函数返回 ``Tree`` 对象。对象包含 (元素数目 − 1） 节点, 如果使用行进行聚类时，元素数目为总行数；
 当使用列进行聚类时，元素数目为总列数。每个节点描述着一对节点连接，然而节点的性质 ``left`` 和
@@ -1058,7 +1058,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``nclusters`` (默认: ``2``)
     类的数目 *k*.
 -  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
+    选择 使用 ``data`` 的行 ( ``transpose==0`` ), 或者列 ( ``transpose==1`` )计算距离。
 -  ``npass`` (默认: ``1``)
     *k*-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
     如果指定了 ``initialid`` , ``npass`` 的值会忽略，并且聚类算法只会运行一次。
@@ -1069,11 +1069,11 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
    -  ``method=='m'``: 中间值 (*k*-medians clustering).
 
    当指定 ``method`` 使用其他值时，算法会采用算数平均值。
--  ``dist`` (默认: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'`` , Euclidean distance)
     选择使用的距离函数 (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
-这个函数返回的是一个元组 ``(clusterid, error, nfound)``, 其中 ``clusterid`` 是一个每行或则列对应的类的编号。
+这个函数返回的是一个元组 ``(clusterid, error, nfound)`` , 其中 ``clusterid`` 是一个每行或则列对应的类的编号。
 ``error`` 是最优解的类内的距离和， ``nfound`` 是最优解被发现的次数。
 
 计算Self-Organizing Map
@@ -1087,25 +1087,25 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 包含以下参数:
 
--  ``transpose`` (默认: ``0``)
-    选择 使用 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离.
+-  ``transpose`` (默认: ``0`` )
+    选择 使用 ``data`` 的行 ( ``transpose==0`` ), 或者列 ( ``transpose==1`` )计算距离.
 -  ``nxgrid, nygrid`` (默认: ``2, 1``)
     当Self-Organizing Map计算时，在矩形网格里的横向和纵向格子数目
 -  ``inittau`` (默认: ``0.02``)
     用于SOM算法的参数 τ 的初始值。默认的 ``inittau`` 是0.02，同Michael Eisen’s Cluster/TreeView 程序中
     使用的参数一致。
--  ``niter`` (默认: ``1``)
+-  ``niter`` (默认: ``1`` )
     迭代运行的次数。
--  ``dist`` (默认: ``'e'``, Euclidean distance)
+-  ``dist`` (默认: ``'e'`` , Euclidean distance)
     选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
 
-函数返回一个元组 ``(clusterid, celldata)``:
+函数返回一个元组 ``(clusterid, celldata)`` :
 
 -  ``clusterid``:
     一个二维数组，行数同待聚类的元素数目相同。每行的内容对应着该元素在矩形SOM方格内 *x* 和 *y* 的坐标。
 -  ``celldata``:
-    格式为一个矩阵，如果是对行聚类，内容为 (``nxgrid``, ``nygrid``, 列数)，如果是对列聚类，
-    那么内容为 (``nxgrid``, ``nygrid``, 行数) 。矩阵中，坐标 ``[ix][iy]`` 对应的是该坐标的网格里的
+    格式为一个矩阵，如果是对行聚类，内容为 ( ``nxgrid`` , ``nygrid`` , 列数)，如果是对列聚类，
+    那么内容为 ( ``nxgrid`` , ``nygrid`` , 行数) 。矩阵中，坐标 ``[ix][iy]`` 对应的是该坐标的网格里的
     基因表达数据的聚类中心的一维向量。
 
 保存聚类结果
@@ -1123,14 +1123,14 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     字符串 ``jobname`` 作为保存的文件名。
 -  ``geneclusters``
     这个参数指的是基因（以行聚类）的结果。在 *k*-means 聚类中，这个参数是一个一维的数组，包含着
-    每个基因对应的类别，可以通过 ``kcluster`` 得到。在系统聚类中， ``geneclusters`` 是一个``Tree`` 对象。
+    每个基因对应的类别，可以通过 ``kcluster`` 得到。在系统聚类中， ``geneclusters`` 是一个 ``Tree`` 对象。
 -  ``expclusters``
     这个参数指的是实验条件（以列聚类）的结果。在 *k*-means 聚类中，这个参数是一个一维的数组，包含着
     每个实验条件对应的类别，可以通过 ``kcluster`` 得到。在系统聚类中， ``geneclusters`` 是一个``Tree`` 对象。
 
 这个方法会生成文本文件 ``jobname.cdt``, ``jobname.gtr``, ``jobname.atr``, ``jobname*.kgg``, 
-和/或 ``jobname*.kag``。 这些文件可以用于后续分析。如果 ``geneclusters`` 和 ``expclusters`` 
-都是 ``None``, 那这个方法只会生成 ``jobname.cdt``; 这个文件可以被读取，生成一个新的 ``Record`` 对象.
+和/或 ``jobname*.kag`` 。 这些文件可以用于后续分析。如果 ``geneclusters`` 和 ``expclusters`` 
+都是 ``None`` , 那这个方法只会生成 ``jobname.cdt`` ; 这个文件可以被读取，生成一个新的 ``Record`` 对象.
 
 15.8  示例
 -------------------------
@@ -1152,7 +1152,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     >>> exptree = record.treecluster(dist='u', transpose=1)
     >>> record.save("cyano_result", genetree, exptree)
 
-这个命令会生成 ``cyano_result.cdt``, ``cyano_result.gtr``, 和 ``cyano_result.atr``等文件。
+这个命令会生成 ``cyano_result.cdt`` , ``cyano_result.gtr`` , 和 ``cyano_result.atr`` 等文件。
 
 同样的，也可以保存一个 *k*-means 聚类的结果:
 
@@ -1166,14 +1166,14 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
     >>> (expclusters, error, ifound) = record.kcluster(nclusters=2, npass=100, transpose=1)
     >>> record.save("cyano_result", geneclusters, expclusters)
 
-上述代码将生成文件 ``cyano_result_K_G2_A2.cdt``,``cyano_result_K_G2.kgg``, 和 ``cyano_result_K_A2.kag``.
+上述代码将生成文件 ``cyano_result_K_G2_A2.cdt`` , ``cyano_result_K_G2.kgg`` , 和 ``cyano_result_K_A2.kag`` 。
 
 15.9  附加函数
 -------------------------
 
-``median(data)`` 返回一维数组 ``data``的中值
+``median(data)`` 返回一维数组 ``data`` 的中值
 
-``mean(data)`` 返回一维数组``data``的均值。
+``mean(data)`` 返回一维数组 ``data`` 的均值。
 
 ``version()`` 返回使用的C聚类库的版本号。
 

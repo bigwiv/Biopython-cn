@@ -322,18 +322,18 @@ where the following arguments are defined:
     Array containing the data for the items.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``weight`` (default: ``None``)
     The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    ``weight==None``, then equal weights are assumed.
 -  ``transpose`` (default: ``0``)
     Determines if the distances between the rows of ``data`` are to be
-   calculated (``transpose==0``), or between the columns of ``data``
-   (``transpose==1``).
+    calculated (``transpose==0``), or between the columns of ``data``
+    (``transpose==1``).
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 To save memory, the distance matrix is returned as a list of 1D arrays.
 The number of columns in each row is equal to the row number. Hence, the
@@ -380,19 +380,19 @@ where the following arguments are defined:
     Array containing the data for the items.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``clusterid`` (default: ``None``)
     Vector of integers showing to which cluster each item belongs. If
-   ``clusterid`` is ``None``, then all items are assumed to belong to
-   the same cluster.
+    ``clusterid`` is ``None``, then all items are assumed to belong to
+    the same cluster.
 -  ``method`` (default: ``'a'``)
     Specifies whether the arithmetic mean (``method=='a'``) or the
-   median (``method=='m'``) is used to calculate the cluster center.
+    median (``method=='m'``) is used to calculate the cluster center.
 -  ``transpose`` (default: ``0``)
     Determines if the centroids of the rows of ``data`` are to be
-   calculated (``transpose==0``), or the centroids of the columns of
-   ``data`` (``transpose==1``).
+    calculated (``transpose==0``), or the centroids of the columns of
+    ``data`` (``transpose==1``).
 
 This function returns the tuple ``(cdata, cmask)``. The centroid data
 are stored in the 2D Numerical Python array ``cdata``, with missing data
@@ -430,19 +430,19 @@ where the following arguments are defined:
     Array containing the data for the items.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``weight`` (default: ``None``)
     The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    ``weight==None``, then equal weights are assumed.
 -  ``index1`` (default: ``0``)
     A list containing the indices of the items belonging to the first
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+    cluster. A cluster containing only one item *i* can be represented
+    either as a list ``[i]``, or as an integer ``i``.
 -  ``index2`` (default: ``0``)
     A list containing the indices of the items belonging to the second
-   cluster. A cluster containing only one items *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+    cluster. A cluster containing only one items *i* can be represented
+    either as a list ``[i]``, or as an integer ``i``.
 -  ``method`` (default: ``'a'``)
     Specifies how the distance between clusters is defined:
 
@@ -458,11 +458,11 @@ where the following arguments are defined:
 
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (default: ``0``)
     If ``transpose==0``, calculate the distance between the rows of
-   ``data``. If ``transpose==1``, calculate the distance between the
-   columns of ``data``.
+    ``data``. If ``transpose==1``, calculate the distance between the
+    columns of ``data``.
 
 15.3  Partitioning algorithms
 -----------------------------
@@ -566,20 +566,20 @@ where the following arguments are defined:
     The number of clusters *k*.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``weight`` (default: ``None``)
     The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    ``weight==None``, then equal weights are assumed.
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    (``transpose`` is ``1``) are to be clustered.
 -  ``npass`` (default: ``1``)
     The number of times the *k*-means/-medians clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored and the
-   clustering algorithm is run only once, as it behaves
-   deterministically in that case.
+    performed, each time with a different (random) initial condition. If
+    ``initialid`` is given, the value of ``npass`` is ignored and the
+    clustering algorithm is run only once, as it behaves
+    deterministically in that case.
 -  ``method`` (default: ``a``)
     describes how the center of a cluster is found:
 
@@ -589,18 +589,18 @@ where the following arguments are defined:
    For other values of ``method``, the arithmetic mean is used.
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__). Whereas all eight distance
-   measures are accepted by ``kcluster``, from a theoretical viewpoint
-   it is best to use the Euclidean distance for the *k*-means algorithm,
-   and the city-block distance for *k*-medians.
+    `15.1 <#sec:distancefunctions>`__). Whereas all eight distance
+    measures are accepted by ``kcluster``, from a theoretical viewpoint
+    it is best to use the Euclidean distance for the *k*-means algorithm,
+    and the city-block distance for *k*-medians.
 -  ``initialid`` (default: ``None``)
     Specifies the initial clustering to be used for the EM algorithm. If
-   ``initialid==None``, then a different random initial clustering is
-   used for each of the ``npass`` runs of the EM algorithm. If
-   ``initialid`` is not ``None``, then it should be equal to a 1D array
-   containing the cluster number (between ``0`` and ``nclusters-1``) for
-   each item. Each cluster should contain at least one item. With the
-   initial clustering specified, the EM algorithm is deterministic.
+    ``initialid==None``, then a different random initial clustering is
+    used for each of the ``npass`` runs of the EM algorithm. If
+    ``initialid`` is not ``None``, then it should be equal to a 1D array
+    containing the cluster number (between ``0`` and ``nclusters-1``) for
+    each item. Each cluster should contain at least one item. With the
+    initial clustering specified, the EM algorithm is deterministic.
 
 This function returns a tuple ``(clusterid, error, nfound)``, where
 ``clusterid`` is an integer array containing the number of the cluster
@@ -625,7 +625,7 @@ initialid=None)\|
 
 -  ``distance`` (required)
     The matrix containing the distances between the items; this matrix
-   can be specified in three ways:
+    can be specified in three ways:
 
    -  as a 2D Numerical Python array (in which only the left-lower part
       of the array will be accessed):
@@ -658,17 +658,17 @@ initialid=None)\|
     The number of clusters *k*.
 -  ``npass`` (default: ``1``)
     The number of times the *k*-medoids clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored, as the
-   clustering algorithm behaves deterministically in that case.
+    performed, each time with a different (random) initial condition. If
+    ``initialid`` is given, the value of ``npass`` is ignored, as the
+    clustering algorithm behaves deterministically in that case.
 -  ``initialid`` (default: ``None``)
     Specifies the initial clustering to be used for the EM algorithm. If
-   ``initialid==None``, then a different random initial clustering is
-   used for each of the ``npass`` runs of the EM algorithm. If
-   ``initialid`` is not ``None``, then it should be equal to a 1D array
-   containing the cluster number (between ``0`` and ``nclusters-1``) for
-   each item. Each cluster should contain at least one item. With the
-   initial clustering specified, the EM algorithm is deterministic.
+    ``initialid==None``, then a different random initial clustering is
+    used for each of the ``npass`` runs of the EM algorithm. If
+    ``initialid`` is not ``None``, then it should be equal to a 1D array
+    containing the cluster number (between ``0`` and ``nclusters-1``) for
+    each item. Each cluster should contain at least one item. With the
+    initial clustering specified, the EM algorithm is deterministic.
 
 This function returns a tuple ``(clusterid, error, nfound)``, where
 ``clusterid`` is an array containing the number of the cluster to which
@@ -901,14 +901,14 @@ where the following arguments are defined:
     Array containing the data for the items.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``weight`` (default: ``None``)
     The weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    ``weight==None``, then equal weights are assumed.
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose==0``) or columns (``transpose==1``)
-   are to be clustered.
+    are to be clustered.
 -  ``method`` (default: ``'m'``)
     defines the linkage method to be used:
 
@@ -920,7 +920,7 @@ where the following arguments are defined:
 
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 To apply hierarchical clustering on a precalculated distance matrix,
 specify the ``distancematrix`` argument when calling ``treecluster``
@@ -1067,41 +1067,41 @@ where the following arguments are defined:
     Array containing the data for the items.
 -  ``mask`` (default: ``None``)
     Array of integers showing which data are missing. If
-   ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
-   then all data are present.
+    ``mask[i,j]==0``, then ``data[i,j]`` is missing. If ``mask==None``,
+    then all data are present.
 -  ``weight`` (default: ``None``)
     contains the weights to be used when calculating distances. If
-   ``weight==None``, then equal weights are assumed.
+    ``weight==None``, then equal weights are assumed.
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    (``transpose`` is ``1``) are to be clustered.
 -  ``nxgrid, nygrid`` (default: ``2, 1``)
     The number of cells horizontally and vertically in the rectangular
-   grid on which the Self-Organizing Map is calculated.
+    grid on which the Self-Organizing Map is calculated.
 -  ``inittau`` (default: ``0.02``)
     The initial value for the parameter τ that is used in the SOM
-   algorithm. The default value for ``inittau`` is 0.02, which was used
-   in Michael Eisen’s Cluster/TreeView program.
+    algorithm. The default value for ``inittau`` is 0.02, which was used
+    in Michael Eisen’s Cluster/TreeView program.
 -  ``niter`` (default: ``1``)
     The number of iterations to be performed.
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 This function returns the tuple ``(clusterid, celldata)``:
 
 -  ``clusterid``:
     An array with two columns, where the number of rows is equal to the
-   number of items that were clustered. Each row contains the *x* and
-   *y* coordinates of the cell in the rectangular SOM grid to which the
-   item was assigned.
+    number of items that were clustered. Each row contains the *x* and
+    *y* coordinates of the cell in the rectangular SOM grid to which the
+    item was assigned.
 -  ``celldata``:
     An array with dimensions (``nxgrid``, ``nygrid``, number of columns)
-   if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
-   rows) if columns are being clustered. Each element ``[ix][iy]`` of
-   this array is a 1D vector containing the gene expression data for the
-   centroid of the cluster in the grid cell with coordinates
-   ``[ix][iy]``.
+    if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
+    rows) if columns are being clustered. Each element ``[ix][iy]`` of
+    this array is a 1D vector containing the gene expression data for the
+    centroid of the cluster in the grid cell with coordinates
+    ``[ix][iy]``.
 
 15.6  Principal Component Analysis
 ----------------------------------
@@ -1229,36 +1229,36 @@ A ``Record`` object has the following attributes:
 
 -  ``data``
     The data array containing the gene expression data. Genes are stored
-   row-wise, while microarrays are stored column-wise.
+    row-wise, while microarrays are stored column-wise.
 -  ``mask``
     This array shows which elements in the ``data`` array, if any, are
-   missing. If ``mask[i,j]==0``, then ``data[i,j]`` is missing. If no
-   data were found to be missing, ``mask`` is set to ``None``.
+    missing. If ``mask[i,j]==0``, then ``data[i,j]`` is missing. If no
+    data were found to be missing, ``mask`` is set to ``None``.
 -  ``geneid``
     This is a list containing a unique description for each gene (i.e.,
-   ORF numbers).
+    ORF numbers).
 -  ``genename``
     This is a list containing a description for each gene (i.e., gene
-   name). If not present in the data file, ``genename`` is set to
-   ``None``.
+    name). If not present in the data file, ``genename`` is set to
+    ``None``.
 -  ``gweight``
     The weights that are to be used to calculate the distance in
-   expression profile between genes. If not present in the data file,
-   ``gweight`` is set to ``None``.
+    expression profile between genes. If not present in the data file,
+    ``gweight`` is set to ``None``.
 -  ``gorder``
     The preferred order in which genes should be stored in an output
-   file. If not present in the data file, ``gorder`` is set to ``None``.
+    file. If not present in the data file, ``gorder`` is set to ``None``.
 -  ``expid``
     This is a list containing a description of each microarray, e.g.
-   experimental condition.
+    experimental condition.
 -  ``eweight``
     The weights that are to be used to calculate the distance in
-   expression profile between microarrays. If not present in the data
-   file, ``eweight`` is set to ``None``.
+    expression profile between microarrays. If not present in the data
+    file, ``eweight`` is set to ``None``.
 -  ``eorder``
     The preferred order in which microarrays should be stored in an
-   output file. If not present in the data file, ``eorder`` is set to
-   ``None``.
+    output file. If not present in the data file, ``eorder`` is set to
+    ``None``.
 -  ``uniqid``
     The string that was used instead of UNIQID in the data file.
 
@@ -1280,11 +1280,11 @@ where the following arguments are defined:
 
 -  ``transpose`` (default: ``0``)
     Determines if the distances between the rows of ``data`` are to be
-   calculated (``transpose==0``), or between the columns of ``data``
-   (``transpose==1``).
+    calculated (``transpose==0``), or between the columns of ``data``
+    (``transpose==1``).
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 This function returns the distance matrix as a list of rows, where the
 number of columns of each row is equal to the row number (see section
@@ -1302,15 +1302,15 @@ use
 
 -  ``clusterid`` (default: ``None``)
     Vector of integers showing to which cluster each item belongs. If
-   ``clusterid`` is not given, then all items are assumed to belong to
-   the same cluster.
+    ``clusterid`` is not given, then all items are assumed to belong to
+    the same cluster.
 -  ``method`` (default: ``'a'``)
     Specifies whether the arithmetic mean (``method=='a'``) or the
-   median (``method=='m'``) is used to calculate the cluster center.
+    median (``method=='m'``) is used to calculate the cluster center.
 -  ``transpose`` (default: ``0``)
     Determines if the centroids of the rows of ``data`` are to be
-   calculated (``transpose==0``), or the centroids of the columns of
-   ``data`` (``transpose==1``).
+    calculated (``transpose==0``), or the centroids of the columns of
+    ``data`` (``transpose==1``).
 
 This function returns the tuple ``cdata, cmask``; see section
 `15.2 <#subsec:clustercentroids>`__ for a description.
@@ -1329,12 +1329,12 @@ where the following arguments are defined:
 
 -  ``index1`` (default: ``0``)
     A list containing the indices of the items belonging to the first
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+    cluster. A cluster containing only one item *i* can be represented
+    either as a list ``[i]``, or as an integer ``i``.
 -  ``index2`` (default: ``0``)
     A list containing the indices of the items belonging to the second
-   cluster. A cluster containing only one item *i* can be represented
-   either as a list ``[i]``, or as an integer ``i``.
+    cluster. A cluster containing only one item *i* can be represented
+    either as a list ``[i]``, or as an integer ``i``.
 -  ``method`` (default: ``'a'``)
     Specifies how the distance between clusters is defined:
 
@@ -1350,11 +1350,11 @@ where the following arguments are defined:
 
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose`` (default: ``0``)
     If ``transpose==0``, calculate the distance between the rows of
-   ``data``. If ``transpose==1``, calculate the distance between the
-   columns of ``data``.
+    ``data``. If ``transpose==1``, calculate the distance between the
+    columns of ``data``.
 
 Performing hierarchical clustering
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1370,7 +1370,7 @@ where the following arguments are defined:
 
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose==0``) or columns (``transpose==1``)
-   are to be clustered.
+    are to be clustered.
 -  ``method`` (default: ``'m'``)
     defines the linkage method to be used:
 
@@ -1382,11 +1382,11 @@ where the following arguments are defined:
 
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 -  ``transpose``
     Determines if genes or microarrays are being clustered. If
-   ``transpose==0``, genes (rows) are being clustered. If
-   ``transpose==1``, microarrays (columns) are clustered.
+    ``transpose==0``, genes (rows) are being clustered. If
+    ``transpose==1``, microarrays (columns) are clustered.
 
 This function returns a ``Tree`` object. This object contains (number of
 items − 1) nodes, where the number of items is the number of rows if
@@ -1413,13 +1413,13 @@ where the following arguments are defined:
     The number of clusters *k*.
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    (``transpose`` is ``1``) are to be clustered.
 -  ``npass`` (default: ``1``)
     The number of times the *k*-means/-medians clustering algorithm is
-   performed, each time with a different (random) initial condition. If
-   ``initialid`` is given, the value of ``npass`` is ignored and the
-   clustering algorithm is run only once, as it behaves
-   deterministically in that case.
+    performed, each time with a different (random) initial condition. If
+    ``initialid`` is given, the value of ``npass`` is ignored and the
+    clustering algorithm is run only once, as it behaves
+    deterministically in that case.
 -  ``method`` (default: ``a``)
     describes how the center of a cluster is found:
 
@@ -1429,7 +1429,7 @@ where the following arguments are defined:
    For other values of ``method``, the arithmetic mean is used.
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 This function returns a tuple ``(clusterid, error, nfound)``, where
 ``clusterid`` is an integer array containing the number of the cluster
@@ -1451,34 +1451,34 @@ where the following arguments are defined:
 
 -  ``transpose`` (default: ``0``)
     Determines if rows (``transpose`` is ``0``) or columns
-   (``transpose`` is ``1``) are to be clustered.
+    (``transpose`` is ``1``) are to be clustered.
 -  ``nxgrid, nygrid`` (default: ``2, 1``)
     The number of cells horizontally and vertically in the rectangular
-   grid on which the Self-Organizing Map is calculated.
+    grid on which the Self-Organizing Map is calculated.
 -  ``inittau`` (default: ``0.02``)
     The initial value for the parameter τ that is used in the SOM
-   algorithm. The default value for ``inittau`` is 0.02, which was used
-   in Michael Eisen’s Cluster/TreeView program.
+    algorithm. The default value for ``inittau`` is 0.02, which was used
+    in Michael Eisen’s Cluster/TreeView program.
 -  ``niter`` (default: ``1``)
     The number of iterations to be performed.
 -  ``dist`` (default: ``'e'``, Euclidean distance)
     Defines the distance function to be used (see
-   `15.1 <#sec:distancefunctions>`__).
+    `15.1 <#sec:distancefunctions>`__).
 
 This function returns the tuple ``(clusterid, celldata)``:
 
 -  ``clusterid``:
     An array with two columns, where the number of rows is equal to the
-   number of items that were clustered. Each row contains the *x* and
-   *y* coordinates of the cell in the rectangular SOM grid to which the
-   item was assigned.
+    number of items that were clustered. Each row contains the *x* and
+    *y* coordinates of the cell in the rectangular SOM grid to which the
+    item was assigned.
 -  ``celldata``:
     An array with dimensions (``nxgrid``, ``nygrid``, number of columns)
-   if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
-   rows) if columns are being clustered. Each element ``[ix][iy]`` of
-   this array is a 1D vector containing the gene expression data for the
-   centroid of the cluster in the grid cell with coordinates
-   ``[ix][iy]``.
+    if rows are being clustered, or (``nxgrid``, ``nygrid``, number of
+    rows) if columns are being clustered. Each element ``[ix][iy]`` of
+    this array is a 1D vector containing the gene expression data for the
+    centroid of the cluster in the grid cell with coordinates
+    ``[ix][iy]``.
 
 Saving the clustering result
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1493,20 +1493,20 @@ where the following arguments are defined:
 
 -  ``jobname``
     The string ``jobname`` is used as the base name for names of the
-   files that are to be saved.
+    files that are to be saved.
 -  ``geneclusters``
     This argument describes the gene (row-wise) clustering result. In
-   case of *k*-means clustering, this is a 1D array containing the
-   number of the cluster each gene belongs to. It can be calculated
-   using ``kcluster``. In case of hierarchical clustering,
-   ``geneclusters`` is a ``Tree`` object.
+    case of *k*-means clustering, this is a 1D array containing the
+    number of the cluster each gene belongs to. It can be calculated
+    using ``kcluster``. In case of hierarchical clustering,
+    ``geneclusters`` is a ``Tree`` object.
 -  ``expclusters``
     This argument describes the (column-wise) clustering result for the
-   experimental conditions. In case of *k*-means clustering, this is a
-   1D array containing the number of the cluster each experimental
-   condition belongs to. It can be calculated using ``kcluster``. In
-   case of hierarchical clustering, ``expclusters`` is a ``Tree``
-   object.
+    experimental conditions. In case of *k*-means clustering, this is a
+    1D array containing the number of the cluster each experimental
+    condition belongs to. It can be calculated using ``kcluster``. In
+    case of hierarchical clustering, ``expclusters`` is a ``Tree``
+    object.
 
 This method writes the text file ``jobname.cdt``, ``jobname.gtr``,
 ``jobname.atr``, ``jobname*.kgg``, and/or ``jobname*.kag`` for
