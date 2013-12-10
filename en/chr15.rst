@@ -80,94 +80,9 @@ measure similarity, or conversely, distance:
 The first two are true distance functions that satisfy the triangle
 inequality:
 
-*d*
+.. math::
 
-| ⎛
-|  ⎜
-|  ⎝
-
-+-------+
-| *u*   |
-+-------+
-+-------+
-
-,
-
-+-------+
-| *v*   |
-+-------+
-+-------+
-
-| ⎞
-|  ⎟
-|  ⎠
-
-≤ \ *d*
-
-| ⎛
-|  ⎜
-|  ⎝
-
-+-------+
-| *u*   |
-+-------+
-+-------+
-
-,
-
-+-------+
-| *w*   |
-+-------+
-+-------+
-
-| ⎞
-|  ⎟
-|  ⎠
-
-+ \ *d*
-
-| ⎛
-|  ⎜
-|  ⎝
-
-+-------+
-| *w*   |
-+-------+
-+-------+
-
-,
-
-+-------+
-| *v*   |
-+-------+
-+-------+
-
-| ⎞
-|  ⎟
-|  ⎠
-
-for all  
-
-+-------+
-| *u*   |
-+-------+
-+-------+
-
-, 
-
-+-------+
-| *v*   |
-+-------+
-+-------+
-
-, 
-
-+-------+
-| *w*   |
-+-------+
-+-------+
-
-,
+  d\left(\underline{u},\underline{v}\right) \leq d\left(\underline{u},\underline{w}\right) + d\left(\underline{w},\underline{v}\right) \textrm{ for all } \underline{u}, \underline{v}, \underline{w},
 
 and are therefore refered to as *metrics*. In everyday language, this
 means that the shortest distance between two points is a straight line.
@@ -178,56 +93,13 @@ correlation *r* by *d*\ =1−\ *r*. Note that these distance functions are
 *semi-metrics* that do not satisfy the triangle inequality. For example,
 for
 
-+-------+
-| *u*   |
-+-------+
-+-------+
+.. math::
+  
+  \underline{u}=\left(1,0,-1\right);
 
-=
+  \underline{v}=\left(1,1,0\right);
 
-| ⎛
-|  ⎝
-
-1,0,−1
-
-| ⎞
-|  ⎠
-
-;
-
-+-------+
-| *v*   |
-+-------+
-+-------+
-
-=
-
-| ⎛
-|  ⎝
-
-1,1,0
-
-| ⎞
-|  ⎠
-
-;
-
-+-------+
-| *w*   |
-+-------+
-+-------+
-
-=
-
-| ⎛
-|  ⎝
-
-0,1,1
-
-| ⎞
-|  ⎠
-
-;
+  \underline{w}=\left(0,1,1\right);
 
 we find a Pearson distance *d*\ (*u*,\ *w*) = 1.8660, while
 *d*\ (*u*,\ *v*)+\ *d*\ (*v*,\ *w*) = 1.6340.
@@ -237,36 +109,9 @@ Euclidean distance
 
 In ``Bio.Cluster``, we define the Euclidean distance as
 
-*d* = 
-
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
- 
-
-| ⎛
-|  ⎝
-
-*x*\ :sub:`*i*`\ −\ *y*\ :sub:`*i*`
-
-| ⎞
-|  ⎠
-
-:sup:`2`.
+.. math::
+  
+  d = {\frac{1} {n}} \sum_{i=1}^{n} \left(x_i-y_i\right)^{2}.
 
 Only those terms are included in the summation for which both
 *x*\ :sub:`*i*` and *y*\ :sub:`*i*` are present, and the denominator *n*
@@ -286,36 +131,9 @@ gene expression data tend to have missing values, in ``Bio.Cluster`` we
 define the city-block distance as the sum of distances divided by the
 number of dimensions:
 
-*d* = 
-
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
- 
-
-| ⎪
-|  ⎪
-
-*x*\ :sub:`*i*`\ −\ *y*\ :sub:`*i*`
-
-| ⎪
-|  ⎪
-
-.
+.. math::
+  
+  d = {\frac{1} {n}} \sum_{i=1}^n \left|x_i-y_i\right|.
 
 This is equal to the distance you would have to walk between two points
 in a city, where you have to walk along city blocks. As for the
@@ -328,66 +146,9 @@ The Pearson correlation coefficient
 
 The Pearson correlation coefficient is defined as
 
-*r* = 
+.. math::
 
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
- 
-
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+----------------------+
-| *x*\ :sub:`*i*` −x   |
-+----------------------+
-+----------------------+
-| σ\ :sub:`*x*`        |
-+----------------------+
-
- 
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+----------------------+
-| *y*\ :sub:`*i*` −ȳ   |
-+----------------------+
-+----------------------+
-| σ\ :sub:`*y*`        |
-+----------------------+
-
- 
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-,
+  r = \frac{1}{n} \sum_{i=1}^n \left( \frac{x_i -\bar{x}}{\sigma_x} \right) \left(\frac{y_i -\bar{y}}{\sigma_y} \right),
 
 in which x, ȳ are the sample mean of *x* and *y* respectively, and
 σ\ :sub:`*x*`, σ\ :sub:`*y*` are the sample standard deviation of *x*
@@ -401,9 +162,9 @@ coefficient is equal to zero, there is no correlation between *x* and
 
 The *Pearson distance* is then defined as
 
-+----------------------------+
-| *d*\ :sub:`P` ≡ 1 − *r*.   |
-+----------------------------+
+.. math::
+  
+  d_{\textrm{P}} \equiv 1 - r.
 
 As the Pearson correlation coefficient lies between -1 and 1, the
 Pearson distance lies between 0 and 2.
@@ -419,10 +180,9 @@ correlation between *x* and *y*.
 
 The corresponding distance is defined as
 
-+------------------------+------+-------+------+-----+
-| *d*\ :sub:`A` ≡ 1 −    | ⎪    | *r*   | ⎪    | ,   |
-|                        |  ⎪   |       |  ⎪   |     |
-+------------------------+------+-------+------+-----+
+.. math::
+
+  d_{\textrm A} \equiv 1 - \left|r\right|,
 
 where *r* is the Pearson correlation coefficient. As the absolute value
 of the Pearson correlation coefficient lies between 0 and 1, the
@@ -440,132 +200,18 @@ In some cases, it may be preferable to use the *uncentered correlation*
 instead of the regular Pearson correlation coefficient. The uncentered
 correlation is defined as
 
-*r*\ :sub:`U` = 
+.. math::
 
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
- 
-
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+-----------------------------+
-| *x*\ :sub:`*i*`             |
-+-----------------------------+
-+-----------------------------+
-| σ\ :sub:`*x*`\ :sup:`(0)`   |
-+-----------------------------+
-
- 
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-+-----------------------------+
-| *y*\ :sub:`*i*`             |
-+-----------------------------+
-+-----------------------------+
-| σ\ :sub:`*y*`\ :sup:`(0)`   |
-+-----------------------------+
-
- 
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-,
+  r_{\textrm U} = \frac{1}{n} \sum_{i=1}^{n} \left(\frac{x_i}{\sigma_x^{(0)}} \right) \left(\frac{y_i}{\sigma_y^{(0)}} \right),
 
 where
 
-     
+.. math::     
 
-σ\ :sub:`*x*`\ :sup:`(0)`
-
- =
-
- 
-
-√
-
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
-*x*\ :sub:`*i*`\ :sup:`2`
-
-;  
-
- 
-
-σ\ :sub:`*y*`\ :sup:`(0)`
-
- =
-
- 
-
-√
-
-+-------+
-| 1     |
-+-------+
-+-------+
-| *n*   |
-+-------+
-
- 
-
-+-----------+
-| *n*       |
-+-----------+
-| ∑         |
-+-----------+
-| *i*\ =1   |
-+-----------+
-
-*y*\ :sub:`*i*`\ :sup:`2`
-
-.  
-
- 
+  \begin{eqnarray}
+  \sigma_x^{(0)} & = & \sqrt{{\frac{1}{n}} \sum_{i=1}^{n}x_i^2}; \nonumber \\
+  \sigma_y^{(0)} & = & \sqrt{{\frac{1}{n}} \sum_{i=1}^{n}y_i^2}. \nonumber 
+  \end{eqnarray}
 
 This is the same expression as for the regular Pearson correlation
 coefficient, except that the sample means x, ȳ are set equal to zero.
@@ -578,9 +224,9 @@ manipulation did not affect the gene expression.
 The distance corresponding to the uncentered correlation coefficient is
 defined as
 
-+--------------------------------------+
-| *d*\ :sub:`U` ≡ 1 − *r*\ :sub:`U`,   |
-+--------------------------------------+
+.. math::
+  
+  d_{\mbox{U}} \equiv 1 - r_{\mbox{U}},
 
 where *r*\ :sub:`U` is the uncentered correlation. As the uncentered
 correlation coefficient lies between -1 and 1, the corresponding
@@ -596,10 +242,9 @@ Absolute uncentered correlation
 As for the regular Pearson correlation, we can define a distance measure
 using the absolute value of the uncentered correlation:
 
-+-------------------------+------+-----------------+------+-----+
-| *d*\ :sub:`AU` ≡ 1 −    | ⎪    | *r*\ :sub:`U`   | ⎪    | ,   |
-|                         |  ⎪   |                 |  ⎪   |     |
-+-------------------------+------+-----------------+------+-----+
+.. math::
+
+  d_{\mbox{AU}} \equiv 1 - \left|r_{\mbox{U}}\right|,
 
 where *r*\ :sub:`U` is the uncentered correlation coefficient. As the
 absolute value of the uncentered correlation coefficient lies between 0
@@ -625,9 +270,9 @@ instead of the data vectors.
 As in the case of the Pearson correlation, we can define a distance
 measure corresponding to the Spearman rank correlation as
 
-+--------------------------------------+
-| *d*\ :sub:`S` ≡ 1 − *r*\ :sub:`S`,   |
-+--------------------------------------+
+.. math::
+
+  d_{\mbox{S}} \equiv 1 - r_{\mbox{S}},
 
 where *r*\ :sub:`S` is the Spearman rank correlation.
 
@@ -641,9 +286,9 @@ themselves only the relative ranks are used to calculate τ (see Snedecor
 
 We can define a distance measure corresponding to Kendall’s τ as
 
-+--------------------------+
-| *d*\ :sub:`K` ≡ 1 − τ.   |
-+--------------------------+
+.. math::
+
+  d_{\mbox{K}} \equiv 1 - \tau.
 
 As Kendall’s τ is always between -1 and 1, the corresponding distance
 will be between 0 and 2.
@@ -703,29 +348,16 @@ first row has zero elements. An example of the return value is
 
 This corresponds to the distance matrix
 
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎜
-|  ⎝
+.. math::
 
-+-----+-----+-----+-------+
-| 0   | 1   | 7   | 4     |
-+-----+-----+-----+-------+
-| 1   | 0   | 3   | 2     |
-+-----+-----+-----+-------+
-| 7   | 3   | 0   | 6     |
-+-----+-----+-----+-------+
-| 4   | 2   | 6   | 0     |
-+-----+-----+-----+-------+
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎟
-|  ⎠
-
-.
+  \left(
+  \begin{array}{cccc}
+  0 & 1 & 7 & 4  \\
+  1 & 0 & 3 & 2  \\
+  7 & 3 & 0 & 6  \\
+  4 & 2 & 6 & 0
+  \end{array}
+  \right).
 
 15.2  Calculating cluster properties
 ------------------------------------
@@ -1382,64 +1014,16 @@ that cluster, as well as those of the neighboring clusters, are adjusted
 using the data vector of the row under consideration. The adjustment is
 given by
 
-Δ 
+.. math::
 
-+-------+
-| *x*   |
-+-------+
-+-------+
-
-:sub:`cell` = τ · 
-
-| ⎛
-|  ⎜
-|  ⎝
-
-+-------+
-| *x*   |
-+-------+
-+-------+
-
-:sub:`row` − 
-
-+-------+
-| *x*   |
-+-------+
-+-------+
-
-:sub:`cell` 
-
-| ⎞
-|  ⎟
-|  ⎠
-
-.
+  \Delta \underline{x}_{\textrm{cell}} = \tau \cdot \left(\underline{x}_{\textrm{row}} - \underline{x}_{\textrm{cell}} \right).
 
 The parameter τ is a parameter that decreases at each iteration step. We
 have used a simple linear function of the iteration step:
 
-τ = τ\ :sub:`init` · 
+.. math::
 
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-1 − 
-
-+--------+
-| *i*    |
-+--------+
-+--------+
-| *n*    |
-+--------+
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-,
+  \tau = \tau_{\textrm{init}} \cdot \left(1 - {\frac{1}{n}}\right),
 
 τ\ :sub:`init` is the initial value of τ as specified by the user, *i*
 is the number of the current iteration step, and *n* is the total number
@@ -1450,41 +1034,15 @@ changes are made.
 All clusters within a radius *R* are adjusted to the gene under
 consideration. This radius decreases as the calculation progresses as
 
-*R* = *R*\ :sub:`max` · 
+.. math::
 
-| ⎛
-|  ⎜
-|  ⎜
-|  ⎝
-
-1 − 
-
-+--------+
-| *i*    |
-+--------+
-+--------+
-| *n*    |
-+--------+
-
-| ⎞
-|  ⎟
-|  ⎟
-|  ⎠
-
-,
+  R = R_{\textrm{max}} \cdot \left(1 - {\frac{1}{n}}\right),
 
 in which the maximum radius is defined as
 
-*R*\ :sub:`max` = 
+.. math::
 
-√
-
-+---------------------------------------------------------+
-+---------------------------------------------------------+
-| *N*\ :sub:`*x*`\ :sup:`2` + *N*\ :sub:`*y*`\ :sup:`2`   |
-+---------------------------------------------------------+
-
-,
+  R_{\textrm{max}} = \sqrt{N_x^2 + N_y^2},
 
 where (*N*\ :sub:`*x*`, *N*\ :sub:`*y*`) are the dimensions of the
 rectangle defining the topology.
