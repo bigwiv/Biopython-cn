@@ -1,4 +1,4 @@
-Chapter 4  序列注释对象
+第4章  序列注释对象
 ======================================
 
 Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接上章的 ``Seq`` 类，这章主要讲Sequence record 或称之为 ``SeqRecord`` 类, 该类在 ``Bio.SeqRecord`` 模块中有定义。 它（见 ``SeqFeature`` 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 ``Bio.SeqIO`` 过程中 （详见Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）。

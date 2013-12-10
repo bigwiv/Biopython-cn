@@ -1,4 +1,4 @@
-第十章 Swiss-Prot和ExPASy
+第10章 Swiss-Prot和ExPASy
 =================================
 
 10.1  解析Swiss-Prot文件
