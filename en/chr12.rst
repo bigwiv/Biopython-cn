@@ -19,7 +19,7 @@ GenePop
 (`http://genepop.curtin.edu.au/ <http://genepop.curtin.edu.au/>`__)
 is a popular population genetics software package supporting
 Hardy-Weinberg tests, linkage desiquilibrium, population diferentiation,
-basic statistics, *F*\ :sub:`*st*` and migration estimates, among
+basic statistics, :math:`F_{st}` and migration estimates, among
 others. GenePop does not supply sequence based statistics as it doesn’t
 handle sequence data. The GenePop file format is supported by a wide
 range of other population genetic software applications, thus making it
@@ -144,7 +144,7 @@ The input for SIMCOAL2 is a file specifying the desired demography and
 genome, the output is a set of files (typically around 1000) with the
 simulated genomes of a sample of individuals per subpopulation. This set
 of files can be used in many ways, like to compute confidence intervals
-where which certain statistics (e.g., *F*\ :sub:`*st*` or Tajima D) are
+where which certain statistics (e.g., :math:`F_{st}` or Tajima D) are
 expected to lie. Real population genetics datasets statistics can then
 be compared to those confidence intervals.
 
@@ -157,7 +157,7 @@ genomes and to run SIMCOAL2.
 Creating a scenario involves both creating a demography and a chromosome
 structure. In many cases (e.g. when doing Approximate Bayesian
 Computations – ABC) it is important to test many parameter variations
-(e.g. vary the effective population size, *N*\ :sub:`*e*`, between 10,
+(e.g. vary the effective population size, :math:`N_e`, between 10,
 50, 500 and 1000 individuals). The code provided allows for the
 simulation of scenarios with different demographic parameters very
 easily.
@@ -387,14 +387,14 @@ genetics’ applications which arguably have a smaller user base.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FDist is a selection detection application suite based on computing
-(i.e. simulating) a “neutral” confidence interval based on
-*F*\ :sub:`*st*` and heterozygosity. Markers (which can be SNPs,
+(i.e. simulating) a “neutral” confidence interval based on :math:`F_{st}`
+:math:`F_{st}` and heterozygosity. Markers (which can be SNPs,
 microsatellites, AFLPs among others) which lie outside the “neutral”
 interval are to be considered as possible candidates for being under
 selection.
 
 FDist is mainly used when the number of markers is considered enough to
-estimate an average *F*\ :sub:`*st*`, but not enough to either have
+estimate an average :math:`F_{st}`, but not enough to either have
 outliers calculated from the dataset directly or, with even more markers
 for which the relative positions in the genome are known, to use
 approaches based on, e.g., Extended Haplotype Heterozygosity (EHH).
@@ -402,9 +402,9 @@ approaches based on, e.g., Extended Haplotype Heterozygosity (EHH).
 The typical usage pattern for FDist is as follows:
 
 #. Import a dataset from an external format into FDist format.
-#. Compute average *F*\ :sub:`*st*`. This is done by datacal inside
+#. Compute average :math:`F_{st}`. This is done by datacal inside
    FDist.
-#. Simulate “neutral” markers based on the average *F*\ :sub:`*st*` and
+#. Simulate “neutral” markers based on the average :math:`F_{st}` and
    expected number of total populations. This is the core operation,
    done by fdist inside FDist.
 #. Calculate the confidence interval, based on the desired confidence
@@ -449,7 +449,7 @@ marker data itself. Most probably the details of the record are of no
 interest to the user, as the record only purpose is to be passed to
 FDist.
 
-The next step is to calculate the average *F*\ :sub:`*st*` of the
+The next step is to calculate the average :math:`F_{st}` of the
 dataset (along with the sample size):
 
 .. code:: verbatim
@@ -462,8 +462,8 @@ suite, this object will be used further on in order to call other suite
 applications.
 
 On the second line we call the datacal application which computes the
-average *F*\ :sub:`*st*` and the sample size. It is worth noting that
-the *F*\ :sub:`*st*` computed by datacal is a *variation* of Weir and
+average :math:`F_{st}` and the sample size. It is worth noting that
+the :math:`F_{st}` computed by datacal is a *variation* of Weir and
 Cockerham’s θ.
 
 We can now call the main fdist application in order to simulate neutral
@@ -480,7 +480,7 @@ markers.
 **nsamples**
     Number of populations sampled, has to be lower than npops.
 **fst**
-    Average *F*\ :sub:`*st*`.
+    Average :math:`F_{st}`.
 **sample\_size**
     Average number of individuals sampled on each population.
 **mut**
@@ -496,13 +496,13 @@ The confusion in wording between number of samples and sample size stems
 from the original application.
 
 A file named out.dat will be created with the simulated heterozygosities
-and *F*\ :sub:`*st*`\ s, it will have as many lines as the number of
+and :math:`F_{st}`\ s, it will have as many lines as the number of
 simulations requested.
 
-Note that fdist returns the average *F*\ :sub:`*st*` that it was
+Note that fdist returns the average :math:`F_{st}` that it was
 *capable* of simulating, for more details about this issue please read
 below the paragraph on approximating the desired average
-*F*\ :sub:`*st*`.
+:math:`F_{st}`.
 
 The next (optional) step is to calculate the confidence interval:
 
@@ -515,7 +515,7 @@ You can only call cplot after having run fdist.
 This will calculate the confidence intervals (99% in this case) for a
 previous fdist run. A list of quadruples is returned. The first element
 represents the heterozygosity, the second the lower bound of
-*F*\ :sub:`*st*` confidence interval for that heterozygosity, the third
+:math:`F_{st}` confidence interval for that heterozygosity, the third
 the average and the fourth the upper bound. This can be used to trace
 the confidence interval contour. This list is also written to a file,
 out.cpl.
@@ -538,8 +538,8 @@ record) is returned. Each element in the list is a quadruple, the
 fundamental member of each quadruple is the last element (regarding the
 other elements, please refer to the pv documentation – for the sake of
 simplicity we will not discuss them here) which returns the probability
-of the simulated *F*\ :sub:`*st*` being lower than the marker
-*F*\ :sub:`*st*`. Higher values would indicate a stronger candidate for
+of the simulated :math:`F_{st}` being lower than the marker
+:math:`F_{st}`. Higher values would indicate a stronger candidate for
 positive selection, lower values a candidate for balancing selection,
 and intermediate values a possible neutral marker. What is “higher”,
 “lower” or “intermediate” is really a subjective issue, but taking a
@@ -547,35 +547,29 @@ and intermediate values a possible neutral marker. What is “higher”,
 interval, “higher” would be between 0.95 and 1.0, “lower” between 0.0
 and 0.05 and “intermediate” between 0.05 and 0.95.
 
-12.3.1.1  Approximating the desired average *F*\ :sub:`*st*`
+12.3.1.1  Approximating the desired average :math:`F_{st}`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Fdist tries to approximate the desired average *F*\ :sub:`*st*` by doing
+Fdist tries to approximate the desired average :math:`F_{st}` by doing
 a coalescent simulation using migration rates based on the formula
 
-*N*\ :sub:`*m*` = 
+.. math::
 
-+--------------------------+
-| 1 − \ *F*\ :sub:`*st*`   |
-+--------------------------+
-+--------------------------+
-| 4\ *F*\ :sub:`*st*`      |
-+--------------------------+
+  N_{m} = \frac{1 - F_{st}}{4F_{st}}
 
- 
 
 This formula assumes a few premises like an infinite number of
 populations.
 
 In practice, when the number of populations is low, the mutation model
 is stepwise and the sample size increases, fdist will not be able to
-simulate an acceptable approximate average *F*\ :sub:`*st*`.
+simulate an acceptable approximate average :math:`F_{st}`.
 
 To address that, a function is provided to iteratively approach the
 desired value by running several fdists in sequence. This approach is
 computationally more intensive than running a single fdist run, but
 yields good results. The following code runs fdist approximating the
-desired *F*\ :sub:`*st*`:
+desired :math:`F_{st}`:
 
 .. code:: verbatim
 
@@ -590,7 +584,7 @@ should) be safely replaced with run\_fdist\_force\_fst.
 12.3.1.2  Final notes
 ^^^^^^^^^^^^^^^^^^^^^
 
-The process to determine the average *F*\ :sub:`*st*` can be more
+The process to determine the average :math:`F_{st}` can be more
 sophisticated than the one presented here. For more information we refer
 you to the FDist README file. Biopython’s code can be used to implement
 more sophisticated approaches.
@@ -604,7 +598,7 @@ The most desired future developments would be the ones you add yourself
 That being said, already existing fully functional code is currently
 being incorporated in Bio.PopGen, that code covers the applications
 FDist and SimCoal2, the HapMap and UCSC Table Browser databases and some
-simple statistics like *F*\ :sub:`*st*`, or allele counts.
+simple statistics like :math:`F_{st}`, or allele counts.
 
 
 
