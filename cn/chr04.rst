@@ -803,3 +803,4 @@ name、description、annotations和dbxrefs默认不变。
     >>> rc = record.reverse_complement(id="TESTING")
     >>> print rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)
     TESTING 9609 41 0 0
+

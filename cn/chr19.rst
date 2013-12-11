@@ -65,7 +65,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
    像以 ``test_`` 开头、检查代码的某些方面的方法那样的子测试。这
    些测试不应该直接打印任何输出。
 
-目前，大约一半的 Biopython 测试是 ``unittest``风格的测试，另一半
+目前，大约一半的 Biopython 测试是 ``unittest`` 风格的测试，另一半
 是 print-and-compare 测试。
 
 直接运行一个简单的 print-and-compare 测试通常会在屏幕上给出大量
@@ -99,6 +99,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 #. ``output/Biospam`` – [只针对 print-and-compare 测试] 这个文件
    包括运行 ``test_Biospam.py`` 的期望输出。这个文件对于 ``unittest`` 
    风格的测试不是必须的，因为测试脚本 ``test_Biospam.py`` 会自己做验证。
+
 你要自己决定你是想编写一个 print-and-compare 测试脚本还是一个 ``unittest`` 
 风格的测试脚本。重要的是你不能把这两种风格混合在一个
 测试脚本中。尤其是，不要在一个 print-and-compare 测试中使用``unittest`` 
@@ -398,3 +399,4 @@ Python 模块、类和函数支持使用 docstrings 创建文档。 `doctest 框
 .. code:: verbatim
 
     $ python run_tests.py doctest
+

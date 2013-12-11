@@ -9,7 +9,7 @@ Biopython处理这些序列的机制-- ``Seq`` 对象。第 `4 <#chapter:SeqReco
 序列实质上就是由字母构成的字符串，比如 ``AGTACACTGGT`` ，看起来很自然，因为
 这就是序列在生物学文件中的常用代表格式。
 
- ``Seq`` 对象和标准的Python字符串有两个明显的不同。首先，它们使用不同的方法。
+``Seq`` 对象和标准的Python字符串有两个明显的不同。首先，它们使用不同的方法。
 尽管``Seq``对象支持常规字符串的很多方法，但是它的 ``translate()`` 方法在做
 生物学翻译时是不同的。相似的还有其他的生物学相关的方法，比如 ``reverse_complement()`` 。
 其次， ``Seq`` 对象具有一个重要的属性-- ``alphabet`` ，这一对象用于描述由单个
@@ -25,7 +25,7 @@ Biopython处理这些序列的机制-- ``Seq`` 对象。第 `4 <#chapter:SeqReco
 （ `http://www.chem.qmw.ac.uk/iupac/ <http://www.chem.qmw.ac.uk/iupac/>`__ ）
 来处理我们比较青睐的对象：DNA、RNA和蛋白质对象。
 
- ``Bio.Alphabet.IUPAC`` 提供了蛋白质、DNA和RNA的基本定义，并且提供了扩展
+``Bio.Alphabet.IUPAC`` 提供了蛋白质、DNA和RNA的基本定义，并且提供了扩展
 和定制基本定义的功能。例如蛋白质，有一个基本的IUPACProtein类，另外还有
 一个ExtendedIUPACProtein类。这个类包含除20种常见氨基酸外的其他氨基酸元素，
 比如 “U” （或 “Sec”代表硒代半胱氨酸），“O”（或“Pyl” 代表吡咯赖氨酸），
@@ -149,8 +149,8 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 字母S混合的情况。
 
 然后还要注意，就像正常的Python字符串， ``Seq`` 对象在某些方式下是只读的。如果需要
-编辑序列，比如模拟点突变，请看后续的 \ `3.12 <#sec:mutable-seq>`__章节中讲述的
- ``MutableSeq`` 对象。
+编辑序列，比如模拟点突变，请看后续的 \ `3.12 <#sec:mutable-seq>`__ 章节中讲述的
+``MutableSeq`` 对象。
 
 3.3  切取序列
 -----------------------
@@ -228,7 +228,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 对象中获取FASTA格式的字符串，更详细的读写FASTA格式的序列文件将在第
 \ `5 <#chapter:Bio.SeqIO>`__ 章介绍。
 
- *注意：*  如果你使用Biopython 1.44或者更旧的版本，使用 ``str(my_seq)`` 只会
+*注意：*  如果你使用Biopython 1.44或者更旧的版本，使用 ``str(my_seq)`` 只会
 返回一个截短了的序列。这时候可以使用 ``my_seq.tostring()`` ，为了保持向后兼
 容性，这一方法在当前的Biopython版本中还有保留。
 
@@ -367,35 +367,24 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 
 在谈论转录之前，我想先说明一下链的问题。考虑以下（编造的）编码短肽的双链DNA的延伸：
 
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-|      | DNA coding strand (aka Crick strand, strand +1)      |      |
-+------+------------------------------------------------------+------+
-| 5’   | ``ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG``          | 3’   |
-+------+------------------------------------------------------+------+
-|      | ``|||||||||||||||||||||||||||||||||||||||``          |      |
-+------+------------------------------------------------------+------+
-| 3’   | ``TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC``          | 5’   |
-+------+------------------------------------------------------+------+
-|      | DNA template strand (aka Watson strand, strand −1)   |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-|      | \|                                                   |      |
-+------+------------------------------------------------------+------+
-|      | Transcription                                        |      |
-+------+------------------------------------------------------+------+
-|      | ↓                                                    |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-| 5’   | ``AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG``          | 3’   |
-+------+------------------------------------------------------+------+
-|      | Single stranded messenger RNA                        |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
+.. math::
+
+    \begin{equation}
+    \\
+       & _{DNA coding strand (aka Crick strand, strand $+1$)} & \\
+    5' & \texttt{ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG} & 3' \\
+       & \texttt{|||||||||||||||||||||||||||||||||||||||} & \\
+    3' & \texttt{TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC} & 5' \\
+       & _{DNA template strand (aka Watson strand, strand $-1$)} & \\
+    \\
+       & {$|$} &\\
+       & Transcription & \\
+       & {$\downarrow$} &\\
+    \\
+    5' & \texttt{AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG} & 3' \\
+       & _{Single stranded messenger RNA} & \\
+    \\
+    \end{equation}
 
 实际的生物学上的转录过程是将模板链反向互补（TCAG → CUGA）生成mRNA。但是，
 在Biopython和生物信息学领域，我们通常会直接利用编码链，因为我们可以通过
@@ -575,7 +564,7 @@ K12中的基因yaaX：
 中的等效函数--参见第 \ `3.14 <#sec:seq-module-functions>`__ 章节）。实质上
 使用的这些密码子表对象来自与NCBI的 ```ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt`` 
 <ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt>`__ ，还有
- `http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__ 
+`http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__ 
 以一种更易读的形式呈现。
 
 和前面一样，让我们仅仅关注两个选择：标准的翻译表和脊椎动物线粒体DNA的翻译表。
@@ -674,14 +663,14 @@ K12中的基因yaaX：
 以比较两个 ``Seq`` 对象意味着既要考虑两个序列的字符串 *又要* 考虑字母表。
 
 举个例子，你可能会觉得 ``Seq("ACGT", IUPAC.unambiguous_dna)`` 和
- ``Seq("ACGT", IUPAC.ambiguous_dna)`` 这两个DNA ``Seq`` 对象是一样的，尽管它们确实具
+``Seq("ACGT", IUPAC.ambiguous_dna)`` 这两个DNA ``Seq`` 对象是一样的，尽管它们确实具
 有不同的字母表。根据上下文来判断是很重要的。
 
 下面这种情况更遭：假设你认为 ``Seq("ACGT", IUPAC.unambiguous_dna)`` 和
- ``Seq("ACGT")`` （也就是默认的通用字母表）是等同的。那么依照逻辑，
-  ``Seq("ACGT", IUPAC.protein)`` 和 ``Seq("ACGT")`` 也是等同的。现在从理
- 论上讲，如果 *A*\ =\ *B* ， *B*\ =\ *C* ，那么通过递延性，我们会期望
- *A*\ =\ *C* 。因此遵从逻辑上的一致性我们需要将 ``Seq("ACGT", IUPAC.unambiguous_dna)`` 
+``Seq("ACGT")`` （也就是默认的通用字母表）是等同的。那么依照逻辑，
+``Seq("ACGT", IUPAC.protein)`` 和 ``Seq("ACGT")`` 也是等同的。现在从理
+论上讲，如果 *A*\ =\ *B* ， *B*\ =\ *C* ，那么通过递延性，我们会期望
+*A*\ =\ *C* 。因此遵从逻辑上的一致性我们需要将 ``Seq("ACGT", IUPAC.unambiguous_dna)`` 
 和 ``Seq("ACGT", IUPAC.protein)`` 等同起来，虽然大部分人会同意这一递延，
 但是这是错误的。这一递延性的问题也会影响使用 ``Seq`` 对象作为Python字典
 的键值。
@@ -800,7 +789,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 3.13  UnknownSeq对象
 ------------------------
 
- ``UnknownSeq`` 对象是基本的 ``Seq`` 对象中的一个子类，其目的是一个已知长度的
+``UnknownSeq`` 对象是基本的 ``Seq`` 对象中的一个子类，其目的是一个已知长度的
 序列，但序列并不是由实际的字母组成的。在这种情况下，你当然可以将其作为一个
 正常的 ``Seq`` 对象，但是存储由一百万个 “N” 字母组成的字符串会浪费相当大量的内
 存，这时你可以只存储一个 “N” 和序列所需的长度（整数）。
@@ -851,8 +840,8 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
     6
 
 你也许能够在自己的代码中找到 ``UnknownSeq`` 对象的应用，但你更可能首先在由
- ``Bio.SeqIO`` 创建的 ``SeqRecord`` 对象中遇到 ``UnknownSeq`` 对象（参见第
- \ `5 <#chapter:Bio.SeqIO>`__ 章）。一些序列格式的文件不总是由实际的序列组成，
+``Bio.SeqIO`` 创建的 ``SeqRecord`` 对象中遇到 ``UnknownSeq`` 对象（参见第
+\ `5 <#chapter:Bio.SeqIO>`__ 章）。一些序列格式的文件不总是由实际的序列组成，
 像GenBank和EMBL文件就可能包含各种特征的列表，而序列部分仅展示contig信息。
 又或者在测序工作中的QUAL文件仅包含质量分数，而 *从未* 包含序列，取而代之的
 和QUAL文件同时生成的FASTA格式文件 *确实* 是由序列构成。
@@ -878,3 +867,4 @@ Python字符串，比如 ``Seq`` 对象（包括 ``UnknownSeq`` 对象）或者 
     'AVMGRWKGGRAAG*'
 
 尽管如此，我们鼓励你使用默认的 ``Seq`` 对象。
+

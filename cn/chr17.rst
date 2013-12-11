@@ -1,13 +1,13 @@
 第17章 Graphics模块中的基因组可视化包—GenomeDiagram
-==================================================
+=======================================================
 
 ``Bio.Graphics`` 模块基于Python的第三方扩展库 `ReportLab <http://www.reportlab.org>`__ ，ReportLab主要生成PDF文件，同时也能生成EPS（Encapsulated Postscript）文件和SVG文件。ReportLa可以导出矢量图，如果安装依赖关系（Dependencies），比如 `PIL(Python Imaging Library) <http://www.pythonware.com/products/pil/>`__ ，ReportLab也可以导出JPEG, PNG, GIF, BMP和PICT格式的位图(Bitmap image)。
 
 17.1  基因组可视化包—GenomeDiagram
--------------------
+---------------------------------------
 
 17.1.1  GenomeDiagram简介
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 `http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
 
@@ -205,7 +205,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 示例中默认的字体很小，这是比较明智的，因为通常我们会把许多Feature同时展示，而不像这里只展示了几个比较大的feature。
 
 17.1.7  表示Feature的图形符号
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 以上示例中Feature的图形符号（sigil）默认是一个方框（plain box），GenomeDiagram第一版中只有这一选项，后来GenomeDiagram被整合到Biopython1.50时，新增了箭头状的图形符号（sigil）。
 
@@ -745,3 +745,4 @@ thaliana* 来展示一个简单示例。
 .. |image23| image:: ../images/three_track_cl2a.png
 .. |image24| image:: ../images/simple_chrom.png
 .. |image25| image:: ../images/tRNA_chrom.png
+

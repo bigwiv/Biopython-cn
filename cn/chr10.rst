@@ -52,9 +52,9 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 对于解析来说，关键点在于Swiss-Prot格式的数据，而不是获取它的方式。
 
-我们可以用\ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
+我们可以用 \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
 通过 ``Bio.SeqIO`` 来获取格式未知的 ``SeqRecord`` 对象。此外，我们也可以
-用 ``Bio.SwissProt`` 来获取更加匹配基本文件格式的 ``Bio.SwissProt.Record``对象。
+用 ``Bio.SwissProt`` 来获取更加匹配基本文件格式的 ``Bio.SwissProt.Record`` 对象。
 
 我们使用 ``read()`` 函数来从文件中读取一个Swiss-Prot记录：
 
@@ -270,8 +270,8 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
     ...
     >>> print n
     2073
-为了从这些数据中读取某一条特定的记录，可以使用 ``read`` 函数：
 
+为了从这些数据中读取某一条特定的记录，可以使用 ``read`` 函数：
 
 .. code:: verbatim
 
@@ -360,7 +360,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
     ['O46647', 'LIPL_MUSVI'], ['P49060', 'LIPL_PAPAN'], ['P49923', 'LIPL_PIG'],
     ['Q06000', 'LIPL_RAT'], ['Q29524', 'LIPL_SHEEP']]
 
-如果没有找到或者找到多个酶记录时，``read``函数会反馈一个ValueError提示。
+如果没有找到或者找到多个酶记录时， ``read`` 函数会反馈一个ValueError提示。
 
 所有酶记录都可以从 `ExPASy FTP site <ftp://ftp.expasy.org/databases/enzyme/enzyme.dat>`__ 网站下载
 为单个文件（ ``enzyme.dat`` ），该文件包含了4877个记录（2009年3月发布的第三版）。为了打开含有多个
@@ -494,7 +494,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
     >>> handle = ExPASy.get_prosite_raw('PS00001')
     >>> record = Prosite.read(handle)
 
-该函数也可以用于获取Prosite文档记录并解析到一个 ``Bio.ExPASy.Prodoc.Record``对象：
+该函数也可以用于获取Prosite文档记录并解析到一个 ``Bio.ExPASy.Prodoc.Record`` 对象：
 
 .. code:: verbatim
 
@@ -600,3 +600,4 @@ ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST
     >>> result = ScanProsite.read(handle)
     >>> result.n_match
     7
+

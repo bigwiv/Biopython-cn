@@ -210,7 +210,7 @@ Consumers是用来接收Scanners所发出事件的对象。
        B   65
        C   100
 
-   用 ``FreqTable.read_count(file_handle)``函数读入。
+   用 ``FreqTable.read_count(file_handle)`` 函数读入。
    
    一个等价的频率文件:
 
@@ -248,3 +248,4 @@ Consumers是用来接收Scanners所发出事件的对象。
        >>> ftab = FreqTable.FreqTable(my_count_dictionary,FreqTable.COUNT)
        >>> ftab = FreqTable.read_count(open('myCountFile'))
        >>> ftab = FreqTable.read_frequency(open('myFrequencyFile'))
+

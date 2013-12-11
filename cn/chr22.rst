@@ -74,3 +74,4 @@ Biopython中句柄常用来向解析器（parsers）传递信息。比如说，�
     >>> second_line = my_info_handle.readline()
     >>> print second_line
      with multiple lines.
+

@@ -45,8 +45,8 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 能够设置的参数。在这里我们只强调其中的一些：
 
 -  ``qblast`` 函数可以返回多种格式的BLAST结果。你可以通过可选参数 ``format_type`` 
-指定格式关键字为：``"HTML"``, ``"Text"``, ``"ASN.1"``, 或 ``"XML"`` 。默认
-格式是 ``"XML"`` ，这是解析器期望的格式，`7.3节 <#sec:parsing-blast>`__ 对其有详细的描述。
+   指定格式关键字为：``"HTML"``, ``"Text"``, ``"ASN.1"``, 或 ``"XML"`` 。默认
+   格式是 ``"XML"`` ，这是解析器期望的格式，`7.3节 <#sec:parsing-blast>`__ 对其有详细的描述。
 
 -  参数 ``expect``  指定期望值，即阀值 e-value。
 
@@ -649,3 +649,4 @@ XML格式的输出。
 
 .. |image1| image:: ../images/BlastRecord.png
 .. |image2| image:: ../images/PSIBlastRecord.png
+
