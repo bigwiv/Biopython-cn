@@ -13,7 +13,7 @@ GenePop（ `http://genepop.curtin.edu.au/ <http://genepop.curtin.edu.au/>`__）�
 
 Bio.PopGen提供GenePop文件格式解析器和生成器，同时也提供操作记录内容的小工具。此处有个关于怎样读取GenePop文件的示例（你可以在Biopython的Test/PopGen文件夹下找到GenePop示例文件）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
 
@@ -25,7 +25,7 @@ Bio.PopGen提供GenePop文件格式解析器和生成器，同时也提供操作
 
 在rec中最重要的信息是基因座名称和群体信息（当然不止这些，请使用help(GenePop.Record)获得API帮助文档）。基因座名称可以在rec.loci\_list中找到，群体信息可以在rec.populations中找到。群体信息是一个列表，每个群体（population）作为其中一个元素。每个元素本身又是包含个体（individual）的列表，每个个体包含个体名和等位基因列表（每个marker两个元素），下面是一个rec.populations的示例：
 
-.. code:: verbatim
+.. code:: python
 
     [
         [
@@ -41,7 +41,7 @@ Bio.PopGen提供GenePop文件格式解析器和生成器，同时也提供操作
 
 有几个可用的工具函数可以处理GenePop记录，如下例：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
 
@@ -121,7 +121,7 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 
 在我们的第一个示例中，将生成一个单一种群固定群体大小（Single population, constant size）模板，样本大小（sample size）为30，同群种大小（deme size）为500。代码如下：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
 
@@ -142,7 +142,7 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 
 现在让我们看看岛屿模型示例。我们希望生成几个岛屿模型，并对不同大小的同群种感兴趣：10、50和100，迁移率为1%。样本大小和同群种大小与上一个示例一致，代码如下： 
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
 
@@ -164,7 +164,7 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 
 我们首先实现一条染色体，包含24个SNPs，每个相邻基因座的重组率为0.0005，次等位基因的最小频率为0。这些由以下列表指定（作为第二个参数传递给generate\_simcoal\_from\_template函数）：
 
-.. code:: verbatim
+.. code:: python
 
     [(1, [('SNP', [24, 0.0005, 0.0])])]
 
@@ -174,7 +174,7 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 
 现在让我们看看更复杂的示例：
 
-.. code:: verbatim
+.. code:: python
 
     [
       (5, [
@@ -198,7 +198,7 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 
 SIMCOAL2可以处理不是使用上诉方法生成的文件（如手动配置的参数文件），但是我们将使用上述方法得到的文件创建模型：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
     from Bio.PopGen.SimCoal.Controller import SimCoalController
@@ -251,7 +251,7 @@ FDist主要运用在当marker数量足够用于估计平均 :math:`F_{st}` ，�
 
 FDist数据格式是该应用程序特有的，不被其它应用程序使用。因此你需要转化你的数据格式到FDist可使用的格式。Biopython可以帮助你完成这个过程。这里有一个将GenePop格式转换为FDist格式的示例（同时包括后面示例将用到的import语句）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
     from Bio.PopGen import FDist
@@ -272,7 +272,7 @@ FDist记录最重要的字段（field）是：num\_pops，群体数量；num\_lo
 
 下一步是计算平均数据集的 :math:`F_{st}` （以及样本大小）：
 
-.. code:: verbatim
+.. code:: python
 
     ctrl = Controller.FDistController()
     fst, samp_size = ctrl.run_datacal()
@@ -283,7 +283,7 @@ FDist记录最重要的字段（field）是：num\_pops，群体数量；num\_lo
 
 现在我们可以调用主程序fdist模拟中性Markers。
 
-.. code:: verbatim
+.. code:: python
 
     sim_fst = ctrl.run_fdist(npops = 15, nsamples = fd_rec.num_pops, fst = fst,
         sample_size = samp_size, mut = 0, num_sims = 40000)
@@ -309,7 +309,7 @@ FDist记录最重要的字段（field）是：num\_pops，群体数量；num\_lo
 
 下一步（可选步骤）是计算置信区间：
 
-.. code:: verbatim
+.. code:: python
 
     cpl_interval = ctrl.run_cplot(ci=0.99)
 
@@ -319,7 +319,7 @@ FDist记录最重要的字段（field）是：num\_pops，群体数量；num\_lo
 
 这步的主要目的是返回一系列的点用于对置信区间作图。如果只是需要根据模拟结果对每个marker的状态进行评估，可以跳过此步。
 
-.. code:: verbatim
+.. code:: python
 
     pv_data = ctrl.run_pv()
 
@@ -342,7 +342,7 @@ FDist通过对由下例公式得到的迁移率进行溯祖模拟估计期望的
 
 为了解决这个问题，Biopython提供了一个使用迭代方法的函数，通过依次运行几个fdist得到期望的值。该方法比运行单个fdist相比耗费更多计算资源，但是可以得到更好的结果。以下代码运行fdist得到期望的 :math:`F_{st}` ：
 
-.. code:: verbatim
+.. code:: python
 
     sim_fst = ctrl.run_fdist_force_fst(npops = 15, nsamples = fd_rec.num_pops,
         fst = fst, sample_size = samp_size, mut = 0, num_sims = 40000,

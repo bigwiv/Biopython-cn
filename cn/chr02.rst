@@ -34,7 +34,7 @@
 字母串。你可以按以下步骤创建一个 ``Seq`` 对象——“\ ``>>>``\”表示Python提示符后紧跟你要
 输入的内容：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
@@ -51,7 +51,7 @@
 
 除了有一个字母表， ``Seq`` 对象支持不同于Python的字符串方法。你不能对一个纯字符串做以下处理：
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq
     Seq('AGTACACTGGT', Alphabet())
@@ -107,7 +107,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 如果你用你喜好的文本编辑器打开了lady slipper orchids的FASTA文件 `ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__，
 你会看到文件开头像这样：
 
-.. code:: verbatim
+.. code:: python
 
     >gi|2765658|emb|Z78533.1|CIZ78533 C.irapeanum 5.8S rRNA gene and ITS1 and ITS2 DNA
     CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG
@@ -116,7 +116,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 
 它包含有94条记录，每一行都以“\ ``>``\ ”开头，（大于号）紧随其后的是一行或多行序列。现在试试以下Python代码：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
@@ -126,7 +126,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 
 你应该会得到类似这样的一些东西出现在屏幕上：
 
-.. code:: verbatim
+.. code:: python
 
     gi|2765658|emb|Z78533.1|CIZ78533
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', SingleLetterAlphabet())
@@ -144,7 +144,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 现在我们来加载一个GenBank文件 `ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
 ——注意这里的代码与上面处理FASTA文件的代码几乎完全相同——仅有的不同之处是我们改变了文件名和格式的字符串：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
@@ -154,7 +154,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 
 这段代码应该会给出：
 
-.. code:: verbatim
+.. code:: python
 
     Z78533.1
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())

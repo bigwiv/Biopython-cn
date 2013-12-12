@@ -243,7 +243,7 @@ Weighting
 
 距离矩阵是 ``data`` 中，所有元素的两两间的距离的平方矩阵，可以用 ``Bio.Cluster`` 模块中 ``distancematrix`` 函数计算：
  
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import distancematrix
     >>> matrix = distancematrix(data)
@@ -264,7 +264,7 @@ Weighting
 为了节省内存，函数返回的距离矩阵是一个一维数组的列表。每行的列数等于行号。
 因此，第一行有0个元素。例如：
 
-.. code:: verbatim
+.. code:: python
 
     [array([]),
      array([1.]),
@@ -293,7 +293,7 @@ Weighting
 类中心可以定义为该类中在每个维度上所有元素的平均值或者中值，可以用 ``Bio.Cluster`` 中的 ``clustercentroids`` 
 函数计算：
  
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import clustercentroids
     >>> cdata, cmask = clustercentroids(data)
@@ -328,7 +328,7 @@ Weighting
 
 为了计算两类之间的距离，可以利用:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import clusterdistance
     >>> distance = clusterdistance(data)
@@ -415,7 +415,7 @@ EM算法会在不能进行任何分配的时候停止。我们注意到，在某
 
 *k*-means 和 *k*-medians 算法可以利用 ``Bio.Cluster``中的 ``kcluster`` 实现:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import kcluster
     >>> clusterid, error, nfound = kcluster(data)
@@ -460,7 +460,7 @@ EM算法会在不能进行任何分配的时候停止。我们注意到，在某
 
 ``kmedoids`` 函数根据提供的距离矩阵和聚类数，来运行 *k*-medoids 聚类：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import kmedoids
     >>> clusterid, error, nfound = kmedoids(distance)
@@ -473,7 +473,7 @@ initialid=None)\|
 
    -  提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([[0.0, 1.1, 2.3],
                             [1.1, 0.0, 4.5],
@@ -481,13 +481,13 @@ initialid=None)\|
 
    -  输入一个一维的 Numerical Python 数组，包含了距离矩阵左下角的数据：
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([1.1, 2.3, 4.5])
 
    -  输入一个列表，包含距离矩阵左下角的数据：
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = [array([]|,
                       array([1.1]),
@@ -560,7 +560,7 @@ initialid=None)\|
 为了创建一个新的 ``Node`` 对象,我们需要指定 ``left`` 和 ``right``; 
 ``distance`` 是可选的。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import Node
     >>> Node(2,3)
@@ -570,7 +570,7 @@ initialid=None)\|
 
 对于已存在 ``Node`` 对象的 ``left``, ``right``, 和 ``distance`` 都是可以直接修改的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> node = Node(4,5)
     >>> node.left = 6
@@ -584,7 +584,7 @@ initialid=None)\|
  Python的类 ``Tree`` 包含着整个系统聚类的结果。 ``Tree`` 的对象可以通过
  一个 ``Node`` 的列表创建:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import Node, Tree
     >>> nodes = [Node(1,2,0.2), Node(0,3,0.5), Node(-2,4,0.6), Node(-1,-3,0.9)]
@@ -597,7 +597,7 @@ initialid=None)\|
 
  ``Tree`` 的初始器会检查包含节点的列表是否是一个正确的系统聚类树的结果:
 
-.. code:: verbatim
+.. code:: python
 
     >>> nodes = [Node(1,2,0.2), Node(0,2,0.5)]
     >>> Tree(nodes)
@@ -607,7 +607,7 @@ initialid=None)\|
 
 也可以使用中括号来对 ``Tree`` 对象进行检索：
 
-.. code:: verbatim
+.. code:: python
 
     >>> nodes = [Node(1,2,0.2), Node(0,-1,0.5)]
     >>> tree = Tree(nodes)
@@ -621,7 +621,7 @@ initialid=None)\|
 因为 ``Tree`` 对象是只读的，我们不能对 ``Tree`` 对象中任何一个节点进行改变。然而，我们可以将其
 转换成一个节点的列表，对列表进行操作，最后创建新的树。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Tree([Node(1,2,0.1), Node(0,-1,0.5), Node(-2,3,0.9)])
     >>> print tree
@@ -642,7 +642,7 @@ initialid=None)\|
 为了利用可视化工具，例如Java Treeview，来查看系统聚类树，最好对所有节点的距离进行标准化，
 使其位于0和1之间。可以通过对 ``Tree`` 对象调用 ``scale`` 方法来实现这个功能：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.scale()
 
@@ -650,7 +650,7 @@ initialid=None)\|
 
 经过系统聚类后，可以对 ``Tree`` 对象进行剪接，将所有的元素分为 *k* 类：
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid = tree.cut(nclusters=1)
 
@@ -663,7 +663,7 @@ initialid=None)\|
 
 为了进行系统聚类，可以用 ``Bio.Cluster`` 中的 ``treecluster`` 函数。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(data)
@@ -692,7 +692,7 @@ initialid=None)\|
 为了对距离矩阵进行系统聚类，可以在调用 ``treecluster`` 时，
 用 ``distancematrix`` 参数来代替 ``data`` 参数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(distancematrix=distance)
@@ -704,7 +704,7 @@ initialid=None)\|
 
    -  提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([[0.0, 1.1, 2.3], 
                             [1.1, 0.0, 4.5],
@@ -712,13 +712,13 @@ initialid=None)\|
 
    -  输入一个一维的 Numerical Python 数组，包含了距离矩阵左下角的数据：
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([1.1, 2.3, 4.5])
 
    -  输入一个列表，包含距离矩阵左下角的数据：
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = [array([]),
                       array([1.1]),
@@ -793,7 +793,7 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 
 运行 ``somcluster``, 例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import somcluster
     >>> clusterid, celldata = somcluster(data)
@@ -853,7 +853,7 @@ Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据�
 
 将主成分分析应用于二维矩阵 ``data``,可以：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import pca
     >>> columnmean, coordinates, components, eigenvalues = pca(data)
@@ -884,7 +884,7 @@ TreeView 程序。这个软件可以显示系统聚类和 *k*-means 聚类的结
 类 ``Record`` 的一个对象包含着一个 Cluster/TreeView-type数据文件需要的所有信息。
 为了将结果保存到一个 ``Record`` 对象中，首先需要打开一个文件，并读取：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("mydatafile.txt")
@@ -893,14 +893,14 @@ TreeView 程序。这个软件可以显示系统聚类和 *k*-means 聚类的结
 
 两步操作使得你可以较灵活地操作不同来源的数据，例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import gzip # Python standard library
     >>> handle = gzip.open("mydatafile.txt.gz")
 
 来打开一个gzipped文件，或者利用
 
-.. code:: verbatim
+.. code:: python
 
     >>> import urllib # Python standard library
     >>> handle = urllib.urlopen("http://somewhere.org/mydatafile.txt")
@@ -949,7 +949,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了计算record中存储元素的距离矩阵，可以用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> matrix = record.distancematrix()
 
@@ -969,7 +969,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了计算存储在record中的元素的聚类中心，利用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> cdata, cmask = record.clustercentroids()
 
@@ -988,7 +988,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了计算存储在record中的两类的距离，利用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> distance = record.clusterdistance()
 
@@ -1020,7 +1020,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了对存储在record中的数据进行系统聚类，利用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = record.treecluster()
 
@@ -1052,7 +1052,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了对存储在record中的元素进行 *k*-means 或者 *k*-medians 聚类，可以使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid, error, nfound = record.kcluster()
 
@@ -1084,7 +1084,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 可以利用以下命令，计算对存储在record中元素计算 Self-Organizing Map ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid, celldata = record.somcluster()
 
@@ -1116,7 +1116,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 为了保存聚类结果，可以利用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.save(jobname, geneclusters, expclusters)
 
@@ -1144,7 +1144,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 在这种情况下，不需要任何的调整，因为 ``exptree`` 中的结果已经位于0和2之间。 示例中使用的
 文件 ``cyano.txt`` 可以从 ``data`` 文件夹中找到。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("cyano.txt")
@@ -1159,7 +1159,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
 同样的，也可以保存一个 *k*-means 聚类的结果:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("cyano.txt")

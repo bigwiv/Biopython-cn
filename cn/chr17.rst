@@ -26,7 +26,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
  
 我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -36,7 +36,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 这里用自上而下的方法，导入目标序列后，新建一个diagram，然后新建一个track，最后新建一个特征集（feature set）：
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram = GenomeDiagram.Diagram("Yersinia pestis biovar Microtus plasmid pPCP1")
     gd_track_for_features = gd_diagram.new_track(1, name="Annotated Features")
@@ -44,7 +44,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 接下来的部分最有趣，提取 ``SeqRecord`` 中每个基因的 ``SeqFeature`` 对象，就会为diagram生成一个相应的特征（feature），将其颜色设置为蓝色，分别用深蓝和浅蓝表示。
 
-.. code:: verbatim
+.. code:: python
 
     for feature in record.features:
         if feature.type != "gene":
@@ -58,7 +58,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 创建导出文件需要两步，首先是 ``draw`` 方法，它用ReportLab对象生成全部图形。然后是  ``write`` 方法，将图形存储到格式文件。注意：输出文件格式不止一种。
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.draw(format="linear", orientation="landscape", pagesize='A4',
                     fragments=4, start=0, end=len(record))
@@ -68,7 +68,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 如果安装了依赖关系（Dependencies），也可以生成位图（Bitmap image），代码如下：
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.write("plasmid_linear.png", "PNG")
 
@@ -78,7 +78,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 如果想要环形图，可以试试以下的代码：
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.draw(format="circular", circular=True, pagesize=(20*cm,20*cm),
                     start=0, end=len(record), circle_core=0.7)
@@ -93,7 +93,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 现在，用“自下而上”的方法来创建相同的图形。首先新建不同的对象（可以是任何顺序），然后将其组合。
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -130,14 +130,14 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象（ 详见 \ `4.3 <#sec:seq_features>`__ 章节）。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
 ``SeqFeature`` 对象，方法很简单，代码如下：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     my_seq_feature = SeqFeature(FeatureLocation(50,100),strand=+1)
 
 对于序列来说， ``+1`` 代表正向， ``-1`` 代表反向，  ``None`` 代表两者都有，下面举个简单的示例：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     from Bio.Graphics import GenomeDiagram
@@ -168,19 +168,19 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 下面代码中， ``feature`` 作为 ``SeqFeature`` 的对象添加到diagram。
 
-.. code:: verbatim
+.. code:: python
 
     gd_feature_set.add_feature(feature, color=color, label=True)
 
 前面的示例用 ``SeqFeature`` 的注释为feature做了恰当的文字说明。 ``SeqFeature`` 对象的限定符（qualifiers dictionary）缺省值是： ``gene``, ``label``, ``name``, ``locus_tag``, 和 ``product`` 。简单地说，你可以定义一个名称：
 
-.. code:: verbatim
+.. code:: python
 
     gd_feature_set.add_feature(feature, color=color, label=True, name="My Gene")
 
 每个feature标签的说明文本可以设置字体、位置和方向。说明文本默认的位置在图形符号（sigil）的左边，可选择在中间或者右边，线形图中文本的默认方向是45°旋转。
 
-.. code:: verbatim
+.. code:: python
 
     #Large font, parallel with the track
     gd_feature_set.add_feature(feature, label=True, color="green",
@@ -209,7 +209,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 以上示例中Feature的图形符号（sigil）默认是一个方框（plain box），GenomeDiagram第一版中只有这一选项，后来GenomeDiagram被整合到Biopython1.50时，新增了箭头状的图形符号（sigil）。
 
-.. code:: verbatim
+.. code:: python
 
     #Default uses a BOX sigil
     gd_feature_set.add_feature(feature)
@@ -222,7 +222,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 Biopython 1.61又新增3个图形形状（sigil）。
 
-.. code:: verbatim
+.. code:: python
 
     #Box with corners cut off (making it an octagon)
     gd_feature_set.add_feature(feature, sigil="OCTO")
@@ -242,7 +242,7 @@ Biopython 1.61又新增3个图形形状（sigil）。
 
 上一部分我们简单引出了箭头形状。还有两个选项可以对箭头形状进行设置：首先根据边界框的高度比例来设置箭杆宽度。
 
-.. code:: verbatim
+.. code:: python
 
     #Full height shafts, giving pointed boxes:
     gd_feature_set.add_feature(feature, sigil="ARROW", color="brown",
@@ -260,7 +260,7 @@ Biopython 1.61又新增3个图形形状（sigil）。
 
 其次，根据边界框的高度比例设置箭头长度（默认为0.5或50%）：
 
-.. code:: verbatim
+.. code:: python
 
     #Short arrow heads:
     gd_feature_set.add_feature(feature, sigil="ARROW", color="blue",
@@ -278,7 +278,7 @@ Biopython 1.61又新增3个图形形状（sigil）。
 
 Biopython1.61新增 ``BIGARROW`` 箭头形状，它经常跨越坐标轴，箭头指向”左边“代表”反向“，指向”右边“代表”正向“。
 
-.. code:: verbatim
+.. code:: python
 
     #A large arrow straddling the axis:
     gd_feature_set.add_feature(feature, sigil="BIGARROW")
@@ -291,7 +291,7 @@ Biopython1.61新增 ``BIGARROW`` 箭头形状，它经常跨越坐标轴，箭�
 回到”自上而下的示例 Section \ `17.1.3 <#sec:gd_top_down>`__ 中鼠疫杆菌 *Yersinia pestis biovar
 Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭头表示基因，窄框穿越箭头表示限制性内切酶的切割位点。
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -362,7 +362,7 @@ Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭�
 
 这三个文件可以从Entrez下载，详情请查阅 \ `9.6 <#sec:efetch>`__ 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 \ `4.6 <#sec:SeqRecord-slicing>`__ ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 \ `4.8 <#sec:SeqRecord-reverse-complement>`__)。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -375,7 +375,7 @@ editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——才
 
 上述GenBank文件中的注释信息与Proux所用的文件信息并不完全相同，他们还添加了一些未注释的基因。
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.colors import red, grey, orange, green, brown, blue, lightblue, purple
 
@@ -389,7 +389,7 @@ editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——才
 
 接下来是“draw”方法，给diagram添加3个track。我们在示例中设置不同的开始/结束值来体现它们之间长度不等（Biopython 1.59及更高级的版本）。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics import GenomeDiagram
 
@@ -439,7 +439,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 噬菌体的名称同样表示为A，B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。
 
-.. code:: verbatim
+.. code:: python
 
     #Tuc2009 (NC_002703) vs bIL285 (AF323668)
     A_vs_B = [
@@ -472,7 +472,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 对噬菌体B和C做同样的处理：
 
-.. code:: verbatim
+.. code:: python
 
     #bIL285 (AF323668) vs Listeria innocua prophage 5 (in NC_003212)
     B_vs_C = [
@@ -495,7 +495,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 噬菌体A和C的标识符（Identifiers）是基因座标签（locus tags），噬菌体B没有基因座标签，这里用基因名称来代替。以下的辅助函数可用基因座标签或基因名称来寻找Feature。
 
-.. code:: verbatim
+.. code:: python
 
     def get_feature(features, id, tags=["locus_tag", "gene"]):
         """Search list of SeqFeature objects for an identifier under the given tags."""
@@ -509,7 +509,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 现在将这些标识符对（identifier pairs）的列表转换为“SeqFeature”列表，因此来查找它们的坐标定位。现在将下列代码添加到上段代码中 ``gd_diagram.draw(...)`` 这一行之前，将cross-links添加到图像中。示例中的脚本文件 `Proux\_et\_al\_2002\_Figure\_6.py <http://biopython.org/SRC/biopython/Doc/examples/Proux_et_al_2002_Figure_6.py>`__ 在Biopython源程序文件夹的 ``Doc/examples`` 目录下。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import CrossLink
     from reportlab.lib import colors
@@ -559,7 +559,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 如果你过去使用下面的方式：
 
-.. code:: verbatim
+.. code:: python
 
     from GenomeDiagram import GDFeatureSet, GDDiagram
     gdd = GDDiagram("An example")
@@ -567,7 +567,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 你只需要将import语句转换成下面这样：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import FeatureSet as GDFeatureSet, Diagram as GDDiagram
     gdd = GDDiagram("An example")
@@ -575,7 +575,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 希望能够顺利运行。将来你可能想换用新名称，你必须在更大程度上改变你编写代码的方式：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import FeatureSet, Diagram
     gdd = Diagram("An example")
@@ -583,7 +583,7 @@ Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能�
 
 or:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics import GenomeDiagram
     gdd = GenomeDiagram.Diagram("An example")
@@ -604,7 +604,7 @@ thaliana* 来展示一个简单示例。
 
 首先从NCBI的FTP服务器 `ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ 下载拟南芥已测序的五个染色体文件，利用 ``Bio.SeqIO`` 函数计算它们的长度。你可以利用GenBank文件，但是对于染色体来说，FASTA文件的处理速度会快点。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     entries = [("Chr I", "CHR_I/NC_003070.fna"),
@@ -618,7 +618,7 @@ thaliana* 来展示一个简单示例。
 
 计算出5个染色体长度后，就可用 ``BasicChromosome`` 模块对其作如下的处理：
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.units import cm
     from Bio.Graphics import BasicChromosome
@@ -674,7 +674,7 @@ thaliana* 来展示一个简单示例。
 
 继续前面的示例，我们可以同时展示tRNA基因。通过解析 *Arabidopsis thaliana* 的5个染色体GenBank文件，我们可以对他们进行定位。你需要从NCBI的FTP服务器下载这些文件 `ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__ ，也可以保存子目录名称或者添加如下的路径：
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.units import cm
     from Bio import SeqIO

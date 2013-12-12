@@ -40,7 +40,7 @@ a handle to the file `m\_cold.fasta <examples/m_cold.fasta>`__ (also
 available online
 `here <http://biopython.org/DIST/docs/tutorial/examples/m_cold.fasta>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("m_cold.fasta", "r")
     >>> handle.readline()
@@ -51,7 +51,7 @@ parsers. For example, since Biopython 1.54 the main functions in
 ``Bio.SeqIO`` and ``Bio.AlignIO`` have allowed you to use a filename
 instead of a handle:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for record in SeqIO.parse("m_cold.fasta", "fasta"):
@@ -59,7 +59,7 @@ instead of a handle:
 
 On older versions of Biopython you had to use a handle, e.g.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     handle = open("m_cold.fasta", "r")
@@ -70,7 +70,7 @@ On older versions of Biopython you had to use a handle, e.g.
 This pattern is still useful - for example suppose you have a gzip
 compressed FASTA file you want to parse:
 
-.. code:: verbatim
+.. code:: python
 
     import gzip
     from Bio import SeqIO
@@ -89,7 +89,7 @@ One useful thing is to be able to turn information contained in a string
 into a handle. The following example shows how to do this using
 ``cStringIO`` from the Python standard library:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_info = 'A string\n with multiple lines.'
     >>> print my_info

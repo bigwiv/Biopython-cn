@@ -65,7 +65,7 @@ not explicitly label the sequences as RNA, DNA or protein – which means
 As an example, consider the following annotation rich protein alignment
 in the PFAM or Stockholm file format:
 
-.. code:: verbatim
+.. code:: python
 
     # STOCKHOLM 1.0
     #=GS COATB_BPIKE/30-81  AC P03620.1
@@ -101,14 +101,14 @@ entry, downloaded from a now out of date release of PFAM from
 load this file as follows (assuming it has been saved to disk as
 “PF05371\_seed.sth” in the current working directory):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
 
 This code will print out a summary of the alignment:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment
     SingleLetterAlphabet() alignment with 7 rows and 52 columns
@@ -124,7 +124,7 @@ You’ll notice in the above output the sequences have been truncated. We
 could instead write our own code to format this as we please by
 iterating over the rows as ``SeqRecord`` objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -148,7 +148,7 @@ Did you notice in the raw file above that several of the sequences
 include database cross-references to the PDB and the associated known
 secondary structure? Try this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in alignment:
     ...     if record.dbxrefs:
@@ -160,7 +160,7 @@ secondary structure? Try this:
 
 To have a look at all the sequence annotation, try this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in alignment:
     ...     print record
@@ -170,7 +170,7 @@ Sanger provide a nice web interface at
 which will actually let you download this alignment in several other
 formats. This is what the file looks like in the FASTA file format:
 
-.. code:: verbatim
+.. code:: python
 
     >COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA
@@ -192,7 +192,7 @@ Note the website should have an option about showing gaps as periods
 save this as file “PF05371\_seed.faa” then you can load it with almost
 exactly the same code:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.faa", "fasta")
@@ -216,7 +216,7 @@ output by the EMBOSS tools. There is a full listing on the wiki page
 and in the built in documentation (also
 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> help(AlignIO)
@@ -232,7 +232,7 @@ alignment, and to read these files we must use the
 
 Suppose you have a small alignment in PHYLIP format:
 
-.. code:: verbatim
+.. code:: python
 
         5    6
     Alpha     AACAAC
@@ -246,7 +246,7 @@ one of the steps would be to create a set of many resampled alignments
 using the tool ``bootseq``. This would give output something like this,
 which has been abbreviated for conciseness:
 
-.. code:: verbatim
+.. code:: python
 
         5     6
     Alpha     AAACCA
@@ -276,7 +276,7 @@ which has been abbreviated for conciseness:
 
 If you wanted to read this in using ``Bio.AlignIO`` you could use:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = AlignIO.parse("resampled.phy", "phylip")
@@ -286,7 +286,7 @@ If you wanted to read this in using ``Bio.AlignIO`` you could use:
 
 This would give the following output, again abbreviated for display:
 
-.. code:: verbatim
+.. code:: python
 
     SingleLetterAlphabet() alignment with 5 rows and 6 columns
     AAACCA Alpha
@@ -323,7 +323,7 @@ As with the function ``Bio.SeqIO.parse()``, using
 alignments in memory at once, which will allow you to access them in any
 order, then turn the iterator into a list:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = list(AlignIO.parse("resampled.phy", "phylip"))
@@ -339,7 +339,7 @@ when a general sequence file format has been used there is no such block
 structure. The most common such situation is when alignments have been
 saved in the FASTA file format. For example consider the following:
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -361,7 +361,7 @@ the same length.
 
 What about this next example?
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -382,7 +382,7 @@ alignments which by chance have all got the same lengths.
 
 This final example is similar:
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -416,7 +416,7 @@ which specifies how many sequences are expected in each alignment (in
 these examples, 3, 2 and 2 respectively). For example, using the third
 example as the input data:
 
-.. code:: verbatim
+.. code:: python
 
     for alignment in AlignIO.parse(handle, "fasta", seq_count=2):
         print "Alignment length %i" % alignment.get_alignment_length()
@@ -426,7 +426,7 @@ example as the input data:
 
 giving:
 
-.. code:: verbatim
+.. code:: python
 
     Alignment length 19
     ACTACGACTAGCTCAG--G - Alpha
@@ -477,7 +477,7 @@ Here is an example, where we start by creating a few
 loading them from a file). Note we create some ``SeqRecord`` objects to
 construct the alignment from.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Alphabet import generic_dna
     from Bio.Seq import Seq
@@ -507,7 +507,7 @@ construct the alignment from.
 Now we have a list of ``Alignment`` objects, we’ll write them to a
 PHYLIP format file:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     AlignIO.write(my_alignments, "my_example.phy", "phylip")
@@ -515,7 +515,7 @@ PHYLIP format file:
 And if you open this file in your favourite text editor it should look
 like this:
 
-.. code:: verbatim
+.. code:: python
 
      3 12
     Alpha      ACTGCTAGCT AG
@@ -558,7 +558,7 @@ them using the ``Bio.AlignIO.write()`` – or just use the
 For this example, we’ll load the PFAM/Stockholm format file used earlier
 and save it as a Clustal W format file:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
@@ -566,7 +566,7 @@ and save it as a Clustal W format file:
 
 Or, using ``Bio.AlignIO.parse()`` and ``Bio.AlignIO.write()``:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
@@ -581,7 +581,7 @@ In this case, we know there is only one alignment in the file so we
 could have used ``Bio.AlignIO.read()`` instead, but notice we have to
 pass this alignment to ``Bio.AlignIO.write()`` as a single element list:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -590,7 +590,7 @@ pass this alignment to ``Bio.AlignIO.write()`` as a single element list:
 Either way, you should end up with the same new Clustal W format file
 “PF05371\_seed.aln” with the following content:
 
-.. code:: verbatim
+.. code:: python
 
     CLUSTAL X (1.81) multiple sequence alignment
 
@@ -614,14 +614,14 @@ Either way, you should end up with the same new Clustal W format file
 Alternatively, you could make a PHYLIP format file which we’ll name
 “PF05371\_seed.phy”:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip")
 
 This time the output looks like this:
 
-.. code:: verbatim
+.. code:: python
 
      7 52
     COATB_BPIK AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
@@ -648,7 +648,7 @@ compress the identifiers, but for the sake of argument you may want to
 assign your own names or numbering system. This following bit of code
 manipulates the record identifiers before saving the output:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -663,13 +663,13 @@ manipulates the record identifiers before saving the output:
 This code used a Python dictionary to record a simple mapping from the
 new sequence system to the original identifier:
 
-.. code:: verbatim
+.. code:: python
 
     {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', ...}
 
 Here is the new PHYLIP format output:
 
-.. code:: verbatim
+.. code:: python
 
      7 52
     seq0       AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
@@ -703,7 +703,7 @@ probably prefer to take advantage of the alignment object’s ``format()``
 method. This takes a single mandatory argument, a lower case string
 which is supported by ``Bio.AlignIO`` as an output format. For example:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -718,7 +718,7 @@ based handle and calling ``Bio.AlignIO.write()``. You can do this in
 your own code if for example you are using an older version of
 Biopython:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     from StringIO import StringIO
@@ -745,7 +745,7 @@ First of all, in some senses the alignment objects act like a Python
 hopefully the actions of ``len()`` (the number of rows) and iteration
 (each row as a ``SeqRecord``) make sense:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -766,7 +766,7 @@ more rows to the alignment (as ``SeqRecord`` objects). Keeping the list
 metaphor in mind, simple slicing of the alignment should also make sense
 - it selects some of the rows giving back another alignment object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment
     SingleLetterAlphabet() alignment with 7 rows and 52 columns
@@ -788,7 +788,7 @@ What if you wanted to select by column? Those of you who have used the
 NumPy matrix or array objects won’t be surprised at this - you use a
 double index.
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[2,6]
     T
@@ -796,14 +796,14 @@ double index.
 Using two integer indices pulls out a single letter, short hand for
 this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[2].seq[6]
     T
 
 You can pull out a single column as a string like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,6]
     TTT---T
@@ -812,7 +812,7 @@ You can also select a range of columns. For example, to pick out those
 same three rows we extracted earlier, but take just their first six
 columns:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[3:6,:6]
     SingleLetterAlphabet() alignment with 3 rows and 6 columns
@@ -822,7 +822,7 @@ columns:
 
 Leaving the first index as ``:`` means take all the rows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,:6]
     SingleLetterAlphabet() alignment with 7 rows and 6 columns
@@ -837,7 +837,7 @@ Leaving the first index as ``:`` means take all the rows:
 This brings us to a neat way to remove a section. Notice columns 7, 8
 and 9 which are gaps in three of the seven sequences:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,6:9]
     SingleLetterAlphabet() alignment with 7 rows and 3 columns
@@ -851,7 +851,7 @@ and 9 which are gaps in three of the seven sequences:
 
 Again, you can slice to get everything after the ninth column:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,9:]
     SingleLetterAlphabet() alignment with 7 rows and 43 columns
@@ -866,7 +866,7 @@ Again, you can slice to get everything after the ninth column:
 Now, the interesting thing is that addition of alignment objects works
 by column. This lets you do this as a way to remove a block of columns:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = alignment[:,:6] + alignment[:,9:]
     >>> print edited
@@ -886,7 +886,7 @@ Section \ `4.7 <#sec:SeqRecord-addition>`__ for how adding ``SeqRecord``
 objects works). You may find it helpful to first sort the alignment rows
 alphabetically by id:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited.sort()
     >>> print edited
@@ -909,7 +909,7 @@ Depending on what you are doing, it can be more useful to turn the
 alignment object into an array of letters – and you can do this with
 NumPy:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import numpy as np
     >>> from Bio import AlignIO
@@ -922,7 +922,7 @@ If you will be working heavily with the columns, you can tell NumPy to
 store the array by column (as in Fortran) rather then its default of by
 row (as in C):
 
-.. code:: verbatim
+.. code:: python
 
     >>> align_array = np.array([list(rec) for rec in alignment], np.character, order="F")
 
@@ -956,7 +956,7 @@ this command line via a Python operating system call (e.g. using the
 Most of these wrappers are defined in the ``Bio.Align.Applications``
 module:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import Bio.Align.Applications
     >>> dir(Bio.Align.Applications)
@@ -987,7 +987,7 @@ running the ClustalW tool yourself by hand at the command line, to
 familiarise yourself the other options. You’ll find the Biopython
 wrapper is very faithful to the actual command line API:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> help(ClustalwCommandline)
@@ -1004,7 +1004,7 @@ By default ClustalW will generate an alignment and guide tree file with
 names based on the input FASTA file, in this case ``opuntia.aln`` and
 ``opuntia.dnd``, but you can override this or make it explicit:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> cline = ClustalwCommandline("clustalw2", infile="opuntia.fasta")
@@ -1025,14 +1025,14 @@ searched). You can either update your PATH setting to include the
 location of your copy of ClustalW tools (how you do this will depend on
 your OS), or simply type in the full path of the tool. For example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import os
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> clustalw_exe = r"C:\Program Files\new clustal\clustalw2.exe"
     >>> clustalw_cline = ClustalwCommandline(clustalw_exe, infile="opuntia.fasta")
 
-.. code:: verbatim
+.. code:: python
 
     >>> assert os.path.isfile(clustalw_exe), "Clustal W executable missing"
     >>> stdout, stderr = clustalw_cline()
@@ -1071,7 +1071,7 @@ picking names based on the input file. In this case the output should be
 in the file ``opuntia.aln``. You should be able to work out how to read
 in the alignment using ``Bio.AlignIO`` by now:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("opuntia.aln", "clustal")
@@ -1089,7 +1089,7 @@ In case you are interested (and this is an aside from the main thrust of
 this chapter), the ``opuntia.dnd`` file ClustalW creates is just a
 standard Newick tree file, and ``Bio.Phylo`` can parse these:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("opuntia.dnd", "newick")
@@ -1120,7 +1120,7 @@ and Biopython also has a wrapper for it under the
 MUSCLE from the command line before trying it from within Python, as the
 Biopython wrapper is very faithful to the actual command line API:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> help(MuscleCommandline)
@@ -1133,7 +1133,7 @@ such as
 source code). You can then tell MUSCLE to read in this FASTA file, and
 write the alignment to an output file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.txt")
@@ -1149,7 +1149,7 @@ gapped sequences). The ``Bio.AlignIO`` module should be able to read
 this alignment using ``format="fasta"``. You can also ask for
 ClustalW-like output:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clw=True)
@@ -1159,7 +1159,7 @@ ClustalW-like output:
 Or, strict ClustalW output where the original ClustalW header line is
 used for maximum compatibility:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clwstrict=True)
@@ -1190,7 +1190,7 @@ However, by default MUSCLE will write the alignment to standard output
 (stdout). We can take advantage of this to avoid having a temporary
 output file! For example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
@@ -1201,7 +1201,7 @@ If we run this via the wrapper, we get back the output as a string. In
 order to parse this we can use ``StringIO`` to turn it into a handle.
 Remember that MUSCLE defaults to using FASTA as the output format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
@@ -1224,7 +1224,7 @@ large output text the fact that all of stdout and stderr is loaded into
 memory as a string can be a potential drawback. Using the ``subprocess``
 module we can work directly with handles instead:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import subprocess
     >>> from Bio.Align.Applications import MuscleCommandline
@@ -1258,7 +1258,7 @@ objects. For this demonstration I’m going to use a filtered version of
 the original FASTA file (using a generator expression), taking just six
 of the seven sequences:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = (r for r in SeqIO.parse("opuntia.fasta", "fasta") if len(r) < 900)
@@ -1267,7 +1267,7 @@ Then we create the MUSCLE command line, leaving the input and output to
 their defaults (stdin and stdout). I’m also going to ask for strict
 ClustalW format as for the output.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(clwstrict=True)
@@ -1277,7 +1277,7 @@ ClustalW format as for the output.
 Now for the fiddly bits using the ``subprocess`` module, stdin and
 stdout:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import subprocess
     >>> import sys
@@ -1290,7 +1290,7 @@ stdout:
 That should start MUSCLE, but it will be sitting waiting for its FASTA
 input sequences, which we must supply via its stdin handle:
 
-.. code:: verbatim
+.. code:: python
 
     >>> SeqIO.write(records, child.stdin, "fasta")
     6
@@ -1301,7 +1301,7 @@ waiting to see if that is all the FASTA sequences or not – so we must
 signal that this is all the input data by closing the handle. At that
 point MUSCLE should start to run, and we can ask for the output:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "clustal")
@@ -1333,7 +1333,7 @@ can supply any standard input as a big string,
 can prepare the FASTA input in memory as a string using ``StringIO``
 (see Section \ `22.1 <#sec:appendix-handles>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = (r for r in SeqIO.parse("opuntia.fasta", "fasta") if len(r) < 900)
@@ -1345,7 +1345,7 @@ can prepare the FASTA input in memory as a string using ``StringIO``
 
 You can then run the tool and parse the alignment as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> stdout, stderr = muscle_cline(stdin=data)
     >>> from Bio import AlignIO
@@ -1374,7 +1374,7 @@ just use ``needle`` here.
 Suppose you want to do a global pairwise alignment between two
 sequences, prepared in FASTA format as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >HBA_HUMAN
     MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHG
@@ -1383,7 +1383,7 @@ sequences, prepared in FASTA format as follows:
 
 in a file ``alpha.fasta``, and secondly in a file ``beta.fasta``:
 
-.. code:: verbatim
+.. code:: python
 
     >HBB_HUMAN
     MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK
@@ -1393,7 +1393,7 @@ in a file ``alpha.fasta``, and secondly in a file ``beta.fasta``:
 Let’s start by creating a complete ``needle`` command line object in one
 go:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(asequence="alpha.faa", bsequence="beta.faa",
@@ -1411,7 +1411,7 @@ Windows). This probably means that the EMBOSS tools are not on your PATH
 environment variable. You can either update your PATH setting, or simply
 tell Biopython the full path to the tool, for example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(r"C:\EMBOSS\needle.exe",
@@ -1426,7 +1426,7 @@ At this point it might help to try running the EMBOSS tools yourself by
 hand at the command line, to familiarise yourself the other options and
 compare them to the Biopython help text:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> help(NeedleCommandline)
@@ -1435,7 +1435,7 @@ compare them to the Biopython help text:
 Note that you can also specify (or change or look at) the settings like
 this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline()
@@ -1454,7 +1454,7 @@ above, for full control, we recommend you use the built in Python
 ``subprocess`` module, but for simple usage the wrapper object usually
 suffices:
 
-.. code:: verbatim
+.. code:: python
 
     >>> stdout, stderr = needle_cline()
     >>> print stdout + stderr
@@ -1463,7 +1463,7 @@ suffices:
 Next we can load the output file with ``Bio.AlignIO`` as discussed
 earlier in this chapter, as the ``emboss`` format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("needle.txt", "emboss")

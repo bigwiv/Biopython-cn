@@ -52,7 +52,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 更多可选的BLAST参数，请参照NCBI的文档，或者是Biopython内置的文档。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> help(NCBIWWW.qblast)
@@ -64,14 +64,14 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 举个例子，如果你有条核酸序列，想使用BLAST对核酸数据库（nt）进行搜索，已知这条查询序列的GI号，
 你可以这样做：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
 
 或者，我们想要查询的序列在FASTA文件中，那么我们只需打开这个文件并把这条记录读入到字符串，然后用这个字符串作为查询参数:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> fasta_string = open("m_cold.fasta").read()
@@ -79,7 +79,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 我们同样可以读取FASTA文件为一个 ``SeqRecord`` 序列对象，然后以这个序列自身作为参数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> from Bio import SeqIO
@@ -89,7 +89,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 只提供序列意味着BLAST会自动分配给你一个ID。你可能更喜欢用 ``SeqRecord``
 对象的format方法来包装一个fasta字符串，因为这个对象会包含fasta文件中已有的ID
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> from Bio import SeqIO
@@ -108,7 +108,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 这里我们需要注意下：因为用 ``result_handle.read()`` 来读取BLAST结果只能用一次 -
 再次调用 ``result_handle.read()`` 会返回一个空的字符串.
 
-.. code:: verbatim
+.. code:: python
 
     >>> save_file = open("my_blast.xml", "w")
     >>> save_file.write(result_handle.read())
@@ -119,7 +119,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 ``parse`` 函数（描述见\ `7.3 <#sec:parsing-blast>`__)
 采用一个文件句柄类的对象，所以我们只需打开已经保存的文件作为输入。
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_blast.xml")
 
@@ -187,7 +187,7 @@ BLAST的时候，在终端打入命令行一样）。然后，我们在Python中
 非冗余（NR）蛋白质数据库。如果你（或者你的系统管理员）下载并安装好了这个数据库，
 那么你只要运行：
 
-.. code:: verbatim
+.. code:: python
 
     blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
 
@@ -198,7 +198,7 @@ BLAST的时候，在终端打入命令行一样）。然后，我们在Python中
 在Biopython中，我们可以用NCBI BLASTX包装模块  ``Bio.Blast.Applications`` 来构建
 命令行字符串并运行它：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast.Applications import NcbiblastxCommandline
     >>> help(NcbiblastxCommandline)
@@ -270,7 +270,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 如果你一直跟着上几节用来和BLAST交互的代码的话，你已经有了个 ``result_handle``
 ，一个用来得到BLAST的结果文件句柄。 比如通过GI号来进行一个在线BLAST搜索：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
@@ -278,21 +278,21 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 如果你通过其他方式运行了BLAST，并且XML格式的BLAST结果输出文件是 ``my_blast.xml`` ,
 那么你只需要打开文件来读：
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_blast.xml")
 
 好的，现在我们已经有了个文件句柄，可以解析输出结果了。解析结果的代码
 很短。如果你想要一条BLAST输出结果（就是说，你只用了一条序列去搜索）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_record = NCBIXML.read(result_handle)
 
 或者， 你有许多搜索结果（就是说，你用了多条序列去BLAST搜索）
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -307,7 +307,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 返回一个迭代器。简单来说，一个迭代器可以让你一个接着一个地获得BLAST
 的搜索结果。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -325,7 +325,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 
 或者，你也可以使用 ``for`` - 循环
 
-.. code:: verbatim
+.. code:: python
 
     >>> for blast_record in blast_records:
     ...     # Do something with blast_record
@@ -334,7 +334,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 感兴趣的信息。如果你想保存所有返回的BLAST记录，你可以把迭代
 转换成列表。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_records = list(blast_records)
 
@@ -344,7 +344,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 一般来说，你会一次运行一个BLAST搜索。然后，你只需提取第一条BLAST 搜索记录到
 ``blast_records`` :
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -354,7 +354,7 @@ or more elegantly:
 
 或者更加优雅地：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_record = NCBIXML.read(result_handle)
@@ -373,7 +373,7 @@ or more elegantly:
 继续我们的例子，让我们打印出所有大于某一特定阈值的BLAST命中结果的一些汇总信息。
 代码如下：
 
-.. code:: verbatim
+.. code:: python
 
     >>> E_VALUE_THRESH = 0.04
     
@@ -390,7 +390,7 @@ or more elegantly:
 
 上面代码会打印出如下图的总结报告：
 
-.. code:: verbatim
+.. code:: python
 
     ****Alignment****
     sequence: >gb|AF283004.1|AF283004 Arabidopsis thaliana cold acclimation protein WCOR413-like protein
@@ -440,14 +440,14 @@ PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法�
 ``blastall`` 或 ``blastpgp`` 函数来调用本地的BLAST，或者从命令行运行本地的
 BLAST， 并且如下处理：
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_file_of_blast_output.txt")
 
 好了，既然现在得到了个文件句柄（我们称它是 ``result_handle`` ），
 我们已经做好了解析它的准备。按下面的代码来解析：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> blast_parser = NCBIStandalone.BlastParser()
@@ -458,7 +458,7 @@ BLAST， 并且如下处理：
 信息了。在我们的例子里，我们来打印出大于某个阈值的所有比对的一个总结
 信息。
 
-.. code:: verbatim
+.. code:: python
 
     >>> E_VALUE_THRESH = 0.04
     >>> for alignment in blast_record.alignments:
@@ -485,7 +485,7 @@ BLAST， 并且如下处理：
 我们可以用BLAST迭代器解析多次结果。为了得到一个迭代器，我们首先需要创建一个解析器，来
 解析BLAST的搜索结果报告为Blast记录对象。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> blast_parser = NCBIStandalone.BlastParser()
@@ -497,7 +497,7 @@ BLAST， 并且如下处理：
 好了，我们现在有了一个解析器和一个文件句柄，我们可以用以下命令来创建
 一个迭代器。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_iterator = NCBIStandalone.Iterator(result_handle, blast_parser)
 
@@ -507,14 +507,14 @@ BLAST， 并且如下处理：
 现在我们已经有了个迭代器，就可以开始通过 ``next()`` 方法来获取BLAST
 记录（由我们的解析器产生）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_record = blast_iterator.next()
 
 每次调用next都会返回一条我们能处理的新记录。现在我们可以遍历所有记录，并打印一
 个我们最爱、漂亮的、简洁的BLAST记录报告。
 
-.. code:: verbatim
+.. code:: python
 
     >>> for blast_record in blast_iterator:
     ...     E_VALUE_THRESH = 0.04
@@ -552,7 +552,7 @@ ValueError异常终止了。这是个严肃的问题。因为你无法分辨导�
 让我们来看看怎样用这个解析器 - 首先我们定义我们准备解析的文件和报告错误情况的
 输出文件。
 
-.. code:: verbatim
+.. code:: python
 
     >>> import os
     >>> blast_file = os.path.join(os.getcwd(), "blast_out", "big_blast.out")
@@ -560,7 +560,7 @@ ValueError异常终止了。这是个严肃的问题。因为你无法分辨导�
 
 现在我们想要一个  ``BlastErrorParser`` ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> error_handle = open(error_file, "w")
@@ -574,7 +574,7 @@ ValueError异常终止了。这是个严肃的问题。因为你无法分辨导�
 特别的是，我们也许想要一个一次读入一个记录的迭代器并用 ``BlastErrorParser`` 
 来解析它。
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open(blast_file)
     >>> iterator = NCBIStandalone.Iterator(result_handle, blast_error_parser)
@@ -582,7 +582,7 @@ ValueError异常终止了。这是个严肃的问题。因为你无法分辨导�
 我们可以一次读一个记录，并且我们现在可以捕获并处理那些因为Blast引起的、
 不是解析器本身导致的错误。
 
-.. code:: verbatim
+.. code:: python
 
     >>> try:
     ...     next_record = iterator.next()

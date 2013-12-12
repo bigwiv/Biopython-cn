@@ -16,7 +16,7 @@ PDB header.
 
 First we create a ``PDBParser`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> p = PDBParser(PERMISSIVE=1)
@@ -31,7 +31,7 @@ The Structure object is then produced by letting the ``PDBParser``
 object parse a PDB file (the PDB file in this case is called
 ’pdb1fat.ent’, ’1fat’ is a user defined name for the structure):
 
-.. code:: verbatim
+.. code:: python
 
     >>> structure_id = "1fat"
     >>> filename = "pdb1fat.ent"
@@ -52,7 +52,7 @@ dictionary that maps header records to their values.
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> resolution = structure.header['resolution']
     >>> keywords = structure.header['keywords']
@@ -66,7 +66,7 @@ dictionary with various information about the crystallized compound).
 The dictionary can also be created without creating a ``Structure``
 object, ie. directly from the PDB file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> file = open(filename,'r')
     >>> header_dict = parse_pdb_header(file)
@@ -78,14 +78,14 @@ object, ie. directly from the PDB file:
 Similarly to the case the case of PDB files, first create an
 ``MMCIFParser`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.PDB.MMCIFParser import MMCIFParser
     >>> parser = MMCIFParser()
 
 Then use this parser to create a structure object from the mmCIF file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> structure = parser.get_structure('1fat', '1fat.cif')
 
@@ -96,20 +96,20 @@ tags in an mmCIF file to their values. If there are multiple values
 coordinates of all atoms), the tag is mapped to a list of values. The
 dictionary is created from the mmCIF file as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.PDB.MMCIF2Dict import MMCIF2Dict
     >>> mmcif_dict = MMCIF2Dict('1FAT.cif')
 
 Example: get the solvent content from an mmCIF file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sc = mmcif_dict['_exptl_crystal.density_percent_sol']
 
 Example: get the list of the *y* coordinates of all atoms
 
-.. code:: verbatim
+.. code:: python
 
     >>> y_list = mmcif_dict['_atom_site.Cartn_y']
 
@@ -129,7 +129,7 @@ structure too, of course.
 
 Example: saving a structure
 
-.. code:: verbatim
+.. code:: python
 
     >>> io = PDBIO()
     >>> io.set_structure(s)
@@ -149,7 +149,7 @@ model/chain/residue/atom is included in the output). By subclassing
 chains, etc. from the output. Cumbersome maybe, but very powerful. The
 following code only writes out glycine residues:
 
-.. code:: verbatim
+.. code:: python
 
     >>> class GlySelect(Select):
     ...     def accept_residue(self, residue):
@@ -220,7 +220,7 @@ In general, a child Entity object (i.e. Atom, Residue, Chain, Model) can
 be extracted from its parent (i.e. Residue, Chain, Model, Structure,
 respectively) by using an id as a key.
 
-.. code:: verbatim
+.. code:: python
 
     >>> child_entity = parent_entity[child_id]
 
@@ -228,13 +228,13 @@ You can also get a list of all child Entities of a parent Entity object.
 Note that this list is sorted in a specific way (e.g. according to chain
 identifier for Chain objects in a Model object).
 
-.. code:: verbatim
+.. code:: python
 
     >>> child_list = parent_entity.get_list()
 
 You can also get the parent from a child:
 
-.. code:: verbatim
+.. code:: python
 
     >>> parent_entity = child_entity.get_parent()
 
@@ -243,7 +243,7 @@ The full id is a tuple containing all id’s starting from the top object
 (Structure) down to the current object. A full id for a Residue object
 e.g. is something like:
 
-.. code:: verbatim
+.. code:: python
 
     >>> full_id = residue.get_full_id()
     >>> print full_id
@@ -262,20 +262,20 @@ is 10 and that its insertion code is "A".
 
 To get the entity’s id, use the ``get_id`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> entity.get_id()
 
 You can check if the entity has a child with a given id by using the
 ``has_id`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> entity.has_id(entity_id)
 
 The length of an entity is equal to its number of children:
 
-.. code:: verbatim
+.. code:: python
 
     >>> nr_children = len(entity)
 
@@ -309,7 +309,7 @@ files with more than one model.
 
 As an example, to get the first model from a Structure object, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> first_model = structure[0]
 
@@ -323,7 +323,7 @@ PDB/mmCIF file, and is a single character (typically a letter). Each
 Chain in a Model object has a unique id. As an example, to get the Chain
 object with identifier “A” from a Model object, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> chain_A = model["A"]
 
@@ -357,7 +357,7 @@ The id of the above glucose residue would thus be
 ``(’H_GLC’, 100, ’A’)``. If the hetero-flag and insertion code are
 blank, the sequence identifier alone can be used:
 
-.. code:: verbatim
+.. code:: python
 
     # Full id
     >>> residue=chain[(' ', 100, ' ')]
@@ -385,7 +385,7 @@ In most cases, the hetflag and insertion code fields will be blank, e.g.
 ``(’ ’, 10, ’ ’)``. In these cases, the sequence identifier can be used
 as a shortcut for the full id:
 
-.. code:: verbatim
+.. code:: python
 
     # use full id
     >>> res10 = chain[(' ', 10, ' ')]
@@ -398,7 +398,7 @@ section `11.3.3 <#point%20mutations>`__.
 
 A Residue object has a number of additional methods:
 
-.. code:: verbatim
+.. code:: python
 
     >>> residue.get_resname()       # returns the residue name, e.g. "ASN"
     >>> residue.is_disordered()     # returns 1 if the residue has disordered atoms
@@ -450,7 +450,7 @@ coordinates directly.
 
 An Atom object has the following additional methods:
 
-.. code:: verbatim
+.. code:: python
 
     >>> a.get_name()       # atom name (spaces stripped, e.g. "CA")
     >>> a.get_id()         # id (equals atom name)
@@ -481,7 +481,7 @@ Cβ atom. Here’s how to do it, making use of the ``rotaxis`` method
 (which can be used to construct a rotation around a certain axis) of the
 ``Vector`` module:
 
-.. code:: verbatim
+.. code:: python
 
     # get atom coordinates as vectors
     >>> n = residue['N'].get_vector() 
@@ -510,7 +510,7 @@ or reflect (``refmat``) one vector on top of another.
 
 These are some examples:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model = structure[0]
     >>> chain = model['A']
@@ -519,7 +519,7 @@ These are some examples:
 
 Note that you can use a shortcut:
 
-.. code:: verbatim
+.. code:: python
 
     >>> atom = structure[0]['A'][100]['CA']
 
@@ -563,7 +563,7 @@ Each disordered atom has a characteristic altloc identifier. You can
 specify that a ``DisorderedAtom`` object should behave like the ``Atom``
 object associated with a specific altloc identifier:
 
-.. code:: verbatim
+.. code:: python
 
     >>> atom.disordered_select('A') # select altloc A atom
     >>> print atom.get_altloc()
@@ -612,7 +612,7 @@ Example: suppose that a chain has a point mutation at position 10,
 consisting of a Ser and a Cys residue. Make sure that residue 10 of this
 chain behaves as the Cys residue.
 
-.. code:: verbatim
+.. code:: python
 
     >>> residue = chain[10]
     >>> residue.disordered_select('CYS')
@@ -659,7 +659,7 @@ would have hetfield “H\_GLC”. Its residue id could e.g. be (“H\_GLC”, 1,
 Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.PDB.PDBParser import PDBParser
     >>> parser = PDBParser()
@@ -672,7 +672,7 @@ Parse a PDB file, and extract some Model, Chain, Residue and Atom objects
 Iterating through all atoms of a structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> p = PDBParser()
     >>> structure = p.get_structure('X', 'pdb1fat.ent')
@@ -686,7 +686,7 @@ Iterating through all atoms of a structure
 There is a shortcut if you want to iterate over all atoms in a
 structure:
 
-.. code:: verbatim
+.. code:: python
 
     >>> atoms = structure.get_atoms()
     >>> for atom in atoms:
@@ -695,7 +695,7 @@ structure:
 
 Similarly, to iterate over all atoms in a chain, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> atoms = chain.get_atoms()
     >>> for atom in atoms:
@@ -707,7 +707,7 @@ Iterating over all residues of a model
 
 or if you want to iterate over all residues in a model:
 
-.. code:: verbatim
+.. code:: python
 
     >>> residues = model.get_residues()
     >>> for residue in residues:
@@ -717,13 +717,13 @@ or if you want to iterate over all residues in a model:
 You can also use the ``Selection.unfold_entities`` function to get all
 residues from a structure:
 
-.. code:: verbatim
+.. code:: python
 
     >>> res_list = Selection.unfold_entities(structure, 'R')
 
 or to get all atoms from a chain:
 
-.. code:: verbatim
+.. code:: python
 
     >>> atom_list = Selection.unfold_entities(chain, 'A')
 
@@ -731,7 +731,7 @@ Obviously, ``A=atom, R=residue, C=chain, M=model, S=structure``. You can
 use this to go up in the hierarchy, e.g. to get a list of (unique)
 ``Residue`` or ``Chain`` parents from a list of ``Atoms``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> residue_list = Selection.unfold_entities(atom_list, 'R')
     >>> chain_list = Selection.unfold_entities(atom_list, 'C')
@@ -741,7 +741,7 @@ For more info, see the API documentation.
 Extract a hetero residue from a chain (e.g. a glucose (GLC) moiety with resseq 10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> residue_id = ("H_GLC", 10, " ")
     >>> residue = chain[residue_id]
@@ -749,7 +749,7 @@ Extract a hetero residue from a chain (e.g. a glucose (GLC) moiety with resseq 1
 Print all hetero residues in chain
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> for residue in chain.get_list():
     ...    residue_id = residue.get_id()
@@ -761,7 +761,7 @@ Print all hetero residues in chain
 Print out the coordinates of all CA atoms in a structure with B factor greater than 50
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -775,7 +775,7 @@ Print out the coordinates of all CA atoms in a structure with B factor greater t
 Print out all the residues that contain disordered atoms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -794,7 +794,7 @@ Loop over all disordered atoms, and select all atoms with altloc A (if present)
 This will make sure that the SMCRA data structure will behave as if only
 the atoms with altloc A are present.
 
-.. code:: verbatim
+.. code:: python
 
     >>> for model in structure.get_list():
     ...     for chain in model.get_list():
@@ -813,7 +813,7 @@ To extract polypeptides from a structure, construct a list of
 ``Polypeptide`` objects from a ``Structure`` object using
 ``PolypeptideBuilder`` as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model_nr = 1
     >>> polypeptide_list = build_peptides(structure, model_nr)
@@ -829,7 +829,7 @@ using a C-N or a Cα-Cα distance criterion.
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     # Using C-N 
     >>> ppb=PPBuilder()
@@ -858,7 +858,7 @@ Biopython ``Seq`` object, and its alphabet is defined by a
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> seq = polypeptide.get_sequence()
     >>> print seq
@@ -873,7 +873,7 @@ Example:
 The minus operator for atoms has been overloaded to return the distance
 between two atoms.
 
-.. code:: verbatim
+.. code:: python
 
     # Get some atoms
     >>> ca1 = residue1['CA']
@@ -887,7 +887,7 @@ between two atoms.
 Use the vector representation of the atomic coordinates, and the
 ``calc_angle`` function from the ``Vector`` module:
 
-.. code:: verbatim
+.. code:: python
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
@@ -900,7 +900,7 @@ Use the vector representation of the atomic coordinates, and the
 Use the vector representation of the atomic coordinates, and the
 ``calc_dihedral`` function from the ``Vector`` module:
 
-.. code:: verbatim
+.. code:: python
 
     >>> vector1 = atom1.get_vector()
     >>> vector2 = atom2.get_vector()
@@ -935,7 +935,7 @@ implemented in the general ``Bio.SVDSuperimposer`` module).
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sup = Superimposer()
     # Specify the atom lists
@@ -977,7 +977,7 @@ HSEβ and contact number values.
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model = structure[0]
     >>> hse = HSExposure()
@@ -1047,7 +1047,7 @@ the solvent accessible surface.
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model = structure[0]
     >>> rd = ResidueDepth(model, pdb_file)
@@ -1067,7 +1067,7 @@ ways: a restrictive way and a permissive way, which is the default.
 
 Example:
 
-.. code:: verbatim
+.. code:: python
 
     # Permissive parser
     >>> parser = PDBParser(PERMISSIVE=1)
@@ -1205,14 +1205,14 @@ Structures can be downloaded from the PDB (Protein Data Bank) by using
 the ``retrieve_pdb_file`` method on a ``PDBList`` object. The argument
 for this method is the PDB identifier of the structure.
 
-.. code:: verbatim
+.. code:: python
 
     >>> pdbl = PDBList()
     >>> pdbl.retrieve_pdb_file('1FAT')
 
 The ``PDBList`` class can also be used as a command-line tool:
 
-.. code:: verbatim
+.. code:: python
 
     python PDBList.py 1fat
 
@@ -1236,7 +1236,7 @@ Kristian Rother for donating this module.
 The following commands will store all PDB files in the ``/data/pdb``
 directory:
 
-.. code:: verbatim
+.. code:: python
 
     python PDBList.py all /data/pdb
 
@@ -1254,7 +1254,7 @@ This can also be done using the ``PDBList`` object. One simply creates a
 ``PDBList`` object (specifying the directory where the local copy of the
 PDB is present) and calls the ``update_pdb`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pl = PDBList(pdb='/data/pdb')
     >>> pl.update_pdb()

@@ -26,35 +26,35 @@ As part of building and installing Biopython you will typically run the
 full test suite at the command line from the Biopython source top level
 directory using the following:
 
-.. code:: verbatim
+.. code:: python
 
     python setup.py test
 
 This is actually equivalent to going to the ``Tests`` subdirectory and
 running:
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py
 
 You’ll often want to run just some of the tests, and this is done like
 this:
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py test_SeqIO.py test_AlignIO.py
 
 When giving the list of tests, the ``.py`` extension is optional, so you
 can also just type:
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py test_SeqIO test_AlignIO
 
 To run the docstring tests (see section `19.3 <#section:doctest>`__),
 you can use
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py doctest
 
@@ -87,14 +87,14 @@ output. If the test is failing with an exception error, it should be
 very easy to locate where exactly the script is failing. For an example
 of a print-and-compare test, try:
 
-.. code:: verbatim
+.. code:: python
 
     python test_SeqIO.py
 
 The ``unittest``-based tests instead show you exactly which
 sub-section(s) of the test are failing. For example,
 
-.. code:: verbatim
+.. code:: python
 
     python test_Cluster.py
 
@@ -132,7 +132,7 @@ found and run by ``run_tests.py``. Below, we show an example test script
 ``Tests`` directory, then ``run_tests.py`` will find it and execute the
 tests contained in it:
 
-.. code:: verbatim
+.. code:: python
 
     $ python run_tests.py     
     test_Ace ... ok
@@ -145,7 +145,7 @@ tests contained in it:
 
 …
 
-.. code:: verbatim
+.. code:: python
 
     ----------------------------------------------------------------------
     Ran 107 tests in 86.127 seconds
@@ -209,7 +209,7 @@ As an example, the ``test_Biospam.py`` test script to test the
 ``addition`` and ``multiplication`` functions in the ``Biospam`` module
 could look as follows:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Biospam
 
@@ -222,7 +222,7 @@ We generate the corresponding output with
 ``python run_tests.py -g test_Biospam.py``, and check the output file
 ``output/test_Biospam``:
 
-.. code:: verbatim
+.. code:: python
 
     test_Biospam
     2 + 3 = 5
@@ -257,7 +257,7 @@ looking at the existing example within Biopython helpful too.
 Here’s a minimal ``unittest``-style test script for ``Biospam``, which
 you can copy and paste to get started:
 
-.. code:: verbatim
+.. code:: python
 
     import unittest
     from Bio import Biospam
@@ -307,7 +307,7 @@ These are the key points of ``unittest``-based tests:
    tests as you want in a class.
 -  At the end of the test script, you can use
 
-   .. code:: verbatim
+   .. code:: python
 
        if __name__ == "__main__":
            runner = unittest.TextTestRunner(verbosity = 2)
@@ -317,7 +317,7 @@ These are the key points of ``unittest``-based tests:
    imported from ``run_tests.py``). If you run this script, then you’ll
    see something like the following:
 
-   .. code:: verbatim
+   .. code:: python
 
        $ python test_BiospamMyModule.py
        test_addition1 (__main__.TestAddition) ... ok
@@ -334,7 +334,7 @@ These are the key points of ``unittest``-based tests:
    docstrings to each test. These are shown when running the tests,
    which can be useful information if a test is failing.
 
-   .. code:: verbatim
+   .. code:: python
 
        import unittest
        from Bio import Biospam
@@ -370,7 +370,7 @@ These are the key points of ``unittest``-based tests:
 
    Running the script will now show you:
 
-   .. code:: verbatim
+   .. code:: python
 
        $ python test_BiospamMyModule.py
        An addition test ... ok
@@ -388,7 +388,7 @@ If your module contains docstring tests (see section
 to be run. You can do so as follows by modifying the code under
 ``if __name__ == "__main__":`` to look like this:
 
-.. code:: verbatim
+.. code:: python
 
     if __name__ == "__main__":
         unittest_suite = unittest.TestLoader().loadTestsFromName("test_Biospam")
@@ -422,7 +422,7 @@ Biopython test suite, you must update ``run_tests.py`` to include your
 module. Currently, the relevant part of ``run_tests.py`` looks as
 follows:
 
-.. code:: verbatim
+.. code:: python
 
     # This is the list of modules containing docstring tests.
     # If you develop docstring tests for other modules, please add
@@ -451,7 +451,7 @@ assuming the code will be run from the ``Tests`` directory, see the
 
 To run the docstring tests only, use
 
-.. code:: verbatim
+.. code:: python
 
     $ python run_tests.py doctest
 

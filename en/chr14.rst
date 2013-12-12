@@ -28,7 +28,7 @@ Since we are interested in motif analysis, we need to take a look at
 ``Motif`` objects in the first place. For that we need to import the
 Bio.motifs library:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
 
@@ -42,7 +42,7 @@ motif finding software.
 
 Suppose we have these instances of a DNA motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> instances = [Seq("TACAA"),
@@ -56,7 +56,7 @@ Suppose we have these instances of a DNA motif:
 
 then we can create a Motif object as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m = motifs.create(instances)
 
@@ -65,7 +65,7 @@ essentially a Python list with some added functionality, as described
 below. Printing out the Motif object shows the instances from which it
 was constructed:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m
     TACAA
@@ -80,7 +80,7 @@ was constructed:
 The length of the motif defined as the sequence length, which should be
 the same for all instances:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(m)
     5
@@ -89,7 +89,7 @@ The Motif object has an attribute ``.counts`` containing the counts of
 each nucleotide at each position. Printing this counts matrix shows it
 in an easily readable format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.counts
             0      1      2      3      4
@@ -101,7 +101,7 @@ in an easily readable format:
 
 You can access these counts as a dictionary:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts['A']
     [3, 7, 0, 2, 1]
@@ -109,7 +109,7 @@ You can access these counts as a dictionary:
 but you can also think of it as a 2D array with the nucleotide as the
 first dimension and the position as the second dimension:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts['T',0]
     4
@@ -120,7 +120,7 @@ first dimension and the position as the second dimension:
 
 You can also directly access columns of the counts matrix
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts[:,3]
     {'A': 2, 'C': 2, 'T': 0, 'G': 3}
@@ -128,7 +128,7 @@ You can also directly access columns of the counts matrix
 Instead of the nucleotide itself, you can also use the index of the
 nucleotide in the sorted letters in the alphabet of the motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.alphabet
     IUPACUnambiguousDNA()
@@ -145,7 +145,7 @@ The motif has an associated consensus sequence, defined as the sequence
 of letters along the positions of the motif for which the largest value
 in the corresponding columns of the ``.counts`` matrix is obtained:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.consensus
     Seq('TACGC', IUPACUnambiguousDNA())
@@ -153,7 +153,7 @@ in the corresponding columns of the ``.counts`` matrix is obtained:
 as well as an anticonsensus sequence, corresponding to the smallest
 values in the columns of the ``.counts`` matrix:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.anticonsensus
     Seq('GGGTG', IUPACUnambiguousDNA())
@@ -162,7 +162,7 @@ You can also ask for a degenerate consensus sequence, in which ambiguous
 nucleotides are used for positions where there are multiple nucleotides
 with high counts:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
@@ -174,7 +174,7 @@ Cavener [`11 <#cavener1987>`__\ ].
 
 We can also get the reverse complement of a motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> r = m.reverse_complement()
     >>> r.consensus
@@ -214,7 +214,7 @@ beginning and ending lines of the JASPAR ``Arnt.sites`` file showing
 known binding sites of the mouse helix-loop-helix transcription factor
 Arnt:
 
-.. code:: verbatim
+.. code:: python
 
     >MA0004 ARNT    1
     CACGTGatgtcctc
@@ -235,7 +235,7 @@ that were found to align to each other.
 
 We can create a ``Motif`` object from these instances as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> arnt = motifs.read(open("Arnt.sites"), "sites")
@@ -243,7 +243,7 @@ We can create a ``Motif`` object from these instances as follows:
 The instances from which this motif was created is stored in the
 ``.instances`` property:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.instances[:3]
     [Seq('CACGTG', IUPACUnambiguousDNA()), Seq('CACGTG', IUPACUnambiguousDNA()), Seq('CACGTG', IUPACUnambiguousDNA())]
@@ -274,7 +274,7 @@ The instances from which this motif was created is stored in the
 The counts matrix of this motif is automatically calculated from the
 instances:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.counts
             0      1      2      3      4      5
@@ -289,7 +289,7 @@ matrix, without the instances from which it was created. For example,
 this is the JASPAR file ``SRF.pfm`` containing the count matrix for the
 human SRF transcription factor:
 
-.. code:: verbatim
+.. code:: python
 
      2  9  0  1 32  3 46  1 43 15  2  2
      1 33 45 45  1  1  0  0  0  1  0  1
@@ -298,7 +298,7 @@ human SRF transcription factor:
 
 We can create a motif for this count matrix as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf = motifs.read(open("SRF.pfm"),"pfm")
     >>> print srf.counts
@@ -312,14 +312,14 @@ We can create a motif for this count matrix as follows:
 As this motif was created from the counts matrix directly, it has no
 instances associated with it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print srf.instances
     None
 
 We can now ask for the consensus sequence of these two motifs:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.counts.consensus
     CACGTG
@@ -338,7 +338,7 @@ contain multiple motifs. This is an example.
 At the top of an output file generated by MEME shows some background
 information about the MEME and the version of MEME used:
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     MEME - Motif discovery tool
@@ -348,7 +348,7 @@ information about the MEME and the version of MEME used:
 
 Further down, the input set of training sequences is recapitulated:
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     TRAINING SET
@@ -365,7 +365,7 @@ Further down, the input set of training sequences is recapitulated:
 
 and the exact command line that was used:
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     COMMAND LINE SUMMARY
@@ -378,7 +378,7 @@ and the exact command line that was used:
 
 Next is detailed information on each motif that was found:
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     MOTIF  1        width =   12   sites =   7   llr = 95   E-value = 2.0e-001
@@ -393,7 +393,7 @@ Next is detailed information on each motif that was found:
 
 To parse this file (stored as ``meme.dna.oops.txt``), use
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("meme.dna.oops.txt")
     >>> record = motifs.parse(handle, "meme")
@@ -403,7 +403,7 @@ The ``motifs.parse`` command reads the complete file directly, so you
 can close the file after calling ``motifs.parse``. The header
 information is stored in attributes:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.version
     '3.0'
@@ -420,7 +420,7 @@ The record is an object of the ``Bio.motifs.meme.Record`` class. The
 class inherits from list, and you can think of ``record`` as a list of
 Motif objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     2
@@ -433,7 +433,7 @@ Motif objects:
 In addition to these generic motif attributes, each motif also stores
 its specific information as calculated by MEME. For example,
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.num_occurrences
     7
@@ -448,7 +448,7 @@ its specific information as calculated by MEME. For example,
 In addition to using an index into the record, as we did above, you can
 also find it by its name:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif = record['Motif 1']
 
@@ -456,7 +456,7 @@ Each motif has an attribute ``.instances`` with the sequence instances
 in which the motif was found, providing some information on each
 instance:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(motif.instances)
     7
@@ -474,7 +474,7 @@ instance:
     12
     >>> pvalue = motif.instances[0].pvalue
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%5.3g" % pvalue
     1.85e-08
@@ -493,7 +493,7 @@ TRANSFAC file format.
 
 A minimal file in the TRANSFAC format looks as follows:
 
-.. code:: verbatim
+.. code:: python
 
     ID  motif1
     P0      A      C      G      T
@@ -516,7 +516,7 @@ nucleotides. In general, one file in the TRANSFAC format can contain
 multiple motifs. For example, this is the contents of the example
 TRANSFAC file ``transfac.dat``:
 
-.. code:: verbatim
+.. code:: python
 
     VV  EXAMPLE January 15, 2013
     XX
@@ -541,7 +541,7 @@ TRANSFAC file ``transfac.dat``:
 
 To parse a TRANSFAC file, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("transfac.dat")
     >>> record = motifs.parse(handle, "TRANSFAC")
@@ -550,7 +550,7 @@ To parse a TRANSFAC file, use
 The overall version number, if available, is stored as
 ``record.version``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.version
     'EXAMPLE January 15, 2013'
@@ -561,7 +561,7 @@ Each motif in ``record`` is in instance of the
 uses the two-letter keys to store any additional information about the
 motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif = record[0]
     >>> motif.degenerate_consensus # Using the Bio.motifs.Motif method
@@ -649,7 +649,7 @@ references associated with the motif, using these two-letter keys:
 
 Printing the motifs writes them out in their native TRANSFAC format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record
     VV  EXAMPLE January 15, 2013
@@ -692,7 +692,7 @@ Printing the motifs writes them out in their native TRANSFAC format:
 You can export the motifs in the TRANSFAC format by capturing this
 output in a string and saving it in a file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> text = str(record)
     >>> handle = open("mytransfacfile.dat", 'w')
@@ -705,7 +705,7 @@ output in a string and saving it in a file:
 Speaking of exporting, let’s look at export functions in general. To
 export a motif in the JASPAR ``.pfm`` format, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("pfm")
     3       7       0       2       1
@@ -716,7 +716,7 @@ export a motif in the JASPAR ``.pfm`` format, use
 
 To write the motif in a TRANSFAC-like matrix format, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("transfac")
     P0      A      C      G      T
@@ -733,7 +733,7 @@ To write out multiple motifs, you can use ``motifs.write``. This
 function can be used regardless of whether the motifs originated from a
 TRANSFAC file. For example,
 
-.. code:: verbatim
+.. code:: python
 
     >>> two_motifs = [arnt, srf]
     >>> print motifs.write(two_motifs, 'transfac')
@@ -769,7 +769,7 @@ TRANSFAC file. For example,
 If we have internet access, we can create a
 `weblogo <http://weblogo.berkeley.edu>`__:
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.weblogo("Arnt.png")
 
@@ -794,7 +794,7 @@ probabilities from becoming zero. To add a fixed pseudocount to all
 nucleotides at all positions, specify a number for the ``pseudocounts``
 argument:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm = m.counts.normalize(pseudocounts=0.5)
     >>> print pwm
@@ -810,7 +810,7 @@ pseudocounts for each nucleotide. For example, as the GC content of the
 human genome is about 40%, you may want to choose the pseudocounts
 accordingly:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm = m.counts.normalize(pseudocounts={'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6})
     >>> print pwm
@@ -824,7 +824,7 @@ accordingly:
 The position-weight matrix has its own methods to calculate the
 consensus, anticonsensus, and degenerate consensus sequences:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm.consensus
     Seq('TACGC', IUPACUnambiguousDNA())
@@ -838,7 +838,7 @@ calculated from the position-weight matrix is slightly different from
 the degenerate consensus sequence calculated from the instances in the
 motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
@@ -846,7 +846,7 @@ motif:
 The reverse complement of the position-weight matrix can be calculated
 directly from the ``pwm``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> rpwm = pwm.reverse_complement()
     >>> print rpwm
@@ -865,7 +865,7 @@ easy to compute the log-odds ratios, telling us what are the log odds of
 a particular symbol to be coming from a motif against the background. We
 can use the ``.log_odds()`` method on the position-weight matrix:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm = pwm.log_odds()
     >>> print pssm
@@ -886,7 +886,7 @@ To calculate the position-specific scoring matrix against a background
 with unequal probabilities for A, C, G, T, use the ``background``
 argument. For example, against a background with a 40% GC content, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> background = {'A':0.3,'C':0.2,'G':0.2,'T':0.3}
     >>> pssm = pwm.log_odds(background)
@@ -901,7 +901,7 @@ argument. For example, against a background with a 40% GC content, use
 The maximum and minimum score obtainable from the PSSM are stored in the
 ``.max`` and ``.min`` properties:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%4.2f" % pssm.max
     6.59
@@ -912,7 +912,7 @@ The mean and standard deviation of the PSSM scores with respect to a
 specific background are calculated by the ``.mean`` and ``.std``
 methods.
 
-.. code:: verbatim
+.. code:: python
 
     >>> mean = pssm.mean(background)
     >>> std = pssm.std(background)
@@ -937,7 +937,7 @@ The most frequent use for a motif is to find its instances in some
 sequence. For the sake of this section, we will use an artificial
 sequence like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> test_seq=Seq("TACACTGCATTACAACCCAAGCATTA",m.alphabet)
     >>> len(test_seq)
@@ -949,7 +949,7 @@ sequence like this:
 The simplest way to find instances, is to look for exact matches of the
 true instances of the motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.instances.search(test_seq):
     ...     print pos, seq
@@ -961,7 +961,7 @@ true instances of the motif:
 We can do the same with the reverse complement (to find instances on the
 complementary strand):
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in r.instances.search(test_seq):
     ...     print pos, seq
@@ -975,7 +975,7 @@ complementary strand):
 It’s just as easy to look for positions, giving rise to high log-odds
 scores against our motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for position, score in pssm.search(test_seq, threshold=3.0):
     ...     print "Position %d: score = %5.3f" % (position, score)
@@ -1000,7 +1000,7 @@ looks more like the motif than the background.
 
 You can also calculate the scores at all positions along the sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm.calculate(test_seq)
     array([  5.62230396,  -5.6796999 ,  -3.43177247,   0.93827754,
@@ -1015,7 +1015,7 @@ returned by ``pssm.calculate`` are for the forward strand only. To
 obtain the scores on the reverse strand, you can take the reverse
 complement of the PSSM:
 
-.. code:: verbatim
+.. code:: python
 
     >>> rpssm = pssm.reverse_complement()
     >>> rpssm.calculate(test_seq)
@@ -1035,7 +1035,7 @@ distribution grows exponentially with motif length, we are using an
 approximation with a given precision to keep computation cost
 manageable:
 
-.. code:: verbatim
+.. code:: python
 
     >>> distribution = pssm.distribution(background=background, precision=10**4)
 
@@ -1044,7 +1044,7 @@ different thresholds. We can specify the requested false-positive rate
 (probability of “finding” a motif instance in background generated
 sequence):
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fpr(0.01)
     >>> print "%5.3f" % threshold
@@ -1053,7 +1053,7 @@ sequence):
 or the false-negative rate (probability of “not finding” an instance
 generated from the motif):
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fnr(0.1)
     >>> print "%5.3f" % threshold
@@ -1062,7 +1062,7 @@ generated from the motif):
 or a threshold (approximately) satisfying some relation between the
 false-positive rate and the false-negative rate (fnr/fpr≃ *t*):
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_balanced(1000)
     >>> print "%5.3f" % threshold
@@ -1072,7 +1072,7 @@ or a threshold satisfying (roughly) the equality between the
 false-positive rate and the −\ *log* of the information content (as used
 in patser software by Hertz and Stormo):
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_patser()
     >>> print "%5.3f" % threshold
@@ -1082,7 +1082,7 @@ For example, in case of our motif, you can get the threshold giving you
 exactly the same results (for this sequence) as searching for instances
 with balanced threshold with rate of 1000.
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fpr(0.01)
     >>> print "%5.3f" % threshold
@@ -1102,7 +1102,7 @@ To facilitate searching for potential TFBSs using PSSMs, both the
 position-weight matrix and the position-specific scoring matrix are
 associated with each motif. Using the Arnt motif as an example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> handle = open("Arnt.sites")
@@ -1122,7 +1122,7 @@ associated with each motif. Using the Arnt motif as an example:
     T:   0.00   0.00   0.00   0.00   1.00   0.00
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pssm
             0      1      2      3      4      5
@@ -1136,7 +1136,7 @@ The negative infinities appear here because the corresponding entry in
 the frequency matrix is 0, and we are using zero pseudocounts by
 default:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for letter in "ACGT":
     ...     print "%s: %4.2f" % (letter, motif.pseudocounts[letter])
@@ -1150,7 +1150,7 @@ If you change the ``.pseudocounts`` attribute, the position-frequency
 matrix and the position-specific scoring matrix are recalculated
 automatically:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.pseudocounts = 3.0
     >>> for letter in "ACGT":
@@ -1161,7 +1161,7 @@ automatically:
     G: 3.00
     T: 3.00
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pwm
             0      1      2      3      4      5
@@ -1171,7 +1171,7 @@ automatically:
     T:   0.09   0.09   0.09   0.09   0.72   0.09
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pssm
             0      1      2      3      4      5
@@ -1189,7 +1189,7 @@ zero.
 The position-specific scoring matrix depends on the background
 distribution, which is uniform by default:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for letter in "ACGT":
     ...     print "%s: %4.2f" % (letter, motif.background[letter])
@@ -1202,7 +1202,7 @@ distribution, which is uniform by default:
 Again, if you modify the background distribution, the position-specific
 scoring matrix is recalculated:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = {'A': 0.2, 'C': 0.3, 'G': 0.3, 'T': 0.2}
     >>> print motif.pssm
@@ -1216,7 +1216,7 @@ scoring matrix is recalculated:
 Setting ``motif.background`` to ``None`` resets it to a uniform
 distribution:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = None
     >>> for letter in "ACGT":
@@ -1230,7 +1230,7 @@ distribution:
 If you set ``motif.background`` equal to a single value, it will be
 interpreted as the GC content:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = 0.8
     >>> for letter in "ACGT":
@@ -1244,21 +1244,21 @@ interpreted as the GC content:
 Note that you can now calculate the mean of the PSSM scores over the
 background against which it was computed:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%f" % motif.pssm.mean(motif.background)
     4.703928
 
 as well as its standard deviation:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%f" % motif.pssm.std(motif.background)
     3.290900
 
 and its distribution:
 
-.. code:: verbatim
+.. code:: python
 
     >>> distribution = motif.pssm.distribution(background=motif.background)
     >>> threshold = distribution.threshold_fpr(0.01)
@@ -1270,7 +1270,7 @@ matrix are recalculated each time you call ``motif.pwm`` or
 ``motif.pssm``, respectively. If speed is an issue and you want to use
 the PWM or PSSM repeatedly, you can save them as a variable, as in
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm = motif.pssm
 
@@ -1297,7 +1297,7 @@ their alignment.
 To give an exmaple, let us first load another motif, which is similar to
 our test motif ``m``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m_reb1 = motifs.read(open("REB1.pfm"), "pfm")
     >>> m_reb1.consensus
@@ -1313,7 +1313,7 @@ our test motif ``m``:
 To make the motifs comparable, we choose the same values for the
 pseudocounts and the background distribution as our motif ``m``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m_reb1.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
     >>> m_reb1.background = {'A':0.3,'C':0.2,'G':0.2,'T':0.3}
@@ -1330,7 +1330,7 @@ We’ll compare these motifs using the Pearson correlation. Since we want
 it to resemble a distance measure, we actually take 1−\ *r*, where *r*
 is the Pearson correlation coefficient (PCC):
 
-.. code:: verbatim
+.. code:: python
 
     >>> distance, offset = pssm.dist_pearson(pssm_reb1)
     >>> print "distance = %5.3g" % distance
@@ -1341,7 +1341,7 @@ is the Pearson correlation coefficient (PCC):
 This means that the best PCC between motif ``m`` and ``m_reb1`` is
 obtained with the following alignment:
 
-.. code:: verbatim
+.. code:: python
 
     m:      bbTACGCbb
     m_reb1: GTTACCCGG
@@ -1365,12 +1365,12 @@ favorite parameters and saved the output in the file ``meme.out``. You
 can retrieve the motifs reported by MEME by running the following piece
 of code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> motifsM = motifs.parse(open("meme.out"), "meme")
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM
     [<Bio.motifs.meme.Motif object at 0xc356b0>]
@@ -1389,7 +1389,7 @@ The motifs returned by the MEME Parser can be treated exactly like
 regular Motif objects (with instances), they also provide some extra
 functionality, by adding additional information about the instances.
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].consensus
     Seq('CTCAATCGTA', IUPACUnambiguousDNA())
@@ -1400,7 +1400,7 @@ functionality, by adding additional information about the instances.
     >>> motifsM[0].instances[0].strand
     '+'
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].instances[0].pvalue
     8.71e-07
@@ -1412,14 +1412,14 @@ We can do very similar things with the AlignACE program. Assume, you
 have your output in the file ``alignace.out``. You can parse your output
 with the following code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> motifsA = motifs.parse(open("alignace.out"),"alignace")
 
 Again, your motifs behave as they should:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA[0].consensus
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
@@ -1428,7 +1428,7 @@ In fact you can even see, that AlignAce found a very similar motif as
 MEME. It is just a longer version of a reverse complement of the MEME
 motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].reverse_complement().consensus
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
@@ -1437,7 +1437,7 @@ If you have AlignAce installed on the same machine, you can also run it
 directly from Biopython. A short example of how this can be done is
 shown below (other parameters can be specified as keyword parameters):
 
-.. code:: verbatim
+.. code:: python
 
     >>> command="/opt/bin/AlignACE"
     >>> input_file="test.fa"
@@ -1448,7 +1448,7 @@ shown below (other parameters can be specified as keyword parameters):
 Since AlignAce prints all of its output to standard output, you can get
 to your motifs by parsing the first part of the result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifs = motifs.parse(stdout,"alignace")
 
@@ -1485,14 +1485,14 @@ Since we are interested in motif analysis, we need to take a look at
 ``Motif`` objects in the first place. For that we need to import the
 Motif library:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Motif
 
 and we can start creating our first motif objects. Let’s create a DNA
 motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import IUPAC
     >>> m = Motif.Motif(alphabet=IUPAC.unambiguous_dna)
@@ -1500,7 +1500,7 @@ motif:
 This is for now just an empty container, so let’s add some sequences to
 our newly created motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> m.add_instance(Seq("TATAA",m.alphabet))
@@ -1511,7 +1511,7 @@ our newly created motif:
 Now we have a full ``Motif`` instance, so we can try to get some basic
 information about it. Let’s start with length and consensus sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(m)
     5
@@ -1520,7 +1520,7 @@ information about it. Let’s start with length and consensus sequence:
 
 In case of DNA motifs, we can also get a reverse complement of a motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.reverse_complement().consensus()
     Seq('TTATA', IUPACUnambiguousDNA())
@@ -1534,7 +1534,7 @@ In case of DNA motifs, we can also get a reverse complement of a motif:
 We can also calculate the information content of a motif with a simple
 call:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%0.2f" % m.ic()
     5.27
@@ -1547,7 +1547,7 @@ Matrix). It summarizes the probabilities of finding any symbol (in this
 case nucleotide) in any position of a motif. It can be computed by
 calling the ``.pwm()`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.pwm()
     [{'A': 0.05, 'C': 0.05, 'T': 0.85, 'G': 0.05}, 
@@ -1570,7 +1570,7 @@ non-motif sequences (usually based on the GC content of the respective
 genome). It is by default set to a uniform distribution upon creation of
 a motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.background  
     {'A': 0.25, 'C': 0.25, 'T': 0.25, 'G': 0.25}
@@ -1578,7 +1578,7 @@ a motif:
 The other parameter is ``.beta``, which states the amount of
 pseudo-counts we should add to the PWM. By default it is set to 1.0,
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.beta
     1.0
@@ -1591,7 +1591,7 @@ easy to compute the log-odds ratios, telling us what are the log odds of
 a particular symbol to be coming from a motif against the background. We
 can use the ``.log_odds()`` method:
 
-.. code:: verbatim
+.. code:: python
 
      >>> m.log_odds() 
     [{'A': -2.3219280948873622, 
@@ -1633,14 +1633,14 @@ on some version of PWM matrix. On of the most popular motif databases
 `JASPAR <http://jaspar.genereg.net>`__ stores motifs in both formats, so
 let’s look at how we can import JASPAR motifs from instances:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Motif
     >>> arnt = Motif.read(open("Arnt.sites"),"jaspar-sites")
 
 and from a count matrix:
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf = Motif.read(open("SRF.pfm"),"jaspar-pfm")
 
@@ -1648,7 +1648,7 @@ The ``arnt`` and ``srf`` motifs can both do the same things for us, but
 they use different internal representations of the motif. We can tell
 that by inspecting the ``has_counts`` and ``has_instances`` properties:
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.has_instances
     True
@@ -1657,7 +1657,7 @@ that by inspecting the ``has_counts`` and ``has_instances`` properties:
     >>> srf.has_counts
     True
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf.counts
     {'A': [2, 9, 0, 1, 32, 3, 46, 1, 43, 15, 2, 2],
@@ -1668,7 +1668,7 @@ that by inspecting the ``has_counts`` and ``has_instances`` properties:
 There are conversion functions, which can help us convert between
 different representations:
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.make_counts_from_instances()
     {'A': [8, 38, 0, 0, 0, 0],
@@ -1693,7 +1693,7 @@ exporting instances from count-based motifs.
 Speaking of exporting, let’s look at export functions. We can export to
 fasta:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("fasta")
     >instance0
@@ -1708,7 +1708,7 @@ fasta:
 or to TRANSFAC-like matrix format (used by some motif processing
 software)
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("transfac")
     XX
@@ -1726,7 +1726,7 @@ software)
 Finally, if we have internet access, we can create a
 `weblogo <http://weblogo.berkeley.edu>`__:
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.weblogo("Arnt.png")
 
@@ -1739,14 +1739,14 @@ The most frequent use for a motif is to find its instances in some
 sequence. For the sake of this section, we will use an artificial
 sequence like this:
 
-.. code:: verbatim
+.. code:: python
 
     test_seq=Seq("TATGATGTAGTATAATATAATTATAA",m.alphabet)
 
 The simplest way to find instances, is to look for exact matches of the
 true instances of the motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.search_instances(test_seq):
     ...     print pos,seq.tostring()
@@ -1758,7 +1758,7 @@ true instances of the motif:
 We can do the same with the reverse complement (to find instances on the
 complementary strand):
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.reverse_complement().search_instances(test_seq):
     ...     print pos,seq.tostring()
@@ -1769,7 +1769,7 @@ complementary strand):
 It’s just as easy to look for positions, giving rise to high log-odds
 scores against our motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,score in m.search_pwm(test_seq,threshold=5.0):
     ...     print pos,score
@@ -1793,7 +1793,7 @@ distribution grows exponentially with motif length, we are using an
 approximation with a given precision to keep computation cost
 manageable:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd = Motif.score_distribution(m,precision=10**4)
 
@@ -1802,7 +1802,7 @@ The sd object can be used to determine a number of different thresholds.
 We can specify the requested false-positive rate (probability of
 “finding” a motif instance in background generated sequence):
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_fpr(0.01)
     4.3535838726139886
@@ -1810,7 +1810,7 @@ We can specify the requested false-positive rate (probability of
 or the false-negative rate (probability of “not finding” an instance
 generated from the motif):
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_fnr(0.1)
     0.26651713652234044
@@ -1818,7 +1818,7 @@ generated from the motif):
 or a threshold (approximately) satisfying some relation between fpr and
 fnr *fnr*/*fpr*\ ≃ *t*:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_balanced(1000)
     8.4406506087056368
@@ -1831,7 +1831,7 @@ For example, in case of our motif, you can get the threshold giving you
 exactly the same results (for this sequence) as searching for instances
 with balanced threshold with rate of 1000.
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,score in m.search_pwm(test_seq,threshold=sd.threshold_balanced(1000)):
     ...     print pos,score
@@ -1870,7 +1870,7 @@ distance and the corresponding offset between motifs.
 To show how these functions work, let us first load another motif, which
 is similar to our test motif ``m``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> ubx=Motif.read(open("Ubx.pfm"),"jaspar-pfm")
     <Bio.Motif.Motif.Motif object at 0xc29b90>
@@ -1882,7 +1882,7 @@ correlation. Since we want it to resemble a distance measure, we
 actually take 1−\ *r*, where *r* is the Pearson correlation coefficient
 (PCC):
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_pearson(ubx)
     (0.41740393308237722, 2)
@@ -1890,7 +1890,7 @@ actually take 1−\ *r*, where *r* is the Pearson correlation coefficient
 This means, that the best PCC between motif ``m`` and ``Ubx`` is
 obtained with the following alignment:
 
-.. code:: verbatim
+.. code:: python
 
     bbTAAT
     TATAAb
@@ -1898,7 +1898,7 @@ obtained with the following alignment:
 where ``b`` stands for background distribution. The PCC itself is
 roughly 1−0.42=0.58. If we try the reverse complement of the Ubx motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_pearson(ubx.reverse_complement())
     (0.25784180151584823, 1)
@@ -1906,7 +1906,7 @@ roughly 1−0.42=0.58. If we try the reverse complement of the Ubx motif:
 We can see that the PCC is better (almost 0.75), and the alignment is
 also different:
 
-.. code:: verbatim
+.. code:: python
 
     bATTA
     TATAA
@@ -1915,7 +1915,7 @@ There are two other functions: ``dist_dpq``, which is a true metric
 (satisfying traingle inequality) based on the Kullback-Leibler
 divergence
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_dpq(ubx.reverse_complement())
     (0.49292358382899853, 1)
@@ -1924,7 +1924,7 @@ and the ``dist_product`` method, which is based on the product of
 probabilities which can be interpreted as the probability of
 independently generating the same instance by both motifs.
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_product(ubx.reverse_complement())
     (0.16224587301064275, 1)
@@ -1945,7 +1945,7 @@ favorite parameters and saved the output in the file ``meme.out``. You
 can retrieve the motifs reported by MEME by running the following piece
 of code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM = list(Motif.parse(open("meme.out"),"MEME"))
     >>> motifsM
@@ -1965,7 +1965,7 @@ The motifs returned by MEMEParser can be treated exactly like regular
 Motif objects (with instances), they also provide some extra
 functionality, by adding additional information about the instances.
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].consensus()
     Seq('CTCAATCGTA', IUPACUnambiguousDNA())
@@ -1986,13 +1986,13 @@ We can do very similar things with AlignACE program. Assume, you have
 your output in the file ``alignace.out``. You can parse your output with
 the following code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA=list(Motif.parse(open("alignace.out"),"AlignAce"))
 
 Again, your motifs behave as they should:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA[0].consensus()
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
@@ -2000,7 +2000,7 @@ Again, your motifs behave as they should:
 In fact you can even see, that AlignAce found a very similar motif as
 MEME, it is just a longer version of a reverse complement of MEME motif:
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].reverse_complement().consensus()
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
@@ -2009,7 +2009,7 @@ If you have AlignAce installed on the same machine, you can also run it
 directly from Biopython. Short example of how this can be done is shown
 below (other parameters can be specified as keyword parameters):
 
-.. code:: verbatim
+.. code:: python
 
     >>> command="/opt/bin/AlignACE"
     >>> input_file="test.fa"
@@ -2020,7 +2020,7 @@ below (other parameters can be specified as keyword parameters):
 Since AlignAce prints all its output to standard output, you can get to
 your motifs by parsing the first part of the result:
 
-.. code:: verbatim
+.. code:: python
 
     motifs=list(Motif.parse(stdout,"AlignAce"))
 

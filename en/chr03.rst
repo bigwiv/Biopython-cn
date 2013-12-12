@@ -58,7 +58,7 @@ Now that we know what we are dealing with, let’s look at how to utilize
 this class to do interesting work. You can create an ambiguous sequence
 with the default generic alphabet like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
@@ -71,7 +71,7 @@ However, where possible you should specify the alphabet explicitly when
 creating your sequence objects - in this case an unambiguous DNA
 alphabet object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -83,7 +83,7 @@ alphabet object:
 
 Unless of course, this really is an amino acid sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -99,7 +99,7 @@ Unless of course, this really is an amino acid sequence:
 In many ways, we can deal with Seq objects as if they were normal Python
 strings, for example getting the length, or iterating over the elements:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -117,7 +117,7 @@ strings, for example getting the length, or iterating over the elements:
 You can access elements of the sequence in the same way as for strings
 (but remember, Python counts from zero!):
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_seq[0] #first letter
     G
@@ -130,7 +130,7 @@ The ``Seq`` object has a ``.count()`` method, just like a string. Note
 that this means that like a Python string, this gives a
 *non-overlapping* count:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> "AAAA".count("AA")
@@ -142,7 +142,7 @@ For some biological uses, you may actually want an overlapping count
 (i.e. 3 in this trivial example). When searching for single letters,
 this makes no difference:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -158,7 +158,7 @@ While you could use the above snippet of code to calculate a GC%, note
 that the ``Bio.SeqUtils`` module has several GC functions already built.
 For example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -182,7 +182,7 @@ Section \ `3.12 <#sec:mutable-seq>`__ below which talks about the
 
 A more complicated example, let’s get a slice of the sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -207,7 +207,7 @@ Also like a Python string, you can do slices with a start, stop and
 *stride* (the step size, which defaults to one). For example, we can get
 the first, second and third codon positions of this DNA sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[0::3]
     Seq('GCTGTAGTAAG', IUPACUnambiguousDNA())
@@ -220,7 +220,7 @@ Another stride trick you might have seen with a Python string is the use
 of a -1 stride to reverse the string. You can do this with a ``Seq``
 object too:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
@@ -231,7 +231,7 @@ object too:
 If you really do just need a plain string, for example to write to a
 file, or insert into a database, then this is very easy to get:
 
-.. code:: verbatim
+.. code:: python
 
     >>> str(my_seq)
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
@@ -240,7 +240,7 @@ Since calling ``str()`` on a ``Seq`` object returns the full sequence as
 a string, you often don’t actually have to do this conversion
 explicitly. Python does this automatically with a print statement:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_seq
     GATCGATGGGCCTATATAGGATCGAAAATCGC
@@ -249,7 +249,7 @@ You can also use the ``Seq`` object directly with a ``%s`` placeholder
 when using the Python string formatting or interpolation operator
 (``%``):
 
-.. code:: verbatim
+.. code:: python
 
     >>> fasta_format_string = ">Name\n%s\n" % my_seq
     >>> print fasta_format_string
@@ -269,7 +269,7 @@ will give just a truncated representation. Instead use
 ``my_seq.tostring()`` (which is still available in the current Biopython
 releases for backwards compatibility):
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq.tostring()
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
@@ -282,7 +282,7 @@ like you can with Python strings to concatenate them. However, you can’t
 add sequences with incompatible alphabets, such as a protein sequence
 and a DNA sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import IUPAC
     >>> from Bio.Seq import Seq
@@ -296,7 +296,7 @@ and a DNA sequence:
 If you *really* wanted to do this, you’d have to first give both
 sequences generic alphabets:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import generic_alphabet
     >>> protein_seq.alphabet = generic_alphabet
@@ -308,7 +308,7 @@ Here is an example of adding a generic nucleotide sequence to an
 unambiguous IUPAC DNA sequence, resulting in an ambiguous nucleotide
 sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_nucleotide
@@ -329,7 +329,7 @@ Python strings have very useful ``upper`` and ``lower`` methods for
 changing the case. As of Biopython 1.53, the ``Seq`` object gained
 similar methods which are alphabet aware. For example,
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_dna
@@ -343,7 +343,7 @@ similar methods which are alphabet aware. For example,
 
 These are useful for doing case insensitive matching:
 
-.. code:: verbatim
+.. code:: python
 
     >>> "GTAC" in dna_seq
     False
@@ -353,7 +353,7 @@ These are useful for doing case insensitive matching:
 Note that strictly speaking the IUPAC alphabets are for upper case
 sequences only, thus:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -369,7 +369,7 @@ sequences only, thus:
 For nucleotide sequences, you can easily obtain the complement or
 reverse complement of a ``Seq`` object using its built-in methods:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -384,7 +384,7 @@ reverse complement of a ``Seq`` object using its built-in methods:
 As mentioned earlier, an easy way to just reverse a ``Seq`` object (or a
 Python string) is slice it with -1 step:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
@@ -393,7 +393,7 @@ In all of these operations, the alphabet property is maintained. This is
 very useful in case you accidentally end up trying to do something weird
 like take the (reverse)complement of a protein sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -443,7 +443,7 @@ Now let’s actually get down to doing a transcription in Biopython.
 First, let’s create ``Seq`` objects for the coding and template DNA
 strands:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -461,7 +461,7 @@ figure the template strand is shown reversed.
 Now let’s transcribe the coding strand into the corresponding mRNA,
 using the ``Seq`` object’s built in ``transcribe`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna
     Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
@@ -474,7 +474,7 @@ As you can see, all this does is switch T → U, and adjust the alphabet.
 If you do want to do a true biological transcription starting with the
 template strand, then this becomes a two-step process:
 
-.. code:: verbatim
+.. code:: python
 
     >>> template_dna.reverse_complement().transcribe()
     Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
@@ -483,7 +483,7 @@ The ``Seq`` object also includes a back-transcription method for going
 from the mRNA to the coding strand of the DNA. Again, this is a simple U
 → T substitution and associated change of alphabet:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -506,7 +506,7 @@ above, now let’s translate this mRNA into the corresponding protein
 sequence - again taking advantage of one of the ``Seq`` object’s
 biological methods:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -518,7 +518,7 @@ biological methods:
 
 You can also translate directly from the coding strand DNA sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -541,7 +541,7 @@ use the *standard* genetic code (NCBI table id 1). Suppose we are
 dealing with a mitochondrial sequence. We need to tell the translation
 function to use the relevant genetic code instead:
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table="Vertebrate Mitochondrial")
     Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -549,7 +549,7 @@ function to use the relevant genetic code instead:
 You can also specify the table using the NCBI table number which is
 shorter, and often included in the feature annotation of GenBank files:
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table=2)
     Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -557,7 +557,7 @@ shorter, and often included in the feature annotation of GenBank files:
 Now, you may want to translate the nucleotides up to the first in frame
 stop codon, and then stop (as happens in nature):
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate()
     Seq('MAIVMGR*KGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -575,7 +575,7 @@ your protein sequence.
 You can even specify the stop symbol if you don’t like the default
 asterisk:
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table=2, stop_symbol="@")
     Seq('MAIVMGRWKGAR@', HasStopCodon(IUPACProtein(), '@'))
@@ -590,7 +590,7 @@ However, what if your sequence uses a non-standard start codon? This
 happens a lot in bacteria – for example the gene yaaX in ``E. coli``
 K12:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_dna
@@ -612,7 +612,7 @@ it does *normally* encode Valine, if used as a start codon it should be
 translated as methionine. This happens if you tell Biopython your
 sequence is a complete CDS:
 
-.. code:: verbatim
+.. code:: python
 
     >>> gene.translate(table="Bacterial", cds=True)
     Seq('MKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR',
@@ -641,7 +641,7 @@ in a much more readable layout.
 As before, let’s just focus on two choices: the Standard translation
 table, and the translation table for Vertebrate Mitochondrial DNA.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Data import CodonTable
     >>> standard_table = CodonTable.unambiguous_dna_by_name["Standard"]
@@ -650,7 +650,7 @@ table, and the translation table for Vertebrate Mitochondrial DNA.
 Alternatively, these tables are labeled with ID numbers 1 and 2,
 respectively:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Data import CodonTable
     >>> standard_table = CodonTable.unambiguous_dna_by_id[1]
@@ -658,7 +658,7 @@ respectively:
 
 You can compare the actual tables visually by printing them:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print standard_table
     Table 1 Standard, SGC0
@@ -688,7 +688,7 @@ You can compare the actual tables visually by printing them:
 
 and:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print mito_table
     Table 2 Vertebrate Mitochondrial, SGC1
@@ -719,7 +719,7 @@ and:
 You may find these following properties useful – for example if you are
 trying to do your own gene finding:
 
-.. code:: verbatim
+.. code:: python
 
     >>> mito_table.stop_codons
     ['TAA', 'TAG', 'AGA', 'AGG']
@@ -756,7 +756,7 @@ Now, in logic if *A*\ =\ *B* and *B*\ =\ *C*, by transitivity we expect
 agree is just not right. This transitivity problem would also have
 implications for using ``Seq`` objects as Python dictionary keys.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -767,7 +767,7 @@ So, what does Biopython do? Well, the equality test is the default for
 Python objects – it tests to see if they are the same object in memory.
 This is a very strict test:
 
-.. code:: verbatim
+.. code:: python
 
     >>> seq1 == seq2
     False
@@ -777,7 +777,7 @@ This is a very strict test:
 If you actually want to do this, you can be more explicit by using the
 Python ``id`` function,
 
-.. code:: verbatim
+.. code:: python
 
     >>> id(seq1) == id(seq2)
     False
@@ -789,7 +789,7 @@ alphabet, or at least all be the same type of sequence (all DNA, all
 RNA, or all protein). What you probably want is to just compare the
 sequences as strings – so do this explicitly:
 
-.. code:: verbatim
+.. code:: python
 
     >>> str(seq1) == str(seq2)
     True
@@ -809,7 +809,7 @@ object to act like a string, this is also a useful default since in many
 biological applications you want to ensure you are not changing your
 sequence data:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -817,7 +817,7 @@ sequence data:
 
 Observe what happens if you try to edit the sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[5] = "G"
     Traceback (most recent call last):
@@ -827,7 +827,7 @@ Observe what happens if you try to edit the sequence:
 However, you can convert it into a mutable sequence (a ``MutableSeq``
 object) and do pretty much anything you want with it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> mutable_seq = my_seq.tomutable()
     >>> mutable_seq
@@ -836,7 +836,7 @@ object) and do pretty much anything you want with it:
 Alternatively, you can create a ``MutableSeq`` object directly from a
 string:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import MutableSeq
     >>> from Bio.Alphabet import IUPAC
@@ -844,7 +844,7 @@ string:
 
 Either way will give you a sequence object which can be changed:
 
-.. code:: verbatim
+.. code:: python
 
     >>> mutable_seq
     MutableSeq('GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA', IUPACUnambiguousDNA())
@@ -869,7 +869,7 @@ this way.
 Once you have finished editing your a ``MutableSeq`` object, it’s easy
 to get back to a read-only ``Seq`` object should you need to:
 
-.. code:: verbatim
+.. code:: python
 
     >>> new_seq = mutable_seq.toseq()
     >>> new_seq
@@ -888,7 +888,7 @@ the actual letters making it up. You could of course use a normal
 to hold a string of a million “N” characters when you could just store a
 single letter “N” and the desired length as an integer.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import UnknownSeq
     >>> unk = UnknownSeq(20)
@@ -902,7 +902,7 @@ single letter “N” and the desired length as an integer.
 You can of course specify an alphabet, meaning for nucleotide sequences
 the letter defaults to “N” and for proteins “X”, rather than just “?”.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import UnknownSeq
     >>> from Bio.Alphabet import IUPAC
@@ -916,7 +916,7 @@ You can use all the usual ``Seq`` object methods too, note these give
 back memory saving ``UnknownSeq`` objects where appropriate as you might
 expect:
 
-.. code:: verbatim
+.. code:: python
 
     >>> unk_dna
     UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
@@ -953,7 +953,7 @@ object orientated one), there are module level functions in ``Bio.Seq``
 will accept plain Python strings, ``Seq`` objects (including
 ``UnknownSeq`` objects) or ``MutableSeq`` objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import reverse_complement, transcribe, back_transcribe, translate
     >>> my_string = "GCTGTTATGGGTCGTTGGAAGGGTGGTCGTGCTGCTGGTTAG"

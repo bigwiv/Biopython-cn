@@ -30,7 +30,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 此外，你还可以从已建立的替换矩阵集合MatrixInfo.py中选择一个矩阵。
 ``SeqMat`` 类来自于一个字典（dictionary）:
 
-.. code:: verbatim
+.. code:: python
 
     class SeqMat(dict)
 
@@ -43,7 +43,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
 #. 方法
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           __init__(self,data=None,alphabet=None, mat_name='', build_later=0):
 
@@ -52,13 +52,13 @@ Consumers是用来接收Scanners所发出事件的对象。
       #. ``mat_name``: 矩阵名，例如  ``BLOSUM62`` 或者 ``PAM250``
       #. ``build_later``: 默认值为false。如果为true，用户应该只提供alphabet和空字典。如果想要之后再构建矩阵，这样会跳过alphabet大小和矩阵大小的检查。
        
-   #. .. code:: verbatim
+   #. .. code:: python
 
           entropy(self,obs_freq_mat)
 
       #. ``obs_freq_mat``: 一个观测频率矩阵。基于“obs_freq_mat”的频率返回矩阵的熵值。矩阵实例须为LO或者SUBS。
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           sum(self)
 
@@ -68,13 +68,13 @@ Consumers是用来接收Scanners所发出事件的对象。
       -  s: 半矩阵中某个字母值的总和;
       -  n: alphabet中字母的个数。
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           print_mat(self,f,format="%4d",bottomformat="%4s",alphabet=None)
 
       将矩阵打印到文件句柄f。 ``format`` 是矩阵值的格式； ``bottomformat`` 是底部行（矩阵字母）的格式。下面是一个3字母矩阵的例子：
 
-      .. code:: verbatim
+      .. code:: python
 
           A 23
           B 12 34
@@ -95,13 +95,13 @@ Consumers是用来接收Scanners所发出事件的对象。
       ARM中的数值是根据你的数据中替换的个数决定的。数据可以是一对或者多对的序列比对结果。
       例如，丙氨酸被半胱氨酸替换了10次，而半胱氨酸被丙氨酸替换了12次，其相对应的ARM为：
 
-      .. code:: verbatim
+      .. code:: python
 
           ('A','C'): 10, ('C','A'): 12
 
       由于顺序并不重要，用户也可以只用一个输入:
 
-      .. code:: verbatim
+      .. code:: python
 
           ('A','C'): 22
 
@@ -122,7 +122,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
       用法:
 
-      .. code:: verbatim
+      .. code:: python
 
           OFM = SubsMat._build_obs_freq_mat(ARM)
 
@@ -132,7 +132,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
       用法:
 
-      .. code:: verbatim
+      .. code:: python
 
           EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
 
@@ -140,7 +140,7 @@ Consumers是用来接收Scanners所发出事件的对象。
     
       期望频率表可以（理论上说也应该可以）从OFM得到。所以大多数情况你可以用下面的代码产生 ``exp_freq_table``:
 
-      .. code:: verbatim
+      .. code:: python
 
           >>> exp_freq_table = SubsMat._exp_freq_table_from_obs_freq(OFM)
           >>> EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
@@ -151,7 +151,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
       用法:
 
-      .. code:: verbatim
+      .. code:: python
 
           SFM = SubsMat._build_subs_mat(OFM,EFM)
 
@@ -161,7 +161,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
       用法:
 
-      .. code:: verbatim
+      .. code:: python
 
           LOM=SubsMat._build_log_odds_mat(SFM[,logbase=10,factor=10.0,round_digit=1])
 
@@ -174,7 +174,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
    因为大部分人都想用最简单的方法产生对数机率矩阵（LOM），SubsMat提供了一个可以完成所有需求的函数：
  
-   .. code:: verbatim
+   .. code:: python
 
        make_log_odds_matrix(acc_rep_mat,exp_freq_table=None,logbase=10,
                              factor=10.0,round_digit=0):
@@ -187,7 +187,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 20.2.2  FreqTable
 ~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     FreqTable.FreqTable(UserDict.UserDict)
 
@@ -204,7 +204,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
 #. 用法示例: 文件中有残基的个数，用空格分格，形式如下（以3个字母为例）：
 
-   .. code:: verbatim
+   .. code:: python
 
        A   35
        B   65
@@ -214,7 +214,7 @@ Consumers是用来接收Scanners所发出事件的对象。
    
    一个等价的频率文件:
 
-   .. code:: verbatim
+   .. code:: python
 
        A  0.175
        B  0.325
@@ -223,7 +223,7 @@ Consumers是用来接收Scanners所发出事件的对象。
    反之，残基频率或者计数也可以作为字典输入。
    一个计数字典的例子（3个字母）：
 
-   .. code:: verbatim
+   .. code:: python
 
        {'A': 35, 'B': 65, 'C': 100}
 
@@ -231,7 +231,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
    一个相同数据的频率字典如下：
 
-   .. code:: verbatim
+   .. code:: python
 
        {'A': 0.175, 'B': 0.325, 'C': 0.5}
 
@@ -241,7 +241,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
    读入期望的计数，readCount会产生频率。下面的任意一个都可以用来产生频率表（ftab）：
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from SubsMat import *
        >>> ftab = FreqTable.FreqTable(my_frequency_dictionary,FreqTable.FREQ)

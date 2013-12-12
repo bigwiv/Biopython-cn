@@ -43,7 +43,7 @@ BLAT output file
 `here <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__. Both
 output files were generated using this sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >mystery_seq
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
@@ -122,7 +122,7 @@ The QueryResult object represents a single search query and contains
 zero or more Hit objects. Let’s see what it looks like using the BLAST
 file we have:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
@@ -185,7 +185,7 @@ on the ``QueryResult`` object, you can see:
 
 Now let’s check our BLAT results using the same procedure as above:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> print blat_qresult
@@ -226,7 +226,7 @@ accessed individually using Python’s object attribute access notation
 (a.k.a. the dot notation). There are also other format-specific
 attributes that you can access using the same method.
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%s %s" % (blast_qresult.program, blast_qresult.version)
     blastn 2.2.27+
@@ -250,7 +250,7 @@ of lists and dictionaries.
 Like Python lists and dictionaries, ``QueryResult`` objects are
 iterable. Each iteration returns a ``Hit`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hit in blast_qresult:
     ...     hit
@@ -264,7 +264,7 @@ iterable. Each iteration returns a ``Hit`` object:
 To check how many items (hits) a ``QueryResult`` has, you can simply
 invoke Python’s ``len`` method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(blast_qresult)
     100
@@ -274,7 +274,7 @@ invoke Python’s ``len`` method:
 Like Python lists, you can retrieve items (hits) from a ``QueryResult``
 using the slice notation:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult[0]        # retrieves the top hit
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
@@ -285,7 +285,7 @@ To retrieve multiple hits, you can slice ``QueryResult`` objects using
 the slice notation as well. In this case, the slice will return a new
 ``QueryResult`` object containing only the sliced hits:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_slice = blast_qresult[:3]     # slices the first three hits
     >>> print blast_slice
@@ -304,7 +304,7 @@ Like Python dictionaries, you can also retrieve hits using the hit’s ID.
 This is particularly useful if you know a given hit ID exists within a
 search query results:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult['gi|262205317|ref|NR_030195.1|']
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
@@ -312,7 +312,7 @@ search query results:
 You can also get a full list of ``Hit`` objects using ``hits`` and a
 full list of ``Hit`` IDs using ``hit_keys``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult.hits
     [...]       # list of all hits
@@ -323,7 +323,7 @@ What if you just want to check whether a particular hit is present in
 the query results? You can do a simple Python membership test using the
 ``in`` keyword:
 
-.. code:: verbatim
+.. code:: python
 
     >>> 'gi|262205317|ref|NR_030195.1|' in blast_qresult
     True
@@ -334,7 +334,7 @@ Sometimes, knowing whether a hit is present is not enough; you also want
 to know the rank of the hit. Here, the ``index`` method comes to the
 rescue:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult.index('gi|301171437|ref|NR_035870.1|')
     22
@@ -358,7 +358,7 @@ the ``in_place`` flag to ``False`` so that sorting will return a new
 set the ``reverse`` flag to ``True`` so that we sort in descending
 order.
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hit in blast_qresult[:5]:   # id and sequence length of the first five hits
     ...     print hit.id, hit.seq_len
@@ -417,7 +417,7 @@ or ``False``.
 Here is an example of using ``hit_filter`` to filter out ``Hit`` objects
 that only have one HSP:
 
-.. code:: verbatim
+.. code:: python
 
     >>> filter_func = lambda hit: len(hit.hsps) > 1     # the callback function
     >>> len(blast_qresult)      # no. of hits before filtering
@@ -445,7 +445,7 @@ callback function must return the modified ``Hit`` or ``HSP`` object
 Let’s see an example where we’re using ``hit_map`` to rename the hit
 IDs:
 
-.. code:: verbatim
+.. code:: python
 
     >>> def map_func(hit):
     ...     hit.id = hit.id.split('|')[3]   # renames 'gi|301171322|ref|NR_035857.1|' to 'NR_035857.1'
@@ -473,13 +473,13 @@ objects, but they themselves contain ``HSP`` objects.
 
 Let’s see what they look like, beginning with our BLAST search:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
     >>> blast_hit = blast_qresult[3]    # fourth hit from the query result
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hit
     Query: 42291
@@ -510,7 +510,7 @@ You see that we’ve got the essentials covered here:
 Now let’s contrast this with the BLAT search. Remember that in the BLAT
 search we had one hit with 17 HSPs.
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_hit = blat_qresult[0]      # the only hit
@@ -560,7 +560,7 @@ object.
 Just like Python lists, ``Hit`` objects are iterable, and each iteration
 returns one ``HSP`` object it contains:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hsp in blast_hit:
     ...     hsp
@@ -570,7 +570,7 @@ returns one ``HSP`` object it contains:
 You can invoke ``len`` on a ``Hit`` to see how many ``HSP`` objects it
 has:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(blast_hit)
     2
@@ -582,7 +582,7 @@ single ``HSP`` or multiple ``HSP`` objects. Like ``QueryResult``, if you
 slice for multiple ``HSP``, a new ``Hit`` object will be returned
 containing only the sliced ``HSP`` objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hit[0]                 # retrieve single items
     HSP(hit_id='chr19', query_id='mystery_seq', 1 fragments)
@@ -627,13 +627,13 @@ the differences you’ve seen in ``QueryResult`` or ``Hit`` objects.
 Let’s see some examples from our BLAST and BLAT searches. We’ll look at
 the BLAST HSP first:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
     >>> blast_hsp = blast_qresult[0][0]    # first hit, first hsp
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hsp
           Query: 42291 mystery_seq
@@ -664,12 +664,12 @@ shows its general details:
 These details can be accessed on their own using the dot notation, just
 like in ``QueryResult`` and ``Hit``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.query_range
     (0, 61)
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.evalue
     4.91307e-23
@@ -678,7 +678,7 @@ They’re not the only attributes available, though. ``HSP`` objects come
 with a default set of properties that makes it easy to probe their
 various details. Here are some examples:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.hit_start         # start coordinate of the hit sequence
     0
@@ -696,7 +696,7 @@ statistics / details for its ``HSP`` objects. For example, an XML BLAST
 search also outputs the number of gaps and identical residues. These
 attributes can be accessed like so:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.gap_num       # number of gaps
     0
@@ -709,7 +709,7 @@ tool, you should check the format’s documentation in ``Bio.SearchIO``.
 Alternatively, you may also use ``.__dict__.keys()`` for a quick list of
 what’s available:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.__dict__.keys()
     ['bitscore', 'evalue', 'ident_num', 'gap_num', 'bitscore_raw', 'pos_num', '_items']
@@ -717,7 +717,7 @@ what’s available:
 Finally, you may have noticed that the ``query`` and ``hit`` attributes
 of our HSP are not just regular strings:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.query
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='42291', name='aligned query sequence', description='mystery_seq', dbxrefs=[])
@@ -732,7 +732,7 @@ sorts of interesting things you can do with ``SeqRecord`` objects on
 It should not surprise you now that the ``HSP`` object has an
 ``alignment`` property which is a ``MultipleSeqAlignment`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hsp.aln
     DNAAlphabet() alignment with 2 rows and 61 columns
@@ -743,7 +743,7 @@ Having probed the BLAST HSP, let’s now take a look at HSPs from our BLAT
 results for a different kind of HSP. As usual, we’ll begin by invoking
 ``print`` on it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_hsp = blat_qresult[0][0]       # first hit, first hsp
@@ -765,7 +765,7 @@ alignment objects. What happens if you try to access ``HSP.query``,
 ``HSP.hit``, or ``HSP.aln``? You’ll get the default values for these
 attributes, which is ``None``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.hit is None
     True
@@ -779,7 +779,7 @@ still access the length of the query or hit alignment. Despite not
 displaying any attributes, the PSL format still have this information so
 ``Bio.SearchIO`` can extract them:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.query_span     # length of query match
     61
@@ -788,7 +788,7 @@ displaying any attributes, the PSL format still have this information so
 
 Other format-specific attributes are still present as well:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.score          # PSL score
     61
@@ -804,7 +804,7 @@ intervening sequence between them.
 Let’s take a look at a BLAT HSP that contains multiple blocks to see how
 ``Bio.SearchIO`` deals with this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2 = blat_qresult[0][1]      # first hit, second hsp
     >>> print blat_hsp2
@@ -845,7 +845,7 @@ contiguous (no intervening regions), while the hit match is not.
 
 All these attributes are accessible from the HSP directly, by the way:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2.hit_range         # hit start and end coordinates of the entire HSP
     (54233104, 54264463)
@@ -880,7 +880,7 @@ for a full list.
 Finally, to check whether you have multiple fragments or not, you can
 use the ``is_fragmented`` property like so:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2.is_fragmented     # BLAT HSP with 2 fragments
     True
@@ -911,7 +911,7 @@ sequences themselves, and their IDs and descriptions.
 These attributes are readily shown when you invoke ``print`` on an
 ``HSPFragment``. Here’s an example, taken from our BLAST search:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
@@ -929,7 +929,7 @@ These attributes are readily shown when you invoke ``print`` on an
 At this level, the BLAT fragment looks quite similar to the BLAST
 fragment, save for the query and hit sequences which are not present:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_frag = blat_qresult[0][0][0]    # first hit, first hsp, first fragment
@@ -943,7 +943,7 @@ fragment, save for the query and hit sequences which are not present:
 In all cases, these attributes are accessible using our favorite dot
 notation. Some examples:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_frag.query_start      # query start coordinate
     0
@@ -1024,7 +1024,7 @@ previously to read a BLAST tabular output file. In the second one, we
 use a keyword argument to modify so it parses the BLAST tabular variant
 with comments in it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresult = SearchIO.read('tab_2226_tblastn_003.txt', 'blast-tab')
@@ -1044,7 +1044,7 @@ object that yields a ``QueryResult`` object in each iteration. Like
 ``Bio.SearchIO.read``, it also accepts format-specific keyword
 arguments:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresults = SearchIO.parse('tab_2226_tblastn_001.txt', 'blast-tab')
@@ -1079,7 +1079,7 @@ format-specific keyword arguments.
 Here are some examples. You can use ``index`` with just the filename and
 format name:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> idx = SearchIO.index('tab_2226_tblastn_001.txt', 'blast-tab')
@@ -1090,7 +1090,7 @@ format name:
 
 Or also with the format-specific keyword argument:
 
-.. code:: verbatim
+.. code:: python
 
     >>> idx = SearchIO.index('tab_2226_tblastn_005.txt', 'blast-tab', comments=True)
     >>> sorted(idx.keys())
@@ -1100,7 +1100,7 @@ Or also with the format-specific keyword argument:
 
 Or with the ``key_function`` argument, as in ``Bio.SeqIO``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> key_function = lambda id: id.upper()    # capitalizes the keys
     >>> idx = SearchIO.index('tab_2226_tblastn_001.txt', 'blast-tab', key_function=key_function)
@@ -1124,7 +1124,7 @@ format-specific keyword arguments. It returns a four-item tuple, which
 denotes the number or ``QueryResult``, ``Hit``, ``HSP``, and
 ``HSPFragment`` objects that were written.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresults = SearchIO.parse('mirna.xml', 'blast-xml')     # read XML file
@@ -1149,7 +1149,7 @@ Finally, ``Bio.SearchIO`` also provides a ``convert`` function, which is
 simply a shortcut for ``Bio.SearchIO.parse`` and ``Bio.SearchIO.write``.
 Using the convert function, our example above would be:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> SearchIO.convert('mirna.xml', 'blast-xml', 'results.tab', 'blast-tab')

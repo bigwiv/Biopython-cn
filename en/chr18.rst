@@ -35,7 +35,7 @@ Let’s say the list of IDs is in a simple text file, as the first word on
 each line. This could be a tabular file where the first column is the
 ID. Try something like this:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     input_file = "big_file.sff"
@@ -70,7 +70,7 @@ our website,
 This file contains one and only one record, so we can read it in as a
 ``SeqRecord`` using the ``Bio.SeqIO.read()`` function:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> original_rec = SeqIO.read("NC_005816.gb","genbank")
@@ -81,7 +81,7 @@ the function ``random.shuffle`` – but this works on a Python list. Our
 sequence is a ``Seq`` object, so in order to shuffle it we need to turn
 it into a list:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import random
     >>> nuc_list = list(original_rec.seq)
@@ -93,7 +93,7 @@ this shuffled list. In order to do this, we need to turn the list of
 nucleotides (single letter strings) into a long string – the standard
 Python way to do this is with the string object’s join method.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqRecord import SeqRecord
@@ -108,7 +108,7 @@ This first version just uses a big for loop and writes out the records
 one by one (using the ``SeqRecord``\ ’s format method described in
 Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
 
-.. code:: verbatim
+.. code:: python
 
     import random
     from Bio.Seq import Seq
@@ -130,7 +130,7 @@ Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__):
 Personally I prefer the following version using a function to shuffle
 the record and a generator expression instead of the for loop:
 
-.. code:: verbatim
+.. code:: python
 
     import random
     from Bio.Seq import Seq
@@ -172,7 +172,7 @@ identifiers for your sequences, and the appropriate genetic code. In
 this example we just use the default table and add a prefix to the
 identifier:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqRecord import SeqRecord
     def make_protein_record(nuc_record):
@@ -185,7 +185,7 @@ We can then use this function to turn the input nucleotide records into
 protein records ready for output. An elegant way and memory efficient
 way to do this is with a generator expression:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     proteins = (make_protein_record(nuc_rec) for nuc_rec in \
@@ -208,7 +208,7 @@ everything consistent (e.g. all upper case), and you can do this easily
 using the ``upper()`` method of the ``SeqRecord`` object (added in
 Biopython 1.55):
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = (rec.upper() for rec in SeqIO.parse("mixed.fas", "fasta"))
@@ -237,7 +237,7 @@ FASTA or FASTQ which ``Bio.SeqIO`` can read, write (and index).
 If the file is small enough, you can load it all into memory at once as
 a list of ``SeqRecord`` objects, sort the list, and save it:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.fasta","fasta"))
@@ -249,7 +249,7 @@ the records (here we sort them by length). If you wanted the longest
 records first, you could flip the comparison or use the reverse
 argument:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.fasta","fasta"))
@@ -261,7 +261,7 @@ large file and you can’t load it all into memory like this? For example,
 you might have some next-generation sequencing reads to sort by length.
 This can be solved using the ``Bio.SeqIO.index()`` function.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     #Get the lengths and ids, and sort on length         
@@ -287,7 +287,7 @@ support, like the plain text SwissProt format? Here is an alternative
 solution using the ``get_raw()`` method added to ``Bio.SeqIO.index()``
 in Biopython 1.54 (see Section \ `5.4.2.2 <#sec:seqio-index-getraw>`__).
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     #Get the lengths and ids, and sort on length         
@@ -335,7 +335,7 @@ for details).
 
 First, let’s count the reads:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     count = 0
@@ -345,7 +345,7 @@ First, let’s count the reads:
 
 Now let’s do a simple filtering for a minimum PHRED quality of 20:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     good_reads = (rec for rec in \
@@ -379,7 +379,7 @@ loading all the sequences into memory at once), and the ``Seq`` object’s
 ``startswith`` method to see if the read starts with the primer
 sequence:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     primer_reads = (rec for rec in \
@@ -397,7 +397,7 @@ change as we can slice the ``SeqRecord`` (see
 Section \ `4.6 <#sec:SeqRecord-slicing>`__) to remove the first eleven
 letters (the length of our primer):
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     trimmed_primer_reads = (rec[11:] for rec in \
@@ -415,7 +415,7 @@ have their primer removed, but all the other reads are kept as they
 were? If we want to still use a generator expression, it is probably
 clearest to define our own trim function:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     def trim_primer(record, primer):
@@ -434,7 +434,7 @@ reads. Again, we’re used a generator expression to avoid any memory
 problems. You could alternatively use a generator function rather than a
 generator expression.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     def trim_primers(records, primer):
@@ -471,7 +471,7 @@ NCBI
 This time however, we will look for the sequence *anywhere* in the
 reads, not just at the very beginning:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -507,7 +507,7 @@ trimmed reads are quite short after trimming (e.g. if the adaptor was
 found in the middle rather than near the start). So, let’s add a minimum
 length requirement as well:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -603,7 +603,7 @@ Biopython includes functions to do this in the ``Bio.SeqIO.QualityIO``
 module, which are called if you use ``Bio.SeqIO`` to convert an old
 Solexa/Illumina file into a standard Sanger FASTQ file:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("solexa.fastq", "fastq-solexa", "standard.fastq", "fastq")
@@ -612,7 +612,7 @@ If you want to convert a new Illumina 1.3+ FASTQ file, all that gets
 changed is the ASCII offset because although encoded differently the
 scores are all PHRED qualities:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("illumina.fastq", "fastq-illumina", "standard.fastq", "fastq")
@@ -635,7 +635,7 @@ Sanger, the NCBI, and elsewhere (format name ``fastq`` or
 For more details, see the built in help (also
 `online <http://www.biopython.org/DIST/docs/api/Bio.SeqIO.QualityIO-module.html>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqIO import QualityIO
     >>> help(QualityIO)
@@ -651,14 +651,14 @@ and QUAL files.
 
 Going from FASTQ to FASTA is easy:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.fasta", "fasta")
 
 Going from FASTQ to QUAL is also easy:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.qual", "qual")
@@ -672,7 +672,7 @@ fiddly, so we provide a function called ``PairedFastaQualIterator`` in
 the ``Bio.SeqIO.QualityIO`` module to do this. This takes two handles
 (the FASTA file and the QUAL file) and returns a ``SeqRecord`` iterator:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqIO.QualityIO import PairedFastaQualIterator
     for record in PairedFastaQualIterator(open("example.fasta"), open("example.qual")):
@@ -683,7 +683,7 @@ This function will check that the FASTA and QUAL files are consistent
 length). You can combine this with the ``Bio.SeqIO.write()`` function to
 convert a pair of FASTA and QUAL files into a single FASTQ files:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from Bio.SeqIO.QualityIO import PairedFastaQualIterator
@@ -711,7 +711,7 @@ Again we’ll use the ``SRR020192.fastq`` file from the ENA
 although this is actually quite a small FASTQ file with less than 50,000
 reads:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> fq_dict = SeqIO.index("SRR020192.fastq", "fastq")
@@ -742,7 +742,7 @@ or to a single FASTQ file. These operations are trivial using the
 ``Bio.SeqIO.convert()`` function (see
 Section \ `5.5.2 <#sec:SeqIO-conversion>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff", "reads.fasta", "fasta")
@@ -758,7 +758,7 @@ leading and trailing poor quality sequence or adaptor will be in lower
 case. If you want the *trimmed* reads (using the clipping information
 recorded within the SFF file) use this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff-trim", "trimmed.fasta", "fasta")
@@ -773,7 +773,7 @@ instrument” tools (often referred to as the Newbler tools). This offers
 an alternative way to do SFF to FASTA or QUAL conversion at the command
 line (but currently FASTQ output is not supported), e.g.
 
-.. code:: verbatim
+.. code:: python
 
     $ sffinfo -seq -notrim E3MFGYR02_random_10_reads.sff > reads.fasta
     $ sffinfo -qual -notrim E3MFGYR02_random_10_reads.sff > reads.qual
@@ -786,7 +786,7 @@ trimming points deliberately mimics what the Roche tools do.
 For more information on the Biopython SFF support, consult the built in
 help:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqIO import SffIO
     >>> help(SffIO)
@@ -813,7 +813,7 @@ pre-marked genes:
 This is a bacterial sequence, so we’ll want to use NCBI codon table 11
 (see Section \ `3.9 <#sec:translation>`__ about translation).
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO 
     >>> record = SeqIO.read("NC_005816.fna","fasta")
@@ -823,7 +823,7 @@ This is a bacterial sequence, so we’ll want to use NCBI codon table 11
 Here is a neat trick using the ``Seq`` object’s ``split`` method to get
 a list of all the possible ORF translations in the six reading frames:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for strand, nuc in [(+1, record.seq), (-1, record.seq.reverse_complement())]:
     ...     for frame in range(3):
@@ -860,7 +860,7 @@ tracks the locations in terms of the protein counting, and converts back
 to the parent sequence by multiplying by three, then adjusting for the
 frame and strand:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO 
     record = SeqIO.read("NC_005816.gb","genbank")
@@ -900,7 +900,7 @@ frame and strand:
 
 And the output:
 
-.. code:: verbatim
+.. code:: python
 
     NQIQGVICSPDSGEFMVTFETVMEIKILHK...GVA - length 355, strand 1, 41:1109
     WDVKTVTGVLHHPFHLTFSLCPEGATQSGR...VKR - length 111, strand -1, 491:827
@@ -958,7 +958,7 @@ First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
 compile a list of all the sequence lengths. You could do this with a for
 loop, but I find a list comprehension more pleasing:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> sizes = [len(rec) for rec in SeqIO.parse("ls_orchid.fasta", "fasta")]
@@ -970,7 +970,7 @@ loop, but I find a list comprehension more pleasing:
 Now that we have the lengths of all the genes (as a list of integers),
 we can use the matplotlib histogram function to display it.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     sizes = [len(rec) for rec in SeqIO.parse("ls_orchid.fasta", "fasta")]
@@ -1009,7 +1009,7 @@ First of all, we will use ``Bio.SeqIO`` to parse the FASTA file and
 compile a list of all the GC percentages. Again, you could do this with
 a for loop, but I prefer this:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from Bio.SeqUtils import GC
@@ -1020,7 +1020,7 @@ Having read in each sequence and calculated the GC%, we then sorted them
 into ascending order. Now we’ll take this list of floating point values
 and plot them with matplotlib:
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.plot(gc_values)
@@ -1051,7 +1051,7 @@ To start off, we’ll need two sequences. For the sake of argument, we’ll
 just take the first two from our orchid FASTA file
 `ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     handle = open("ls_orchid.fasta")
@@ -1066,7 +1066,7 @@ other to compiles a similarity matrix. You could construct a matrix or
 array object, but here we just use a list of lists of booleans created
 with a nested list comprehension:
 
-.. code:: verbatim
+.. code:: python
 
     window = 7
     seq_one = str(rec_one.seq).upper()
@@ -1080,7 +1080,7 @@ we’ll use the matplotlib’s ``pylab.imshow()`` function to display this
 data, first requesting the gray color scheme so this is done in black
 and white:
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.gray()
@@ -1112,7 +1112,7 @@ use the ``pylab.scatter()`` function.
 We start by creating dictionaries mapping the window-sized sub-sequences
 to locations:
 
-.. code:: verbatim
+.. code:: python
 
     window = 7
     dict_one = {}
@@ -1133,7 +1133,7 @@ to locations:
 In order to use the ``pylab.scatter()`` we need separate lists for the
 *x* and *y* co-ordinates:
 
-.. code:: verbatim
+.. code:: python
 
     #Create lists of x and y co-ordinates for scatter plot
     x = []
@@ -1146,7 +1146,7 @@ In order to use the ``pylab.scatter()`` we need separate lists for the
 
 We are now ready to draw the revised dot plot as a scatter plot:
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.cla() #clear any prior graph
@@ -1186,7 +1186,7 @@ is used in order to show the forward and reverse qualities on two
 subplots, side by side. There is also a little bit of code to only plot
 the first fifty reads.
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     from Bio import SeqIO
@@ -1236,7 +1236,7 @@ example read in using ``Bio.AlignIO.read(...)`` as described in
 Chapter \ `6 <#chapter:Bio.AlignIO>`__. All we need to do to get an
 object that will calculate summary information is:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Align import AlignInfo
     summary_align = AlignInfo.SummaryInfo(alignment)
@@ -1263,7 +1263,7 @@ calculate a quick consensus of an alignment. Assuming we’ve got a
 ``SummaryInfo`` object called ``summary_align`` we can calculate a
 consensus by doing:
 
-.. code:: verbatim
+.. code:: python
 
     consensus = summary_align.dumb_consensus()
 
@@ -1276,7 +1276,7 @@ object is Seq object whose alphabet is inferred from the alphabets of
 the sequences making up the consensus. So doing a ``print consensus``
 would give:
 
-.. code:: verbatim
+.. code:: python
 
     consensus Seq('TATACATNAAAGNAGGGGGATGCGGATAAATGGAAAGGCGAAAGAAAGAAAAAAATGAAT
     ...', IUPACAmbiguousDNA())
@@ -1307,7 +1307,7 @@ sequence along the left axis. This sequence may be the consesus
 sequence, but can also be any sequence in the alignment. For instance
 for the alignment,
 
-.. code:: verbatim
+.. code:: python
 
     GTATC
     AT--C
@@ -1315,7 +1315,7 @@ for the alignment,
 
 the PSSM is:
 
-.. code:: verbatim
+.. code:: python
 
           G A T C
         G 1 1 0 1
@@ -1328,7 +1328,7 @@ Let’s assume we’ve got an alignment object called ``c_align``. To get a
 PSSM with the consensus sequence along the side we first get a summary
 object and calculate the consensus sequence:
 
-.. code:: verbatim
+.. code:: python
 
     summary_align = AlignInfo.SummaryInfo(c_align)
     consensus = summary_align.dumb_consensus()
@@ -1336,7 +1336,7 @@ object and calculate the consensus sequence:
 Now, we want to make the PSSM, but ignore any ``N`` ambiguity residues
 when calculating this:
 
-.. code:: verbatim
+.. code:: python
 
     my_pssm = summary_align.pos_specific_score_matrix(consensus,
                                                       chars_to_ignore = ['N'])
@@ -1352,7 +1352,7 @@ Two notes should be made about this:
    display the second sequence in the alignment along this axis, you
    would need to do:
 
-   .. code:: verbatim
+   .. code:: python
 
        second_seq = alignment.get_seq_by_num(1)
        my_pssm = summary_align.pos_specific_score_matrix(second_seq
@@ -1361,7 +1361,7 @@ Two notes should be made about this:
 The command above returns a ``PSSM`` object. To print out the PSSM as we
 showed above, we simply need to do a ``print my_pssm``, which gives:
 
-.. code:: verbatim
+.. code:: python
 
         A   C   G   T
     T  0.0 0.0 0.0 7.0
@@ -1379,7 +1379,7 @@ You can access any element of the PSSM by subscripting like
 the counts for the ’A’ residue in the second element of the above PSSM
 you would do:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_pssm[1]["A"]
     7.0
@@ -1433,7 +1433,7 @@ section \ `18.3.1 <#sec:summary_info>`__) for instructions on how to get
 this. Once we’ve got this object, calculating the information content
 for a region is as easy as:
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30,
                                                      chars_to_ignore = ['N'])
@@ -1448,7 +1448,7 @@ our alphabet (so we shouldn’t be interested in looking at it!).
 As mentioned above, we can also calculate relative information content
 by supplying the expected frequencies:
 
-.. code:: verbatim
+.. code:: python
 
     expect_freq = {
         'A' : .3,
@@ -1466,7 +1466,7 @@ works.
 To create a FreqTable object, from the frequency dictionary you just
 need to do:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Alphabet import IUPAC
     from Bio.SubsMat import FreqTable
@@ -1477,7 +1477,7 @@ need to do:
 Now that we’ve got that, calculating the relative information content
 for our region of the alignment is as simple as:
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30,
                                                      e_freq_table = e_freq_table,
@@ -1490,7 +1490,7 @@ The value return is calculated using base 2 as the logarithm base in the
 formula above. You can modify this by passing the parameter ``log_base``
 as the base you want:
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30, log_base = 10,
                                                      chars_to_ignore = ['N'])
@@ -1530,7 +1530,7 @@ containing `protein.aln <examples/protein.aln>`__ (also available online
 `here <http://biopython.org/DIST/docs/tutorial/examples/protein.aln>`__)
 contains the Clustalw alignment output.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> from Bio import Alphabet
@@ -1553,7 +1553,7 @@ when generating a replacement dictionary, by passing in all of the
 characters that should be ignored. Thus we’ll create a dictionary of
 replacements for only charged polar amino acids using:
 
-.. code:: verbatim
+.. code:: python
 
     >>> replace_info = summary_align.replacement_dictionary(["G", "A", "V", "L", "I",
     ...                                                      "M", "P", "F", "W", "S",
@@ -1562,7 +1562,7 @@ replacements for only charged polar amino acids using:
 This information about amino acid replacements is represented as a
 python dictionary which will look something like (the order can vary):
 
-.. code:: verbatim
+.. code:: python
 
     {('R', 'R'): 2079.0, ('R', 'H'): 17.0, ('R', 'K'): 103.0, ('R', 'E'): 2.0,
     ('R', 'D'): 2.0, ('H', 'R'): 0, ('D', 'H'): 15.0, ('K', 'K'): 3218.0,
@@ -1578,7 +1578,7 @@ out, amazingly enough, that this is all of the information we need to go
 ahead and create a substitution matrix. First, we use the replacement
 dictionary information to create an Accepted Replacement Matrix (ARM):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SubsMat
     >>> my_arm = SubsMat.SeqMat(replace_info)
@@ -1586,7 +1586,7 @@ dictionary information to create an Accepted Replacement Matrix (ARM):
 With this accepted replacement matrix, we can go right ahead and create
 our log odds matrix (i. e. a standard type Substitution Matrix):
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_lom = SubsMat.make_log_odds_matrix(my_arm)
 
@@ -1607,7 +1607,7 @@ optional arguments:
 Once you’ve got your log odds matrix, you can display it prettily using
 the function ``print_mat``. Doing this on our created matrix gives:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_lom.print_mat()
     D   2

@@ -24,20 +24,20 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 -  本地打开Swiss-Prot文件：
 
-   .. code:: verbatim
+   .. code:: python
       
        >>> handle = open("myswissprotfile.dat")
 
 -  打开使用gzip压缩的Swiss-Prot文件：
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> import gzip
        >>> handle = gzip.open("myswissprotfile.dat.gz")
 
 -  在线打开Swiss-Prot文件：
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> import urllib
        >>> handle = urllib.urlopen("http://www.somelocation.org/data/someswissprotfile.dat")
@@ -45,7 +45,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 -  从ExPASy数据库在线打开Swiss-Prot文件
    (见 `10.5.1 <#subsec:expasy_swissprot>`__ 章节):
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from Bio import ExPASy
        >>> handle = ExPASy.get_sprot_raw(myaccessionnumber)
@@ -58,7 +58,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 我们使用 ``read()`` 函数来从文件中读取一个Swiss-Prot记录：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> record = SwissProt.read(handle)
@@ -68,7 +68,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 现在我们可以输出一些与这些记录相关的信息：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.description
     'RecName: Full=Chalcone synthase 3; EC=2.3.1.74; AltName: Full=Naringenin-chalcone synthase 3;'
@@ -93,7 +93,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 如同这一部分刚开始所描述的，你可以按照如下所示的方法使用python
 的 ``gzip`` 模块打开并解压 ``.gz`` 文件:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import gzip
     >>> handle = gzip.open("uniprot_sprot.dat.gz")
@@ -102,7 +102,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 文件都是比较慢的。所以，如果你有空闲的硬盘空间并且在
 最开始就在硬盘里通过解压到来得到 ``uniprot_sprot.dat`` ，这样能够在以后就可以像平常那样来打开文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("uniprot_sprot.dat")
 
@@ -110,7 +110,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 有468851个Swiss-Prot记录，一种建立关于这些记录的描述列表的
 间接方式就是使用一种列表解析：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> handle = open("uniprot_sprot.dat")
@@ -126,7 +126,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 或者对记录迭代器使用for循环：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> descriptions = []
@@ -143,7 +143,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 从Swiss-Prot记录中提取任何你想要的信息也同样简单。比如你想看看一个
 Swiss-Prot记录中的成员，就输入：
 
-.. code:: verbatim
+.. code:: python
 
     >>> dir(record)
     ['__ doc__ ', '__ init__ ', '__ module__ ', 'accessions', 'annotation_update',
@@ -159,7 +159,7 @@ Swiss-Prot记录中的成员，就输入：
 Swiss-Prot也会提供一个 ``keywlist.txt`` 文件，该文件列出了Swiss-Prot中所用到
 的关键词和分类。其中所包含的词条形式如下：
 
-.. code:: verbatim
+.. code:: python
 
     ID   2Fe-2S.
     AC   KW-0001
@@ -190,7 +190,7 @@ Swiss-Prot也会提供一个 ``keywlist.txt`` 文件，该文件列出了Swiss-P
 python字典里。
 
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SwissProt import KeyWList
     >>> handle = open("keywlist.txt")
@@ -201,7 +201,7 @@ python字典里。
 
 这些命令行将会输出：
 
-.. code:: verbatim
+.. code:: python
 
     2Fe-2S.
     Protein which contains at least one 2Fe-2S iron-sulfur cluster: 2 iron atoms
@@ -222,7 +222,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 下来的、容纳了整个Prosite记录的 ``prosite.dat`` 文件，含有2073条记录（2007年12月发布的第20.24版本）。
 为了解析这样一个文件，我们再次使用一个迭代器：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("myprositefile.dat")
@@ -231,7 +231,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 现在我们可以逐个提取这些记录并输出其中一些信息。比如，使用包含整个Prosite数据库的
 文件将会使我们找到如下等信息：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("prosite.dat")
@@ -260,7 +260,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 
 如果你想知道有多少条Prosite记录，你可以输入：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("prosite.dat")
@@ -273,7 +273,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 
 为了从这些数据中读取某一条特定的记录，可以使用 ``read`` 函数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("mysingleprositerecord.dat")
@@ -291,7 +291,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__ 网站下载
 我们使用 ``Bio.ExPASy.Prodoc`` 中的解析器来解析这些Prosite文档记录。比如，为了生成一个包含所有
 Prosite文档记录的编号列表，你可以使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prodoc
     >>> handle = open("prosite.doc")
@@ -305,7 +305,7 @@ Prosite文档记录的编号列表，你可以使用：
 
 ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如下所示是一个比较典型的酶的记录
 
-.. code:: verbatim
+.. code:: python
 
     ID   3.1.1.34
     DE   Lipoprotein lipase.
@@ -333,7 +333,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 于酶相关文件中所用到的双字母编码的python字典和哈希键。为了阅读含有一个酶记录的酶文件，
 你可以使用 ``Bio.ExPASy.Enzyme`` 中的 ``read`` 函数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Enzyme
     >>> handle = open("lipoprotein.txt")
@@ -349,7 +349,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
     >>> record["PR"]
     ['PDOC00110']
 
-.. code:: verbatim
+.. code:: python
 
     >>> record["CC"]
     ['Hydrolyzes triacylglycerols in chylomicrons and very low-density lipoproteins
@@ -366,7 +366,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 为单个文件（ ``enzyme.dat`` ），该文件包含了4877个记录（2009年3月发布的第三版）。为了打开含有多个
 酶记录的文件，你可以使用 ``Bio.ExPASy.Enzyme`` 中的 ``parse`` 函数来获得一个迭代器：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Enzyme
     >>> handle = open("enzyme.dat")
@@ -374,7 +374,7 @@ ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如�
 
 我们现在每次都可以对这些记录进行迭代。比如我们可以对那些已有的酶记录做一个EC编号列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> ecnumbers = [record["ID"] for record in records]
 
@@ -416,7 +416,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 然后我们可以使用 ``Bio.SwissProt.read`` 来提取对应的Swiss-Prot记录，也可以使用 ``Bio.SeqIO.read`` 来
 得到一个序列记录SeqRecord。下列代码能够实现我刚刚提到的任务：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio import SwissProt
@@ -432,7 +432,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 如果你提供给 ``ExPASy.get_sprot_raw`` 的编号并不存在，那么 ``SwissProt.read(handle)`` 会反
 馈一个 ``ValueError`` 提示。你可以根据 ``ValueException`` 异常来找到无效的编号：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for accession in accessions:
     ...     handle = ExPASy.get_sprot_raw(accession)
@@ -455,7 +455,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 `http://www.expasy.org/cgi-bin/sprot-search-ful <http://www.expasy.org/cgi-bin/sprot-search-ful>`__ 上有说明。
 注意它们的默认情况下并不搜索TrEMBL（参数为 ``trembl`` ）。还要注意它们返回的是html网页，然而编号却可以很容易从中得到：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> import re
@@ -478,7 +478,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 为了获取一个原始格式的Prosite或者Prosite文档的记录，请使用 ``get_prosite_raw()`` 。
 例如，为了下载一个prosite记录并以原始格式输出，你可以使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prosite_raw('PS00001')
@@ -487,7 +487,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 为了获取一个Prosite记录并将其解析成一个 ``Bio.Prosite.Record`` 对象，请使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio import Prosite
@@ -496,7 +496,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 该函数也可以用于获取Prosite文档记录并解析到一个 ``Bio.ExPASy.Prodoc.Record`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio.ExPASy import Prodoc
@@ -510,7 +510,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 ``get_prosite_entry()`` 和 ``get_prodoc_entry()`` 函数可用于下载HTML格式的Prosite和Prosite文档记录。
 为了生成展示单个Prosite记录的网页，你可以使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prosite_entry('PS00001')
@@ -521,7 +521,7 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 类似地，Prosite文档文本的网页展示如下：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prodoc_entry('PDOC00001')
@@ -544,14 +544,14 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
 能够帮你安全访问ScanProsite，也可以对ScanProsite返回的结果进行解析。为了查看下边序列中
 的Prosite模式（pattern）：
 
-.. code:: verbatim
+.. code:: python
 
     MEHKEVVLLLLLFLKSGQGEPLDDYVNTQGASLFSVTKKQLGAGSIEECAAKCEEDEEFT
     CRAFQYHSKEQQCVIMAENRKSSIIIRMRDVVLFEKKVYLSECKTGNGKNYRGTMSKTKN
 
 你可以使用下边的代码：
 
-.. code:: verbatim
+.. code:: python
 
     >>> sequence = "MEHKEVVLLLLLFLKSGQGEPLDDYVNTQGASLFSVTKKQLGAGSIEECAAKCEEDEEFT
     CRAFQYHSKEQQCVIMAENRKSSIIIRMRDVVLFEKKVYLSECKTGNGKNYRGTMSKTKN"
@@ -561,7 +561,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
 你可以通过执行 ``handle.read()`` 获取原始XML格式的搜索结果。此外，我们可以使用 ``Bio.ExPASy.ScanProsite.read``
 来将原始的XML数据解析到一个python对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> result = ScanProsite.read(handle)
     >>> type(result)
@@ -569,7 +569,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
 
  ``Bio.ExPASy.ScanProsite.Record`` 对象源自一个由ScanProsite返回的包含了ScanProsite hits的列表，这个对象也能够存储hits的数量以及所找到序列的数量。本次ScanProsite搜索找到了6个hits：
 
-.. code:: verbatim
+.. code:: python
 
     >>> result.n_seq
     1
@@ -594,7 +594,7 @@ Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanPro
 ScanProsite说明文档 <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__ 。
 比如，传递 ``lowscore=1`` 可以帮我们找到一个新的低分值hit：
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = ScanProsite.scan(seq=sequence, lowscore=1)
     >>> result = ScanProsite.read(handle)

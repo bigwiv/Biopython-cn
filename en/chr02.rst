@@ -59,7 +59,7 @@ string of letters like ‘\ ``AGTACACTGGT``\ ’. You can create such
 ``Seq`` object with this sequence as follows - the “\ ``>>>``\ ”
 represents the Python prompt followed by what you would type in:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
@@ -80,7 +80,7 @@ In addition to having an alphabet, the ``Seq`` object differs from the
 Python string in the methods it supports. You can’t do this with a plain
 string:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq
     Seq('AGTACACTGGT', Alphabet())
@@ -185,7 +185,7 @@ If you open the lady slipper orchids FASTA file
 in your favourite text editor, you’ll see that the file starts like
 this:
 
-.. code:: verbatim
+.. code:: python
 
     >gi|2765658|emb|Z78533.1|CIZ78533 C.irapeanum 5.8S rRNA gene and ITS1 and ITS2 DNA
     CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG
@@ -196,7 +196,7 @@ It contains 94 records, each has a line starting with “\ ``>``\ ”
 (greater-than symbol) followed by the sequence on one or more lines. Now
 try this in Python:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
@@ -206,7 +206,7 @@ try this in Python:
 
 You should get something like this on your screen:
 
-.. code:: verbatim
+.. code:: python
 
     gi|2765658|emb|Z78533.1|CIZ78533
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', SingleLetterAlphabet())
@@ -229,7 +229,7 @@ instead - notice that the code to do this is almost identical to the
 snippet used above for the FASTA file - the only difference is we change
 the filename and the format string:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
@@ -239,7 +239,7 @@ the filename and the format string:
 
 This should give:
 
-.. code:: verbatim
+.. code:: python
 
     Z78533.1
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())

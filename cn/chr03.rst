@@ -41,7 +41,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 我们已经知道了将要处理的对象，现在让我们看看怎么使用这些类做一些有意思的事情。
 你可以创建一条有通用字母组成的模糊序列，如下：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
@@ -53,7 +53,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 然而，如果可能，你要在创建序列对象的时候就尽量明确指定字母的类型，如下创建一条
 明确的DNA字母表对象。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -65,7 +65,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 
 当然,除非这真的是一个氨基酸序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -81,7 +81,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 在许多时候，我们可以讲Seq对象处理成正常的Python字符串，比如取序列长度，迭代
 元素：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -98,7 +98,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 
 你可以像字符串那样获取序列的元素（但是请记住，Python计数从0开始）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_seq[0] #first letter
     G
@@ -110,7 +110,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 ``Seq`` 对象有一个 ``.count()`` 方法，类似于字符串。记住这意味就像Python的
 字符串一样进行着非重叠的计数。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> "AAAA".count("AA")
@@ -121,7 +121,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 但是在某些生物学上，你可能需要使用重叠计数（就像上面的例子中如果重复计
 数结果将为3）。当计算耽搁字母出现的次数时，重叠计数和非重叠计数没有差别。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -136,7 +136,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 你当然可以使用上面的代码段计算GC含量，但是记住 ``Bio.SeqUtils`` 模块已经
 建立了好几个GC函数，类如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -157,7 +157,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 
 一个较为复杂的例子，让我们切取序列。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -176,7 +176,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 同样和Python字符串一样，你可以通过设置起始位置、终止位置和 *步幅* （间隔数，默认为1）
 进行切片。例如，我们可以分别获取下面DNA序列密码子第一、第二、第三位的碱基。
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[0::3]
     Seq('GCTGTAGTAAG', IUPACUnambiguousDNA())
@@ -188,7 +188,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 你可能已经注意到Python字符串中的另一个奇特步幅设定：使用-1返回倒序字符串切片。
 当然以也可以使用 ``Seq`` 对象来完成。
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
@@ -199,7 +199,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 如果你仅仅需要一个单纯的字符串，就像写入文件或者插入数据库，这事很容易就
 可以实现的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> str(my_seq)
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
@@ -207,7 +207,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 尽管对 ``Seq`` 对象调用 ``str()`` 方法将以字符串的形式返回全长序列，但是你经常不需要
 特地做这个转换。当使用print打印声明是，Python会自动转换。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_seq
     GATCGATGGGCCTATATAGGATCGAAAATCGC
@@ -215,7 +215,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 当你进行Python字符串格式化或者插入操作符（ ``%`` ）时，
 可以直接把 ``Seq`` 对象和 ``%s`` 占位符一起使用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> fasta_format_string = ">Name\n%s\n" % my_seq
     >>> print fasta_format_string
@@ -232,7 +232,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 返回一个截短了的序列。这时候可以使用 ``my_seq.tostring()`` ，为了保持向后兼
 容性，这一方法在当前的Biopython版本中还有保留。
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq.tostring()
     'GATCGATGGGCCTATATAGGATCGAAAATCGC'
@@ -244,7 +244,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 但是你不能将两个不相容的字母表加在一起，比如蛋白质序列和核苷酸序列就不能简单
 叠加。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import IUPAC
     >>> from Bio.Seq import Seq
@@ -257,7 +257,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 
 如果你 *真的* 想这么做，你必须首先将两个序列转换成通用字母表。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import generic_alphabet
     >>> protein_seq.alphabet = generic_alphabet
@@ -268,7 +268,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 这里有个例子是将通用核苷酸序列加到明确的IUPAC DNA序列上，最后生成一段
 模糊的核苷酸序列。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_nucleotide
@@ -288,7 +288,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 Python字符串具有很有用的转换大小写的 ``upper`` 和 ``lower`` 方法。从
 Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表。例如:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_dna
@@ -302,7 +302,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 
 这在不区分大小写进行匹配的时候很有用。
 
-.. code:: verbatim
+.. code:: python
 
     >>> "GTAC" in dna_seq
     False
@@ -311,7 +311,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 
 注意，严格地说IUPAC字母表仅仅是对于大写字母构成的序列的，因此：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -327,7 +327,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 对于核苷酸序列，你可以使用 ``Seq`` 对象内置的方法很容易地获得 ``Seq`` 
 的互补或反向互补序列。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -341,7 +341,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 
 在前面的方法中，使用切片的-1的步长可以很容易的获取一个 ``Seq`` 对象的反向序列。
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
@@ -349,7 +349,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
 在所有这些操作中，字母的属性一直保留着。这是非常有用的，以防你不小心做一些
 奇怪的事情，比如获取蛋白质序列的（反向）互补序列。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -393,7 +393,7 @@ T → U的转换获得mRNA。
 现在让我们着手真实地使用Biopython做一个转录。首先，让我们分别创建DNA序列的
 编码链和模板链的 ``Seq`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -409,7 +409,7 @@ T → U的转换获得mRNA。
 
 现在让我们使用 ``Seq`` 对象内置的 ``transcribe`` 方法将编码链转录成对应的mRNA：
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna
     Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
@@ -421,7 +421,7 @@ T → U的转换获得mRNA。
 
 如果你确实想从模板链去做一个真正的生物学上的转录，需要两步：
 
-.. code:: verbatim
+.. code:: python
 
     >>> template_dna.reverse_complement().transcribe()
     Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
@@ -429,7 +429,7 @@ T → U的转换获得mRNA。
 ``Seq`` 对象还包含了从mRNA逆向转录为DNA编码链的方法。同样，这仅仅是从U
 → T的替代并伴随着字母表的变化：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -450,7 +450,7 @@ Biopython 1.49版本才出现，在较早的版本中你需要使用 ``Bio.Seq``
 继续使用在转录那个小节中的例子，现在让我们将这个mRNA翻译成相对应的
 蛋白质序列，利用的是 ``Seq`` 对象众多生物学方法中的一个：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -462,7 +462,7 @@ Biopython 1.49版本才出现，在较早的版本中你需要使用 ``Bio.Seq``
 
 你也可以直接从编码DNA链进行翻译：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -480,7 +480,7 @@ Biopython上可用的翻译表是基于 `NCBI <http://www.ncbi.nlm.nih.gov/Taxon
 （参考这个教程的下一个部分）。默认情况下，翻译使用的是 *标准* 遗传密码（NCBI上table id 1)。
 假设我们需要翻译一个线粒体序列，我们就需要告诉翻译函数使用相关的遗传密码：
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table="Vertebrate Mitochondrial")
     Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -488,7 +488,7 @@ Biopython上可用的翻译表是基于 `NCBI <http://www.ncbi.nlm.nih.gov/Taxon
 你也可以利用NCBI上表格的标号来指定所使用的遗传密码，这样更简洁一些，
 在GenBank文件的特征注释中经常包含表格的标号：
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table=2)
     Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -496,7 +496,7 @@ Biopython上可用的翻译表是基于 `NCBI <http://www.ncbi.nlm.nih.gov/Taxon
 现在你可能想将上面的核苷酸序列仅翻译到阅读框的第一个终止密码子，然后停止
 （这更符合自然现象）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate()
     Seq('MAIVMGR*KGAR*', HasStopCodon(IUPACProtein(), '*'))
@@ -512,7 +512,7 @@ Biopython上可用的翻译表是基于 `NCBI <http://www.ncbi.nlm.nih.gov/Taxon
 
 如果你不喜欢默认的星号作为终止符号，你也可以自己指定终止符。
 
-.. code:: verbatim
+.. code:: python
 
     >>> coding_dna.translate(table=2, stop_symbol="@")
     Seq('MAIVMGRWKGAR@', HasStopCodon(IUPACProtein(), '@'))
@@ -524,7 +524,7 @@ Biopython上可用的翻译表是基于 `NCBI <http://www.ncbi.nlm.nih.gov/Taxon
 用的是非标准的起始密码子呢？这种情况在细菌中很常见，比如 ``E. coli`` 
 K12中的基因yaaX：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import generic_dna
@@ -545,7 +545,7 @@ K12中的基因yaaX：
 如果作为起始密码子，则翻译成甲硫氨酸。当你告诉Biopython你的序列是完整CDS时，
 这事将会发生。
 
-.. code:: verbatim
+.. code:: python
 
     >>> gene.translate(table="Bacterial", cds=True)
     Seq('MKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR',
@@ -569,7 +569,7 @@ K12中的基因yaaX：
 
 和前面一样，让我们仅仅关注两个选择：标准的翻译表和脊椎动物线粒体DNA的翻译表。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Data import CodonTable
     >>> standard_table = CodonTable.unambiguous_dna_by_name["Standard"]
@@ -577,7 +577,7 @@ K12中的基因yaaX：
 
 另一种方式，这些表也可以分别以标号1和2来标识：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Data import CodonTable
     >>> standard_table = CodonTable.unambiguous_dna_by_id[1]
@@ -585,7 +585,7 @@ K12中的基因yaaX：
 
 你可以在打印后直观地比较这些实际的翻译表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print standard_table
     Table 1 Standard, SGC0
@@ -615,7 +615,7 @@ K12中的基因yaaX：
 
 和
 
-.. code:: verbatim
+.. code:: python
 
     >>> print mito_table
     Table 2 Vertebrate Mitochondrial, SGC1
@@ -645,7 +645,7 @@ K12中的基因yaaX：
 
 你会发现下面的特性很有用，比如当你查找新基因时：
 
-.. code:: verbatim
+.. code:: python
 
     >>> mito_table.stop_codons
     ['TAA', 'TAG', 'AGA', 'AGG']
@@ -675,7 +675,7 @@ K12中的基因yaaX：
 但是这是错误的。这一递延性的问题也会影响使用 ``Seq`` 对象作为Python字典
 的键值。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -685,7 +685,7 @@ K12中的基因yaaX：
 那么接下来Biopython会怎么做？等同性测试是Python对象默认要做的测试。经过
 检验查看内存中的对象是不是同一个。这是一个非常严格的测试：
 
-.. code:: verbatim
+.. code:: python
 
     >>> seq1 == seq2
     False
@@ -694,7 +694,7 @@ K12中的基因yaaX：
 
 如果你真想这么做，你可以更明确地使用Python中的 ``id`` 函数，
 
-.. code:: verbatim
+.. code:: python
 
     >>> id(seq1) == id(seq2)
     False
@@ -705,7 +705,7 @@ K12中的基因yaaX：
 （都是DNA、RNA或者都是蛋白质）。你可能想要的只是以字符串的形式比较这些序列，
 那么直接这么做：
 
-.. code:: verbatim
+.. code:: python
 
     >>> str(seq1) == str(seq2)
     True
@@ -722,7 +722,7 @@ K12中的基因yaaX：
 除了想要 ``Seq`` 对象表现得向一个字符串之外，这是一个很有用的默认，因为在生
 物学应用上你往往需要确保你没有改动你的序列数据：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.Alphabet import IUPAC
@@ -730,7 +730,7 @@ K12中的基因yaaX：
 
 当你尝试编辑序列是你看看会发生什么：
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_seq[5] = "G"
     Traceback (most recent call last):
@@ -739,7 +739,7 @@ K12中的基因yaaX：
 
 但是你可以使用 ``MutableSeq`` 对象将它转换成可变的序列，然后做任何你想要做的。
 
-.. code:: verbatim
+.. code:: python
 
     >>> mutable_seq = my_seq.tomutable()
     >>> mutable_seq
@@ -747,7 +747,7 @@ K12中的基因yaaX：
 
 或者你可以直接从字符串建立一个 ``MutableSeq`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import MutableSeq
     >>> from Bio.Alphabet import IUPAC
@@ -755,7 +755,7 @@ K12中的基因yaaX：
 
 这两种方式都可以将序列对象转换成可变的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> mutable_seq
     MutableSeq('GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA', IUPACUnambiguousDNA())
@@ -777,7 +777,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 
 一旦你的 ``MutableSeq`` 对象编辑完成，很容易将它变回到只读的 ``Seq`` 对象，你只需：
 
-.. code:: verbatim
+.. code:: python
 
     >>> new_seq = mutable_seq.toseq()
     >>> new_seq
@@ -794,7 +794,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 正常的 ``Seq`` 对象，但是存储由一百万个 “N” 字母组成的字符串会浪费相当大量的内
 存，这时你可以只存储一个 “N” 和序列所需的长度（整数）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import UnknownSeq
     >>> unk = UnknownSeq(20)
@@ -808,7 +808,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 当然你也可以指定一个字母，而不仅仅是 “?” 。一般核苷酸序列默认为 “N” ，蛋白质
 序列默认为 “X” 。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import UnknownSeq
     >>> from Bio.Alphabet import IUPAC
@@ -821,7 +821,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 你可以使用所有常规的 ``Seq`` 对象，记住这些可以节省内存的 ``UnknownSeq`` 对象，
 如你所希望的那样在恰当的地方使用。
 
-.. code:: verbatim
+.. code:: python
 
     >>> unk_dna
     UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
@@ -853,7 +853,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 对象的函数式编程风格的人）， ``Bio.Seq`` 的模块级别的函数可以接受普通的
 Python字符串，比如 ``Seq`` 对象（包括 ``UnknownSeq`` 对象）或者 ``MutableSeq`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import reverse_complement, transcribe, back_transcribe, translate
     >>> my_string = "GCTGTTATGGGTCGTTGGAAGGGTGGTCGTGCTGCTGGTTAG"

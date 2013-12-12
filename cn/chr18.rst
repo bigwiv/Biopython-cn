@@ -19,7 +19,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 让我们假设这个ID列表在一个简单的文本文件中，作为每一行的第一个词。这可能是一个表格文件，其第一列是序列ID。尝试下面的代码：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     input_file = "big_file.sff"
@@ -42,14 +42,14 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 在这一讨论中，我们将使用来自 *Yersinia pestis biovar Microtus* 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__. 该文件仅有一个记录，所以我们能用 ``Bio.SeqIO.read()`` 函数把它当做 ``SeqRecord`` 读入：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> original_rec = SeqIO.read("NC_005816.gb","genbank")
 
 那么，我们怎么生成一个原始序列重排后的版本能？我会使用Python内置的 ``random`` 模块来做这个，特别是 ``random.shuffle`` 函数——但是这个只作用于Python列表。我们的序列是一个 ``Seq`` 对象，所以为了重排它，我们需要将它转换为一个列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import random
     >>> nuc_list = list(original_rec.seq)
@@ -57,7 +57,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 现在，为了使用 ``Bio.SeqIO`` 输出重排的序列，我们需要使用重排后的列表重新创建包含一个新的 ``SeqRecord`` 包含随即化后的 ``Seq`` 。要实现这个，我们需要将核苷酸（单字母字符串）列表转换为长字符串——在Python中，一般使用字符串对象的join方法来实现它。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqRecord import SeqRecord
@@ -68,7 +68,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__ 描述的``SeqRecord`` 的格式化方法）：
 
-.. code:: verbatim
+.. code:: python
 
     import random
     from Bio.Seq import Seq
@@ -89,7 +89,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 我个人更喜欢下面的版本（不使用for循环），而使用一个函数来重排记录以及一个生成表达式：
 
-.. code:: verbatim
+.. code:: python
 
     import random
     from Bio.Seq import Seq
@@ -118,7 +118,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 你能编写自己的函数来做这个事情，为你的序列选择合适的蛋白标识和恰当的密码表。在本例中，我们仅使用默认的密码表，并给序列ID加一个前缀。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqRecord import SeqRecord
     def make_protein_record(nuc_record):
@@ -129,7 +129,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 我们能用这个函数将核苷酸记录转换为蛋白记录，作为输出。一个优雅且内存高效的方式是使用生成表达式（generator expression）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     proteins = (make_protein_record(nuc_rec) for nuc_rec in \
@@ -143,7 +143,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 通常你会从合作者那里得到FASTA文件的数据，有时候这些序列可能是大小写混合的。在某些情况下，这些可能是有意为之的（例如，小写的作为低质量的区域），但通常大小写并不重要。你可能希望编辑这个文件以使所有的序列都变得一致（如，都为大写），你可以使用 ``SeqRecord`` 对象的 ``upper()`` 方法轻易的实现（Biopython 1.55中引入）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = (rec.upper() for rec in SeqIO.parse("mixed.fas", "fasta"))
@@ -161,7 +161,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 如果文件足够小，你能将它都一次读入内存为一个 ``SeqRecord`` 对象列表，对列表进行排序，并保存它：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.fasta","fasta"))
@@ -170,7 +170,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 唯一巧妙的地方是指明一个比较函数来说明怎样对记录进行排序（这里我们按长度对他们排序）。如果你希望最长的记录在第一个，你可以交换比对，或者使用reverse参数：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.fasta","fasta"))
@@ -179,7 +179,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 现在这一实现是非常直接的——但是如果你的文件非常大，你不能像这样把它整个加载到内存中应该怎么办呢？例如，你可能有一些二代测序的读长要根据长度排序。这时你可以使用 ``Bio.SeqIO.index()`` 函数解决。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     #Get the lengths and ids, and sort on length         
@@ -195,7 +195,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 这些例子都使用 ``Bio.SeqIO`` 来解析记录为 ``SeqRecord`` 对象，并通过 ``Bio.SeqIO.write()`` 输出。当你想排序的文件格式 ``Bio.SeqIO.write()`` 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 \ `5.4.2.2 <#sec:seqio-index-getraw>`__) 中 ``Bio.SeqIO.index()`` 添加的 ``get_raw()`` 方法。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     #Get the lengths and ids, and sort on length         
@@ -222,7 +222,7 @@ FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列
 
 首先，让我们来统计reads的数目：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     count = 0
@@ -232,7 +232,7 @@ FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列
 
 现在让我们做一个简单的过滤，PHRED质量不小于20：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     good_reads = (rec for rec in \
@@ -252,7 +252,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 这个代码使用 ``Bio.SeqIO`` 和一个生成器表达式（避免一次加载所有的序列到内存中），以及 ``Seq`` 对象的 ``startswith`` 方法来检查读长是否以引物序列开始：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     primer_reads = (rec for rec in \
@@ -265,7 +265,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 ``SeqRecord`` 进行切片（参见章节 \ `4.6 <#sec:SeqRecord-slicing>`__ ）以移除前11个字母（我们的引物长度）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     trimmed_primer_reads = (rec[11:] for rec in \
@@ -278,7 +278,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 最后，假设你想移除部分reads中的引物并创建一个新的FASTQ文件，而其他的reads保持不变。如果我们仍然希望使用生成器表达式，声明我们自己的修剪（trim）函数可能更加清楚：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     def trim_primer(record, primer):
@@ -294,7 +294,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 以上代码会运行较长的时间，因为这次输出文件包含所有41892个reads。再次，我们将使用生成器表达式来避免内存问题。你也可以使用一个生成器函数来替代生成器表达式。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     def trim_primers(records, primer):
@@ -324,7 +324,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 然而在本例中，我们将在读长的 *任何位置* 查找序列，不仅仅是最开始：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -353,7 +353,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 和上面的例子（只在每个读长的开始查找引物/接头）相比，你会发现有些reads剪切后非常短（例如，如果接头序列在读长的中部发现，而不是开始附近）。所以，让我们再加入一个最低长度要求：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -415,14 +415,14 @@ Solexa质量分数采用一种不同的对数转换：
 
 由于Solexa/Illumina目前在他们的1.3版本的工作流程中已迁移到使用PHRED分数，Solexa质量分数将逐渐淡出使用。如果你将错误估值取等号（ *P*\ :sub:`*e*` ），这两个等式允许在两个评分系统之间进行转换 —— Biopython在 ``Bio.SeqIO.QualityIO`` 模块中有函数可以实现。这一模块在使用 ``Bio.SeqIO`` 进行从Solexa/Illumina老文件格式到标准Sanger FASTQ文件格式转换时被调用：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("solexa.fastq", "fastq-solexa", "standard.fastq", "fastq")
 
 如果你想转换新的Illumina 1.3+ FASTQ文件，改变只会导致ASCII码的整体偏移。因为尽管编码不同，所有的质量分数都是PHRED分数：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("illumina.fastq", "fastq-illumina", "standard.fastq", "fastq")
@@ -433,7 +433,7 @@ Solexa质量分数采用一种不同的对数转换：
 
 了解更多细节，请参见内置的帮助（或 `在线帮助 <http://www.biopython.org/DIST/docs/api/Bio.SeqIO.QualityIO-module.html>`__ ）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqIO import QualityIO
     >>> help(QualityIO)
@@ -446,21 +446,21 @@ FASTQ *同时* 包含序列和他们的质量信息字符串。FASTA文件 *只*
 
 从FASTQ到FASTA很简单：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.fasta", "fasta")
 
 从FASTQ到QUAL也很简单：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.convert("example.fastq", "fastq", "example.qual", "qual")
 
 然而，反向则有一点复杂。你可以使用 ``Bio.SeqIO.parse()`` 迭代一个 *单独* 文件中的所有记录，但是这里我们有两个输入文件。有几个可能的策略，然而这里假设两个文件是真的完全匹配的，最内存高效的方式是同时循环两个文件。代码有些巧妙，所以在 ``Bio.SeqIO.QualityIO`` 模块中我们提供一个函数来实现，叫做 ``PairedFastaQualIterator``。它接受两个句柄（FASTA文件和QUAL文件）并返回一个 ``SeqRecord`` 迭代器：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqIO.QualityIO import PairedFastaQualIterator
     for record in PairedFastaQualIterator(open("example.fasta"), open("example.qual")):
@@ -468,7 +468,7 @@ FASTQ *同时* 包含序列和他们的质量信息字符串。FASTA文件 *只*
 
 这个函数将检查FASTA和QUAL文件是否一致（例如，记录顺序是相同的，并且序列长度一致）。你可以和 ``Bio.SeqIO.write()`` 函数结合使用，转换一对FASTA和QUAL文件为单独的FASTQ文件：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from Bio.SeqIO.QualityIO import PairedFastaQualIterator
@@ -487,7 +487,7 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 我们将再次使用来自 ENA (`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__) 的文件 ``SRR020192.fastq`` ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> fq_dict = SeqIO.index("SRR020192.fastq", "fastq")
@@ -509,7 +509,7 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 ``Bio.SeqIO.convert()`` 来轻松实现（参见 \ `5.5.2 <#sec:SeqIO-conversion>`__ ）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff", "reads.fasta", "fasta")
@@ -521,7 +521,7 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 注意这个转换函数返回记录的条数，在这个例子中为10。这将给你 *未裁剪* 的读长，其中先导和跟随链中低质量的序列，或接头序列将以小写字母显示。如果你希望得到 *裁剪* 后的读长（使用SFF文件中的剪切信息），可以使用下面的代码：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> SeqIO.convert("E3MFGYR02_random_10_reads.sff", "sff-trim", "trimmed.fasta", "fasta")
@@ -533,7 +533,7 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 如果你使用Linux，你可以向Roche请求一份“脱离仪器（off instrument）”的工具（通常叫做Newbler工具）。它提供了另一种的方式来在命令行实现SFF到FASTA或QUAL的转换（但并不支持FASTQ输出）。
 
-.. code:: verbatim
+.. code:: python
 
     $ sffinfo -seq -notrim E3MFGYR02_random_10_reads.sff > reads.fasta
     $ sffinfo -qual -notrim E3MFGYR02_random_10_reads.sff > reads.qual
@@ -544,7 +544,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 要获得Biopython对SFF支持的更多信息，请参考内部帮助：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqIO import SffIO
     >>> help(SffIO)
@@ -559,7 +559,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： `NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO 
     >>> record = SeqIO.read("NC_005816.fna","fasta")
@@ -568,7 +568,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 这里有一个巧妙的技巧，使用 ``Seq`` 对象的 ``split`` 方法获得一个包含六个读码框中所有可能的ORF翻译的列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for strand, nuc in [(+1, record.seq), (-1, record.seq.reverse_complement())]:
     ...     for frame in range(3):
@@ -598,7 +598,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 你可以用几种方式来处理。例如，下面的代码以蛋白计数的方式记录位置信息，并通过乘以三倍来转换为父序列（parent sequence），并记录编码框和链的信息：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO 
     record = SeqIO.read("NC_005816.gb","genbank")
@@ -638,7 +638,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 输出是：
 
-.. code:: verbatim
+.. code:: python
 
     NQIQGVICSPDSGEFMVTFETVMEIKILHK...GVA - length 355, strand 1, 41:1109
     WDVKTVTGVLHHPFHLTFSLCPEGATQSGR...VKR - length 111, strand -1, 491:827
@@ -671,7 +671,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 首先，我们使用 ``Bio.SeqIO`` 来解析这个FASTA文件，并创建一个序列长度的列表。你可以用一个for循环来实现，然而我觉得列表解析（list comprehension）更简洁：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> sizes = [len(rec) for rec in SeqIO.parse("ls_orchid.fasta", "fasta")]
@@ -682,7 +682,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 现在我们得到了所有基因的长度（以整数列表的形式），我们可以用matplotlib的柱状图功能来显示它。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     sizes = [len(rec) for rec in SeqIO.parse("ls_orchid.fasta", "fasta")]
@@ -710,7 +710,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 首先，我们使用 ``Bio.SeqIO`` 解析这个FASTA文件并创建一个GC百分含量的列表。你可以使用for循环，但我更喜欢这样：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from Bio.SeqUtils import GC
@@ -719,7 +719,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 读取完每个序列并计算了GC百分比，我们接着将它们按升序排列。现在，我们用matplotlib来对这个浮点数列表进行可视化：
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.plot(gc_values)
@@ -742,7 +742,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     handle = open("ls_orchid.fasta")
@@ -753,7 +753,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 我们将展示两种方式。首先，一个简单的实现，它将所有滑动窗大小的子序列相互比较，并生产一个相似性矩阵。你可以创建一个矩阵或数组对象，而在这儿，我们只用一个用嵌套的列表解析生成的布尔值列表的列表。
 
-.. code:: verbatim
+.. code:: python
 
     window = 7
     seq_one = str(rec_one.seq).upper()
@@ -764,7 +764,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 注意，我们在这里并 *没有* 检查反向的互补匹配。现在我们将使用matplotlib的 ``pylab.imshow()`` 函数来显示这个数据，首先启用灰度模式，以保证这是在黑白颜色下完成的：
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.gray()
@@ -784,7 +784,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 我们从创建，从滑动窗大小的子序列到其位置的字典映射开始：
 
-.. code:: verbatim
+.. code:: python
 
     window = 7
     dict_one = {}
@@ -804,7 +804,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 为了使用 ``pylab.scatter()`` 函数，我们需要两个分别对应 *x* 和 *y* 轴的列表：
 
-.. code:: verbatim
+.. code:: python
 
     #Create lists of x and y co-ordinates for scatter plot
     x = []
@@ -817,7 +817,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 现在我们能以散点图的形式画出优化后的点线图：
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     pylab.cla() #clear any prior graph
@@ -841,7 +841,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 如果你在处理二代测序数据，你可能希望绘制数据的质量图。这里使用两个包含双末端（paired end）读长的FASTQ文件作为例子，其中 ``SRR001666_1.fastq`` 为正向读长， ``SRR001666_2.fastq`` 为反向读长。它们可以从ENA序列读长档案的FTP站点下载（ `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz>`__ 和 `ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz>`__ ）， 且来自 *E. coli* —— 参见 `http://www.ebi.ac.uk/ena/data/view/SRR001666 <http://www.ebi.ac.uk/ena/data/view/SRR001666>`__ 的详细介绍。在下面的代码中， ``pylab.subplot(...)`` 函数被用来在两个子图中展示正向和反向的质量。这里也有少量的代码来保证仅仅展示前50个读长的质量。
 
-.. code:: verbatim
+.. code:: python
 
     import pylab
     from Bio import SeqIO
@@ -875,7 +875,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 ``alignment`` ，例如由在第 \ `6 <#chapter:Bio.AlignIO>`__ 章介绍的 ``Bio.AlignIO.read(...)`` 读入。我们获得该对象的摘要信息所要做的所有事情是：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Align import AlignInfo
     summary_align = AlignInfo.SummaryInfo(alignment)
@@ -892,13 +892,13 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 在章节 \ `18.3.1 <#sec:summary_info>`__ 中描述的 ``SummaryInfo`` 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 ``SummaryInfo`` 对象，叫做 ``summary_align``，我们能通过下面的方法计算一个保守序列：
 
-.. code:: verbatim
+.. code:: python
 
     consensus = summary_align.dumb_consensus()
 
 就行名字显示的那样，这是一个非常简单的保守序列计算器，它将只是在保守序列中累加每个位点的所有残基，如果最普遍的残基数大于某个阈值时，这个最普遍的残基将被添加到保守序列中。如果它没有到达这个阈值，将添加一个“不确定字符”。最终返回的保守序列对象是一个Seq对象，它的字母表是从组成保守序列所有序列的字母表中推断出来的。所以使用 ``print consensus`` 将给出如下信息：
 
-.. code:: verbatim
+.. code:: python
 
     consensus Seq('TATACATNAAAGNAGGGGGATGCGGATAAATGGAAAGGCGAAAGAAAGAAAAAAATGAAT
     ...', IUPACAmbiguousDNA())
@@ -917,7 +917,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 位点特异性评分矩阵（Position specific score matrices，PSSMs）以另一种总结比对信息的方式（与刚才介绍的保守序列不同），这或许在某些情况下更为有用。简单来说，PSSM是一个计数矩阵。对于比对中的每一列，将所有可能出现的字母进行计数并加和。这些加和值将和一个代表序列（默认为比对中的第一条序列）一起显示出来。这个序列可能是保守序列，但也可以是比对中的任何序列。例如，对于比对，
 
-.. code:: verbatim
+.. code:: python
 
     GTATC
     AT--C
@@ -925,7 +925,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 它的PSSM是：
 
-.. code:: verbatim
+.. code:: python
 
           G A T C
         G 1 1 0 1
@@ -936,14 +936,14 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 假设我们有一个比对对象叫做 ``c_align`` ，为了获得PSSM和保守序列，我们首先得到一个摘要对象（summary object），并计算一致序列：
 
-.. code:: verbatim
+.. code:: python
 
     summary_align = AlignInfo.SummaryInfo(c_align)
     consensus = summary_align.dumb_consensus()
 
 现在，我们想创建PSSM，但是在计算中忽略任何 ``N`` 不确定残基：
 
-.. code:: verbatim
+.. code:: python
 
     my_pssm = summary_align.pos_specific_score_matrix(consensus,
                                                       chars_to_ignore = ['N'])
@@ -953,7 +953,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 #. 为了维持字母表的严格性，你可以在PSSM的顶部显示比对对象字母表中规定的字符。空白字符（Gaps）并不包含在PSSM的顶轴中。
 #. 传入并显示在左侧轴的序列可以不是保守序列。例如，你如果想要在PSSM左边显示比对中的第二条序列，你只需要：
 
-   .. code:: verbatim
+   .. code:: python
 
        second_seq = alignment.get_seq_by_num(1)
        my_pssm = summary_align.pos_specific_score_matrix(second_seq
@@ -961,7 +961,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 以上的命令将返回一个 ``PSSM`` 对象。为了显示出PSSM，我们只需 ``print my_pssm``，结果如下：
 
-.. code:: verbatim
+.. code:: python
 
         A   C   G   T
     T  0.0 0.0 0.0 7.0
@@ -976,7 +976,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 你可以用 ``your_pssm[sequence_number][residue_count_name]`` 获得任何PSSM的元素。例如，获取上面PSSM中第二个元素的‘A’残基的计数，你可以：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_pssm[1]["A"]
     7.0
@@ -1007,7 +1007,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 ``summary_align`` （参见章节\ `18.3.1 <#sec:summary_info>`__ 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30,
                                                      chars_to_ignore = ['N'])
@@ -1016,7 +1016,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 像上面提到的一样，我们同样能通过提供期望频率计算相对信息量：
 
-.. code:: verbatim
+.. code:: python
 
     expect_freq = {
         'A' : .3,
@@ -1028,7 +1028,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 要从频率字典创建一个FreqTable对象，你只需要：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Alphabet import IUPAC
     from Bio.SubsMat import FreqTable
@@ -1038,7 +1038,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 现在我们得到了它，计算我们比对区域的相对信息量就像下面一样简单：
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30,
                                                      e_freq_table = e_freq_table,
@@ -1048,7 +1048,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 返回值是按上面的公式以2为对底数计算的。你可以通过传入 ``log_base`` 参数来改变成你想要的底数：
 
-.. code:: verbatim
+.. code:: python
 
     info_content = summary_align.information_content(5, 30, log_base = 10,
                                                      chars_to_ignore = ['N'])
@@ -1071,7 +1071,7 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 使用替换矩阵类能轻易做出的一个非常酷的事情，是从序列比对创建出你自己的替换矩阵。实际中，通常是使用蛋白比对来做。在这个例子中，我们将首先得到一个Biopython比对对象，然后得到一个摘要对象来计算关于这个比对的相关信息。文件 `protein.aln <examples/protein.aln>`__ （也可在 `这里 <http://biopython.org/DIST/docs/tutorial/examples/protein.aln>`__ 获取）包含Clustalw格式的比对输出。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> from Bio import Alphabet
@@ -1086,7 +1086,7 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 现在我们得到了我们的 ``summary_align`` 对象，我们想使用它来找出不同的残基相互替换的次数。为了使例子的可读性更强，我们将只关注那些有极性电荷侧链的氨基酸。幸运的是，这能在生成替代字典时轻松实现，通过传入所有需要被忽略的字符。这样我们将能创建一个只包含带电荷的极性氨基酸的替代字典：
 
-.. code:: verbatim
+.. code:: python
 
     >>> replace_info = summary_align.replacement_dictionary(["G", "A", "V", "L", "I",
     ...                                                      "M", "P", "F", "W", "S",
@@ -1094,7 +1094,7 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 这个关于氨基酸替代的信息以python字典的形式展示出来将会像如下的样子（顺序可能有所差异）：
 
-.. code:: verbatim
+.. code:: python
 
     {('R', 'R'): 2079.0, ('R', 'H'): 17.0, ('R', 'K'): 103.0, ('R', 'E'): 2.0,
     ('R', 'D'): 2.0, ('H', 'R'): 0, ('D', 'H'): 15.0, ('K', 'K'): 3218.0,
@@ -1106,14 +1106,14 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 这个信息提供了我们所需要的替换次数，或者说我们期望的不同的事情相互替换有多么频繁。事实上，（你可能会感到惊奇）这就是我们继续创建替代矩阵所需要的全部信息。首先，我们使用替代字典信息创建一个“接受替换矩阵”（Accepted Replacement Matrix，ARM）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SubsMat
     >>> my_arm = SubsMat.SeqMat(replace_info)
 
 使用这个“接受替换矩阵”，我们能继续创建我们的对数矩阵（即一个标准类型的替换举证）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_lom = SubsMat.make_log_odds_matrix(my_arm)
 
@@ -1126,7 +1126,7 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 一旦你获得了你的对数矩阵，你可以使用函数 ``print_mat`` 很漂亮的显示出来。使用我们创建的矩阵可以得到：
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_lom.print_mat()
     D   2

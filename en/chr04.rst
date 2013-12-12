@@ -23,7 +23,7 @@ and the built in documentation (also online –
 and
 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqRecord import SeqRecord
     >>> help(SeqRecord)
@@ -93,7 +93,7 @@ simple.
 
 To create a ``SeqRecord`` at a minimum you just need a ``Seq`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> simple_seq = Seq("GATC")
@@ -104,7 +104,7 @@ Additionally, you can also pass the id, name and description to the
 initialization function, but if not they will be set as strings
 indicating they are unknown, and can be modified subsequently:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.id
     '<unknown id>'
@@ -119,7 +119,7 @@ Including an identifier is very important if you want to output your
 ``SeqRecord`` to a file. You would normally include this when creating
 the object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> simple_seq = Seq("GATC")
@@ -132,7 +132,7 @@ doesn’t fit under one of the other more specific attributes. Adding
 annotations is easy, and just involves dealing directly with the
 annotation dictionary:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.annotations["evidence"] = "None. I just made it up."
     >>> print simple_seq_r.annotations
@@ -145,7 +145,7 @@ is a dictionary like attribute which will let you assign any Python
 sequence (i.e. a string, list or tuple) which has the same length as the
 sequence:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.letter_annotations["phred_quality"] = [40,40,38,30]
     >>> print simple_seq_r.letter_annotations
@@ -170,7 +170,7 @@ from our website.
 The file starts like this - and you can check there is only one record
 present (i.e. only one line starting with a greater than symbol):
 
-.. code:: verbatim
+.. code:: python
 
     >gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... pPCP1, complete sequence
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
@@ -182,7 +182,7 @@ file as ``SeqRecord`` objects. The ``Bio.SeqIO`` module has a sister
 function for use on files which contain just one record which we’ll use
 here (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.fna", "fasta")
@@ -196,7 +196,7 @@ Now, let’s have a look at the key attributes of this ``SeqRecord``
 individually – starting with the ``seq`` attribute which gives you a
 ``Seq`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
@@ -208,7 +208,7 @@ use (see Chapter \ `5 <#chapter:Bio.SeqIO>`__).
 
 Next, the identifiers and description:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.id
     'gi|45478711|ref|NC_005816.1|'
@@ -224,7 +224,7 @@ than symbol) is used for the record description. This is deliberate,
 partly for backwards compatibility reasons, but it also makes sense if
 you have a FASTA file like this:
 
-.. code:: verbatim
+.. code:: python
 
     >Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
@@ -233,7 +233,7 @@ you have a FASTA file like this:
 Note that none of the other annotation attributes get populated when
 reading a FASTA file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.dbxrefs
     []
@@ -264,7 +264,7 @@ from our website.
 This file contains a single record (i.e. only one LOCUS line) and
 starts:
 
-.. code:: verbatim
+.. code:: python
 
     LOCUS       NC_005816               9609 bp    DNA     circular BCT 21-JUL-2008
     DEFINITION  Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete
@@ -278,7 +278,7 @@ Again, we’ll use ``Bio.SeqIO`` to read this file in, and the code is
 almost identical to that for used above for the FASTA file (see
 Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
@@ -294,7 +294,7 @@ this time ``Bio.SeqIO`` has been able to automatically assign a more
 specific alphabet (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for
 details):
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', IUPACAmbiguousDNA())
@@ -302,7 +302,7 @@ details):
 The ``name`` comes from the LOCUS line, while the ``id`` includes the
 version suffix. The description comes from the DEFINITION line:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.id
     'NC_005816.1'
@@ -313,7 +313,7 @@ version suffix. The description comes from the DEFINITION line:
 
 GenBank files don’t have any per-letter annotations:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.letter_annotations
     {}
@@ -321,7 +321,7 @@ GenBank files don’t have any per-letter annotations:
 Most of the annotations information gets recorded in the ``annotations``
 dictionary, for example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record.annotations)
     11
@@ -330,7 +330,7 @@ dictionary, for example:
 
 The ``dbxrefs`` list gets populated from any PROJECT or DBLINK lines:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.dbxrefs
     ['Project:10638']
@@ -339,7 +339,7 @@ Finally, and perhaps most interestingly, all the entries in the features
 table (e.g. the genes or CDS features) get recorded as ``SeqFeature``
 objects in the ``features`` list.
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record.features)
     29
@@ -507,7 +507,7 @@ classes do deal with them:
 
 Here’s an example where we create a location with fuzzy end points:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqFeature
     >>> start_pos = SeqFeature.AfterPosition(5)
@@ -524,7 +524,7 @@ value, while for an end position this would generally be the higher
 If you print out a ``FeatureLocation`` object, you can get a nice
 representation of the information:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_location
     [>5:(8^9)]
@@ -532,7 +532,7 @@ representation of the information:
 We can access the fuzzy start and end positions using the start and end
 attributes of the location:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_location.start
     AfterPosition(5)
@@ -546,7 +546,7 @@ attributes of the location:
 If you don’t want to deal with fuzzy positions and just want numbers,
 they are actually subclasses of integers so should work like integers:
 
-.. code:: verbatim
+.. code:: python
 
     >>> int(my_location.start)
     5
@@ -557,7 +557,7 @@ For compatibility with older versions of Biopython you can ask for the
 ``nofuzzy_start`` and ``nofuzzy_end`` attributes of the location which
 are plain integers:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_location.nofuzzy_start
     5
@@ -571,7 +571,7 @@ Similarly, to make it easy to create a position without worrying about
 fuzzy positions, you can just pass in numbers to the ``FeaturePosition``
 constructors, and you’ll get back out ``ExactPosition`` objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> exact_location = SeqFeature.FeatureLocation(5, 9)
     >>> print exact_location
@@ -600,7 +600,7 @@ which features this SNP is within, and lets suppose this SNP is at index
 4350 (Python counting!). Here is a simple brute force solution where we
 just check all the features one by one in a loop:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> my_snp = 4350
@@ -626,7 +626,7 @@ a (short) gene sequence with location 5:18 on the reverse strand, which
 in GenBank/EMBL notation using 1-based counting would be
 ``complement(6..18)``, like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqFeature import SeqFeature, FeatureLocation
@@ -637,7 +637,7 @@ You could take the parent sequence, slice it to extract 5:18, and then
 take the reverse complement. If you are using Biopython 1.59 or later,
 the feature location’s start and end are integer like so this works:
 
-.. code:: verbatim
+.. code:: python
 
     >>> feature_seq = example_parent[example_feature.location.start:example_feature.location.end].reverse_complement()
     >>> print feature_seq
@@ -648,7 +648,7 @@ to deal with compound features (joins) this is rather messy. Instead,
 the ``SeqFeature`` object has an ``extract`` method to take care of all
 this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> feature_seq = example_feature.extract(example_parent)
     >>> print feature_seq
@@ -657,7 +657,7 @@ this:
 The length of a ``SeqFeature`` or location matches that of the region of
 sequence it describes.
 
-.. code:: verbatim
+.. code:: python
 
     >>> print example_feature.extract(example_parent)
     AGCCTTTGCCGTC
@@ -706,7 +706,7 @@ The ``format()`` method of the ``SeqRecord`` class gives a string
 containing your record formatted using one of the output file formats
 supported by ``Bio.SeqIO``, such as FASTA:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
@@ -723,7 +723,7 @@ supported by ``Bio.SeqIO``, such as FASTA:
 
 which should give:
 
-.. code:: verbatim
+.. code:: python
 
     >gi|14150838|gb|AAK54648.1|AF376133_1 chalcone synthase [Cucumis sativus]
     MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD
@@ -749,12 +749,12 @@ within the new sequence are preserved (with their locations adjusted).
 
 For example, taking the same GenBank file used earlier:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
 
-.. code:: verbatim
+.. code:: python
 
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
@@ -762,7 +762,7 @@ For example, taking the same GenBank file used earlier:
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     9609
@@ -776,7 +776,7 @@ counting ``4342:4780``. From looking at the file you can work out that
 these are the twelfth and thirteenth entries in the file, so in Python
 zero-based counting they are entries 11 and 12 in the ``features`` list:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.features[20]
     type: gene
@@ -787,7 +787,7 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.features[21]
     type: CDS
@@ -806,11 +806,11 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
 Let’s slice this parent record from 4300 to 4800 (enough to include the
 ``pim`` gene/CDS), and see how many features we get:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record = record[4300:4800]
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record
     SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA',
@@ -818,7 +818,7 @@ Let’s slice this parent record from 4300 to 4800 (enough to include the
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(sub_record)
     500
@@ -828,7 +828,7 @@ Let’s slice this parent record from 4300 to 4800 (enough to include the
 Our sub-record just has two features, the gene and CDS entries for
 ``YP_pPCP05``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print sub_record.features[0]
     type: gene
@@ -839,7 +839,7 @@ Our sub-record just has two features, the gene and CDS entries for
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print sub_record.features[20]
     type: CDS
@@ -865,7 +865,7 @@ not. To avoid guessing, the ``annotations`` and ``dbxrefs`` are omitted
 from the sub-record, and it is up to you to transfer any relevant
 information as appropriate.
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.annotations
     {}
@@ -875,7 +875,7 @@ information as appropriate.
 The same point could be made about the record ``id``, ``name`` and
 ``description``, but for practicality these are preserved:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.id
     'NC_005816.1'
@@ -890,7 +890,7 @@ fix this and then view the sub-record as a reduced GenBank file using
 the ``format`` method described above in
 Section \ `4.5 <#sec:SeqRecord-format>`__:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.description = "Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, partial."
     >>> print sub_record.format("genbank")
@@ -914,7 +914,7 @@ For an example with per-letter annotation, we’ll use the first record in
 a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
 ``SeqIO`` functions:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.parse("example.fastq", "fastq").next()
@@ -923,7 +923,7 @@ a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
     >>> print record.seq
     CCCTTCTTGTCTTCAGCGTTTCTCC
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
@@ -934,7 +934,7 @@ you think the ``TTT`` should be only ``TT``. We can make a new edited
 record by first slicing the ``SeqRecord`` before and after the “extra”
 third ``T``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> left = record[:20]
     >>> print left.seq
@@ -949,7 +949,7 @@ third ``T``:
 
 Now add the two parts together:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = left + right
     >>> len(edited)
@@ -957,7 +957,7 @@ Now add the two parts together:
     >>> print edited.seq
     CCCTTCTTGTCTTCAGCGTTCTCC
 
-.. code:: verbatim
+.. code:: python
 
     >>> print edited.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
@@ -965,19 +965,19 @@ Now add the two parts together:
 
 Easy and intuitive? We hope so! You can make this shorter with just:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = record[:20] + record[21:]
 
 Now, for an example with features, we’ll use a GenBank file. Suppose you
 have a circular genome:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
 
-.. code:: verbatim
+.. code:: python
 
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
@@ -985,7 +985,7 @@ have a circular genome:
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     9609
@@ -994,7 +994,7 @@ have a circular genome:
     >>> record.dbxrefs
     ['Project:58037']
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.annotations.keys()
     ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
@@ -1002,11 +1002,11 @@ have a circular genome:
 
 You can shift the origin like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted = record[2000:] + record[:2000]
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted
     SeqRecord(seq=Seq('GATACGCAGTCATATTTTTTACACAATTCTCTAATCCCGACAAGGTCGTAGGTC...GGA',
@@ -1014,7 +1014,7 @@ You can shift the origin like this:
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(shifted)
     9609
@@ -1023,7 +1023,7 @@ Note that this isn’t perfect in that some annotation like the database
 cross references and one of the features (the source feature) have been
 lost:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(shifted.features)
     40
@@ -1037,7 +1037,7 @@ annotation it preserves (erroneously propagating annotation can cause
 major problems). If you want to keep the database cross references or
 the annotations dictionary, this must be done explicitly:
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted.dbxrefs = record.dbxrefs[:]
     >>> shifted.annotations = record.annotations.copy()
@@ -1080,7 +1080,7 @@ alternatively provide the new desired value instead.
 
 Consider this example record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
@@ -1090,7 +1090,7 @@ Consider this example record:
 Here we take the reverse complement and specify a new identifier – but
 notice how most of the annotation is dropped (but not the features):
 
-.. code:: verbatim
+.. code:: python
 
     >>> rc = record.reverse_complement(id="TESTING")
     >>> print rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)

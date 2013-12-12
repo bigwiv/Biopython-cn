@@ -3,7 +3,7 @@
 
 本章将详细讨论 ``Bio.SeqIO`` 模块，该模块在第 \ `2 <#chapter:quick-start>`__ 章已经做过简单的介绍并在第 \ `4 <#chapter:SeqRecord>`__ 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 ``Bio.SeqIO`` 维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `SeqIO <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> help(SeqIO)
@@ -30,7 +30,7 @@
 
 总的来说， ``Bio.SeqIO.parse()`` 用于读取序列文件并返回 ``SeqRecord`` 对象，并通常用在循环中，如：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
@@ -40,7 +40,7 @@
 
 上面的示例来自第 \ `2.4 <#sec:sequence-parsing>`__ 节，它将读取来自FASTA格式文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 的兰花DNA序列。如果你想读取GenBank格式文件，如 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，只需要更改文件名和格式字符串：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
@@ -52,7 +52,7 @@
 
 另外一个非常常见的使用Python迭代器的地方是在列表解析（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> identifiers = [seq_record.id for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank")]
@@ -70,7 +70,7 @@
 
 除了使用for循环，还可以使用迭代器的 ``.next()`` 方法遍历序列条目，如：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     record_iterator = SeqIO.parse("ls_orchid.fasta", "fasta")
@@ -87,7 +87,7 @@
 
 一种特殊情形是，序列文件包含多个序列条目，而你只需要第一个条目。在这种情况下，可使用以下代码，非常简洁：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     first_record  = SeqIO.parse("ls_orchid.gbk", "genbank").next()
@@ -99,7 +99,7 @@
 
 在上一节中，我们讨论了如何使用 ``Bio.SeqIO.parse()`` 返回一个 ``SeqRecord`` 迭代器，然后顺序地获取序列条目。往往我们需要以任意顺序获取序列条目，Python列表数据类型便可以达到这个目的。使用Python内置函数 ``list()`` ，我们可以将序列条目迭代器转变成 ``SeqRecord`` 对象列表，如下：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.gbk", "genbank"))
@@ -120,7 +120,7 @@
 
 运行结果:
 
-.. code:: verbatim
+.. code:: python
 
     Found 94 records
     The last record
@@ -139,7 +139,7 @@
 
 ``SeqRecord`` 对象及其注释信息在第 \ `4 <#chapter:SeqRecord>`__ 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     record_iterator = SeqIO.parse("ls_orchid.gbk", "genbank")
@@ -148,7 +148,7 @@
 
 输出结果:
 
-.. code:: verbatim
+.. code:: python
 
     ID: Z78533.1
     Name: Z78533
@@ -168,19 +168,19 @@
 
 这可以得到 ``SeqRecord`` 大部分的易读的注释汇总信息。在此例中，我们将使用 ``.annotations`` 属性-即Python字典（dictionary）。该注释字典的内容如上述示例结果，你也可以直接输出：
 
-.. code:: verbatim
+.. code:: python
 
     print first_record.annotations
 
 与其他Python字典一样，你可以轻松地获得键列表：
 
-.. code:: verbatim
+.. code:: python
 
     print first_record.annotations.keys()
 
 或者值列表:
 
-.. code:: verbatim
+.. code:: python
 
     print first_record.annotations.values()
 
@@ -188,14 +188,14 @@
 
 例如你想从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中提取出物种列表。我们需要的信息 *Cypripedium irapeanum* 被保存在这个注释字典的‘source’和‘organism’键中，我们可以用下面的方式获取：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print first_record.annotations["source"]
     Cypripedium irapeanum
 
 或:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print first_record.annotations["organism"]
     Cypripedium irapeanum
@@ -204,7 +204,7 @@
 
 现在，让我们遍历所有的序列条目， 创建一个包含所有兰花序列的物种列表：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     all_species = []
@@ -214,7 +214,7 @@
 
 另外一种方式是使用列表解析：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     all_species = [seq_record.annotations["organism"] for seq_record in \
@@ -223,7 +223,7 @@
 
 两种方式的输出结果相同：
 
-.. code:: verbatim
+.. code:: python
 
     ['Cypripedium irapeanum', 'Cypripedium californicum', ..., 'Paphiopedilum barbatum']
 
@@ -231,7 +231,7 @@
 
 现在，假设你需要从一个FASTA文件而不是GenBank文件提取出物种列表，那么你不得不多写一些代码，用以从序列条目的描述行提取需要的数据。使用的示例FASTA文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 格式如下：
 
-.. code:: verbatim
+.. code:: python
 
     >gi|2765658|emb|Z78533.1|CIZ78533 C.irapeanum 5.8S rRNA gene and ITS1 and ITS2 DNA
     CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG
@@ -240,7 +240,7 @@
 
 你可以手动检查，对于每一个序列条目，物种名都是描述行的第二个单词。这意味着如果我们以空白分割序列条目的 ``.description`` ，物种名将会是第1个元素（第0个元素是序列ID），我们可以这样做：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     all_species = []
@@ -250,13 +250,13 @@
 
 将得到:
 
-.. code:: verbatim
+.. code:: python
 
     ['C.irapeanum', 'C.californicum', 'C.fasciculatum', 'C.margaritaceum', ..., 'P.barbatum']
 
 使用更简洁的列表解析：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     all_species == [seq_record.description.split()[1] for seq_record in \
@@ -272,7 +272,7 @@
 
 正如你上面看到的，我们可以使用文件名作为 ``Bio.SeqIO.read()`` 或 ``Bio.SeqIO.parse()`` 的参数 - 例如在这个例子中，我们利用生成器表达式计算GenBank文件中多条序列条目的总长：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> print sum(len(r) for r in SeqIO.parse("ls_orchid.gbk", "gb"))
@@ -280,7 +280,7 @@
 
 此处，我们使用文件句柄，并使用 ``with`` 语句（Python 2.5及以上版本）自动关闭句柄：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from __future__ import with_statement #Needed on Python 2.5
     >>> from Bio import SeqIO
@@ -290,7 +290,7 @@
 
 或者，用旧版本的方式，手动关闭句柄：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> handle = open("ls_orchid.gbk")
@@ -300,7 +300,7 @@
 
 现在，如果我们有一个gzip压缩的文件呢？这种类型的文件在Linux系统中被普遍使用。我们可以使用Python的 ``gzip`` 模块打开压缩文档以读取数据 - 返回一个句柄对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import gzip
     >>> from Bio import SeqIO
@@ -311,7 +311,7 @@
 
 相同地，如果我们有一个bzip2压缩文件（遗憾的是与函数的名字是不太一致）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import bz2
     >>> from Bio import SeqIO
@@ -338,7 +338,7 @@
 
 首先，我们只获取一条序列条目。如果你不关注注释和相关信息，下载FASTA文件是个不错的选择，因为他们相对紧凑。请记住，当你希望处理的对象包含有且仅有一条序列条目时，使用 ``Bio.SeqIO.read()`` 函数：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Entrez
     from Bio import SeqIO
@@ -350,13 +350,13 @@
 
 输出结果为:
 
-.. code:: verbatim
+.. code:: python
 
     gi|6273291|gb|AF191665.1|AF191665 with 0 features
 
 NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见 `EFetch for Sequence and other Molecular Biology Databases <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。因此，Biopython1.50及以后版本的 ``Bio.SeqIO`` 中，我们支持“gb”作为“genbank”的别名。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Entrez
     from Bio import SeqIO
@@ -368,7 +368,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 输出结果为：
 
-.. code:: verbatim
+.. code:: python
 
     AF191665.1 with 3 features
 
@@ -376,7 +376,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 现在，让我们获取多个序列条目。这次句柄包含多条序列条目，因此我们必须使用 ``Bio.SeqIO.parse()`` 函数：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Entrez
     from Bio import SeqIO
@@ -392,7 +392,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 输出结果为：
 
-.. code:: verbatim
+.. code:: python
 
     AF191665.1 Opuntia marenae rpl16 gene; chloroplast gene for c...
     Sequence length 902, 3 features, from: chloroplast Opuntia marenae
@@ -408,7 +408,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 现在我们使用句柄下载来自ExPASy的SwissProt文件，更深入的信息请见第 \ `10 <#chapter:swiss_prot>`__ 章。如上面提到的，当你希望处理的对象包含有且仅有一条序列条目时，使用 ``Bio.SeqIO.read()`` 函数：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import ExPASy
     from Bio import SeqIO
@@ -424,7 +424,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 如果网络连接正常，你将会得到：
 
-.. code:: verbatim
+.. code:: python
 
     O23729
     CHS3_BROFI
@@ -451,7 +451,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 你可以使用 ``Bio.SeqIO.to_dict()`` 函数创建一个 ``SeqRecord`` 字典（在内存中）。默认会使用每条序列条目的ID（i.e.  ``.id`` 属性）作为键。让我们用GenBank文件试一试：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.gbk", "genbank"))
@@ -460,26 +460,26 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 因为变量 ``orchid_dict``  是一个普通的Python字典，我们可以查看所有的键：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(orchid_dict)
     94
 
-.. code:: verbatim
+.. code:: python
 
     >>> print orchid_dict.keys()
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
 
 如果你确实需要，你甚至可以一次性查看所有的序列条目：
 
-.. code:: verbatim
+.. code:: python
 
     >>> orchid_dict.values() #lots of output!
     ...
 
 我们可以通过键读取单个 ``SeqRecord``  对象并操作改对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> seq_record = orchid_dict["Z78475.1"]
     >>> print seq_record.description
@@ -496,7 +496,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 使用上述相同的代码，仅将文件改为FASTA文件：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     orchid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.fasta", "fasta"))
@@ -504,7 +504,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 这次键为：
 
-.. code:: verbatim
+.. code:: python
 
     ['gi|2765596|emb|Z78471.1|PDZ78471', 'gi|2765646|emb|Z78521.1|CCZ78521', ...
      ..., 'gi|2765613|emb|Z78488.1|PTZ78488', 'gi|2765583|emb|Z78458.1|PHZ78458']
@@ -513,7 +513,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 首先，你必须写一个函数，当使用 ``SeqRecord`` 对象作为参数时，可以返回你需要的键（字符串）。通常，函数的细节依赖于你要处理的序列条目的特点。但是对于我们的兰花数据，我们只需要使用“管道”符号（|）切分ID并返回第四个条目（第三个元素）：
 
-.. code:: verbatim
+.. code:: python
 
     def get_accession(record):
         """"Given a SeqRecord, return the accession number as a string.
@@ -526,7 +526,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 然后我们可以将此函数赋与 ``SeqIO.to_dict()`` 函数用于构建字典：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     orchid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.fasta", "fasta"), key_function=get_accession)
@@ -534,7 +534,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 最终可到到新的字典键：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print orchid_dict.keys()
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
@@ -548,7 +548,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 让我们再一次处理兰花GenBank文件：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from Bio.SeqUtils.CheckSum import seguid
@@ -557,7 +557,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 将得到：
 
-.. code:: verbatim
+.. code:: python
 
     Z78533.1 JUEoWn6DPhgZ9nAyowsgtoD9TTo
     Z78532.1 MN/s0q9zDoCVEEc+k/IFwCNF2pY
@@ -566,7 +566,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 现在，再次调用 ``Bio.SeqIO.to_dict()`` 函数 ``key_function`` 参数， ``key_function`` 参数需要一个函数将 ``SeqRecord`` 转变为字符串。我们不能直接使用`seguid() `` 函数，因为它需要 ``Seq`` 对象（或字符串）作为参数。不过，我们可以使用Python的 ``lambda`` 特性创建一个一次性（“one off”）函数，然后传递给 ``Bio.SeqIO.to_dict()`` ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> from Bio.SeqUtils.CheckSum import seguid
@@ -589,19 +589,19 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 让我们使用之前相同的GenBank文件作为示例：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.gbk", "genbank")
     >>> len(orchid_dict)
     94
 
-.. code:: verbatim
+.. code:: python
 
     >>> orchid_dict.keys()
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
 
-.. code:: verbatim
+.. code:: python
 
     >>> seq_record = orchid_dict["Z78475.1"]
     >>> print seq_record.description
@@ -613,7 +613,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 下面是使用FASTA文件做的相同的示例 - 仅改变了文件名和格式：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.fasta", "fasta")
@@ -628,7 +628,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 如果想使用与之前一样的键，像第 \ `5.4.1.1 <#seq:seqio-todict-functionkey>`__ 节 ``Bio.SeqIO.to_dict()`` 示例，你需要写一个小函数，从FASTA ID（字符串）中匹配你想要的键：
 
-.. code:: verbatim
+.. code:: python
 
     def get_acc(identifier):
         """"Given a SeqRecord identifier string, return the accession number as a string.
@@ -641,7 +641,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 然后我们将此函数赋与 ``Bio.SeqIO.index()`` 函数用于构建字典：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.fasta", "fasta", key_function=get_acc)
@@ -659,7 +659,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 假如你已经从UniProt FTP站点下载了整个数据库的SwissPort格式文本文件（ `ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz <ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz>`__ ），并也已经解压为文件 ``uniprot_sprot.dat`` ，你需要从中提取一部分序列条目：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> uniprot = SeqIO.index("uniprot_sprot.dat", "swiss")
@@ -683,7 +683,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 将以NCBI FTP站点 `ftp://ftp.ncbi.nih.gov/genbank/ <ftp://ftp.ncbi.nih.gov/genbank/>`__ 的GenBank文本文件为例，这些文件为gzip压缩文件。对于GenBank版本182，病毒序列共包含16个文件， ``gbvrl1.seq``  -  ``gbvrl16.seq`` ，共包含约一百万条序列条目。对这些文件，你可以像这样建立索引：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> files = ["gbvrl%i.seq" % (i+1) for i in range(16)]
@@ -693,7 +693,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 在我个人电脑上，运行大约需要2分钟。如果你重新运行，索引文件（这里为 ``gbvrl.idx`` ）将在不到一秒的时间内加载。你可以将这个索引作为一个只读的Python字典，并不需要去担心序列来自哪个文件，e.g.:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print gb_vrl["GQ333173.1"].description
     HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial cds.
@@ -703,7 +703,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 与第 \ `5.4.2.2 <#sec:seqio-index-getraw>`__ 节讨论的 ``Bio.SeqIO.index()`` 函数一样，该字典样对象同样允许你获取每个序列条目的原始文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print gb_vrl.get_raw("GQ333173.1")
     LOCUS       GQ333173                 459 bp    DNA     linear   VRL 21-OCT-2009
@@ -722,7 +722,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 ``Bio.SeqIO.index()`` 和 ``Bio.SeqIO.index_db()`` 函数均可以用于BGZF压缩文件。例如，如果使用过未压缩的GenBank文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.gbk", "genbank")
@@ -731,13 +731,13 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 你可以使用如下的命令行命令压缩该文件（同时保留源文件） - 不需要担心，压缩文件和别的示例及已经包含：
 
-.. code:: verbatim
+.. code:: python
 
     $ bgzip -c ls_orchid.gbk > ls_orchid.gbk.bgz
 
 你可以用相同的方式使用压缩文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.gbk.bgz", "genbank")
@@ -746,7 +746,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 或：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index_db("ls_orchid.gbk.bgz.idx", "ls_orchid.gbk.bgz", "genbank")
@@ -785,7 +785,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 我们先用硬编码方式（手动创建而不是从文件中加载）创建一个些新的 ``SeqRecord`` 对象，示例如下：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
@@ -817,14 +817,14 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 现在我们得到一个 ``SeqRecord`` 对象列表，将它写入一个FASTA格式文件：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     SeqIO.write(my_records, "my_example.faa", "fasta")
 
 如果用你喜欢的文本编辑软件打开，可得到：
 
-.. code:: verbatim
+.. code:: python
 
     >gi|14150838|gb|AAK54648.1|AF376133_1 chalcone synthase [Cucumis sativus]
     MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD
@@ -854,7 +854,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 一个简单的例子是，FASTA文件中，允许序列以任意字符数换行。解析以下两条序列得到一个相同的 ``SeqRecord`` 对象，这两条序列仅在换行上不同：
 
-.. code:: verbatim
+.. code:: python
 
     >YAL068C-7235.2170 Putative promoter sequence
     TACGAGAATAATTTCTCATCATCCAGCTTTAACACAAAATTCGCACAGTTTTCGTTAAGA
@@ -876,7 +876,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 在这个例子中，我们将读取GenBank格式文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，然后输出为FASTA格式文件：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = SeqIO.parse("ls_orchid.gbk", "genbank")
@@ -885,7 +885,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 这仍然有点复杂，因为文件格式转换是比较常见的任务，有一个辅助函数可以替代上述代码：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     count = SeqIO.convert("ls_orchid.gbk", "genbank", "my_example.fasta", "fasta")
@@ -893,7 +893,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 ``Bio.SeqIO.convert()`` 函数可以使用句柄或文件名。然而需要注意的是，如果输出文件已存在，将覆写该文件。想了解更多信息，请使用内置帮助文档：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> help(SeqIO.convert)
@@ -910,7 +910,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 首先，我们将使用 ``Bio.SeqIO.parse()`` 加载文件中的核酸序列，然后使用 ``Seq`` 对象的内置方法 ``.reverse_complement()`` 输出其反向互补序列（请见第 \ `3.7 <#sec:seq-reverse-complement>`__ 节）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> for record in SeqIO.parse("ls_orchid.gbk", "genbank"):
@@ -921,7 +921,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 这是一个绝好的展示列表解析效率地方，列表解析通过在内存中创建一个列表实现：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = [rec.reverse_complement(id="rc_"+rec.id, description = "reverse complement") \
@@ -930,7 +930,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 这时就用到了列表解析的绝妙之处，在其中添加一个条件语句：
 
-.. code:: verbatim
+.. code:: python
 
     >>> records = [rec.reverse_complement(id="rc_"+rec.id, description = "reverse complement") \
     ...            for rec in SeqIO.parse("ls_orchid.fasta", "fasta") if len(rec)<700]
@@ -939,14 +939,14 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 这将在内存中创建一个序列小于700bp的反向互补序列列表。我们可以以相同的方式使用生成器表达式 - 但是更有优势的是，它不需要同时在内存中创建所有序列条目的列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> records = (rec.reverse_complement(id="rc_"+rec.id, description = "reverse complement") \
     ...           for rec in SeqIO.parse("ls_orchid.fasta", "fasta") if len(rec)<700)
 
 完整的示例如下：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = (rec.reverse_complement(id="rc_"+rec.id, description = "reverse complement") \
@@ -963,7 +963,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 举个例子来说明如果使用这个功能，我们先从兰花GenBank文件加载一系列 ``SeqRecord`` 对象，然后创建一个包含FASTA格式序列条目的字符串：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     from StringIO import StringIO
@@ -977,7 +977,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 注意：尽管我们不鼓励这么做，你可以使用 ``format()`` 方法写入文件，示例如下：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     out_handle = open("ls_orchid_long.tab", "w")
@@ -988,7 +988,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 这类代码可以处理顺序文件格式如FASTA或者此处使用的简单的制表符分割文件，但不能处理更复杂的或是交错式文件格式。这就是为什么我们仍然强调使用 ``Bio.SeqIO.write()`` 的原因，如下面的示例：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     records = (rec for rec in SeqIO.parse("ls_orchid.gbk", "genbank") if len(rec) > 100)

@@ -73,7 +73,7 @@ folder, or online
 `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
 from our website.
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -85,7 +85,7 @@ We’re using a top down approach, so after loading in our sequence we
 next create an empty diagram, then add an (empty) track, and to that add
 an (empty) feature set:
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram = GenomeDiagram.Diagram("Yersinia pestis biovar Microtus plasmid pPCP1")
     gd_track_for_features = gd_diagram.new_track(1, name="Annotated Features")
@@ -96,7 +96,7 @@ Now the fun part - we take each gene ``SeqFeature`` object in our
 going to color them blue, alternating between a dark blue and a light
 blue.
 
-.. code:: verbatim
+.. code:: python
 
     for feature in record.features:
         if feature.type != "gene":
@@ -114,7 +114,7 @@ using ReportLab objects. Then we call the ``write`` method which renders
 these to the requested file format. Note you can output in multiple file
 formats:
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.draw(format="linear", orientation="landscape", pagesize='A4',
                     fragments=4, start=0, end=len(record))
@@ -125,7 +125,7 @@ formats:
 Also, provided you have the dependencies installed, you can also do
 bitmaps, for example:
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.write("plasmid_linear.png", "PNG")
 
@@ -136,7 +136,7 @@ many pieces the genome gets broken up into.
 
 If you want to do a circular figure, then try this:
 
-.. code:: verbatim
+.. code:: python
 
     gd_diagram.draw(format="circular", circular=True, pagesize=(20*cm,20*cm),
                     start=0, end=len(record), circle_core=0.7)
@@ -153,7 +153,7 @@ Now let’s produce exactly the same figures, but using the bottom up
 approach. This means we create the different objects directly (and this
 can be done in almost any order) and then combine them.
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -195,7 +195,7 @@ Sometimes you won’t have ``SeqFeature`` objects, but just the
 coordinates for a feature you want to draw. You have to create minimal
 ``SeqFeature`` object, but this is easy:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     my_seq_feature = SeqFeature(FeatureLocation(50,100),strand=+1)
@@ -203,7 +203,7 @@ coordinates for a feature you want to draw. You have to create minimal
 For strand, use ``+1`` for the forward strand, ``-1`` for the reverse
 strand, and ``None`` for both. Here is a short self contained example:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.SeqFeature import SeqFeature, FeatureLocation
     from Bio.Graphics import GenomeDiagram
@@ -237,7 +237,7 @@ caption text for these features. This is discussed in more detail next.
 Recall we used the following (where ``feature`` was a ``SeqFeature``
 object) to add a feature to the diagram:
 
-.. code:: verbatim
+.. code:: python
 
     gd_feature_set.add_feature(feature, color=color, label=True)
 
@@ -247,7 +247,7 @@ entries under the ``SeqFeature`` object’s qualifiers dictionary are
 used: ``gene``, ``label``, ``name``, ``locus_tag``, and ``product``.
 More simply, you can specify a name directly:
 
-.. code:: verbatim
+.. code:: python
 
     gd_feature_set.add_feature(feature, color=color, label=True, name="My Gene")
 
@@ -256,7 +256,7 @@ choose the font, position (this defaults to the start of the sigil, you
 can also choose the middle or at the end) and orientation (for linear
 diagrams only, where this defaults to rotated by 45 degrees):
 
-.. code:: verbatim
+.. code:: python
 
     #Large font, parallel with the track
     gd_feature_set.add_feature(feature, label=True, color="green",
@@ -292,7 +292,7 @@ a plain box, which was all that was available in the last publicly
 released standalone version of GenomeDiagram. Arrow sigils were included
 when GenomeDiagram was added to Biopython 1.50:
 
-.. code:: verbatim
+.. code:: python
 
     #Default uses a BOX sigil
     gd_feature_set.add_feature(feature)
@@ -305,7 +305,7 @@ when GenomeDiagram was added to Biopython 1.50:
 
 Biopython 1.61 added three more sigils,
 
-.. code:: verbatim
+.. code:: python
 
     #Box with corners cut off (making it an octagon)
     gd_feature_set.add_feature(feature, sigil="OCTO")
@@ -332,7 +332,7 @@ additional options to adjust the shapes of the arrows, firstly the
 thickness of the arrow shaft, given as a proportion of the height of the
 bounding box:
 
-.. code:: verbatim
+.. code:: python
 
     #Full height shafts, giving pointed boxes:
     gd_feature_set.add_feature(feature, sigil="ARROW", color="brown",
@@ -351,7 +351,7 @@ The results are shown below:
 Secondly, the length of the arrow head - given as a proportion of the
 height of the bounding box (defaulting to 0.5, or 50%):
 
-.. code:: verbatim
+.. code:: python
 
     #Short arrow heads:
     gd_feature_set.add_feature(feature, sigil="ARROW", color="blue",
@@ -370,7 +370,7 @@ The results are shown below:
 Biopython 1.61 adds a new ``BIGARROW`` sigil which always stradles the
 axis, pointing left for the reverse strand or right otherwise:
 
-.. code:: verbatim
+.. code:: python
 
     #A large arrow straddling the axis:
     gd_feature_set.add_feature(feature, sigil="BIGARROW")
@@ -388,7 +388,7 @@ options we’ve now discussed. This time we’ll use arrows for the genes,
 and overlay them with strand-less features (as plain boxes) showing the
 position of some restriction digest sites.
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib import colors
     from reportlab.lib.units import cm
@@ -473,7 +473,7 @@ complement to match the orientation of the first two phage (again
 preserving the features, see
 Section \ `4.8 <#sec:SeqRecord-reverse-complement>`__):
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
 
@@ -491,7 +491,7 @@ code three lists of colors.
 Note that the annotation in the GenBank files doesn’t exactly match that
 shown in Proux *et al.*, they have drawn some unannotated genes.
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.colors import red, grey, orange, green, brown, blue, lightblue, purple
 
@@ -507,7 +507,7 @@ Now to draw them – this time we add three tracks to the diagram, and
 also notice they are given different start/end values to reflect their
 different lengths (this requires Biopython 1.59 or later).
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics import GenomeDiagram
 
@@ -570,7 +570,7 @@ My naming convention continues to refer to the three phage as A, B and
 C. Here are the links we want to show between A and B, given as a list
 of tuples (percentage similarity score, gene in A, gene in B).
 
-.. code:: verbatim
+.. code:: python
 
     #Tuc2009 (NC_002703) vs bIL285 (AF323668)
     A_vs_B = [
@@ -603,7 +603,7 @@ of tuples (percentage similarity score, gene in A, gene in B).
 
 Likewise for B and C:
 
-.. code:: verbatim
+.. code:: python
 
     #bIL285 (AF323668) vs Listeria innocua prophage 5 (in NC_003212)
     B_vs_C = [
@@ -629,7 +629,7 @@ middle phage there are no locus tags so I’ve used gene names instead.
 The following little helper function lets us lookup a feature using
 either a locus tag or gene name:
 
-.. code:: verbatim
+.. code:: python
 
     def get_feature(features, id, tags=["locus_tag", "gene"]):
         """Search list of SeqFeature objects for an identifier under the given tags."""
@@ -649,7 +649,7 @@ and the following snippet to the previous example (just before the
 included in the ``Doc/examples`` folder of the Biopython source code) to
 add cross links to the figure:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import CrossLink
     from reportlab.lib import colors
@@ -743,7 +743,7 @@ some point in the future the UK spellings may be deprecated.
 
 For example, if you used to have:
 
-.. code:: verbatim
+.. code:: python
 
     from GenomeDiagram import GDFeatureSet, GDDiagram
     gdd = GDDiagram("An example")
@@ -751,7 +751,7 @@ For example, if you used to have:
 
 you could just switch the import statements like this:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import FeatureSet as GDFeatureSet, Diagram as GDDiagram
     gdd = GDDiagram("An example")
@@ -760,7 +760,7 @@ you could just switch the import statements like this:
 and hopefully that should be enough. In the long term you might want to
 switch to the new names, but you would have to change more of your code:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics.GenomeDiagram import FeatureSet, Diagram
     gdd = Diagram("An example")
@@ -768,7 +768,7 @@ switch to the new names, but you would have to change more of your code:
 
 or:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Graphics import GenomeDiagram
     gdd = GenomeDiagram.Diagram("An example")
@@ -801,7 +801,7 @@ and then parsed them with ``Bio.SeqIO`` to find out their lengths. You
 could use the GenBank files for this, but it is faster to use the FASTA
 files for the whole chromosomes:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     entries = [("Chr I", "CHR_I/NC_003070.fna"),
@@ -816,7 +816,7 @@ files for the whole chromosomes:
 This gave the lengths of the five chromosomes, which we’ll now use in
 the following short demonstration of the ``BasicChromosome`` module:
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.units import cm
     from Bio.Graphics import BasicChromosome
@@ -877,7 +877,7 @@ from the NCBI FTP site
 `ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana <ftp://ftp.ncbi.nlm.nih.gov/genomes/Arabidopsis_thaliana>`__,
 and preserve the subdirectory names or edit the paths below:
 
-.. code:: verbatim
+.. code:: python
 
     from reportlab.lib.units import cm
     from Bio import SeqIO

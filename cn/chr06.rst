@@ -31,7 +31,7 @@
 
 例如，请见以下PFAM（或者Stockholm）格式的蛋白序列比对文件。
 
-.. code:: verbatim
+.. code:: python
 
     # STOCKHOLM 1.0
     #=GS COATB_BPIKE/30-81  AC P03620.1
@@ -63,14 +63,14 @@
 
 这是PFAM数据库中Phage\_Coat\_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ `http://pfam.sanger.ac.uk/ <http://pfam.sanger.ac.uk/>`__ ），但这并不影响我们的例子（假设你已经将以上内容下载到一个名为''PF05371\_seed.sth''的文件中，并在Python的当前工作目录下）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
 
 这段代码将在屏幕上打印出该序列比对的概要信息：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment
     SingleLetterAlphabet() alignment with 7 rows and 52 columns
@@ -84,7 +84,7 @@
 
 你会注意到，以上输出截短了中间一部分序列的内容。你也可以很容易地通过控制多序列比对中每一条序列（作为 ``SeqRecord`` 对象）来输出你所喜欢的格式。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -104,7 +104,7 @@
 
 你是否已经注意到以上原始数据文件中包含有蛋白数据库（PDB）交叉引用以及相关二级结构的信息？你可以尝试以下代码：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in alignment:
     ...     if record.dbxrefs:
@@ -116,7 +116,7 @@
 
 如果你希望显示所有的序列注释信息，请使用以下例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in alignment:
     ...     print record
@@ -125,7 +125,7 @@ Sanger网站
 `http://pfam.sanger.ac.uk/family?acc=PF05371 <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
 可以让你下载各种不同的序列比对的格式。以下例子为FASTA格式：
 
-.. code:: verbatim
+.. code:: python
 
     >COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA
@@ -144,7 +144,7 @@ Sanger网站
 
 注意Sanger网站有一个选项可以将序列比对中的间隔（gap）用小圆点或者是小横线表示。在以上例子中，序列间隔由小横线表示。假设你已经下载该文件，并保存为 “PF05371\_seed.faa”。你可以使用以下代码来读入该序列比对。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.faa", "fasta")
@@ -156,7 +156,7 @@ Sanger网站
 
 对于任何一种Biopython支持的格式，你都可以用同样的方式读取它（通过指定文件的格式）。例如，你可以使用“phylip”来表示PHYLIP格式文件，用"nexus"来指定NEXUS格式文件或者用“emboss”来指定EMBOSS工具箱的输出文件。读者可以在以下链接中找到所有支持的格式（ `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__ ），或者内置的帮助中（以及在线文档 `online <http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html>`__ ）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> help(AlignIO)
@@ -169,7 +169,7 @@ Sanger网站
 
 假设我们有一个PHYLIP格式的很小的序列比对：
 
-.. code:: verbatim
+.. code:: python
 
         5    6
     Alpha     AACAAC
@@ -180,7 +180,7 @@ Sanger网站
 
 如果你想用PHYLIP工具包来bootstrap一个系统发生树，其中的一个步骤是用 ``bootseq`` 程序来产生许多序列比对。这将给出类似于以下格式的序列比对：
 
-.. code:: verbatim
+.. code:: python
 
         5     6
     Alpha     AAACCA
@@ -210,7 +210,7 @@ Sanger网站
 
 如果你想用 ``Bio.AlignIO`` 来读取这个文件，你可以使用：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = AlignIO.parse("resampled.phy", "phylip")
@@ -220,7 +220,7 @@ Sanger网站
 
 这将给出以下的输出（这时只显示缩略的一部分）：
 
-.. code:: verbatim
+.. code:: python
 
     SingleLetterAlphabet() alignment with 5 rows and 6 columns
     AAACCA Alpha
@@ -254,7 +254,7 @@ Sanger网站
 
 与 ``Bio.SeqIO.parse`` 一样， ``Bio.SeqIO.parse()`` 将返回一个迭代器（iterator）。如果你希望把所有的序列比对都读取到内存中，以下代码将把它们储存在一个列表对象里。
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = list(AlignIO.parse("resampled.phy", "phylip"))
@@ -266,7 +266,7 @@ Sanger网站
 
 许多序列比对的文件格式可以非常明确地储存多个序列比对。然而，例如FASTA一类的普通序列文件格式并没有很直接的分隔符来分开多个序列比对。读者可以见以下例子：
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -285,7 +285,7 @@ Sanger网站
 
 以下是另一个例子：
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -304,7 +304,7 @@ Sanger网站
 
 最后一个例子也类似：
 
-.. code:: verbatim
+.. code:: python
 
     >Alpha
     ACTACGACTAGCTCAG--G
@@ -325,7 +325,7 @@ Sanger网站
 
 为了处理这样的FASTA格式的数据，我们可以指定 ``Bio.AlignIO.parse()`` 的第三个可选参数 ``seq_count`` ，这一参数将告诉Biopython你所期望的每个序列比对中序列的个数。例如：
 
-.. code:: verbatim
+.. code:: python
 
     for alignment in AlignIO.parse(handle, "fasta", seq_count=2):
         print "Alignment length %i" % alignment.get_alignment_length()
@@ -335,7 +335,7 @@ Sanger网站
 
 这将给出：
 
-.. code:: verbatim
+.. code:: python
 
     Alignment length 19
     ACTACGACTAGCTCAG--G - Alpha
@@ -364,7 +364,7 @@ Sanger网站
 
 这里有一个手动构造一个 ``MultipleSeqAlignment`` 对象的例子（注意 ``MultipleSeqAlignment`` 是由若干个 ``SeqRecord`` 组成的）：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Alphabet import generic_dna
     from Bio.Seq import Seq
@@ -393,14 +393,14 @@ Sanger网站
 
 现在我们有一个包含三个 ``MultipleSeqAlignment`` 对象的列表（ ``my_alignments`` ），现在我们将它写出为PHYLIP格式：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     AlignIO.write(my_alignments, "my_example.phy", "phylip")
 
 如果你用你喜欢的文本编辑器在你当前的工作目录下打开 ``my_example.phy`` 文件，你会看到以下内容：
 
-.. code:: verbatim
+.. code:: python
 
      3 12
     Alpha      ACTGCTAGCT AG
@@ -428,7 +428,7 @@ Sanger网站
 
 在本例中，我们将读取PFAM/Stockholm格式的序列比对，然后将其保存为Clustal格式：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
@@ -436,7 +436,7 @@ Sanger网站
 
 或者，使用 ``Bio.AlignIO.parse()`` 和 ``Bio.AlignIO.write()`` ：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
@@ -447,7 +447,7 @@ Sanger网站
 
 在以下例子中，我们知道序列比对文件中仅包含有一个序列比对，因此我们使用 ``Bio.AlignIO.read()`` 函数来读取数据，然后使用 ``Bio.AlignIO.write()`` 来将数据保存为另一种格式：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -455,7 +455,7 @@ Sanger网站
 
 使用以上两个例子，你都可以将PFAM/Stockholm格式的序列比对数据转换为Clustal格式：
 
-.. code:: verbatim
+.. code:: python
 
     CLUSTAL X (1.81) multiple sequence alignment
 
@@ -478,14 +478,14 @@ Sanger网站
 
 另外，你也可以使用以下代码将它保存为PHYLIP格式：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip")
 
 你可以获得以下PHYLIP格式的文件输出：
 
-.. code:: verbatim
+.. code:: python
 
      7 52
     COATB_BPIK AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
@@ -506,7 +506,7 @@ Sanger网站
 
 PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是都为10个字符（ID中多出的字符将被截短）。在这一个例子中，截短的序列ID依然是唯一的（只是缺少了可读性）。在某些情况下，我们并没有一个好的方式去压缩序列的ID。以下例子提供了另一种解决方案 —— 利用自定义的序列ID来代替原本的序列ID：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -520,13 +520,13 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 以上代码将会建立一个字典对象实现自定义的ID和原始ID的映射：
 
-.. code:: verbatim
+.. code:: python
 
     {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', ...}
 
 以下为PHYLIP的格式输出：
 
-.. code:: verbatim
+.. code:: python
 
      7 52
     seq0       AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
@@ -552,7 +552,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 因为 ``Bio.AlignIO`` 模块是基于文件句柄的，因此你如果想将序列比对读入为一个字符串对象，你需要做一些额外的工作。然而，我们提供一个 ``format()`` 方法来帮助你实现这项任务。 ``format()`` 方法需要用户提供一个小写的格式参数（这可以是任何 ``AlignIO`` 支持的序列比对格式）。例如：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -562,7 +562,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 ``format()`` 方法是利用 ``StringIO`` 以及 ``Bio.AlignIO.write()`` 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import AlignIO
     from StringIO import StringIO
@@ -585,7 +585,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 首先，用户可以认为读入的序列比对是一个由 ``SeqRecord`` 对象构成的Python列表（list）。有了这样一个印象以后，你可以使用 ``len()`` 方法来得到行数（序列比对的个数），你也可以对序列比对进行迭代。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
@@ -603,7 +603,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 你可以使用列表所拥有的 ``append`` 和 ``extend`` 方法来给序列比对增加序列。请读者一定要正确理解序列比对与其包含的序列的关系，这样你就可以使用切片操作来获得其中某些序列比对。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment
     SingleLetterAlphabet() alignment with 7 rows and 52 columns
@@ -623,28 +623,28 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 假如你需要获得特定的列该怎么办呢？如果你接触过Numpy矩阵那么一定对下面的语法非常熟悉，使用双切片：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[2,6]
     T
 
 使用两个整数来获得序列比对中的一个字符，这其实是以下操作的简化方式：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[2].seq[6]
     T
 
 你可以用下面的代码来获取整列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,6]
     TTT---T
 
 你也可以同时选择特定的行和列。例如，以下代码将打印出第3到6行的前6列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[3:6,:6]
     SingleLetterAlphabet() alignment with 3 rows and 6 columns
@@ -654,7 +654,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 使用 ``:`` 将打印出所有行：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,:6]
     SingleLetterAlphabet() alignment with 7 rows and 6 columns
@@ -668,7 +668,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 切片给我们提供了一个简单的方式来去除一部分序列比对。在以下例子中，有三条序列的7，8，9三列为间隔（-）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,6:9]
     SingleLetterAlphabet() alignment with 7 rows and 3 columns
@@ -682,7 +682,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 你也可以通过切片来获得第9列以后的所有序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print alignment[:,9:]
     SingleLetterAlphabet() alignment with 7 rows and 43 columns
@@ -696,7 +696,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 现在，你可以通过列来操纵序列比对。这也是你能够去除序列比对中的许多列。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = alignment[:,:6] + alignment[:,9:]
     >>> print edited
@@ -713,7 +713,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 在进行这种操作时一定要注意序列的ID需要匹配（具体请见 `4.7 <#sec:SeqRecord-addition>`__ 关于 ``SeqRecord``
 的说明)。为了达到这种目的，用 ``sort()`` 方法将序列ID按照字母顺序进行排列可能会有所帮助：
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited.sort()
     >>> print edited
@@ -733,7 +733,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 根据你的需要，有时将序列比对转换为字符数组是非常方便的。你可以用 ``Numpy`` 来实现这一目的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import numpy as np
     >>> from Bio import AlignIO
@@ -744,7 +744,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 如果你需要频繁地使用列操作，你可以让 ``Numpy`` 将序列比对以列的形式进行储存（与Fortran一样），而不是 ``Numpy`` 默认形式（与C一样以行储存）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> align_array = np.array([list(rec) for rec in alignment], np.character, order="F")
 
@@ -763,7 +763,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 大多数的打包程序都在 ``Bio.Align.Applications`` 中定义：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import Bio.Align.Applications
     >>> dir(Bio.Align.Applications)
@@ -780,7 +780,7 @@ ClustalW是一个非常流行的进行多序列比对的命令行程序（其还
 
 我们建议你在Python中使用ClustalW之前在命令行界面下手动使用ClustalW，这样能使你更清楚这一程序的参数。你会发现Biopython打包程序非常严格地遵循实际的命令行API：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> help(ClustalwCommandline)
@@ -790,7 +790,7 @@ ClustalW是一个非常流行的进行多序列比对的命令行程序（其还
 
 ClustalW在默认情况下会产生一个包括所有输入序列的序列比对以及一个由输入序列名字构成的指导树（guide tree）。例如，用上述文件作为输入，ClustalW将会输出 ``opuntia.aln`` 和 ``opuntia.dnd`` 两个文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> cline = ClustalwCommandline("clustalw2", infile="opuntia.fasta")
@@ -801,14 +801,14 @@ ClustalW在默认情况下会产生一个包括所有输入序列的序列比对
 
 你可能会发现，尽管你安装了ClustalW，以上的命令行却无法正确运行。你可能会得到“command not found”的错误信息（尤其是在Windows上）。这往往是由于ClustalW的运行程序并不在系统的工作目录PATH下（一个包含着运行程序路径的环境变量）。你既可以修改PATH，使其包括ClustalW的运行程序（不同系统需要以不同的方式修改），或者你也可以直接指定程序的绝对路径。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import os
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> clustalw_exe = r"C:\Program Files\new clustal\clustalw2.exe"
     >>> clustalw_cline = ClustalwCommandline(clustalw_exe, infile="opuntia.fasta")
 
-.. code:: verbatim
+.. code:: python
 
     >>> assert os.path.isfile(clustalw_exe), "Clustal W executable missing"
     >>> stdout, stderr = clustalw_cline()
@@ -825,7 +825,7 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
 
 当运行ClustalW的时候，我们所关心的往往是输出的序列比对文件和指导树文件。ClustalW会自动根据输入数据的文件名来命名输出文件。在本例中，输出文件将是 ``opuntia.aln`` 。当你成功运行完ClustalW以后，你可以使用 ``Bio.AlignIO`` 来读取输出结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("opuntia.aln", "clustal")
@@ -841,7 +841,7 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
 
 另一个输出文件 ``opuntia.dnd`` 中包含有一个newick格式的指导树，你可以使用Biopython中的 ``Bio.Phylo`` 来读取它：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("opuntia.dnd", "newick")
@@ -867,7 +867,7 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
 
 MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applications`` 中也有针对Muscle的打包程序。与ClustalW一样，我们也建议你先在命令行界面下使用MUSCLE以后再使用Biopython打包程序。你会发现，Biopython的打包程序非常严格地包括了所有命令行输入参数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> help(MuscleCommandline)
@@ -875,7 +875,7 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
 作为最简单的例子，你只需要一个Fasta格式的数据文件作为输入。例如： `opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__ 然后你可以告诉MUSCLE来读取该FASTA文件，并将序列比对写出：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.txt")
@@ -886,7 +886,7 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
 默认情况下，MUSCLE的输出文件将是包含间隔（gap）的FASTA格式文件。 当你指定 ``format=fasta`` 时， ``Bio.AlignIO`` 能够读取该FASTA文件。你也可以告诉MUSCLE来输出ClustalW-like的文件结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clw=True)
@@ -895,7 +895,7 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
 或者，严格的ClustalW的输出文件（这将输出原始的ClustalW的文件标签）。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clwstrict=True)
@@ -913,7 +913,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 使用以上的MUSCLE命令行将会把序列比对结果写出到一个文件中。然而MUSCLE也允许你将序列比对结果作为系统的标准输出。Biopython打包程序可以利用这一特性来避免创建一个临时文件。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
@@ -922,7 +922,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 如果你使用打包程序运行上述命令，程序将返回一个字符串对象。为了读取它，我们可以使用 ``StringIO`` 模块。记住MUSCLE将默认以FASTA格式输出序列比对：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
@@ -942,7 +942,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 以上是一个非常简单的例子，如果你希望处理较大的输出数据，我们并不建议你将它们全部读入内存中。对于这种情况， ``subprocess`` 模块可以非常方便地处理。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import subprocess
     >>> from Bio.Align.Applications import MuscleCommandline
@@ -970,14 +970,14 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 为了让MUSCLE读取标准输入的内容，我们首先需要将未排列的序列以 ``SeqRecord`` 对象的形式读入到内存。在这里，我们将以一个规则来选择特定的序列（序列长度小于900bp的），使用生成器表达式。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = (r for r in SeqIO.parse("opuntia.fasta", "fasta") if len(r) < 900)
 
 随后，我们需要建立一个MUSCLE命令行，但是不指定输入和输出（MUSCLE默认为标准输入和标准输出）。这里，我们将指定输出格式为严格的Clustal格式：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(clwstrict=True)
@@ -986,7 +986,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 我们使用Python的内置模块 ``subprocess`` 来实现这一目的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> import subprocess
     >>> import sys
@@ -998,7 +998,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 这一命令将启动MUSCLE，但是它将会等待FASTA格式的输入数据。我们可以通过标准输入句柄来提供给它：
 
-.. code:: verbatim
+.. code:: python
 
     >>> SeqIO.write(records, child.stdin, "fasta")
     6
@@ -1006,7 +1006,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 在将6条序列写入句柄后，MUSCLE仍将会等待，判断是否所有的FASTA序列全部输入完毕了。我们可以关闭句柄来提示给MUSCLE。这时，MUSCLE将开始运行。最后，我们可以在标准输出中获得结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "clustal")
@@ -1023,7 +1023,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 如果你觉得 ``subprocess`` 不方便使用，Biopython提供了另一种方式。如果你用 ``muscle_cline()`` 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： ``muscle_cline(stdin=...)`` 。假如你的序列文件不大，你可以将其储存为 ``StringIO`` 对象（具体见 `22.1 <#sec:appendix-handles>`__)：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> records = (r for r in SeqIO.parse("opuntia.fasta", "fasta") if len(r) < 900)
@@ -1035,7 +1035,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 你可以以下方式运行外部程序和读取结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> stdout, stderr = muscle_cline(stdin=data)
     >>> from Bio import AlignIO
@@ -1058,7 +1058,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 假设你希望做全局的序列两两排列，你可以将FASTA格式序列以如下方式储存：
 
-.. code:: verbatim
+.. code:: python
 
     >HBA_HUMAN
     MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHG
@@ -1067,7 +1067,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 以上内容在 ``alpha.fasta`` 文件中，另一个在 ``beta.fasta`` 中如下：
 
-.. code:: verbatim
+.. code:: python
 
     >HBB_HUMAN
     MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK
@@ -1076,7 +1076,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 让我们开始使用一个完整的 ``needle`` 命令行对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(asequence="alpha.faa", bsequence="beta.faa",
@@ -1088,7 +1088,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 即使你安装了EMBOSS，使用以上命令仍可能会出错，你可能获得一个错误消息“command not found”，尤其是在Windows环境中。这很可能是由于EMBOSS工具的安装目录并不在系统的PATH中。遇到这种情况，你既可以更新系统的环境变量，也可以在Biopython中指定EMBOSS的安装路径。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(r"C:\EMBOSS\needle.exe",
@@ -1099,7 +1099,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 现在你可以自己尝试着手动运行EMBOSS工具箱中的程序，比较一下各个参数以及其对应的Biopython打包程序帮助文档：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> help(NeedleCommandline)
@@ -1107,7 +1107,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 提示：你也可以指定特定的参数设置。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline()
@@ -1123,7 +1123,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 现在我们获得了一个 ``needle`` 命令行，并希望在Python中运行它。我们在之前解释过，如果你希望完全地控制这一过程， ``subprocess`` 是最好的选择，但是如果你只是想尝试使用打包程序，以下命令足以达到目的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> stdout, stderr = needle_cline()
     >>> print stdout + stderr
@@ -1131,7 +1131,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 随后，我们需要载入 ``Bio.AlignIO`` 模块来读取needle输出（ ``emboss`` 格式）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("needle.txt", "emboss")

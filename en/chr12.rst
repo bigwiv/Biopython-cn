@@ -30,7 +30,7 @@ Utilities to manipulate the content of a record are also provided. Here
 is an example on how to read a GenePop file (you can find example
 GenePop data files in the Test/PopGen directory of Biopython):
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
 
@@ -49,7 +49,7 @@ list with one element per population. Each element is itself a list of
 individuals, each individual is a pair composed by individual name and a
 list of alleles (2 per marker), here is an example for rec.populations:
 
-.. code:: verbatim
+.. code:: python
 
     [
         [
@@ -70,7 +70,7 @@ Ind2 above).
 A few utility functions to manipulate GenePop records are made
 available, here is an example:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
 
@@ -203,7 +203,7 @@ In our first example, we will generate a template for a single
 population, constant size model with a sample size of 30 and a deme size
 of 500. The code for this is:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
 
@@ -236,7 +236,7 @@ models, and we are interested in varying the number of demes: 10, 50 and
 100 with a migration rate of 1%. Sample size and deme size will be the
 same as before. Here is the code:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
 
@@ -271,7 +271,7 @@ a minimum frequency of the minor allele of 0. This will be specified by
 the following list (to be passed as second parameter to the function
 generate\_simcoal\_from\_template):
 
-.. code:: verbatim
+.. code:: python
 
     [(1, [('SNP', [24, 0.0005, 0.0])])]
 
@@ -293,7 +293,7 @@ from a certain population).
 
 Let’s see a more complicated example:
 
-.. code:: verbatim
+.. code:: python
 
     [
       (5, [
@@ -336,7 +336,7 @@ It is possible to run SIMCOAL2 on files that were not generated using
 the method above (e.g., writing a parameter file by hand), but we will
 show an example by creating a model using the framework presented above.
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen.SimCoal.Template import generate_simcoal_from_template
     from Bio.PopGen.SimCoal.Controller import SimCoalController
@@ -423,7 +423,7 @@ for use with FDist. Biopython can help you do this. Here is an example
 converting from GenePop format to FDist format (along with imports that
 will be needed on examples further below):
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.PopGen import GenePop
     from Bio.PopGen import FDist
@@ -452,7 +452,7 @@ FDist.
 The next step is to calculate the average :math:`F_{st}` of the
 dataset (along with the sample size):
 
-.. code:: verbatim
+.. code:: python
 
     ctrl = Controller.FDistController()
     fst, samp_size = ctrl.run_datacal()
@@ -469,7 +469,7 @@ Cockerham’s θ.
 We can now call the main fdist application in order to simulate neutral
 markers.
 
-.. code:: verbatim
+.. code:: python
 
     sim_fst = ctrl.run_fdist(npops = 15, nsamples = fd_rec.num_pops, fst = fst,
         sample_size = samp_size, mut = 0, num_sims = 40000)
@@ -506,7 +506,7 @@ below the paragraph on approximating the desired average
 
 The next (optional) step is to calculate the confidence interval:
 
-.. code:: verbatim
+.. code:: python
 
     cpl_interval = ctrl.run_cplot(ci=0.99)
 
@@ -525,7 +525,7 @@ easily used to plot a confidence interval. It can be skipped if the
 objective is only to assess the status of each marker against the
 simulation, which is the next step...
 
-.. code:: verbatim
+.. code:: python
 
     pv_data = ctrl.run_pv()
 
@@ -571,7 +571,7 @@ computationally more intensive than running a single fdist run, but
 yields good results. The following code runs fdist approximating the
 desired :math:`F_{st}`:
 
-.. code:: verbatim
+.. code:: python
 
     sim_fst = ctrl.run_fdist_force_fst(npops = 15, nsamples = fd_rec.num_pops,
         fst = fst, sample_size = samp_size, mut = 0, num_sims = 40000,

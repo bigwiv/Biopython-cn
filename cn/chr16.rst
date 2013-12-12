@@ -96,7 +96,7 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 表`16.1 <#table:training>`__ 列出了枯草芽孢杆菌的一些基因对，这些基因的操纵子结构已知。让我们根据表中的这些数据来计算其logistic回归模型：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import LogisticRegression
     >>> xs = [[-53, -200.78],
@@ -137,7 +137,7 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 这里， ``xs`` 和 ``ys`` 是训练数据： ``xs`` 包含每个基因对的预测变量， ``ys`` 指定是否这个基因对属于相同操纵子（ ``1`` ，类别OP）或不同操纵子（``0``，类别NOP）。Logistic回归模型结果存储在 ``model`` 中，包含权重 β\ :sub:`0`, β\ :sub:`1`, and β\ :sub:`2`:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model.beta
     [8.9830290157144681, -0.035968960444850887, 0.02181395662983519]
@@ -146,7 +146,7 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 函数 ``train`` 有两个可选参数： ``update_fn`` 和 ``typecode`` 。 ``update_fn`` 可用来指定一个回调函数，以迭代数和对数似然值做参数。在这个例子中，我们可以使用这个回调函数追踪模型计算（使用Newton-Raphson迭代来最大化logistic回归模型的对数似然函数）进度：
 
-.. code:: verbatim
+.. code:: python
 
     >>> def show_progress(iteration, loglikelihood):
             print "Iteration:", iteration, "Log-likelihood function:", loglikelihood
@@ -222,7 +222,7 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP），而 *yxiB* ， *yxiA* 属于不同操纵子:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "yxcE, yxcD:", LogisticRegression.classify(model, [6,-173.143442352])
     yxcE, yxcD: 1
@@ -234,7 +234,7 @@ Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP）
 为了确定这个预测的可信度，我们可以调用 ``calculate`` 函数来获得类别OP和NOP的概率(公式
 (`16.2 <#eq:OP>`__) 和 (`16.3 <#eq:NOP>`__))。对于 *yxcE*, *yxcD* 我们发现
 
-.. code:: verbatim
+.. code:: python
 
     >>> q, p = LogisticRegression.calculate(model, [6,-173.143442352])
     >>> print "class OP: probability =", p, "class NOP: probability =", q
@@ -242,7 +242,7 @@ Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP）
 
 对于 *yxiB* ， *yxiA*
 
-.. code:: verbatim
+.. code:: python
 
     >>> q, p = LogisticRegression.calculate(model, [309, -271.005880394])
     >>> print "class OP: probability =", p, "class NOP: probability =", q
@@ -250,7 +250,7 @@ Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP）
 
 为了确定回归模型的预测精确性，我们可以把模型应用到训练数据上：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             print "True:", ys[i], "Predicted:", LogisticRegression.classify(model, xs[i])
@@ -274,7 +274,7 @@ Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP）
 
 这表示除一个基因对外其他所有预测都是正确的。Leave-one-out分析可以对预测精确性给出一个更可信的估计。Leave-one-out是指从训练数据中移除要预测的基因重新计算模型，再用该模型进行预测比对：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             model = LogisticRegression.train(xs[:i]+xs[i+1:], ys[:i]+ys[i+1:])
@@ -323,7 +323,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 使用表`16.1 <#table:training>`__中的数据，我们创建和初始化一个*KNN*模型：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import kNN
     >>> k = 3
@@ -338,7 +338,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 对于基因对 *yxcE* 、 *yxcD* 和 *yxiB* 、 *yxiA* 的例子，我们发现：
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [6, -173.143442352]
     >>> print "yxcE, yxcD:", kNN.classify(model, x)
@@ -351,7 +351,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 函数 ``classify`` 可以指定距离函数和权重函数作为可选参数。距离函数影响作为最近邻居的 *k* 个类别的选择，因为这些到查询点（ *x* ， *y* ）有最小距离的类别被定义为邻居。默认使用欧几里德距离。另外，我们也可以如示例中的使用曼哈顿距离：
 
-.. code:: verbatim
+.. code:: python
 
     >>> def cityblock(x1, x2):
     ...    assert len(x1)==2
@@ -365,7 +365,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 权重函数可以用于权重投票。例如，相比于相邻较远的邻居，我们可能想给更近的邻居一个更高的权重：
 
-.. code:: verbatim
+.. code:: python
 
     >>> def weight(x1, x2):
     ...    assert len(x1)==2
@@ -380,7 +380,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 为了确定这些预测的置信度，我们可以调用函数 ``calculate`` 来计算分配到类别OP和NOP的总权重。对于默认的加权方案，这样减少了每个分类的邻居数量。对于 *yxcE* ， *yxcD* ， 我们发现
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [6, -173.143442352]
     >>> weight = kNN.calculate(model, x)
@@ -389,7 +389,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 这意味着 ``x1`` ， ``x2`` 的所有三个邻居都属于NOP类别。对另一个例子 *yesK* ， *yesL* 我们发现
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [117, -267.14]
     >>> weight = kNN.calculate(model, x)
@@ -400,7 +400,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 对于*KNN*方法的预测精确性，我们对训练数据应用模型：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             print "True:", ys[i], "Predicted:", kNN.classify(model, xs[i])
@@ -424,7 +424,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 显示除了两个基因对所有预测都是正确的。Leave-one-out分析可以对预测精确性给出一个更可信的估计，这是通过从训练数据中移除要预测的基因，再重新计算模型实现：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             model = kNN.train(xs[:i]+xs[i+1:], ys[:i]+ys[i+1:])

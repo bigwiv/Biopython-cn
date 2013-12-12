@@ -22,7 +22,7 @@ save it.
 In a terminal, create a simple Newick file using your favorite text
 editor:
 
-.. code:: verbatim
+.. code:: python
 
     % cat > simple.dnd <<EOF
     > (((A,B),(C,D)),(E,F,G));
@@ -34,7 +34,7 @@ that instead.)
 
 Launch the Python interpreter of your choice:
 
-.. code:: verbatim
+.. code:: python
 
     % ipython -pylab
 
@@ -45,7 +45,7 @@ up automatically. We’ll use that during this demo.
 Now, within Python, read the tree file, giving the file name and the
 name of the format.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("simple.dnd", "newick")
@@ -53,7 +53,7 @@ name of the format.
 Printing the tree object as a string gives us a look at the entire
 object hierarchy.
 
-.. code:: verbatim
+.. code:: python
 
     >>> print tree
 
@@ -79,7 +79,7 @@ The function ``draw_ascii`` creates a simple ASCII-art (plain text)
 dendrogram. This is a convenient visualization for interactive
 exploration, in case better graphical tools aren’t available.
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw_ascii(tree)
                                                         ________________________ A
@@ -100,7 +100,7 @@ If you have **matplotlib** or **pylab** installed, you can create a
 graphic using the ``draw`` function (see Fig.
 `13.1 <#fig:phylo-simple-draw>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.rooted = True
     >>> Phylo.draw(tree)
@@ -125,14 +125,14 @@ Bio.Phylo.PhyloXML module.
 
 In Biopython 1.55 and later, this is a convenient tree method:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = tree.as_phyloxml()
 
 In Biopython 1.54, you can accomplish the same thing with one extra
 import:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Phylo.PhyloXML import Phylogeny
     >>> tree = Phylogeny.from_tree(tree)
@@ -148,19 +148,19 @@ gray. We can do that by assigning the 24-bit color value as an RGB
 triple, an HTML-style hex string, or the name of one of the predefined
 colors.
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = (128, 128, 128)
 
 Or:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = "#808080"
 
 Or:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = "gray"
 
@@ -174,7 +174,7 @@ Let’s target the most recent common ancestor (MRCA) of the nodes named
 clade in the original tree, so when we color that clade “salmon”, the
 color will show up in the original tree.
 
-.. code:: verbatim
+.. code:: python
 
     >>> mrca = tree.common_ancestor({"name": "E"}, {"name": "F"})
     >>> mrca.color = "salmon"
@@ -184,13 +184,13 @@ terms of nested list entries, we can jump directly to that position in
 the tree by indexing it. Here, the index ``[0,1]`` refers to the second
 child of the first child of the root.
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.clade[0,1].color = "blue"
 
 Finally, show our work (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw(tree)
 
@@ -208,7 +208,7 @@ standard output, to see what would be written — and the format
 this phyloXML file in another tree viewer like Archaeopteryx, and the
 colors will show up there, too.
 
-.. code:: verbatim
+.. code:: python
 
     >>> import sys
     >>> Phylo.write(tree, sys.stdout, "phyloxml")
@@ -247,7 +247,7 @@ The ``read`` function parses a single tree in the given file and returns
 it. Careful; it will raise an error if the file contains more than one
 tree, or no trees.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("Tests/Nexus/int_node_labels.nwk", "newick")
@@ -259,7 +259,7 @@ tree, or no trees.
 To handle multiple (or an unknown number of) trees, use the ``parse``
 function iterates through each of the trees in the given file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> trees = Phylo.parse("Tests/PhyloXML/phyloxml_examples.xml", "phyloxml")
     >>> for tree in trees:
@@ -268,7 +268,7 @@ function iterates through each of the trees in the given file:
 Write a tree or iterable of trees back to file with the ``write``
 function:
 
-.. code:: verbatim
+.. code:: python
 
     >>> trees = list(Phylo.parse("phyloxml_examples.xml", "phyloxml"))
     >>> tree1 = trees[0]
@@ -281,7 +281,7 @@ function:
 Convert files between any of the supported formats with the ``convert``
 function:
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.convert("tree1.dnd", "newick", "tree1.xml", "nexml")
     1
@@ -291,7 +291,7 @@ function:
 To use strings as input or output instead of actual files, use
 ``StringIO`` as you would with SeqIO and AlignIO:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> from StringIO import StringIO
@@ -304,7 +304,7 @@ To use strings as input or output instead of actual files, use
 The simplest way to get an overview of a ``Tree`` object is to ``print``
 it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("Tests/PhyloXML/example.xml", "phyloxml")
     >>> print tree
@@ -326,7 +326,7 @@ given. Not all of the available information about the tree is shown, but
 it provides a way to quickly view the tree without relying on any
 external dependencies.
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw_ascii(tree)
@@ -340,7 +340,7 @@ The ``draw`` function draws a more attractive image using the matplotlib
 library. See the API documentation for details on the arguments it
 accepts to customize the output.
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw(tree, branch_labels=lambda c: c.branch_length)
@@ -353,7 +353,7 @@ installed. Using the same example as above, and the ``dot`` program
 included with Graphviz, let’s draw a rooted tree (see
 Fig. `13.3 <#fig:phylo-dot>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw_graphviz(tree, prog='dot')
@@ -377,7 +377,7 @@ The display is also affected by the ``rooted`` attribute of the given
 tree object. Rooted trees are shown with a “head” on each branch
 indicating direction (see Fig. `13.3 <#fig:phylo-rooted>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("simple.dnd", "newick")
     >>> tree.rooted = True
@@ -393,7 +393,7 @@ Fig. `13.3 <#fig:phylo-color>`__). The ``dot`` program may be useful
 with small trees, but tends to do surprising things with the layout of
 larger trees.
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw_graphviz(tree, prog="neato")
 
@@ -403,7 +403,7 @@ This viewing mode is particularly handy for exploring larger trees,
 because the matplotlib viewer can zoom in on a selected region, thinning
 out a cluttered graphic.
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("apaf.xml", "phyloxml")
     >>> Phylo.draw_graphviz(tree, prog="neato", node_size=0)
@@ -620,7 +620,7 @@ These methods modify the tree in-place. If you want to keep the original
 tree intact, make a complete copy of the tree first, using Python’s
 ``copy`` module:
 
-.. code:: verbatim
+.. code:: python
 
     tree = Phylo.read('example.xml', 'phyloxml')
     import copy
@@ -698,7 +698,7 @@ The program accepts an input alignment in ``phylip-relaxed`` format
 (that’s Phylip format, but without the 10-character limit on taxon
 names) and a variety of options. A quick example:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> from Bio.Phylo.Applications import PhymlCommandline
@@ -710,7 +710,7 @@ This generates a tree file and a stats file with the names
 [*input filename*\ ]\ ``_phyml_stats.txt``. The tree file is in Newick
 format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read('Tests/Phylip/random.phy_phyml_tree.txt', 'newick')
     >>> Phylo.draw_ascii(tree)
@@ -745,7 +745,7 @@ results dictionary.
 
 Here is an example of typical usage of codeml:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Phylo.PAML import codeml
     >>> cml = codeml.Codeml()
@@ -772,7 +772,7 @@ Here is an example of typical usage of codeml:
 Existing output files may be parsed as well using a module’s ``read()``
 function:
 
-.. code:: verbatim
+.. code:: python
 
     >>> results = codeml.read("Tests/PAML/Results/codeml/codeml_NSsites_all.out")
     >>> print results.get("lnL max")

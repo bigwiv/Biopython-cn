@@ -80,7 +80,7 @@ with helping out:
     Once you are setup with a C compiler, making the installer just
     requires doing:
 
-    .. code:: verbatim
+    .. code:: python
 
         python setup.py bdist_wininst
 
@@ -100,7 +100,7 @@ with helping out:
 
     To make the RPM, you just need to do:
 
-    .. code:: verbatim
+    .. code:: python
 
         python setup.py bdist_rpm
 

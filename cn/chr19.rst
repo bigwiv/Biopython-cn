@@ -20,32 +20,32 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 作为构建和安装Biopython的一部分，你通常会在命令行上从Biopython
 源码顶层目录运行整个测试套件如下：
 
-.. code:: verbatim
+.. code:: python
 
     python setup.py test
 
 这事实上等价于转到 ``Tests`` 子目录，并运行：
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py
 
 你通常会想要只运行测试的一部分，这可以如下来操作：
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py test_SeqIO.py test_AlignIO.py
 
 当给出测试列表时， ``.py`` 扩展名是可选的，所以你可以只需打字：
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py test_SeqIO test_AlignIO
 
 要运行 docstring 测试（见 `19.3 <#section:doctest>`__ 节）的话，
 你可以用
 
-.. code:: verbatim
+.. code:: python
 
     python run_tests.py doctest
 
@@ -72,14 +72,14 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 输出，但是并不检查输出是否跟期望的一样。如果测试以一个意外的错误
 而失败，那么应该很容易精确定位脚本失败的位置。例如，对于一个print-and-compare 测试，试一下：
 
-.. code:: verbatim
+.. code:: python
 
     python test_SeqIO.py
 
 基于 ``unittest`` 的测试反倒是精确地显示你测试的哪一个小块失败了。
 例如，
 
-.. code:: verbatim
+.. code:: python
 
     python test_Cluster.py
 
@@ -111,7 +111,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 脚本放进 Biopython的 ``Tests`` 目录，那么 ``run_tests.py`` 就会找到它并
 执行其中包含的测试：
 
-.. code:: verbatim
+.. code:: python
 
     $ python run_tests.py     
     test_Ace ... ok
@@ -124,7 +124,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
 …
 
-.. code:: verbatim
+.. code:: python
 
     ----------------------------------------------------------------------
     Ran 107 tests in 86.127 seconds
@@ -176,7 +176,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 例如，测试 ``Biospam`` 模块中的 ``addition`` 和 ``multiplication`` 功
 能的测试脚本 ``test_Biospam.py`` 也许看起来是下面这个样子：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Biospam
 
@@ -188,7 +188,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 我们用 ``python run_tests.py -g test_Biospam.py`` 来生成对应的输出，
 并检查输出文件 ``output/test_Biospam`` ：
 
-.. code:: verbatim
+.. code:: python
 
     test_Biospam
     2 + 3 = 5
@@ -218,7 +218,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 这是关于 ``Biospam`` 的一个 ``unittest`` 风格的极小测试脚本，你可以
 复制粘贴过去运行它：
 
-.. code:: verbatim
+.. code:: python
 
     import unittest
     from Bio import Biospam
@@ -264,7 +264,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
    具体部分。一个类中你想包含多少个测试都行。
 -  在测试脚本的末尾，你可以用
 
-   .. code:: verbatim
+   .. code:: python
 
        if __name__ == "__main__":
            runner = unittest.TextTestRunner(verbosity = 2)
@@ -273,7 +273,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
    来执行测试脚本，当脚本是从	自己运行（而不是从 ``run_tests.py`` 导入）时。
    如果你运行该脚本，那么你会见到类似下面的东西:
 
-   .. code:: verbatim
+   .. code:: python
 
        $ python test_BiospamMyModule.py
        test_addition1 (__main__.TestAddition) ... ok
@@ -289,7 +289,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 -  为了更清晰地表明每个测试都干了什么，你可以给每个测试加上 docstrings 。
    它们会在运行测试的时候显示出来，如果一个测试失败这会是有用的信息。
 
-   .. code:: verbatim
+   .. code:: python
 
        import unittest
        from Bio import Biospam
@@ -325,7 +325,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 
    运行脚本你就会看到：
 
-   .. code:: verbatim
+   .. code:: python
 
        $ python test_BiospamMyModule.py
        An addition test ... ok
@@ -342,7 +342,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 你也许想在要运行的测试中包含这些。你可以修改 ``if __name__ == "__main__":`` 
 下面的代码如下面这样：
 
-.. code:: verbatim
+.. code:: python
 
     if __name__ == "__main__":
         unittest_suite = unittest.TestLoader().loadTestsFromName("test_Biospam")
@@ -370,7 +370,7 @@ Python 模块、类和函数支持使用 docstrings 创建文档。 `doctest 框
 套件中，你必须更新 ``run_tests.py`` 以包含你的模块。现在，
 ``run_tests.py`` 的相关部分看起来像下面这样：
 
-.. code:: verbatim
+.. code:: python
 
     # This is the list of modules containing docstring tests.
     # If you develop docstring tests for other modules, please add
@@ -396,7 +396,7 @@ Python 模块、类和函数支持使用 docstrings 创建文档。 `doctest 框
 
 要想只运行 docstring 测试，使用
 
-.. code:: verbatim
+.. code:: python
 
     $ python run_tests.py doctest
 

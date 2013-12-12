@@ -90,7 +90,7 @@ To paraphrase:
    each call to Entrez (e.g. include ``email="A.N.Other@example.com"``
    in the argument list), or you can set a global email address:
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from Bio import Entrez
        >>> Entrez.email = "A.N.Other@example.com"
@@ -109,7 +109,7 @@ To paraphrase:
    ``tool="MyLocalScript"`` in the argument list), or you can set a
    global tool name:
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from Bio import Entrez
        >>> Entrez.tool = "MyLocalScript"
@@ -134,7 +134,7 @@ EInfo provides field index term counts, last update, and available links
 for each of NCBI’s databases. In addition, you can use EInfo to obtain a
 list of all database names accessible through the Entrez utilities:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -143,7 +143,7 @@ list of all database names accessible through the Entrez utilities:
 
 The variable ``result`` now contains a list of databases in XML format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print result
     <?xml version="1.0"?>
@@ -195,7 +195,7 @@ Since this is a fairly simple XML file, we could extract the information
 it contains simply by string searching. Using ``Bio.Entrez``\ ’s parser
 instead, we can directly parse this XML file into a Python object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = Entrez.einfo()
@@ -203,7 +203,7 @@ instead, we can directly parse this XML file into a Python object:
 
 Now ``record`` is a dictionary with exactly one key:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.keys()
     [u'DbList']
@@ -211,7 +211,7 @@ Now ``record`` is a dictionary with exactly one key:
 The values stored in this key is the list of database names shown in the
 XML above:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record["DbList"]
     ['pubmed', 'protein', 'nucleotide', 'nuccore', 'nucgss', 'nucest',
@@ -224,7 +224,7 @@ XML above:
 For each of these databases, we can use EInfo again to obtain more
 information:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.einfo(db="pubmed")
     >>> record = Entrez.read(handle)
@@ -239,7 +239,7 @@ Try ``record["DbInfo"].keys()`` for other information stored in this
 record. One of the most useful is a list of possible search fields for
 use with ESearch:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for field in record["DbInfo"]["FieldList"]:
     ...     print "%(Name)s, %(FullName)s, %(Description)s" % field
@@ -267,7 +267,7 @@ particular database.
 To search any of these databases, we use ``Bio.Entrez.esearch()``. For
 example, let’s search in PubMed for publications related to Biopython:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -285,7 +285,7 @@ for the *matK* gene in *Cypripedioideae* orchids (see
 Section \ `9.2 <#sec:entrez-einfo>`__ about EInfo for one way to find
 out which fields you can search in each Entrez database):
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.esearch(db="nucleotide",term="Cypripedioideae[Orgn] AND matK[Gene]")
     >>> record = Entrez.read(handle)
@@ -308,7 +308,7 @@ restricts to just completed genomes.
 
 As a final example, let’s get a list of computational journal titles:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.esearch(db="journals", term="computational")
     >>> record = Entrez.read(handle)
@@ -351,7 +351,7 @@ associated data with EFetch.
 Let’s look at a simple example to see how EPost works – uploading some
 PubMed identifiers:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -369,7 +369,7 @@ The returned XML includes two important strings, ``QueryKey`` and
 ``WebEnv`` which together define your history session. You would extract
 these values for use with another Entrez call such as EFetch:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -391,7 +391,7 @@ for more information). In Biopython, ESummary is available as
 ``Bio.Entrez.esummary()``. Using the search result above, we can for
 example find out more about the journal with ID 30367:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -430,7 +430,7 @@ GenBank/GenPept plain text formats (which can then be parsed with
 and \ `9.6 <#sec:efetch>`__). From the *Cypripedioideae* example above,
 we can download GenBank record 186972394 using ``Bio.Entrez.efetch``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -527,7 +527,7 @@ If you fetch the record in one of the formats accepted by ``Bio.SeqIO``
 (see Chapter \ `5 <#chapter:Bio.SeqIO>`__), you could directly parse it
 into a ``SeqRecord``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez, SeqIO
     >>> handle = Entrez.efetch(db="nucleotide", id="186972394",rettype="gb", retmode="text")
@@ -546,7 +546,7 @@ local file, and *then* parse it with ``Bio.SeqIO``. This can save you
 having to re-download the same file repeatedly while working on your
 script, and places less load on the NCBI’s servers. For example:
 
-.. code:: verbatim
+.. code:: python
 
     import os
     from Bio import SeqIO
@@ -569,7 +569,7 @@ script, and places less load on the NCBI’s servers. For example:
 To get the output in XML format, which you can parse using the
 ``Bio.Entrez.read()`` function, use ``retmode="xml"``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = Entrez.efetch(db="nucleotide", id="186972394", retmode="xml")
@@ -600,7 +600,7 @@ Let’s use ELink to find articles related to the Biopython application
 note published in *Bioinformatics* in 2009. The PubMed ID of this
 article is 19304878:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"
@@ -613,7 +613,7 @@ for, ``record`` contains only one item. This item is a dictionary
 containing information about our search term, as well as all the related
 items that were found:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record[0]["DbFrom"]
     'pubmed'
@@ -625,7 +625,7 @@ consisting of one item for each target database. In our search results,
 we only find hits in the PubMed database (although sub-divided into
 categories):
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record[0]["LinkSetDb"])
     5
@@ -642,7 +642,7 @@ The actual search results are stored as under the ``"Link"`` key. In
 total, 110 items were found under standard search. Let’s now at the
 first search result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record[0]["LinkSetDb"][0]["Link"][0]
     {u'Id': '19304878'}
@@ -650,7 +650,7 @@ first search result:
 This is the article we searched for, which doesn’t help us much, so
 let’s look at the second search result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record[0]["LinkSetDb"][0]["Link"][1]
     {u'Id': '14630660'}
@@ -659,7 +659,7 @@ This paper, with PubMed ID 14630660, is about the Biopython PDB parser.
 
 We can use a loop to print out all PubMed IDs:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for link in record[0]["LinkSetDb"][0]["Link"] : print link["Id"]
     19304878
@@ -693,7 +693,7 @@ example in `9.14.2 <#subsec:entrez_example_genbank>`__ below).
 In this example, we use ``Bio.Entrez.egquery()`` to obtain the counts
 for “Biopython”:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -716,7 +716,7 @@ for more information.
 ESpell retrieves spelling suggestions. In this example, we use
 ``Bio.Entrez.espell()`` to obtain the correct spelling of Biopython:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -751,7 +751,7 @@ had a size of 116576 kB. This file, which is in the ``ASN`` format, can
 be converted into an XML file using NCBI’s ``gene2xml`` program (see
 NCBI’s ftp site for more information):
 
-.. code:: verbatim
+.. code:: python
 
     gene2xml -b T -i Homo_sapiens.ags -o Homo_sapiens.xml
 
@@ -765,7 +765,7 @@ print out or store the relevant information in each record by iterating
 over the records. For example, this script iterates over the Entrez gene
 records and prints out the gene numbers and names for all current genes:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = open("Homo_sapiens.xml")
@@ -781,7 +781,7 @@ records and prints out the gene numbers and names for all current genes:
 
 This will print:
 
-.. code:: verbatim
+.. code:: python
 
     1 A1BG
     2 A2M
@@ -811,7 +811,7 @@ Three things can go wrong when parsing an XML file:
 The first case occurs if, for example, you try to parse a Fasta file as
 if it were an XML file:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = open("NC_005816.fna") # a Fasta file
@@ -832,7 +832,7 @@ When your file is in the XML format but is corrupted (for example, by
 ending prematurely), the parser will raise a CorruptedXMLError. Here is
 an example of an XML file that ends prematurely:
 
-.. code:: verbatim
+.. code:: python
 
     <?xml version="1.0"?>
     <!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
@@ -852,7 +852,7 @@ an example of an XML file that ends prematurely:
 
 which will generate the following traceback:
 
-.. code:: verbatim
+.. code:: python
 
     >>> Entrez.read(handle)
     Traceback (most recent call last):
@@ -872,7 +872,7 @@ The third type of error occurs if the XML file contains tags that do not
 have a description in the corresponding DTD file. This is an example of
 such an XML file:
 
-.. code:: verbatim
+.. code:: python
 
     <?xml version="1.0"?>
     <!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd">
@@ -906,7 +906,7 @@ specified on the second line as the DTD for this XML file. By default,
 the parser will stop and raise a ValidationError if it cannot find some
 tag in the DTD:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = open("einfo3.xml")
@@ -925,7 +925,7 @@ Optionally, you can instruct the parser to skip such tags instead of
 raising a ValidationError. This is done by calling ``Entrez.read`` or
 ``Entrez.parse`` with the argument ``validate`` equal to False:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = open("einfo3.xml")
@@ -963,7 +963,7 @@ parse the file ``pubmed_result1.txt``, containing one Medline record.
 You can find this file in Biopython’s ``Tests\Medline`` directory. The
 file looks like this:
 
-.. code:: verbatim
+.. code:: python
 
     PMID- 12230038
     OWN - NLM
@@ -984,7 +984,7 @@ file looks like this:
 
 We first open the file and then parse it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Medline
     >>> input = open("pubmed_result1.txt")
@@ -992,12 +992,12 @@ We first open the file and then parse it:
 
 The ``record`` now contains the Medline record as a Python dictionary:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record["PMID"]
     '12230038'
 
-.. code:: verbatim
+.. code:: python
 
     >>> record["AB"]
     'Bioinformatics research is often difficult to do with commercial software.
@@ -1010,7 +1010,7 @@ The ``record`` now contains the Medline record as a Python dictionary:
 
 The key names used in a Medline record can be rather obscure; use
 
-.. code:: verbatim
+.. code:: python
 
     >>> help(record)
 
@@ -1019,7 +1019,7 @@ for a brief summary.
 To parse a file containing multiple Medline records, you can use the
 ``parse`` function instead:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Medline
     >>> input = open("pubmed_result2.txt")
@@ -1035,7 +1035,7 @@ Instead of parsing Medline records stored in files, you can also parse
 Medline records downloaded by ``Bio.Entrez.efetch``. For example, let’s
 look at all Medline records in PubMed related to Biopython:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -1046,7 +1046,7 @@ look at all Medline records in PubMed related to Biopython:
 
 We now use ``Bio.Entrez.efetch`` to download these Medline records:
 
-.. code:: verbatim
+.. code:: python
 
     >>> idlist = record["IdList"]
     >>> handle = Entrez.efetch(db="pubmed",id=idlist,rettype="medline",retmode="text")
@@ -1055,7 +1055,7 @@ Here, we specify ``rettype="medline", retmode="text"`` to obtain the
 Medline records in plain-text Medline format. Now we use ``Bio.Medline``
 to parse these records:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Medline
     >>> records = Medline.parse(handle)
@@ -1071,7 +1071,7 @@ to parse these records:
 
 For comparison, here we show an example using the XML format:
 
-.. code:: verbatim
+.. code:: python
 
     >>> idlist = record["IdList"]
     >>> handle = Entrez.efetch(db="pubmed",id=idlist,rettype="medline",retmode="xml")
@@ -1104,7 +1104,7 @@ data.
 The following code fragment shows how to parse the example GEO file
 ``GSE16.txt`` into a record and print the record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Geo
     >>> handle = open("GSE16.txt")
@@ -1114,7 +1114,7 @@ The following code fragment shows how to parse the example GEO file
 
 You can search the “gds” database (GEO datasets) with ESearch:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com" # Always tell NCBI who you are
@@ -1146,7 +1146,7 @@ record showing the set of transcripts that are associated with a
 particular gene in a specific organism. A typical UniGene record looks
 like this:
 
-.. code:: verbatim
+.. code:: python
 
     ID          Hs.2
     TITLE       N-acetyltransferase 2 (arylamine N-acetyltransferase)
@@ -1189,7 +1189,7 @@ corresponding sequence-tagged sites in the genome.
 
 To parse UniGene files, use the ``Bio.UniGene`` module:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import UniGene
     >>> input = open("myunigenefile.data")
@@ -1199,7 +1199,7 @@ The ``record`` returned by ``UniGene.read`` is a Python object with
 attributes corresponding to the fields in the UniGene record. For
 example,
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.ID
     "Hs.2"
@@ -1209,14 +1209,14 @@ example,
 The ``EXPRESS`` and ``RESTR_EXPR`` lines are stored as Python lists of
 strings:
 
-.. code:: verbatim
+.. code:: python
 
     ['bone', 'connective tissue', 'intestine', 'liver', 'liver tumor', 'normal', 'soft tissue/muscle tissue tumor', 'adult']
 
 Specialized objects are returned for the ``STS``, ``PROTSIM``, and
 ``SEQUENCE`` lines, storing the keys shown in each line as attributes:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.sts[0].acc
     'PMC310725P3'
@@ -1228,7 +1228,7 @@ and similarly for the ``PROTSIM`` and ``SEQUENCE`` lines.
 To parse a file containing more than one UniGene record, use the
 ``parse`` function in ``Bio.UniGene``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import UniGene
     >>> input = open("unigenerecords.data")
@@ -1251,7 +1251,7 @@ You may choose to set the ``http_proxy`` environment variable once (how
 you do this will depend on your operating system). Alternatively you can
 set this within Python at the start of your script, for example:
 
-.. code:: verbatim
+.. code:: python
 
     import os
     os.environ["http_proxy"] = "http://proxyhost.example.com:8080"
@@ -1277,7 +1277,7 @@ In this example, we will query PubMed for all articles having to do with
 orchids (see section \ `2.3 <#sec:orchids>`__ for our motivation). We
 first check how many of such articles there are:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -1291,7 +1291,7 @@ first check how many of such articles there are:
 Now we use the ``Bio.Entrez.efetch`` function to download the PubMed IDs
 of these 463 articles:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.esearch(db="pubmed", term="orchid", retmax=463)
     >>> record = Entrez.read(handle)
@@ -1301,7 +1301,7 @@ of these 463 articles:
 This returns a Python list containing all of the PubMed IDs of articles
 related to orchids:
 
-.. code:: verbatim
+.. code:: python
 
     ['18680603', '18665331', '18661158', '18627489', '18627452', '18612381',
     '18594007', '18591784', '18589523', '18579475', '18575811', '18575690',
@@ -1312,7 +1312,7 @@ Medline records and extract the information from them. Here, we’ll
 download the Medline records in the Medline flat-file format, and use
 the ``Bio.Medline`` module to parse them:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Medline
     >>> handle = Entrez.efetch(db="pubmed", id=idlist, rettype="medline",
@@ -1327,14 +1327,14 @@ Keep in mind that ``records`` is an iterator, so you can iterate through
 the records only once. If you want to save the records, you can convert
 them to a list:
 
-.. code:: verbatim
+.. code:: python
 
     >>> records = list(records)
 
 Let’s now iterate over the records to print out some information about
 each record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in records:
     ...     print "title:", record.get("TI", "?")
@@ -1344,7 +1344,7 @@ each record:
 
 The output for this looks like:
 
-.. code:: verbatim
+.. code:: python
 
     title: Sex pheromone mimicry in the early spider orchid (ophrys sphegodes):
     patterns of hydrocarbons as the key mechanism for pollination by sexual
@@ -1359,7 +1359,7 @@ using standard Python tools. For instance, we could loop through a whole
 bunch of entries searching for a particular author with code like the
 following:
 
-.. code:: verbatim
+.. code:: python
 
     >>> search_author = "Waits T"
 
@@ -1388,7 +1388,7 @@ before actually downloading them. EGQuery will tell us how many search
 results were found in each of the databases, but for this example we are
 only interested in nucleotides:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -1404,7 +1404,7 @@ I obtained in 2008; it is likely to increase in the future). If you find
 some ridiculously high number of hits, you may want to reconsider if you
 really want to download all of them, which is our next step:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> handle = Entrez.esearch(db="nucleotide", term="Cypripedioideae", retmax=814)
@@ -1414,14 +1414,14 @@ Here, ``record`` is a Python dictionary containing the search results
 and some auxiliary information. Just for information, let’s look at what
 is stored in this dictionary:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.keys()
     [u'Count', u'RetMax', u'IdList', u'TranslationSet', u'RetStart', u'QueryTranslation']
 
 First, let’s check how many results were found:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record["Count"]
     '814'
@@ -1429,14 +1429,14 @@ First, let’s check how many results were found:
 which is the number we expected. The 814 results are stored in
 ``record['IdList']``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print len(record["IdList"])
     814
 
 Let’s look at the first five results:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record["IdList"][:5]
     ['187237168', '187372713', '187372690', '187372688', '187372686']
@@ -1447,7 +1447,7 @@ better to fetch a bunch of records at the same time, shown below.
 However, in this situation you should ideally be using the history
 feature described later in Section \ `9.15 <#sec:entrez-webenv>`__.
 
-.. code:: verbatim
+.. code:: python
 
     >>> idlist = ",".join(record["IdList"][:5])
     >>> print idlist
@@ -1459,7 +1459,7 @@ feature described later in Section \ `9.15 <#sec:entrez-webenv>`__.
 
 Each of these records corresponds to one GenBank record.
 
-.. code:: verbatim
+.. code:: python
 
     >>> print records[0].keys()
     [u'GBSeq_moltype', u'GBSeq_source', u'GBSeq_sequence',
@@ -1506,7 +1506,7 @@ organisms, *Opuntia* (prickly-pear cacti). We can do quick search and
 get back the GIs (GenBank identifiers) for all of the corresponding
 records. First we check how many records there are:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -1520,7 +1520,7 @@ records. First we check how many records there are:
 
 Now we download the list of GenBank identifiers:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.esearch(db="nuccore", term="Opuntia AND rpl16")
     >>> record = Entrez.read(handle)
@@ -1534,7 +1534,7 @@ older versions of Biopython you had to supply a comma separated list of
 GI numbers to Entrez, as of Biopython 1.59 you can pass a list and this
 is converted for you:
 
-.. code:: verbatim
+.. code:: python
 
     >>> gi_str = ",".join(gi_list)
     >>> handle = Entrez.efetch(db="nuccore", id=gi_str, rettype="gb", retmode="text")
@@ -1542,7 +1542,7 @@ is converted for you:
 If you want to look at the raw GenBank files, you can read from this
 handle and print out the result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> text = handle.read()
     >>> print text
@@ -1565,7 +1565,7 @@ a more Python-friendly form, we can use ``Bio.SeqIO`` to parse the
 GenBank data into ``SeqRecord`` objects, including ``SeqFeature``
 objects (see Chapter \ `5 <#chapter:Bio.SeqIO>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> handle = Entrez.efetch(db="nuccore", id=gi_str, rettype="gb", retmode="text")
@@ -1574,7 +1574,7 @@ objects (see Chapter \ `5 <#chapter:Bio.SeqIO>`__):
 We can now step through the records and look at the information we are
 interested in:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for record in records: 
     >>> ...    print "%s, length %i, with %i features" \
@@ -1609,7 +1609,7 @@ Staying with a plant example, let’s now find the lineage of the
 Cypripedioideae orchid family. First, we search the Taxonomy database
 for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"     # Always tell NCBI who you are
@@ -1623,14 +1623,14 @@ for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:
 Now, we use ``efetch`` to download this entry in the Taxonomy database,
 and then parse it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = Entrez.efetch(db="Taxonomy", id="158330", retmode="xml")
     >>> records = Entrez.read(handle)
 
 Again, this record stores lots of information:
 
-.. code:: verbatim
+.. code:: python
 
     >>> records[0].keys()
     [u'Lineage', u'Division', u'ParentTaxId', u'PubDate', u'LineageEx',
@@ -1639,7 +1639,7 @@ Again, this record stores lots of information:
 
 We can get the lineage directly from this record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> records[0]["Lineage"]
     'cellular organisms; Eukaryota; Viridiplantae; Streptophyta; Streptophytina;
@@ -1680,7 +1680,7 @@ results - which the NCBI can anticipate and cache.
 To do this, call ``Bio.Entrez.esearch()`` as normal, but with the
 additional argument of ``usehistory="y"``,
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "history.user@example.com"
@@ -1692,7 +1692,7 @@ additional argument of ``usehistory="y"``,
 When you get the XML output back, it will still include the usual search
 results:
 
-.. code:: verbatim
+.. code:: python
 
     >>> gi_list = search_results["IdList"]
     >>> count = int(search_results["Count"])
@@ -1701,7 +1701,7 @@ results:
 However, you also get given two additional pieces of information, the
 ``WebEnv`` session cookie, and the ``QueryKey``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> webenv = search_results["WebEnv"]
     >>> query_key = search_results["QueryKey"] 
@@ -1716,7 +1716,7 @@ it is better to download in batches. You use the ``retstart`` and
 returned (starting entry using zero-based counting, and maximum number
 of results to return). For example,
 
-.. code:: verbatim
+.. code:: python
 
     batch_size = 3
     out_handle = open("orchid_rpl16.fasta", "w")
@@ -1742,7 +1742,7 @@ Here is another history example, searching for papers published in the
 last year about the *Opuntia*, and then downloading them into a file in
 MedLine format:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import Entrez
     Entrez.email = "history.user@example.com"
@@ -1782,7 +1782,7 @@ journals indexed for PubMed Central (doing it for all the journals in
 PubMed would mean a lot more work for the NIH). Let’s try this for the
 Biopython PDB parser paper, PubMed ID 14630660:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Entrez
     >>> Entrez.email = "A.N.Other@example.com"
@@ -1807,7 +1807,7 @@ accomplish it (Section `9.15 <#sec:entrez-webenv>`__).
 But first, taking the more straightforward approach of making a second
 (separate) call to ELink:
 
-.. code:: verbatim
+.. code:: python
 
     >>> results2 = Entrez.read(Entrez.elink(dbfrom="pmc", db="pubmed", LinkName="pmc_pubmed",
     ...                                     from_uid=",".join(pmc_ids)))

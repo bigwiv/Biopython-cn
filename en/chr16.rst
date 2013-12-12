@@ -142,7 +142,7 @@ Table `16.1 <#table:training>`__ lists some of the *Bacillus subtilis*
 gene pairs for which the operon structure is known. Let’s calculate the
 logistic regression model from these data:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import LogisticRegression
     >>> xs = [[-53, -200.78],
@@ -188,7 +188,7 @@ pair belongs to the same operon (``1``, class OP) or different operons
 ``model``, which contains the weights β\ :sub:`0`, β\ :sub:`1`, and
 β\ :sub:`2`:
 
-.. code:: verbatim
+.. code:: python
 
     >>> model.beta
     [8.9830290157144681, -0.035968960444850887, 0.02181395662983519]
@@ -209,7 +209,7 @@ progress of the model calculation (which uses a Newton-Raphson iteration
 to maximize the log-likelihood function of the logistic regression
 model):
 
-.. code:: verbatim
+.. code:: python
 
     >>> def show_progress(iteration, loglikelihood):
             print "Iteration:", iteration, "Log-likelihood function:", loglikelihood
@@ -298,7 +298,7 @@ The logistic regression model classifies *yxcE*, *yxcD* as belonging to
 the same operon (class OP), while *yxiB*, *yxiA* are predicted to belong
 to different operons:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "yxcE, yxcD:", LogisticRegression.classify(model, [6,-173.143442352])
     yxcE, yxcD: 1
@@ -312,7 +312,7 @@ the ``calculate`` function to obtain the probabilities (equations
 (`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__)) for class OP and NOP. For
 *yxcE*, *yxcD* we find
 
-.. code:: verbatim
+.. code:: python
 
     >>> q, p = LogisticRegression.calculate(model, [6,-173.143442352])
     >>> print "class OP: probability =", p, "class NOP: probability =", q
@@ -320,7 +320,7 @@ the ``calculate`` function to obtain the probabilities (equations
 
 and for *yxiB*, *yxiA*
 
-.. code:: verbatim
+.. code:: python
 
     >>> q, p = LogisticRegression.calculate(model, [309, -271.005880394])
     >>> print "class OP: probability =", p, "class NOP: probability =", q
@@ -329,7 +329,7 @@ and for *yxiB*, *yxiA*
 To get some idea of the prediction accuracy of the logistic regression
 model, we can apply it to the training data:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             print "True:", ys[i], "Predicted:", LogisticRegression.classify(model, xs[i])
@@ -356,7 +356,7 @@ pairs. A more reliable estimate of the prediction accuracy can be found
 from a leave-one-out analysis, in which the model is recalculated from
 the training data after removing the gene to be predicted:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             model = LogisticRegression.train(xs[:i]+xs[i+1:], ys[:i]+ys[i+1:])
@@ -433,7 +433,7 @@ Biopython, we will use the same operon data set as in section
 Using the data in Table `16.1 <#table:training>`__, we create and
 initialize a *k*-nearest neighbors model as follows:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import kNN
     >>> k = 3
@@ -460,7 +460,7 @@ occurs most among the *k* neighbors.
 For the example of the gene pairs *yxcE*, *yxcD* and *yxiB*, *yxiA*, we
 find:
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [6, -173.143442352]
     >>> print "yxcE, yxcD:", kNN.classify(model, x)
@@ -480,7 +480,7 @@ defined as the neighbors with the smallest distance to the query point
 (*x*, *y*). By default, the Euclidean distance is used. Instead, we
 could for example use the city-block (Manhattan) distance:
 
-.. code:: verbatim
+.. code:: python
 
     >>> def cityblock(x1, x2):
     ...    assert len(x1)==2
@@ -496,7 +496,7 @@ The weight function can be used for weighted voting. For example, we may
 want to give closer neighbors a higher weight than neighbors that are
 further away:
 
-.. code:: verbatim
+.. code:: python
 
     >>> def weight(x1, x2):
     ...    assert len(x1)==2
@@ -515,7 +515,7 @@ assigned to the classes OP and NOP. For the default weighting scheme,
 this reduces to the number of neighbors in each category. For *yxcE*,
 *yxcD*, we find
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [6, -173.143442352]
     >>> weight = kNN.calculate(model, x)
@@ -525,7 +525,7 @@ this reduces to the number of neighbors in each category. For *yxcE*,
 which means that all three neighbors of ``x1``, ``x2`` are in the NOP
 class. As another example, for *yesK*, *yesL* we find
 
-.. code:: verbatim
+.. code:: python
 
     >>> x = [117, -267.14]
     >>> weight = kNN.calculate(model, x)
@@ -538,7 +538,7 @@ non-operon pair.
 To get some idea of the prediction accuracy of the *k*-nearest neighbors
 approach, we can apply it to the training data:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             print "True:", ys[i], "Predicted:", kNN.classify(model, xs[i])
@@ -565,7 +565,7 @@ pairs. A more reliable estimate of the prediction accuracy can be found
 from a leave-one-out analysis, in which the model is recalculated from
 the training data after removing the gene to be predicted:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for i in range(len(ys)):
             model = kNN.train(xs[:i]+xs[i+1:], ys[:i]+ys[i+1:])

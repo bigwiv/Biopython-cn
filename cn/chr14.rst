@@ -12,13 +12,13 @@
 
 由于我们感兴趣的是模体分析，所以我们需要先看看 ``Motif`` 对象。对此我们需要先导入Bio.motifs包：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
 
 然后我们可以开始创建我们第一个模体对象。我们可以从模体的实例列表中创建一个 ``Motif`` 对象，也可以通过读取模体数据库中或模体查找软件产生的文件来获得一个 ``Motif`` 对象。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
 
@@ -28,7 +28,7 @@
 
 假设我们有一些DNA模体的实例：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> instances = [Seq("TACAA"),
@@ -42,13 +42,13 @@
 
 然后我们可以如下创建一个模体对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m = motifs.create(instances)
 
 这些实例被存储在一个名为 ``m.instances`` 的属性中，这个其实也就是一个Python的列表，只不过附加了一些功能，这些功能将在之后介绍。将这些模体对象打印出来后就可以看出这些实例是从哪构建出来的。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m
     TACAA
@@ -62,14 +62,14 @@
 
 模体的长度像其他一些实例一些被定义为序列的长度：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(m)
     5
 
 模体对象有一个 ``.counts`` 属性，可以用来查看碱基在每个位置的数目。可以把这个统计表用易读的格式打印出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.counts
             0      1      2      3      4
@@ -81,14 +81,14 @@
 
 你也可以像使用字典一样获取这些数目：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts['A']
     [3, 7, 0, 2, 1]
 
 但是你也可以把它看成一个二维数列，核苷酸作为列，位置作为行：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts['T',0]
     4
@@ -99,14 +99,14 @@
 
 你还可以直接获得核苷酸数目矩阵中的列
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.counts[:,3]
     {'A': 2, 'C': 2, 'T': 0, 'G': 3}
 
 除了使用核苷酸本身，你还可以使用模体碱基序列按字符排序后的核苷酸索引：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.alphabet
     IUPACUnambiguousDNA()
@@ -121,28 +121,28 @@
 
 模体有一个相关联的一致序列，这个序列被定义为由 ``.counts`` 矩阵相应列中具有最大值的碱基，这些碱基是按模体序列排列的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.consensus
     Seq('TACGC', IUPACUnambiguousDNA())
 
 反一致序列也一样，只不过是由 ``.counts`` 矩阵中相应列的最小值来选：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.anticonsensus
     Seq('GGGTG', IUPACUnambiguousDNA())
 
 你也可以利用简并一致序列，用不确定核苷酸来表示序列某一位置的所有核苷酸：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
 此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [`10 <#cornish1985>`__\ ] 。这些简并一致序列是按照Cavener指定的规则[`11 <#cavener1987>`__\ ]来建立的。
 
-.. code:: verbatim
+.. code:: python
 
     >>> r = m.reverse_complement()
     >>> r.consensus
@@ -172,7 +172,7 @@ JASPAR
 作为一个最流行的模体数据库 `JASPAR <http://jaspar.genereg.net>`__ 它不是以一系列的实例就是频率矩阵。比如，下面就是JASPAR ``Arnt.sites`` 文件的开头和结尾行显示了老鼠螺旋-环-螺旋转录因子Arnt的结合位点：
 
 
-.. code:: verbatim
+.. code:: python
 
     >MA0004 ARNT    1
     CACGTGatgtcctc
@@ -192,14 +192,14 @@ JASPAR
 
 我们可以从下面的实例创建一个 ``Motif`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> arnt = motifs.read(open("Arnt.sites"), "sites")
 
 从这个模体创建的实例存储在该模体的 ``.instances`` 属性：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.instances[:3]
     [Seq('CACGTG', IUPACUnambiguousDNA()), Seq('CACGTG', IUPACUnambiguousDNA()), Seq('CACGTG', IUPACUnambiguousDNA())]
@@ -229,7 +229,7 @@ JASPAR
 
 这个模体的计数矩阵可以从这些实例中自动计算出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.counts
             0      1      2      3      4      5
@@ -241,7 +241,7 @@ JASPAR
 
 JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些创建它们的实例。比如，下面这个JASPAR文件 ``SRF.pfm`` 包含了人类SRF转录因子的计数矩阵：
 
-.. code:: verbatim
+.. code:: python
 
      2  9  0  1 32  3 46  1 43 15  2  2
      1 33 45 45  1  1  0  0  0  1  0  1
@@ -250,7 +250,7 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
 
 我们可以如下为计数矩阵创建一个模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf = motifs.read(open("SRF.pfm"),"pfm")
     >>> print srf.counts
@@ -263,14 +263,14 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
 
 由于这个模体是由计数矩阵直接创建的，所以它没有相关的实例：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print srf.instances
     None
 
 我们可以获得这两个模体的一致序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print arnt.counts.consensus
     CACGTG
@@ -284,7 +284,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 在输出文件的开头，有一些MEME生成的关于MEME和所用MEME版本的背景信息：
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     MEME - Motif discovery tool
@@ -294,7 +294,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 再往下，简要概括了输入的训练序列集：
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     TRAINING SET
@@ -311,7 +311,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 以及所使用到的命令：
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     COMMAND LINE SUMMARY
@@ -324,7 +324,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 接下来就是每个被发现模体的详细信息：
 
-.. code:: verbatim
+.. code:: python
 
     ********************************************************************************
     MOTIF  1        width =   12   sites =   7   llr = 95   E-value = 2.0e-001
@@ -339,7 +339,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 使用下面的方法来读取这个文件（以 ``meme.dna.oops.txt`` 存储）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("meme.dna.oops.txt")
     >>> record = motifs.parse(handle, "meme")
@@ -347,7 +347,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 ``motifs.parse`` 命令直接读取整个文件，所以在使用后可以关闭这个文件。其中头文件信息被存储于属性中
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.version
     '3.0'
@@ -362,7 +362,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 这个数据记录是 ``Bio.motifs.meme.Record`` 类的一个对象。这个类继承于列表（list），所以你可以把这个 ``record`` 看成模体对象的一个列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     2
@@ -374,7 +374,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 除了一般的模体属性外，每个模体还同时保存着它们由MEME计算的各自特异信息。例如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.num_occurrences
     7
@@ -388,13 +388,13 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
 
 除了像上面所做的用索引来获得相关记录，你也可以用它的名称来找到这个记录：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif = record['Motif 1']
 
 每个模体都有一个 ``.instances`` 属性与在这个被发现模体中的序列实例，能够为每个实例提供一些信息：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(motif.instances)
     7
@@ -412,7 +412,7 @@ MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序�
     12
     >>> pvalue = motif.instances[0].pvalue
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%5.3g" % pvalue
     1.85e-08
@@ -427,7 +427,7 @@ TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还
 
 TRANSFAC文件格式简单概括如下：
 
-.. code:: verbatim
+.. code:: python
 
     ID  motif1
     P0      A      C      G      T
@@ -447,7 +447,7 @@ TRANSFAC文件格式简单概括如下：
 
 这个文件显示了模体 ``motif1`` 中12个核苷酸的频率矩阵。总的来说，一个TRANSFAC文件里面可以包含多个模体。以下是示例文件 ``transfac.dat`` 的内容：
 
-.. code:: verbatim
+.. code:: python
 
     VV  EXAMPLE January 15, 2013
     XX
@@ -472,7 +472,7 @@ TRANSFAC文件格式简单概括如下：
 
 可用如下方法读取TRANSFAC文件：
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("transfac.dat")
     >>> record = motifs.parse(handle, "TRANSFAC")
@@ -480,14 +480,14 @@ TRANSFAC文件格式简单概括如下：
 
 如果有总版本号的话，它是存储在 ``record.version`` 中：
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.version
     'EXAMPLE January 15, 2013'
 
 每个在 ``record`` 中的模体都是 ``Bio.motifs.transfac.Motif`` 类的实例，这些实例同时继承 ``Bio.motifs.Motif`` 类和Python字典的属性。这些字典用双字母的键来存储关于这个模体的其他附加信息：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif = record[0]
     >>> motif.degenerate_consensus # Using the Bio.motifs.Motif method
@@ -573,7 +573,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 将TRANSFAC文件按原来格式打印出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record
     VV  EXAMPLE January 15, 2013
@@ -615,7 +615,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 通过用字符串形式来截取输出并且保存在文件中，你可以按TRANSFAC的格式导出这些模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> text = str(record)
     >>> handle = open("mytransfacfile.dat", 'w')
@@ -627,7 +627,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 说到导出，我们可以先看看导出函数。以JASPAR ``.pfm`` 格式导出模体文件，可以用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("pfm")
     3       7       0       2       1
@@ -638,7 +638,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 用类似TRANSFAC的格式导出一个模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("transfac")
     P0      A      C      G      T
@@ -653,7 +653,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 你可以用 ``motifs.write`` 来写出多个模体。这个函数在使用的时候不必担心这些模体来自于TRANSFAC文件。比如：
 
-.. code:: verbatim
+.. code:: python
 
     >>> two_motifs = [arnt, srf]
     >>> print motifs.write(two_motifs, 'transfac')
@@ -688,7 +688,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.weblogo("Arnt.png")
 
@@ -701,7 +701,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 通常来说，伪计数（pseudocounts）在归一化之前都已经加到每个位置中。这样可以避免在这序列上过度拟合位置权重矩阵以至趋向于模体的实例的有限数量，还可以避免概率为0。向每个位置的核苷酸添加一个固定的伪计数，可以为 ``pseudocounts`` 参数指定一个数值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm = m.counts.normalize(pseudocounts=0.5)
     >>> print pwm
@@ -714,7 +714,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 另外， ``pseudocounts`` 可以利用字典为每个核苷酸指定一个伪计数值。例如，由于在人类基因组中GC含量大概为40%,因此可以选择下面这些伪计数值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm = m.counts.normalize(pseudocounts={'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6})
     >>> print pwm
@@ -727,7 +727,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 位置权重矩阵有它自己的方法计算一致序列、反向一致序列和简并一致序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> pwm.consensus
     Seq('TACGC', IUPACUnambiguousDNA())
@@ -738,14 +738,14 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 应当注意到由于伪计数的原因，由位置仅重矩阵计算得到的简并一致序列和由模体中实例计算得到的简并一致序列有一点不同：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
 位置权重矩阵的反向互补矩阵可以直接用 ``pwm`` 计算出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> rpwm = pwm.reverse_complement()
     >>> print rpwm
@@ -761,7 +761,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 使用背景分布和加入伪计数的PWM，很容易就能计算出log-odds比率，提供特定标记的log odds值，这值来自于在这个背景的模体。我们可以用在位置仅重矩阵中 ``.log-odds()`` 方法：
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm = pwm.log_odds()
     >>> print pssm
@@ -776,7 +776,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 上面是假设A,C,G和T在背景中出现的概率是相同的。那在A,C,G和T出现概率不同的情况下，为了计算特定背景下的位置特异性得分矩阵，可以使用 ``background`` 参数。例如，在40%GC含量的背景下，可以用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> background = {'A':0.3,'C':0.2,'G':0.2,'T':0.3}
     >>> pssm = pwm.log_odds(background)
@@ -790,7 +790,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 从PSSM中得到的最大和最小值被存储在 ``.max`` 和 ``.min`` 属性中：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%4.2f" % pssm.max
     6.59
@@ -799,7 +799,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 在特定背景下计算平均值和标准方差使用 ``.mean`` 和 ``.std`` 方法。
 
-.. code:: verbatim
+.. code:: python
 
     >>> mean = pssm.mean(background)
     >>> std = pssm.std(background)
@@ -815,7 +815,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 模体最常用的功能就是在序列中的查找它的实例。在这节，我们会用如下的序列作为例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> test_seq=Seq("TACACTGCATTACAACCCAAGCATTA",m.alphabet)
     >>> len(test_seq)
@@ -826,7 +826,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 查找实例最简单的方法就是查找模体实例的准确匹配：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.instances.search(test_seq):
     ...     print pos, seq
@@ -837,7 +837,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我们可获得反向互补序列（找到互补链的实例）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in r.instances.search(test_seq):
     ...     print pos, seq
@@ -850,7 +850,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 在模体中很容易找出相应的位置,引起对模体的高log-odds值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for position, score in pssm.search(test_seq, threshold=3.0):
     ...     print "Position %d: score = %5.3f" % (position, score)
@@ -865,7 +865,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 你可能注意到阀值参数，在这里随意地设为3.0。这里是 *log*\ :sub:`2` ，所以我们现在开始寻找那些在模体中出现概率为背景中出现概率8倍序列。默认的阀值是0.0,在此阀值下，会把所有比背景中出现概率大的模体实例都找出来。
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm.calculate(test_seq)
     array([  5.62230396,  -5.6796999 ,  -3.43177247,   0.93827754,
@@ -877,7 +877,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 通常来说，上述是计算PSSM得分的最快方法。这些得分只能由前导链用 ``pssm.calculate`` 计算得到。为了得到互补链的PSSM值，你可以利用PSSM的互补矩阵：
 
-.. code:: verbatim
+.. code:: python
 
     >>> rpssm = pssm.reverse_complement()
     >>> rpssm.calculate(test_seq)
@@ -893,13 +893,13 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果不想刚才那么随意设定一个阀值，你可以探究一下PSSM得分的分布。由于得分的空间分布随着模体长度而成倍增长，我们用一个近似于给定精度值来计算，如此可使计算成本更容易控制：
 
-.. code:: verbatim
+.. code:: python
 
     >>> distribution = pssm.distribution(background=background, precision=10**4)
 
 ``distribution`` 对象可以用来决定许多不同的阀值。我们可以指定一个需要的的假阳性率（找到一个由序列在此背景下产生的模体实例的概率）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fpr(0.01)
     >>> print "%5.3f" % threshold
@@ -907,7 +907,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 或者假阴性率（找不到模体产生的实例概率）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fnr(0.1)
     >>> print "%5.3f" % threshold
@@ -915,7 +915,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 或者一个阀值（近似），满足假阳性率和假阴性率之间的关系（fnr/fpr≃ *t*)：
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_balanced(1000)
     >>> print "%5.3f" % threshold
@@ -923,7 +923,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 或者一个阀值能够大体满足假阳性率和信息含量的 −\ *log* 值之间的相等关系（与Hertz和Stormo的Patser软件所用的一样）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_patser()
     >>> print "%5.3f" % threshold
@@ -931,7 +931,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 比如在我们这个模体中，当以1000比率的平衡阀值查找实例，你可以得到一个让你获得相同结果的阀值（对这个序列来说）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> threshold = distribution.threshold_fpr(0.01)
     >>> print "%5.3f" % threshold
@@ -949,7 +949,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 为了更好的利用PSSMs来查找潜在的TFBSs，每个模体都同位置权重矩阵和位置特异性得分矩阵相关联。用Arnt模体来举个例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> handle = open("Arnt.sites")
@@ -969,7 +969,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
     T:   0.00   0.00   0.00   0.00   1.00   0.00
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pssm
             0      1      2      3      4      5
@@ -981,7 +981,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 在这出现的负无穷大是由于在频率矩阵中相关项的值为0,并且我们默认使用0作为伪计数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for letter in "ACGT":
     ...     print "%s: %4.2f" % (letter, motif.pseudocounts[letter])
@@ -993,7 +993,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果你更改了 ``.pseudocouts`` 属性，那么位置频率矩阵和位置特异性得分矩阵就都会自动重新计算：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.pseudocounts = 3.0
     >>> for letter in "ACGT":
@@ -1004,7 +1004,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
     G: 3.00
     T: 3.00
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pwm
             0      1      2      3      4      5
@@ -1014,7 +1014,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
     T:   0.09   0.09   0.09   0.09   0.72   0.09
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print motif.pssm
             0      1      2      3      4      5
@@ -1028,7 +1028,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 位置特异性得分矩阵依赖于一个默认均一的背景分布：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for letter in "ACGT":
     ...     print "%s: %4.2f" % (letter, motif.background[letter])
@@ -1040,7 +1040,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 同样，如果你更改了背景分布，位置特异性得分矩阵也会重新计算：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = {'A': 0.2, 'C': 0.3, 'G': 0.3, 'T': 0.2}
     >>> print motif.pssm
@@ -1053,7 +1053,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 把 ``motif.backgroud`` 设为 ``None`` 后会将其重置为均一的分布。
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = None
     >>> for letter in "ACGT":
@@ -1066,7 +1066,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果你把 ``motif.background`` 设为一个单一值，这个值将会被看成是GC含量：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motif.background = 0.8
     >>> for letter in "ACGT":
@@ -1079,21 +1079,21 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 应当注意到你能够在当前计算背景下计算PSSM的平均值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%f" % motif.pssm.mean(motif.background)
     4.703928
 
 它的标准方差也是一样：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%f" % motif.pssm.std(motif.background)
     3.290900
 
 和它的分布：
 
-.. code:: verbatim
+.. code:: python
 
     >>> distribution = motif.pssm.distribution(background=motif.background)
     >>> threshold = distribution.threshold_fpr(0.01)
@@ -1102,7 +1102,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 请注意，每当你调用 ``motif.pwm`` 或 ``motif.pssm`` ，位置仅重矩阵和位置特异性得分矩阵都会重新计算。如果看重速度并且需要重复用到PWM或PSSM时，你可以把他们保存成变量，如下所示：
 
-.. code:: verbatim
+.. code:: python
 
     >>> pssm = motif.pssm
 
@@ -1120,7 +1120,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 举个例子，先导入和测试模体 ``m`` 相似的模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m_reb1 = motifs.read(open("REB1.pfm"), "pfm")
     >>> m_reb1.consensus
@@ -1135,7 +1135,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 为了让模体能够进行相互比较，选择和模体 ``m`` 相同伪计数和背景值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m_reb1.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
     >>> m_reb1.background = {'A':0.3,'C':0.2,'G':0.2,'T':0.3}
@@ -1150,7 +1150,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我们将用皮尔逊相关（Pearson correlation）来比较这些模体。由于我们想要让它偏向于一个距离长度，我们实际上取1−\ *r* ，其中 *r* 是皮尔逊相关系数（Pearson correlation coefficient，PCC）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> distance, offset = pssm.dist_pearson(pssm_reb1)
     >>> print "distance = %5.3g" % distance
@@ -1160,7 +1160,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 这意味着模体 ``m`` 和 ``m_reb1`` 间最佳PCC可以从下面的比对中获得：
 
-.. code:: verbatim
+.. code:: python
 
     m:      bbTACGCbb
     m_reb1: GTTACCCGG
@@ -1178,12 +1178,12 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 假设用MEME以你喜欢的参数设置来跑序列，并把结果保存在文件 ``meme.out`` 中。你可以用以下的命令来得到MEME输出的模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> motifsM = motifs.parse(open("meme.out"), "meme")
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM
     [<Bio.motifs.meme.Motif object at 0xc356b0>]
@@ -1198,7 +1198,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 由MEME解析得到的模体可以像平常的模体对象（有实例）一样处理，它们也提供了一些额外的功能，可以为实例增加额外的信息。
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].consensus
     Seq('CTCAATCGTA', IUPACUnambiguousDNA())
@@ -1209,7 +1209,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
     >>> motifsM[0].instances[0].strand
     '+'
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].instances[0].pvalue
     8.71e-07
@@ -1219,28 +1219,28 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我们可以用AlignACE程序实现类似的效果。假如，你把结果保存在 ``alignace.out`` 文件中。你可以用下面的代码读取结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import motifs
     >>> motifsA = motifs.parse(open("alignace.out"),"alignace")
 
 同样，你的模体也和正常的模体对象有相同的属性：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA[0].consensus
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
 
 事实上，你甚至可以观察到，AlignAce找到了一个和MEME非常相似的模体。下面只是MEME模体互补链的一个较长版本：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].reverse_complement().consensus
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
 如果你的机器上安装了AlignAce，你可以直接从Biopython中运行AlignAce。下面就是一个如何运行AlignAce的简单例子（其他参数可以用关键字参数来调用）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> command="/opt/bin/AlignACE"
     >>> input_file="test.fa"
@@ -1250,7 +1250,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 由于AlignAce把所有的结果输出到标准输出，所以你可以通过读取结果的第一部分来获得模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifs = motifs.parse(stdout,"alignace")
 
@@ -1279,20 +1279,20 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 由于我们对模体分析感兴趣，不过让我们首先看看 ``Motif`` 对象。第一步要先导入模体库：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Motif
 
 然后可以开始创建第一个模体对象。创建一个DNA模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Alphabet import IUPAC
     >>> m = Motif.Motif(alphabet=IUPAC.unambiguous_dna)
 
 现在这里面什么也没有，往新建的模体加入一些序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> m.add_instance(Seq("TATAA",m.alphabet))
@@ -1302,7 +1302,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 现在我们有了一个完整的 ``Motif`` 实例，我们可以试着从中获取一些基本信息。先看看长度和一致序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(m)
     5
@@ -1311,7 +1311,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 对于DNA模体，我们还可以获得一个模体的反向互补序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.reverse_complement().consensus()
     Seq('TTATA', IUPACUnambiguousDNA())
@@ -1324,7 +1324,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我们也可以简单的调取模体的信息容量：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%0.2f" % m.ic()
     5.27
@@ -1333,7 +1333,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 展示模体最常用的就是PWM（位置仅重矩阵）。它概括了在模体上任意位置出现一个符号（这里指核苷酸）的概率。这个可以用 ``.pwm()`` 方法来计算：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.pwm()
     [{'A': 0.05, 'C': 0.05, 'T': 0.85, 'G': 0.05}, 
@@ -1346,14 +1346,14 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我可以调整伪计数添加到模体对象两个属性的方式。 ``.background`` 是我们假设代表背景分布的所有字符的概率分布，是非模体序列（通常基于各自基因组的GC含量）。在模体创建的时候，就默认的设置为一个统一分布：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.background  
     {'A': 0.25, 'C': 0.25, 'T': 0.25, 'G': 0.25}
 
 另一个就是 ``.beta`` ，这个参数可以说明我们应该给伪计数设定为何值。默认设定为1.0。
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.beta
     1.0
@@ -1362,7 +1362,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 使用背景分布和附加了伪计数的pwm，可以很容易的计算log-odd比率，这告诉我们在背景下，一个来自模体特定碱基的log-odd值。我们可以使用 ``.log_odds()`` 方法：
 
-.. code:: verbatim
+.. code:: python
 
      >>> m.log_odds() 
     [{'A': -2.3219280948873622, 
@@ -1394,20 +1394,20 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 手动从实例创建一个模体确实没什么技术含量，所以很有必要有一些读写功能来读取和写出模体。对于如何存储模体还没有一个固定的标准，但是有一些格式比其他格式更流行。这些格式的主要区别在于模体的创建是基于实例还是一些PWM矩阵。其中一个最流行的模体数据库就是 `JASPAR <http://jaspar.genereg.net>`__ ，该数据库保存了上述两种类型的格式，所以让我们看看是如何从实例中导入JASPAR模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Motif
     >>> arnt = Motif.read(open("Arnt.sites"),"jaspar-sites")
 
 从一个计数矩阵中导入：
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf = Motif.read(open("SRF.pfm"),"jaspar-pfm")
 
 ``arnt`` 和 ``srf`` 模体可以为我们做相同的事情，但是它们使用不同的内部表现形式来展现模体。我们可以用 ``has_counts`` 和 ``has_instances`` 属性来区分它们：
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.has_instances
     True
@@ -1416,7 +1416,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
     >>> srf.has_counts
     True
 
-.. code:: verbatim
+.. code:: python
 
     >>> srf.counts
     {'A': [2, 9, 0, 1, 32, 3, 46, 1, 43, 15, 2, 2],
@@ -1426,7 +1426,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 对于模体的不同表现形式，可以用转换功能来实现相互转换：
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.make_counts_from_instances()
     {'A': [8, 38, 0, 0, 0, 0],
@@ -1444,7 +1444,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 说到导出，让我们看看导出函数。我们可以按fasta的格式导出：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("fasta")
     >instance0
@@ -1458,7 +1458,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 或者是按TRANSFAC样的矩阵格式导出（能被一些处理软件识别）
 
-.. code:: verbatim
+.. code:: python
 
     >>> print m.format("transfac")
     XX
@@ -1475,7 +1475,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 最后，如果能够联网，我们可以创建一个 `weblogo <http://weblogo.berkeley.edu>`__ ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> arnt.weblogo("Arnt.png")
 
@@ -1486,13 +1486,13 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 模体中最常用的就是在一些序列中查找实例。为解释这部分，我们将手动创建一个如下的序列：
 
-.. code:: verbatim
+.. code:: python
 
     test_seq=Seq("TATGATGTAGTATAATATAATTATAA",m.alphabet)
 
 查找实例最简单的方法就是在模体中查找具体匹配的实例：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.search_instances(test_seq):
     ...     print pos,seq.tostring()
@@ -1503,7 +1503,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 对于互补序列，也可以用相同的方法（为了找到互补链上的实例）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,seq in m.reverse_complement().search_instances(test_seq):
     ...     print pos,seq.tostring()
@@ -1514,7 +1514,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 提高模体的log-odds值能让查为位置更加简单:
 
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,score in m.search_pwm(test_seq,threshold=5.0):
     ...     print pos,score
@@ -1529,7 +1529,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 如果不想那么随意的选择一个阀值，你可以研究一下 ``Motif.score_distribution`` 类，它为模体提供一个相应的得分分布。由于得分的空间分布随着模体长度而成倍增长，我们正用一个近似于给定精度值计算，从而使计算成本易于控制：
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd = Motif.score_distribution(m,precision=10**4)
 
@@ -1537,21 +1537,21 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 我们可以设定一个需要的假阳性率（找到一个由此序列在这个背景下产生的模体实例的概率）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_fpr(0.01)
     4.3535838726139886
 
 或者假阴性率（找不到模体产生的实例的概率）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_fnr(0.1)
     0.26651713652234044
 
 或者一个阀值（近似），满足假阳性率和假阴性率之间的关系（fnr/fpr≃ *t*)：
 
-.. code:: verbatim
+.. code:: python
 
     >>> sd.threshold_balanced(1000)
     8.4406506087056368
@@ -1560,7 +1560,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 在我们这个例子中，当以1000比率的平衡阀值查找实例时，你可以得到一个让你获得相同结果（对于这个序列来说）的阀值：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for pos,score in m.search_pwm(test_seq,threshold=sd.threshold_balanced(1000)):
     ...     print pos,score
@@ -1584,7 +1584,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 为了展示这些比较功能是如何实现的，导入和测试模体 ``m`` 相似的其他模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> ubx=Motif.read(open("Ubx.pfm"),"jaspar-pfm")
     <Bio.Motif.Motif.Motif object at 0xc29b90>
@@ -1593,42 +1593,42 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 第一个展示的功能是基于皮尔逊相关（Pearson correlation）的。因为我们想让它类似于一个距离估量，所以我们实际上取 1−\ *r* ，其中的 *r* 是皮尔逊相关系数（Pearson correlation coefficient，PCC）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_pearson(ubx)
     (0.41740393308237722, 2)
 
 这意味着模体 ``m`` 和 ``Ubx`` 间最佳的PCC可以从下面的比对中获得：
 
-.. code:: verbatim
+.. code:: python
 
     bbTAAT
     TATAAb
 
 其中 ``b`` 代表背景分布。PCC值大概为 1-0.42=0.58.如果我们尝试计算Ubx模体的互补序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_pearson(ubx.reverse_complement())
     (0.25784180151584823, 1)
 
 我们可以发现更好的PCC值（大概为0.75），并且比对也是不同的：
 
-.. code:: verbatim
+.. code:: python
 
     bATTA
     TATAA
 
 还有两个其他的功能函数： ``dist_dpq`` ,这是基于Kullback-Leibler散度的真正度量（满足三角不等式）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_dpq(ubx.reverse_complement())
     (0.49292358382899853, 1)
 
 还有 ``dist_product`` 方法，它是基于概率的方法，这概率可以看成是两个模体独立产生两个相同实例的概率。
 
-.. code:: verbatim
+.. code:: python
 
     >>> m.dist_product(ubx.reverse_complement())
     (0.16224587301064275, 1)
@@ -1643,7 +1643,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 假如你以中意的参数用MEME来跑你自己的序列，并把得到的结果保存在 ``meme.out`` 文件中。你可以用以下代码读取MEME产生的文件获得那些模体：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM = list(Motif.parse(open("meme.out"),"MEME"))
     >>> motifsM
@@ -1659,7 +1659,7 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 
 MEME解析器得到的模体可以像通常模体（含有实例）一样进行处理，它们也可以通过对实例添加附加信息而提供一些额外的功能。
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].consensus()
     Seq('CTCAATCGTA', IUPACUnambiguousDNA())
@@ -1678,27 +1678,27 @@ MEME解析器得到的模体可以像通常模体（含有实例）一样进行�
 
 对于AlignACE程序也可以做相同的事情。假如你把结果存储于文件 ``alignace.out`` 文件中。你可以用以下代码读取结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA=list(Motif.parse(open("alignace.out"),"AlignAce"))
 
 同样，得到的模体也和平常的模体一样：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsA[0].consensus()
     Seq('TCTACGATTGAG', IUPACUnambiguousDNA())
 
 事实上，你甚至可以发现AlignAce和MEME得到的模体十分相似，只不过AlignAce模体是MEME模体反向互补序列的加长版本而已：
 
-.. code:: verbatim
+.. code:: python
 
     >>> motifsM[0].reverse_complement().consensus()
     Seq('TACGATTGAG', IUPACUnambiguousDNA())
 
 如果你的机器上安装了AlignAce，你也可以直接从Biopython中启动。下面就是一个如何启动的小例子（其他参数可以用关键字参数指定）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> command="/opt/bin/AlignACE"
     >>> input_file="test.fa"
@@ -1708,7 +1708,7 @@ MEME解析器得到的模体可以像通常模体（含有实例）一样进行�
 
 由于AlignAce把结果打印到标准输出，因此你可以通过读取结果的第一部分来获得你想要的模体：
 
-.. code:: verbatim
+.. code:: python
 
     motifs=list(Motif.parse(stdout,"AlignAce"))
 

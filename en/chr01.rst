@@ -98,7 +98,7 @@ click-and-run installers, while for Unix and other operating systems you
 must install from source as described in the included README file. This
 is usually as simple as the standard commands:
 
-.. code:: verbatim
+.. code:: python
 
     python setup.py build
     python setup.py test
@@ -148,7 +148,7 @@ and HTML formats
    
    Use this:
 
-   .. code:: verbatim
+   .. code:: python
 
          >>> import Bio
          >>> print Bio.__version__

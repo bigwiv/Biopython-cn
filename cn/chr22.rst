@@ -17,7 +17,7 @@
 
 句柄最常见的使用就是从文件读取信息，这可以通过Python内置函数 ``open`` 来完成。 下面示例中，我们打开一个指向文件 `m\_cold.fasta <examples/m_cold.fasta>`__ （可通过网址 `<http://biopython.org/DIST/docs/tutorial/examples/m_cold.fasta>`__ 获取）的句柄：
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("m_cold.fasta", "r")
     >>> handle.readline()
@@ -25,7 +25,7 @@
 
 Biopython中句柄常用来向解析器（parsers）传递信息。比如说，自Biopython1.54版本后， ``Bio.SeqIO`` 和 ``Bio.AlignIO`` 模块中的主要函数都可以使用文件名来代替句柄使用：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     for record in SeqIO.parse("m_cold.fasta", "fasta"):
@@ -33,7 +33,7 @@ Biopython中句柄常用来向解析器（parsers）传递信息。比如说，�
 
 在比较早的BioPython版本中，必须使用句柄：
 
-.. code:: verbatim
+.. code:: python
 
     from Bio import SeqIO
     handle = open("m_cold.fasta", "r")
@@ -43,7 +43,7 @@ Biopython中句柄常用来向解析器（parsers）传递信息。比如说，�
 
 这种操作方式仍有其用武之地，比如在解析一个gzip压缩的FASTA文件中：
 
-.. code:: verbatim
+.. code:: python
 
     import gzip
     from Bio import SeqIO
@@ -59,7 +59,7 @@ Biopython中句柄常用来向解析器（parsers）传递信息。比如说，�
 
 一个比较有用的工具是将字符串中包含的文本信息传递给一个句柄。以下示例是使用Python标准文库 ``cStringIO`` 来展示如何实现的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_info = 'A string\n with multiple lines.'
     >>> print my_info

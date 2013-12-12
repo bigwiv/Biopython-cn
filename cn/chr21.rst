@@ -48,7 +48,7 @@
 
     在你配置好C编译器之后，安装工作就很简单：
 
-    .. code:: verbatim
+    .. code:: python
 
         python setup.py bdist_wininst
 
@@ -59,7 +59,7 @@
 
     创建一个RPM,仅需做以下工作：
 
-    .. code:: verbatim
+    .. code:: python
 
         python setup.py bdist_rpm
 

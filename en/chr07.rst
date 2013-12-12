@@ -67,7 +67,7 @@ the BLAST web page. We’ll just highlight a few of them here:
 For more about the optional BLAST arguments, we refer you to the NCBI’s
 own documentation, or that built into Biopython:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> help(NCBIWWW.qblast)
@@ -82,7 +82,7 @@ For example, if you have a nucleotide sequence you want to search
 against the nucleotide database (nt) using BLASTN, and you know the GI
 number of your query sequence, you can use:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
@@ -91,7 +91,7 @@ Alternatively, if we have our query sequence already in a FASTA
 formatted file, we just need to open the file and read in this record as
 a string, and use that as the query argument:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> fasta_string = open("m_cold.fasta").read()
@@ -100,7 +100,7 @@ a string, and use that as the query argument:
 We could also have read in the FASTA file as a ``SeqRecord`` and then
 supplied just the sequence itself:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> from Bio import SeqIO
@@ -112,7 +112,7 @@ for your sequence automatically. You might prefer to use the
 ``SeqRecord`` object’s format method to make a fasta string (which will
 include the existing identifier):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> from Bio import SeqIO
@@ -136,7 +136,7 @@ We need to be a bit careful since we can use ``result_handle.read()`` to
 read the BLAST output only once – calling ``result_handle.read()`` again
 returns an empty string.
 
-.. code:: verbatim
+.. code:: python
 
     >>> save_file = open("my_blast.xml", "w")
     >>> save_file.write(result_handle.read())
@@ -149,7 +149,7 @@ However, the ``parse`` function of the BLAST parser (described
 in \ `7.3 <#sec:parsing-blast>`__) takes a file-handle-like object, so
 we can just open the saved file for input:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_blast.xml")
 
@@ -235,7 +235,7 @@ want to run a BLASTX (translation) search against the non-redundant (NR)
 protein database. Assuming you (or your systems administrator) has
 downloaded and installed the NR database, you might run:
 
-.. code:: verbatim
+.. code:: python
 
     blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5
 
@@ -249,7 +249,7 @@ From within Biopython we can use the NCBI BLASTX wrapper from the
 ``Bio.Blast.Applications`` module to build the command line string, and
 run it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast.Applications import NcbiblastxCommandline
     >>> help(NcbiblastxCommandline)
@@ -333,7 +333,7 @@ If you followed the code above for interacting with BLAST through a
 script, then you already have ``result_handle``, the handle to the BLAST
 results. For example, using a GI number to do an online search:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIWWW
     >>> result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
@@ -342,7 +342,7 @@ If instead you ran BLAST some other way, and have the BLAST output (in
 XML format) in the file ``my_blast.xml``, all you need to do is to open
 the file for reading:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_blast.xml")
 
@@ -350,14 +350,14 @@ Now that we’ve got a handle, we are ready to parse the output. The code
 to parse it is really quite small. If you expect a single BLAST result
 (i.e. you used a single query):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_record = NCBIXML.read(result_handle)
 
 or, if you have lots of results (i.e. multiple query sequences):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -376,7 +376,7 @@ iterator. In plain English, an iterator allows you to step through the
 BLAST output, retrieving BLAST records one by one for each BLAST search
 result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -394,7 +394,7 @@ result:
 
 Or, you can use a ``for``-loop:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for blast_record in blast_records:
     ...     # Do something with blast_record
@@ -404,7 +404,7 @@ Usually, from each BLAST record you would save the information that you
 are interested in. If you want to save all returned BLAST records, you
 can convert the iterator into a list:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_records = list(blast_records)
 
@@ -416,7 +416,7 @@ Usually, you’ll be running one BLAST search at a time. Then, all you
 need to do is to pick up the first (and only) BLAST record in
 ``blast_records``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
@@ -424,7 +424,7 @@ need to do is to pick up the first (and only) BLAST record in
 
 or more elegantly:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIXML
     >>> blast_record = NCBIXML.read(result_handle)
@@ -446,7 +446,7 @@ To continue with our example, let’s just print out some summary info
 about all hits in our blast report greater than a particular threshold.
 The following code does this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> E_VALUE_THRESH = 0.04
 
@@ -463,7 +463,7 @@ The following code does this:
 
 This will print out summary reports like the following:
 
-.. code:: verbatim
+.. code:: python
 
     ****Alignment****
     sequence: >gb|AF283004.1|AF283004 Arabidopsis thaliana cold acclimation protein WCOR413-like protein
@@ -524,14 +524,14 @@ the provided ``blastall`` or ``blastpgp`` functions to run the local
 blast, or to run a local blast via the command line, and then do
 something like the following:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open("my_file_of_blast_output.txt")
 
 Well, now that we’ve got a handle (which we’ll call ``result_handle``),
 we are ready to parse it. This can be done with the following code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> blast_parser = NCBIStandalone.BlastParser()
@@ -543,7 +543,7 @@ you can extract the information from it. In our case, let’s just use
 print out a quick summary of all of the alignments greater than some
 threshold value.
 
-.. code:: verbatim
+.. code:: python
 
     >>> E_VALUE_THRESH = 0.04
     >>> for alignment in blast_record.alignments:
@@ -573,7 +573,7 @@ in the very next section.
 We can do this using the blast iterator. To set up an iterator, we first
 set up a parser, to parse our blast reports in Blast Record objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> blast_parser = NCBIStandalone.BlastParser()
@@ -585,7 +585,7 @@ detail above in the blast parsing sections.
 Now that we’ve got a parser and a handle, we are ready to set up the
 iterator with the following command:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_iterator = NCBIStandalone.Iterator(result_handle, blast_parser)
 
@@ -595,7 +595,7 @@ then the iterator will just return the raw BLAST reports one at a time.
 Now that we’ve got an iterator, we start retrieving blast records
 (generated by our parser) using ``next()``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_record = blast_iterator.next()
 
@@ -603,7 +603,7 @@ Each call to next will return a new record that we can deal with. Now we
 can iterate through this records and generate our old favorite, a nice
 little blast report:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for blast_record in blast_iterator:
     ...     E_VALUE_THRESH = 0.04
@@ -647,7 +647,7 @@ attempting to diagnose the errors.
 Let’s take a look at using this parser – first we define the file we are
 going to parse and the file to write the problem reports to:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import os
     >>> blast_file = os.path.join(os.getcwd(), "blast_out", "big_blast.out")
@@ -655,7 +655,7 @@ going to parse and the file to write the problem reports to:
 
 Now we want to get a ``BlastErrorParser``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Blast import NCBIStandalone
     >>> error_handle = open(error_file, "w")
@@ -671,7 +671,7 @@ parser. Specifically, we might want to make an iterator that goes
 through our blast records one at a time and parses them with the error
 parser:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result_handle = open(blast_file)
     >>> iterator = NCBIStandalone.Iterator(result_handle, blast_error_parser)
@@ -680,7 +680,7 @@ We can read these records one a time, but now we can catch and deal with
 errors that are due to problems with Blast (and not with the parser
 itself):
 
-.. code:: verbatim
+.. code:: python
 
     >>> try:
     ...     next_record = iterator.next()

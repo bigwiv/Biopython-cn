@@ -28,20 +28,20 @@ Swiss-Prot record is stored:
 
 -  Open a Swiss-Prot file locally:
   
-   .. code:: verbatim
+   .. code:: python
       
        >>> handle = open("myswissprotfile.dat")
 
 -  Open a gzipped Swiss-Prot file:
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> import gzip
        >>> handle = gzip.open("myswissprotfile.dat.gz")
 
 -  Open a Swiss-Prot file over the internet:
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> import urllib
        >>> handle = urllib.urlopen("http://www.somelocation.org/data/someswissprotfile.dat")
@@ -49,7 +49,7 @@ Swiss-Prot record is stored:
 -  Open a Swiss-Prot file over the internet from the ExPASy database
    (see section `10.5.1 <#subsec:expasy_swissprot>`__):
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from Bio import ExPASy
        >>> handle = ExPASy.get_sprot_raw(myaccessionnumber)
@@ -66,7 +66,7 @@ closer match to the underlying file format.
 To read one Swiss-Prot record from the handle, we use the function
 ``read()``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> record = SwissProt.read(handle)
@@ -77,7 +77,7 @@ was found, and also if more than one record was found.
 
 We can now print out some information about this record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.description
     'RecName: Full=Chalcone synthase 3; EC=2.3.1.74; AltName: Full=Naringenin-chalcone synthase 3;'
@@ -105,7 +105,7 @@ a compressed file containing a single file, ``uniprot_sprot.dat`` (over
 As described at the start of this section, you can use the Python
 library ``gzip`` to open and uncompress a ``.gz`` file, like this:
 
-.. code:: verbatim
+.. code:: python
 
     >>> import gzip
     >>> handle = gzip.open("uniprot_sprot.dat.gz")
@@ -116,7 +116,7 @@ So, if you can spare the disk space you’ll save time in the long run if
 you first decompress the file to disk, to get the ``uniprot_sprot.dat``
 file inside. Then you can open the file for reading as usual:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = open("uniprot_sprot.dat")
 
@@ -124,7 +124,7 @@ As of June 2009, the full Swiss-Prot database downloaded from ExPASy
 contained 468851 Swiss-Prot records. One concise way to build up a list
 of the record descriptions is with a list comprehension:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> handle = open("uniprot_sprot.dat")
@@ -140,7 +140,7 @@ of the record descriptions is with a list comprehension:
 
 Or, using a for loop over the record iterator:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SwissProt
     >>> descriptions = []
@@ -158,7 +158,7 @@ minutes on my new desktop computer (using the uncompressed
 It is equally easy to extract any kind of information you’d like from
 Swiss-Prot records. To see the members of a Swiss-Prot record, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> dir(record)
     ['__doc__', '__init__', '__module__', 'accessions', 'annotation_update',
@@ -175,7 +175,7 @@ Swiss-Prot also distributes a file ``keywlist.txt``, which lists the
 keywords and categories used in Swiss-Prot. The file contains entries in
 the following form:
 
-.. code:: verbatim
+.. code:: python
 
     ID   2Fe-2S.
     AC   KW-0001
@@ -205,7 +205,7 @@ The entries in this file can be parsed by the ``parse`` function in the
 ``Bio.SwissProt.KeyWList`` module. Each entry is then stored as a
 ``Bio.SwissProt.KeyWList.Record``, which is a Python dictionary.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SwissProt import KeyWList
     >>> handle = open("keywlist.txt")
@@ -216,7 +216,7 @@ The entries in this file can be parsed by the ``parse`` function in the
 
 This prints
 
-.. code:: verbatim
+.. code:: python
 
     2Fe-2S.
     Protein which contains at least one 2Fe-2S iron-sulfur cluster: 2 iron atoms
@@ -241,7 +241,7 @@ site <ftp://ftp.expasy.org/databases/prosite/prosite.dat>`__, contains
 2073 records (version 20.24 released on 4 December 2007). To parse such
 a file, we again make use of an iterator:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("myprositefile.dat")
@@ -251,7 +251,7 @@ We can now take the records one at a time and print out some
 information. For example, using the file containing the complete Prosite
 database, we’d find
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("prosite.dat")
@@ -281,7 +281,7 @@ database, we’d find
 and so on. If you’re interested in how many Prosite records there are,
 you could use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("prosite.dat")
@@ -295,7 +295,7 @@ you could use
 To read exactly one Prosite from the handle, you can use the ``read``
 function:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prosite
     >>> handle = open("mysingleprositerecord.dat")
@@ -317,7 +317,7 @@ We use the parser in ``Bio.ExPASy.Prodoc`` to parse Prosite
 documentation records. For example, to create a list of all accession
 numbers of Prosite documentation record, you can use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Prodoc
     >>> handle = open("prosite.doc")
@@ -333,7 +333,7 @@ documentation record from the handle.
 ExPASy’s Enzyme database is a repository of information on enzyme
 nomenclature. A typical Enzyme record looks as follows:
 
-.. code:: verbatim
+.. code:: python
 
     ID   3.1.1.34
     DE   Lipoprotein lipase.
@@ -366,7 +366,7 @@ dictionary and has keys corresponding to the two-letter codes used in
 Enzyme files. To read an Enzyme file containing one Enzyme record, use
 the ``read`` function in ``Bio.ExPASy.Enzyme``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Enzyme
     >>> handle = open("lipoprotein.txt")
@@ -382,7 +382,7 @@ the ``read`` function in ``Bio.ExPASy.Enzyme``:
     >>> record["PR"]
     ['PDOC00110']
 
-.. code:: verbatim
+.. code:: python
 
     >>> record["CC"]
     ['Hydrolyzes triacylglycerols in chylomicrons and very low-density lipoproteins
@@ -403,7 +403,7 @@ site <ftp://ftp.expasy.org/databases/enzyme/enzyme.dat>`__, containing
 multiple Enzyme records, use the ``parse`` function in
 ``Bio.ExPASy.Enzyme`` to obtain an iterator:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.ExPASy import Enzyme
     >>> handle = open("enzyme.dat")
@@ -412,7 +412,7 @@ multiple Enzyme records, use the ``parse`` function in
 We can now iterate over the records one at a time. For example, we can
 make a list of all EC numbers for which an Enzyme record is available:
 
-.. code:: verbatim
+.. code:: python
 
     >>> ecnumbers = [record["ID"] for record in records]
 
@@ -460,7 +460,7 @@ can the use ``Bio.SwissProt.read`` to pull out the Swiss-Prot record, or
 ``Bio.SeqIO.read`` to get a SeqRecord. The following code accomplishes
 what I just wrote:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio import SwissProt
@@ -478,7 +478,7 @@ not exist, then ``SwissProt.read(handle)`` will raise a ``ValueError``.
 You can catch ``ValueException`` exceptions to detect invalid accession
 numbers:
 
-.. code:: verbatim
+.. code:: python
 
     >>> for accession in accessions:
     ...     handle = ExPASy.get_sprot_raw(accession)
@@ -506,7 +506,7 @@ respectively. Note that they don’t search in TrEMBL by default (argument
 ``trembl``). Note also that they return html pages; however, accession
 numbers are quite easily extractable:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> import re
@@ -533,7 +533,7 @@ To retrieve a Prosite or Prosite documentation record in raw format, use
 ``get_prosite_raw()``. For example, to download a Prosite record and
 print it out in raw text format, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prosite_raw('PS00001')
@@ -543,7 +543,7 @@ print it out in raw text format, use
 To retrieve a Prosite record and parse it into a ``Bio.Prosite.Record``
 object, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio import Prosite
@@ -553,7 +553,7 @@ object, use
 The same function can be used to retrieve a Prosite documentation record
 and parse it into a ``Bio.ExPASy.Prodoc.Record`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> from Bio.ExPASy import Prodoc
@@ -569,7 +569,7 @@ The functions ``get_prosite_entry()`` and ``get_prodoc_entry()`` are
 used to download Prosite and Prosite documentation records in HTML
 format. To create a web page showing one Prosite record, you can use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prosite_entry('PS00001')
@@ -580,7 +580,7 @@ format. To create a web page showing one Prosite record, you can use
 
 and similarly for a Prosite documentation record:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import ExPASy
     >>> handle = ExPASy.get_prodoc_entry('PDOC00001')
@@ -609,14 +609,14 @@ ScanProsite programmatically, and to parse the results returned by
 ScanProsite. To scan for Prosite patterns in the following protein
 sequence:
 
-.. code:: verbatim
+.. code:: python
 
     MEHKEVVLLLLLFLKSGQGEPLDDYVNTQGASLFSVTKKQLGAGSIEECAAKCEEDEEFT
     CRAFQYHSKEQQCVIMAENRKSSIIIRMRDVVLFEKKVYLSECKTGNGKNYRGTMSKTKN
 
 you can use the following code:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sequence = "MEHKEVVLLLLLFLKSGQGEPLDDYVNTQGASLFSVTKKQLGAGSIEECAAKCEEDEEFT
     CRAFQYHSKEQQCVIMAENRKSSIIIRMRDVVLFEKKVYLSECKTGNGKNYRGTMSKTKN"
@@ -627,7 +627,7 @@ By executing ``handle.read()``, you can obtain the search results in raw
 XML format. Instead, let’s use ``Bio.ExPASy.ScanProsite.read`` to parse
 the raw XML into a Python object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result = ScanProsite.read(handle)
     >>> type(result)
@@ -638,7 +638,7 @@ each element in the list storing one ScanProsite hit. This object also
 stores the number of hits, as well as the number of search sequences, as
 returned by ScanProsite. This ScanProsite search resulted in six hits:
 
-.. code:: verbatim
+.. code:: python
 
     >>> result.n_seq
     1
@@ -665,7 +665,7 @@ ScanProsite <http://www.expasy.org/tools/scanprosite/ScanPrositeREST.html>`__
 for more information. As an example, passing ``lowscore=1`` to include
 matches with low level scores lets use find one additional hit:
 
-.. code:: verbatim
+.. code:: python
 
     >>> handle = ScanProsite.scan(seq=sequence, lowscore=1)
     >>> result = ScanProsite.read(handle)

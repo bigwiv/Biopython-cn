@@ -27,7 +27,7 @@ BLAT输出结果文件可以在
 `这里 <http://biopython.org/SRC/Tests/Tutorial/my_blat.psl>`__ 下载。两个结果
 文件都是用下面这条序列搜索产生的：
 
-.. code:: verbatim
+.. code:: python
 
     >mystery_seq
     CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG
@@ -86,7 +86,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 ``QueryResult``，代表单query搜索，每个 ``QueryResult`` 中有0个或多个 ``Hit`` 对象。我们来看看BLAST文件是什么样的：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
@@ -144,7 +144,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
  
 现在让我们用同样的步骤来检查BLAT的结果：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> print blat_qresult
@@ -173,7 +173,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 所有通过调用 ``print`` 方法看到的信息都可以单独地用Python的对象属性获得（又叫点标记法）。同样还可以用相同的方法获得其他格式特有的属性。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print "%s %s" % (blast_qresult.program, blast_qresult.version)
     blastn 2.2.27+
@@ -193,7 +193,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 和列表以及字典一样， ``QueryResult`` 对象是可迭代的。每次迭代返回一个hit
 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hit in blast_qresult:
     ...     hit
@@ -206,7 +206,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 要得到 ``QueryResult`` 对象有多少hit，可以简单调用Python的 ``len`` 方法：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(blast_qresult)
     100
@@ -215,7 +215,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 同列表类似，你可以用切片来获得 ``QueryResult`` 对象的hit：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult[0]        # retrieves the top hit
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
@@ -224,7 +224,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 要得到多个hit，你同样可以对 ``QueryResult`` 对象作切片。这种情况下，返回一个包含被切hit的新 ``QueryResult`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_slice = blast_qresult[:3]     # slices the first three hits
     >>> print blast_slice
@@ -241,14 +241,14 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 同字典类似，可以通过ID获取hit。如果你知道一个特定的hit ID存在于一个搜索结果中时，特别有用：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult['gi|262205317|ref|NR_030195.1|']
     Hit(id='gi|262205317|ref|NR_030195.1|', query_id='42291', 1 hsps)
 
 你可以用 ``hits`` 方法获得完整的 ``Hit`` 对象，也可以用 ``hit_keys`` 方法获得完整的 ``Hit`` ID：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult.hits
     [...]       # list of all hits
@@ -257,7 +257,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 如果你想确定一个特定的hit是否存在于查询结果中该怎么做呢？可以用 ``in`` 关键字作一个简单的成员检验：
 
-.. code:: verbatim
+.. code:: python
 
     >>> 'gi|262205317|ref|NR_030195.1|' in blast_qresult
     True
@@ -266,7 +266,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 有时候，只知道一个hit是否存在是不够的，你可能也会想知道hit的排名。 ``index`` 方法可以帮助你：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_qresult.index('gi|301171437|ref|NR_035870.1|')
     22
@@ -285,7 +285,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 这样排序方法会返回一个新的 ``QueryResult`` 对象，而原来的对象是未排序的。
 我们同样可以设置 ``reverse`` 参数等于 `` True `` 以递减排序。
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hit in blast_qresult[:5]:   # id and sequence length of the first five hits
     ...     print hit.id, hit.seq_len
@@ -329,7 +329,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 这里有个用 ``hit_filter`` 筛选出只有一个HSP的 ``Hit`` 对象的例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> filter_func = lambda hit: len(hit.hsps) > 1     # the callback function
     >>> len(blast_qresult)      # no. of hits before filtering
@@ -353,7 +353,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 来看一个用 ``hit_map`` 方法来重命名hit ID的例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> def map_func(hit):
     ...     hit.id = hit.id.split('|')[3]   # renames 'gi|301171322|ref|NR_035857.1|' to 'NR_035857.1'
@@ -377,13 +377,13 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 看看它们是什么样的，从我们的BLAST搜索开始：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
     >>> blast_hit = blast_qresult[3]    # fourth hit from the query result
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hit
     Query: 42291
@@ -408,7 +408,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 现在，和BLAT结果作对比。记住，在BLAT搜索结果中，我们发现有一个含有17HSP的hit。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_hit = blat_qresult[0]      # the only hit
@@ -450,7 +450,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 和列表一样， ``Hit`` 对象是可迭代的，并且每次迭代返回一个 ``HSP`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> for hsp in blast_hit:
     ...     hsp
@@ -459,7 +459,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 你可以对 ``Hit`` 对象调用 ``len`` 方法查看它含有多少个 ``HSP`` 对象：
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(blast_hit)
     2
@@ -469,7 +469,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 你可以对 ``Hit`` 对象作切片取得单个或多个 ``HSP`` 对象，和 ``QueryResult``
 一样，如果切取多个 ``HSP``  ，会返回包含被切片 ``HSP``  的一个新 ``Hit`` 对象。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hit[0]                 # retrieve single items
     HSP(hit_id='chr19', query_id='mystery_seq', 1 fragments)
@@ -507,13 +507,13 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 我们来看看BLAST和BLAT搜索的例子。先看BLAST HSP：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
     >>> blast_hsp = blast_qresult[0][0]    # first hit, first hsp
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hsp
           Query: 42291 mystery_seq
@@ -539,12 +539,12 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 
 这些信息可以用点标记从它们本身获得，和 ``Hit`` 以及 ``QueryResult`` 相同： 
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.query_range
     (0, 61)
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.evalue
     4.91307e-23
@@ -552,7 +552,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 它们并不是仅有的属性， ``HSP``  对象有一系列的属性，使得获得它们的具体信
 息更加容易。下面是一些例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.hit_start         # start coordinate of the hit sequence
     0
@@ -568,7 +568,7 @@ BLAT，数据库是2009年2月份的 ``hg19`` 人类基因组草图，输出格�
 不仅如此，每个搜索工具通常会对它的 ``HSP``  对象作统计学或其他细节计算。例如，一个
 XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以像这样被获取：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.gap_num       # number of gaps
     0
@@ -579,7 +579,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
 定的序列搜索工具中是存在的，你应该查看那种格式的在 ``Bio.SearchIO`` 中的
 文档。或者可以用 ``.__dict__.keys()`` 获得快速列表：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.__dict__.keys()
     ['bitscore', 'evalue', 'ident_num', 'gap_num', 'bitscore_raw', 'pos_num', '_items']
@@ -587,7 +587,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
 最后，你可能已经注意到了，我们HSP的 ``query`` 和 ``hit`` 属性不只是规律字符串： 
 
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_hsp.query
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='42291', name='aligned query sequence', description='mystery_seq', dbxrefs=[])
@@ -600,7 +600,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
 现在 ``HSP``  对象有个 ``alignment`` 属性（一个 ``MultipleSeqAlignment`` 
 对象）应该不会让你感到惊讶：
 
-.. code:: verbatim
+.. code:: python
 
     >>> print blast_hsp.aln
     DNAAlphabet() alignment with 2 rows and 61 columns
@@ -610,7 +610,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
 
 探索完BLAST HSP对象，让我们看看来自BLAT结果的不一样的HSP。我们将对它调用 ``print`` 方法： 
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_hsp = blat_qresult[0][0]       # first hit, first hsp
@@ -629,7 +629,7 @@ hit和query序列，所以 ``Bio.SearchIO`` 不会创建任何序列或者比对
 你尝试获取 ``HSP.query`` ，``HSP.hit`` ， 或者 ``HSP.aln`` 属性会怎么样
 呢？你会得到这些属性的默认值 ``None`` ：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.hit is None
     True
@@ -642,7 +642,7 @@ hit和query序列，所以 ``Bio.SearchIO`` 不会创建任何序列或者比对
 示任何的属性，但是PSL格式还是有这些信息的，所以 ``Bio.SearchIO`` 可以抽
 提出这些信息。
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.query_span     # length of query match
     61
@@ -651,7 +651,7 @@ hit和query序列，所以 ``Bio.SearchIO`` 不会创建任何序列或者比对
 
 其他格式特异的属性同样被展示出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp.score          # PSL score
     61
@@ -663,7 +663,7 @@ hit和query序列，所以 ``Bio.SearchIO`` 不会创建任何序列或者比对
 
 让我们看看 ``Bio.SearchIO`` 怎么处理包含多个区块的BLAT HSP：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2 = blat_qresult[0][1]      # first hit, second hsp
     >>> print blat_hsp2
@@ -694,7 +694,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 
 所有的这些属性都是可以直接从HSP获取的，通过这样的方式：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2.hit_range         # hit start and end coordinates of the entire HSP
     (54233104, 54264463)
@@ -723,7 +723,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 
 最后，想要检查是否是多片段HSP，你可以用 ``is_fragmented`` 属性：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_hsp2.is_fragmented     # BLAT HSP with 2 fragments
     True
@@ -748,7 +748,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 当你对 ``HSPFragment`` 对象调用 ``print`` 方法时，这些属性可以非常简单地显示
 出来。这里有个从我们BLAST搜索得到的例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> blast_qresult = SearchIO.read('my_blast.xml', 'blast-xml')
@@ -765,7 +765,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 
 在这个水平上，BLAT和BLAST片段看起来非常相似，除了没有出现的query和hit序列：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blat_qresult = SearchIO.read('my_blat.psl', 'blat-psl')
     >>> blat_frag = blat_qresult[0][0][0]    # first hit, first hsp, first fragment
@@ -778,7 +778,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 
 在所有情况下，这些属性都可以通过我们最爱的点标记访问。一些例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> blast_frag.query_start      # query start coordinate
     0
@@ -837,7 +837,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 文件。在第二个例子中，我们用一个关键字来修饰，所以它分析带有注释的BLAST
 表格变量。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresult = SearchIO.read('tab_2226_tblastn_003.txt', 'blast-tab')
@@ -853,7 +853,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 这个方法返回一个generator对象，在每次迭代中yield一个 ``QueryResult`` 对象。
 和 ``Bio.SearchIO.read`` 一样，它同样接受格式特异的关键字参数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresults = SearchIO.parse('tab_2226_tblastn_001.txt', 'blast-tab')
@@ -882,7 +882,7 @@ Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO``
 
 这里有一些例子。你可以只用文件名和格式名来 ``index`` 
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> idx = SearchIO.index('tab_2226_tblastn_001.txt', 'blast-tab')
@@ -893,7 +893,7 @@ Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO``
 
 或者依旧使用格式特异的关键字参数：
 
-.. code:: verbatim
+.. code:: python
 
     >>> idx = SearchIO.index('tab_2226_tblastn_005.txt', 'blast-tab', comments=True)
     >>> sorted(idx.keys())
@@ -903,7 +903,7 @@ Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO``
 
 或者使用 ``key_function`` 参数，和 ``Bio.SeqIO`` 中一样：
 
-.. code:: verbatim
+.. code:: python
 
     >>> key_function = lambda id: id.upper()    # capitalizes the keys
     >>> idx = SearchIO.index('tab_2226_tblastn_001.txt', 'blast-tab', key_function=key_function)
@@ -924,7 +924,7 @@ Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO``
 格式和一些可选的格式特异的关键字参数。它返回一个4项目的元组，分别代表
 被写入的 ``QueryResult``， ``Hit``， ``HSP``， 和 ``HSPFragment`` 对象的数量。 
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> qresults = SearchIO.parse('mirna.xml', 'blast-xml')     # read XML file
@@ -943,7 +943,7 @@ Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO``
 
 最后， ``Bio.SearchIO`` 同样提供一个 ``convert`` 方法，可以理解为 ``Bio.SearchIO.parse`` 和 ``Bio.SearchIO.write`` 的简单替代方法。使用 ``convert`` 方法的例子如下：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SearchIO
     >>> SearchIO.convert('mirna.xml', 'blast-xml', 'results.tab', 'blast-tab')

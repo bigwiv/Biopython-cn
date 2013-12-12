@@ -21,7 +21,7 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 
 在终端中使用你喜欢的编辑器创建一个简单的Newick文件：
 
-.. code:: verbatim
+.. code:: python
 
     % cat > simple.dnd <<EOF
     > (((A,B),(C,D)),(E,F,G));
@@ -32,7 +32,7 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 
 选择启动你的Python解释器：
 
-.. code:: verbatim
+.. code:: python
 
     % ipython -pylab
 
@@ -41,14 +41,14 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 
 现在，在Python终端中，读取树文件，给定文件名和格式名。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("simple.dnd", "newick")
 
 以字符串打印该树对象我们将得到整个对象的层次结构概况。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print tree
 
@@ -72,7 +72,7 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 函数 ``draw_ascii`` 创建一个简单的ASCII-art(纯文本)系统发生图。在没有更好
 图形工具的情况下，这对于交互研究来说是一个方便的可视化展示方式。
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw_ascii(tree)
                                                         ________________________ A
@@ -92,7 +92,7 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 如果你安装有 **matplotlib** 或者 **pylab**, 你可以使用 ``draw`` 函数一个图像(见 Fig.
 `13.1 <#fig:phylo-simple-draw>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.rooted = True
     >>> Phylo.draw(tree)
@@ -113,13 +113,13 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 
 在Biopython 1.55和之后的版本中，这是一个很方便的树方法：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = tree.as_phyloxml()
 
 在Biopython 1.54中, 你能通过导入一个额外的模块实现相同的事情：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Phylo.PhyloXML import Phylogeny
     >>> tree = Phylogeny.from_tree(tree)
@@ -132,19 +132,19 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
 的颜色值来实现，用三位数的RGB值、HTML格式的十六进制字符串、或者预先设置好的
 颜色名称。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = (128, 128, 128)
 
 Or:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = "#808080"
 
 Or:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.root.color = "gray"
 
@@ -156,7 +156,7 @@ Or:
 原始树中这个进化枝的引用，所以当我们设置该进化枝为“salmon”颜色时，这个颜
 色则会在原始的树中显示出来。
 
-.. code:: verbatim
+.. code:: python
 
     >>> mrca = tree.common_ancestor({"name": "E"}, {"name": "F"})
     >>> mrca.color = "salmon"
@@ -165,13 +165,13 @@ Or:
 通过索引的方式直接跳到那个位置。这里，索引 ``[0,1]`` 表示根节点的第一个
 子代节点的第二个子代。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.clade[0,1].color = "blue"
 
 最后，展示一下我们的工作结果 (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw(tree)
 
@@ -185,7 +185,7 @@ Or:
 调用 ``write`` 函数。PhyloXML格式保存了我们设置的颜色，所以你能通过其他树
 查看工具，如Archaeopteryx，打开这个phyloXML文件，这些颜色也会显示出来。
 
-.. code:: verbatim
+.. code:: python
 
     >>> import sys
     >>> Phylo.write(tree, sys.stdout, "phyloxml")
@@ -221,7 +221,7 @@ phyloXML和NeXML等树文件格式。
 
 ``read`` 函数解析并返回给定文件中的单个树。注意，如果文件中包含多个或不包含任何树，它将抛出一个错误。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> tree = Phylo.read("Tests/Nexus/int_node_labels.nwk", "newick")
@@ -231,7 +231,7 @@ phyloXML和NeXML等树文件格式。
 
 处理多个（或者未知个数）的树文件，需要使用 ``parse`` 函数迭代给定文件中的每一个树。
 
-.. code:: verbatim
+.. code:: python
 
     >>> trees = Phylo.parse("Tests/PhyloXML/phyloxml_examples.xml", "phyloxml")
     >>> for tree in trees:
@@ -239,7 +239,7 @@ phyloXML和NeXML等树文件格式。
 
 使用 ``write`` 函数输出一个或多个可迭代的树。
 
-.. code:: verbatim
+.. code:: python
 
     >>> trees = list(Phylo.parse("phyloxml_examples.xml", "phyloxml"))
     >>> tree1 = trees[0]
@@ -251,7 +251,7 @@ phyloXML和NeXML等树文件格式。
 
 使用 ``convert`` 函数转换任何支持的树格式。
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.convert("tree1.dnd", "newick", "tree1.xml", "nexml")
     1
@@ -260,7 +260,7 @@ phyloXML和NeXML等树文件格式。
 
 和SeqIO和AlignIO类似，当使用字符串而不是文件作为输入输出时，需要使用 ‵‵StringIO`` 函数。
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> from StringIO import StringIO
@@ -272,7 +272,7 @@ phyloXML和NeXML等树文件格式。
 
 了解一个 ``Tree`` 对象概况的最简单的方法是用 ``print`` 函数将它打印出来：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("Tests/PhyloXML/example.xml", "phyloxml")
     >>> print tree
@@ -291,7 +291,7 @@ phyloXML和NeXML等树文件格式。
 到标准输出，或者一个打开的文件句柄，若有提供。不是所有关于树的信息被显示出来，但是它提供了一个
 不依靠于任何外部依赖的快速查看树的方法。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw_ascii(tree)
@@ -304,7 +304,7 @@ phyloXML和NeXML等树文件格式。
 ``draw`` 函数则使用matplotlib类库画出一个更加好看的图像。查看API文档以获得关于它所接受的
 用来定制输出的参数。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw(tree, branch_labels=lambda c: c.branch_length)
@@ -315,7 +315,7 @@ phyloXML和NeXML等树文件格式。
 PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
 ``dot`` 程序，让我们来画一个有根树（见图. `13.3 <#fig:phylo-dot>`__ ）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw_graphviz(tree, prog='dot')
@@ -335,7 +335,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 最终的显示也受所提供的树对象的 ``rooted`` 属性的影响。有根树在每个分支（branch）上显示
 一个“head”来表明它的方向（见图. `13.3 <#fig:phylo-rooted>`__ ）：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("simple.dnd", "newick")
     >>> tree.rooted = True
@@ -348,7 +348,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 有交叉分支出现（见图. `13.3 <#fig:phylo-color>`__ ）。 ``dot`` 程序或许对小型的树有用，
 但是对于大一点的树的布局易产生奇怪的事情。
 
-.. code:: verbatim
+.. code:: python
 
     >>> Phylo.draw_graphviz(tree, prog="neato")
 
@@ -357,7 +357,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 这个查看方式非常方便研究大型的树，因为matplotlib查看器可以放大选择的区域，使得杂乱的图像
 变得稀疏。
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read("apaf.xml", "phyloxml")
     >>> Phylo.draw_graphviz(tree, prog="neato", node_size=0)
@@ -515,7 +515,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 这些方法都在原地对树进行修改，所以如果你想保持原来的树不变，你首先要使用Python的
 ``copy`` 模块对树进行完整的拷贝：
 
-.. code:: verbatim
+.. code:: python
 
     tree = Phylo.read('example.xml', 'phyloxml')
     import copy
@@ -575,7 +575,7 @@ Biopython 1.58引入了一个PhyML的打包程序（wrapper）
 该程序接受一个 ``phylip-relaxed`` 格式（它是Phylip格式，然而没有对分类名称的10个字符的限制）
 的比对输入和多种参数。一个快速的例子是：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Phylo
     >>> from Bio.Phylo.Applications import PhymlCommandline
@@ -586,7 +586,7 @@ Biopython 1.58引入了一个PhyML的打包程序（wrapper）
 [*input filename*\ ]\ ``_phyml_tree.txt`` 和
 [*input filename*\ ]\ ``_phyml_stats.txt``. 树文件的格式是Newick格式：
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Phylo.read('Tests/Phylip/random.phy_phyml_tree.txt', 'newick')
     >>> Phylo.draw_ascii(tree)
@@ -615,7 +615,7 @@ Biopython 1.58引入了对PAML的支持
 
 下面是一个codeml典型用法的例子：
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Phylo.PAML import codeml
     >>> cml = codeml.Codeml()
@@ -641,7 +641,7 @@ Biopython 1.58引入了对PAML的支持
 
 已有的输出文件也可以通过模块的 ``read()`` 方法来解析：
 
-.. code:: verbatim
+.. code:: python
 
     >>> results = codeml.read("Tests/PAML/Results/codeml/codeml_NSsites_all.out")
     >>> print results.get("lnL max")

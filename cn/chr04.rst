@@ -7,7 +7,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 尽管本章内容涵盖了 ``SeqRecord`` 和 ``SeqFeature`` 对象的大部分内容，但如需了解更多，读者可自行查阅 ``SeqRecord`` wiki (`http://biopython.org/wiki/SeqRecord <http://biopython.org/wiki/SeqRecord>`__ ),和内置帮助文档 (或在线文档 `SeqRecord <http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html>`__ 和 `SeqFeature <http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html>`__ )，获取更多信息:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.SeqRecord import SeqRecord
     >>> help(SeqRecord)
@@ -47,7 +47,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 ``SeqRecord`` 最少只需包含 ``Seq`` 对象:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> simple_seq = Seq("GATC")
@@ -56,7 +56,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 还可以通过初始化函数给 id, name和description赋值；反之，它们被设为默认值“unknown”（可随后编辑）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.id
     '<unknown id>'
@@ -69,7 +69,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 标识符对输出 ``SeqRecord`` 内容到文件很重要，可随SeqRecord同时建立:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> simple_seq = Seq("GATC")
@@ -78,7 +78,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 上述章节已提到，``SeqRecord`` 含有一个 ``annotations`` 属性，用于储存各种杂乱注释的字典。添加annotations示例如下:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.annotations["evidence"] = "None. I just made it up."
     >>> print simple_seq_r.annotations
@@ -88,7 +88,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 ``letter_annotations`` 也是字典，其值为与序列等长的内置Python字符串、列表或元组:
 
-.. code:: verbatim
+.. code:: python
 
     >>> simple_seq_r.letter_annotations["phred_quality"] = [40,40,38,30]
     >>> print simple_seq_r.letter_annotations
@@ -105,7 +105,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 序列以大于号开头，该文件只包含一条序列:
 
-.. code:: verbatim
+.. code:: python
 
     >gi|45478711|ref|NC_005816.1| Yersinia pestis biovar Microtus ... pPCP1, complete sequence
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
@@ -113,7 +113,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 回顾 Chapter \ `2 <#chapter:quick-start>`__ 的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历 ``SeqRecord`` 对象中的所有记录。 此处，我们介绍 ``Bio.SeqIO`` 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.fna", "fasta")
@@ -125,7 +125,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 现在让我们逐个介绍 ``SeqRecord`` 对象中的主要属性，从给予我们序列属性的 ``Seq`` 对象 开始:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
@@ -134,7 +134,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 接下来介绍 identifiers 和 description:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.id
     'gi|45478711|ref|NC_005816.1|'
@@ -145,7 +145,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 
 FASTA文件中序列名所在行的第一个单词(去除大于号后) 被当作 ``id`` 和 ``name`` ；而将整行 (去除大于号后) 作为 description。这样设定是为了向后兼容，同时也为了便于处理如下序列:
 
-.. code:: verbatim
+.. code:: python
 
     >Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
@@ -153,7 +153,7 @@ FASTA文件中序列名所在行的第一个单词(去除大于号后) 被当作
 
 Note: 读取FASTA 文件时其他注释属性为空:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.dbxrefs
     []
@@ -174,7 +174,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
 
 该文件只含一条记录 (只有一个 LOCUS 行):
 
-.. code:: verbatim
+.. code:: python
 
     LOCUS       NC_005816               9609 bp    DNA     circular BCT 21-JUL-2008
     DEFINITION  Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete
@@ -187,7 +187,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
 同样使用 ``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见
 Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
@@ -199,14 +199,14 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 ``Bio.SeqIO`` 可自动识别序列类型 （详见 chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', IUPACAmbiguousDNA())
 
 ``name`` 源于 LOCUS行, ``id`` 附加了版本后缀。description源于DEFINITION 行:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.id
     'NC_005816.1'
@@ -217,14 +217,14 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 GenBank 文件中per-letter annotations为空:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.letter_annotations
     {}
 
 多数注释信息储存在 ``annotations`` 字典中，例如:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record.annotations)
     11
@@ -233,14 +233,14 @@ GenBank 文件中per-letter annotations为空:
 
 ``dbxrefs`` 列表中的数据来自 PROJECT 或DBLINK行:
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.dbxrefs
     ['Project:10638']
 
 最后也许也可能是最有意思的， ``features`` 列表以 ``SeqFeature`` 对象的形式保存了features table中的所有entries（如genes和CDS等）。
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record.features)
     29
@@ -325,7 +325,7 @@ position的不同，我们用5个类分别描述:
 
 举例说明创建一个fuzzy end points:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqFeature
     >>> start_pos = SeqFeature.AfterPosition(5)
@@ -337,14 +337,14 @@ WithinPosition，现在必须显示用整数表示。起点为较小值，终点
 
 print输出 ``FeatureLocation`` 对象，可看到简洁的结果:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print my_location
     [>5:(8^9)]
 
 也可通过start和end属性得到fuzzy position的起始/终止位点:
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_location.start
     AfterPosition(5)
@@ -357,7 +357,7 @@ print输出 ``FeatureLocation`` 对象，可看到简洁的结果:
 
 如果你只想获取数字，不理会模糊positions，则可将fuzzy position强制转换成一个整数:
 
-.. code:: verbatim
+.. code:: python
 
     >>> int(my_location.start)
     5
@@ -366,7 +366,7 @@ print输出 ``FeatureLocation`` 对象，可看到简洁的结果:
 
 为了兼容旧版Biopython，保留了整数形式的 ``nofuzzy_start`` and ``nofuzzy_end`` :
 
-.. code:: verbatim
+.. code:: python
 
     >>> my_location.nofuzzy_start
     5
@@ -378,7 +378,7 @@ Notice：上述例子只是为了帮助你理解fuzzy locations。
 相似的，如果要建立一个精确location，只需将整数传递给 ``FeaturePosition``
 构造函数, 即可建立 ``ExactPosition`` 对象:
 
-.. code:: verbatim
+.. code:: python
 
     >>> exact_location = SeqFeature.FeatureLocation(5, 9)
     >>> print exact_location
@@ -400,7 +400,7 @@ feature/location中。
 
 假定你想知道某个SNP位于哪个feature里，并知道该SNP的索引位置是4350（Python 计数）。一个简单的实现方案是用循环遍历所有features:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> my_snp = 4350
@@ -420,7 +420,7 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 ``SeqFeature`` 或 location object对象并没有直接包含任何序列，只是可根据储存的location (见Section \ `4.3.2 <#sec:locations>`__)，从父序列中取得。例如：某一短基因位于负链5:18位置，由于GenBank/EMBL文件以1开始计数，Biopython中表示为 ``complement(6..18)`` :
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqFeature import SeqFeature, FeatureLocation
@@ -429,7 +429,7 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 你可以用切片从父序列截取5:18,然后取反向互补序列。如果是Biopython 1.59或以后版本，可使用如下方法:
 
-.. code:: verbatim
+.. code:: python
 
     >>> feature_seq = example_parent[example_feature.location.start:example_feature.location.end].reverse_complement()
     >>> print feature_seq
@@ -437,7 +437,7 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 不过在处理复合 features (joins)时，此法相当繁琐。此时可以使用 ``SeqFeature`` 对象的 ``extract`` 方法处理:
 
-.. code:: verbatim
+.. code:: python
 
     >>> feature_seq = example_feature.extract(example_parent)
     >>> print feature_seq
@@ -445,7 +445,7 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 ``SeqFeature`` 或 location对象的长度等同于所表示序列的长度。
 
-.. code:: verbatim
+.. code:: python
 
     >>> print example_feature.extract(example_parent)
     AGCCTTTGCCGTC
@@ -475,7 +475,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 ``SeqRecord`` 类中的 ``format()`` 能将字符串转换成被 ``Bio.SeqIO`` 支持的格式，如FASTA:
 
-.. code:: verbatim
+.. code:: python
 
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
@@ -492,7 +492,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 输出为:
 
-.. code:: verbatim
+.. code:: python
 
     >gi|14150838|gb|AAK54648.1|AF376133_1 chalcone synthase [Cucumis sativus]
     MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD
@@ -509,12 +509,12 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 以前述Genbank文件为例:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
 
-.. code:: verbatim
+.. code:: python
 
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
@@ -522,7 +522,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     9609
@@ -531,7 +531,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 本例中，我们关注 ``YP_pPCP05`` 质粒上的 ``pim`` 基因。从GenBank文件可直接看出 ``pim`` gene/CDS location是 ``4343..4780`` （相应的Python 位置是 ``4342:4780`` ）。Location信息位于GenBank文件第12和13 entries中, 由于python以0开始计数，因此python中，它们是 ``features`` 列表中的 entries 11和12:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.features[20]
     type: gene
@@ -542,7 +542,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.features[21]
     type: CDS
@@ -560,11 +560,11 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 从父记录中取切片（4300 到 4800），观测所得到的features数量:
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record = record[4300:4800]
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record
     SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA',
@@ -572,7 +572,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(sub_record)
     500
@@ -581,7 +581,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 子记录（sub_record）只包括两个features, 分别是 ``YP_pPCP05`` 质粒的gene和CDS:
 
-.. code:: verbatim
+.. code:: python
 
     >>> print sub_record.features[0]
     type: gene
@@ -592,7 +592,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
 
-.. code:: verbatim
+.. code:: python
 
     >>> print sub_record.features[20]
     type: CDS
@@ -612,7 +612,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 尽可能灵敏和直观地获取子记录的相关特征（和任意的per-letter annotation），但是对于其余注释，Biopython无法判断是否仍然适用于子记录。因此子记录忽略了 ``annotations`` 和 ``dbxrefs`` 以避免引起歧义。
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.annotations
     {}
@@ -621,7 +621,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 为了便于实际操作，子记录保留了 ``id`` , ``name`` 和 ``description`` :
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.id
     'NC_005816.1'
@@ -633,7 +633,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用Section \ `4.5 <#sec:SeqRecord-format>`__中所述 ``format`` 方法纠正：
 :
 
-.. code:: verbatim
+.. code:: python
 
     >>> sub_record.description = "Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, partial."
     >>> print sub_record.format("genbank")
@@ -649,7 +649,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
 
 以FASTQ 文件中的第一条记录为例说明per-letter annotation （Chapter \ `5 <#chapter:Bio.SeqIO>`__ 详细介绍 ``SeqIO`` 函数）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.parse("example.fastq", "fastq").next()
@@ -658,7 +658,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
     >>> print record.seq
     CCCTTCTTGTCTTCAGCGTTTCTCC
 
-.. code:: verbatim
+.. code:: python
 
     >>> print record.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
@@ -666,7 +666,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
 
 假设上述序列数据来自Roche 454测序, 你根据其它信息得知 ``TTT`` 应该是 ``TT`` 。此时可分别用切片提取第三个 ``T`` 前后的序列（ ``SeqRecord`` ）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> left = record[:20]
     >>> print left.seq
@@ -681,7 +681,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
 
 两部分相加:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = left + right
     >>> len(edited)
@@ -689,7 +689,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
     >>> print edited.seq
     CCCTTCTTGTCTTCAGCGTTCTCC
 
-.. code:: verbatim
+.. code:: python
 
     >>> print edited.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
@@ -697,18 +697,18 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
 
 很容易和直观吧！上述两步可合并:
 
-.. code:: verbatim
+.. code:: python
 
     >>> edited = record[:20] + record[21:]
 
 现在以GenBank文件（假定是环状基因组）为例说明features:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
 
-.. code:: verbatim
+.. code:: python
 
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
@@ -716,7 +716,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(record)
     9609
@@ -725,7 +725,7 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
     >>> record.dbxrefs
     ['Project:58037']
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.annotations.keys()
     ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
@@ -733,11 +733,11 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
 
 可改变起点:
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted = record[2000:] + record[:2000]
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted
     SeqRecord(seq=Seq('GATACGCAGTCATATTTTTTACACAATTCTCTAATCCCGACAAGGTCGTAGGTC...GGA',
@@ -745,14 +745,14 @@ FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(shifted)
     9609
 
 Note: 上述方法并不完美（丢失了数据库交叉引用dbxrefs 和源feature）:
 
-.. code:: verbatim
+.. code:: python
 
     >>> len(shifted.features)
     40
@@ -763,7 +763,7 @@ Note: 上述方法并不完美（丢失了数据库交叉引用dbxrefs 和源fea
 
 这是因为 ``SeqRecord`` 切片对 annotation 保留非常谨慎 (错误保留 annotation 可能引起大问题)。如果你想保留数据库的交叉引用dbxrefs和其余annotations 字典必须明确说明，才能得以保留:
 
-.. code:: verbatim
+.. code:: python
 
     >>> shifted.dbxrefs = record.dbxrefs[:]
     >>> shifted.annotations = record.annotations.copy()
@@ -789,7 +789,7 @@ name、description、annotations和dbxrefs默认不变。
 
 举例:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
@@ -798,7 +798,7 @@ name、description、annotations和dbxrefs默认不变。
 
 反向互补该record并给ID赋予新值 - 注意：多数annotation丢失，而features仍在:
 
-.. code:: verbatim
+.. code:: python
 
     >>> rc = record.reverse_complement(id="TESTING")
     >>> print rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)

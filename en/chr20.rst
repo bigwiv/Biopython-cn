@@ -43,7 +43,7 @@ user-provided data. Additionally, you may select a matrix from
 MatrixInfo.py, a collection of established substitution matrices. The
 ``SeqMat`` class derives from a dictionary:
 
-.. code:: verbatim
+.. code:: python
 
     class SeqMat(dict)
 
@@ -59,7 +59,7 @@ letters, and n is a value.
 
 #. Methods
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           __init__(self,data=None,alphabet=None, mat_name='', build_later=0):
 
@@ -73,7 +73,7 @@ letters, and n is a value.
          later. this skips the sanity check of alphabet size vs. matrix
          size.
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           entropy(self,obs_freq_mat)
 
@@ -81,7 +81,7 @@ letters, and n is a value.
          matrix’s entropy, based on the frequency in ``obs_freq_mat``.
          The matrix instance should be LO or SUBS.
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           sum(self)
 
@@ -93,7 +93,7 @@ letters, and n is a value.
       -  s: sum of all values in a half-matrix for that letter;
       -  n: number of letters in alphabet.
 
-   #. .. code:: verbatim
+   #. .. code:: python
 
           print_mat(self,f,format="%4d",bottomformat="%4s",alphabet=None)
 
@@ -102,7 +102,7 @@ letters, and n is a value.
       the bottom row, containing matrix letters. Example output for a
       3-letter alphabet matrix:
 
-      .. code:: verbatim
+      .. code:: python
 
           A 23
           B 12 34
@@ -129,13 +129,13 @@ letters, and n is a value.
       replaced by Cysteine 10 times, and Cysteine by Alanine 12 times,
       the corresponding ARM entries would be:
 
-      .. code:: verbatim
+      .. code:: python
 
           ('A','C'): 10, ('C','A'): 12
 
       as order doesn’t matter, user can already provide only one entry:
 
-      .. code:: verbatim
+      .. code:: python
 
           ('A','C'): 22
 
@@ -164,7 +164,7 @@ letters, and n is a value.
 
       Use:
 
-      .. code:: verbatim
+      .. code:: python
 
           OFM = SubsMat._build_obs_freq_mat(ARM)
 
@@ -175,7 +175,7 @@ letters, and n is a value.
 
       Use:
 
-      .. code:: verbatim
+      .. code:: python
 
           EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
 
@@ -190,7 +190,7 @@ letters, and n is a value.
       generated from the observed frequency matrix. So in most cases you
       will generate ``exp_freq_table`` using:
 
-      .. code:: verbatim
+      .. code:: python
 
           >>> exp_freq_table = SubsMat._exp_freq_table_from_obs_freq(OFM)
           >>> EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
@@ -201,7 +201,7 @@ letters, and n is a value.
 
       Use:
 
-      .. code:: verbatim
+      .. code:: python
 
           SFM = SubsMat._build_subs_mat(OFM,EFM)
 
@@ -212,7 +212,7 @@ letters, and n is a value.
 
       Use:
 
-      .. code:: verbatim
+      .. code:: python
 
           LOM=SubsMat._build_log_odds_mat(SFM[,logbase=10,factor=10.0,round_digit=1])
 
@@ -228,7 +228,7 @@ letters, and n is a value.
    As most people would want to generate a log-odds matrix, with minimum
    hassle, SubsMat provides one function which does it all:
 
-   .. code:: verbatim
+   .. code:: python
 
        make_log_odds_matrix(acc_rep_mat,exp_freq_table=None,logbase=10,
                              factor=10.0,round_digit=0):
@@ -244,7 +244,7 @@ letters, and n is a value.
 20.2.2  FreqTable
 ~~~~~~~~~~~~~~~~~
 
-.. code:: verbatim
+.. code:: python
 
     FreqTable.FreqTable(UserDict.UserDict)
 
@@ -266,7 +266,7 @@ letters, and n is a value.
    sitting in a file, whitespace delimited, in the following format
    (example given for a 3-letter alphabet):
 
-   .. code:: verbatim
+   .. code:: python
 
        A   35
        B   65
@@ -277,7 +277,7 @@ letters, and n is a value.
 
    An equivalent frequency file:
 
-   .. code:: verbatim
+   .. code:: python
 
        A  0.175
        B  0.325
@@ -286,7 +286,7 @@ letters, and n is a value.
    Conversely, the residue frequencies or counts can be passed as a
    dictionary. Example of a count dictionary (3-letter alphabet):
 
-   .. code:: verbatim
+   .. code:: python
 
        {'A': 35, 'B': 65, 'C': 100}
 
@@ -296,7 +296,7 @@ letters, and n is a value.
 
    A frequency dictionary for the same data would be:
 
-   .. code:: verbatim
+   .. code:: python
 
        {'A': 0.175, 'B': 0.325, 'C': 0.5}
 
@@ -312,7 +312,7 @@ letters, and n is a value.
    Any one of the following may be done to geerate the frequency table
    (ftab):
 
-   .. code:: verbatim
+   .. code:: python
 
        >>> from SubsMat import *
        >>> ftab = FreqTable.FreqTable(my_frequency_dictionary,FreqTable.FREQ)

@@ -311,7 +311,7 @@ The distance matrix is a square matrix with all pairwise distances
 between the items in ``data``, and can be calculated by the function
 ``distancematrix`` in the ``Bio.Cluster`` module:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import distancematrix
     >>> matrix = distancematrix(data)
@@ -339,7 +339,7 @@ To save memory, the distance matrix is returned as a list of 1D arrays.
 The number of columns in each row is equal to the row number. Hence, the
 first row has zero elements. An example of the return value is
 
-.. code:: verbatim
+.. code:: python
 
     [array([]),
      array([1.]),
@@ -369,7 +369,7 @@ The centroid of a cluster can be defined either as the mean or as the
 median of each dimension over all cluster items. The function
 ``clustercentroids`` in ``Bio.Cluster`` can be used to calculate either:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import clustercentroids
     >>> cdata, cmask = clustercentroids(data)
@@ -419,7 +419,7 @@ two clusters is defined as the average over the pairwise distances.
 
 To calculate the distance between two clusters, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import clusterdistance
     >>> distance = clusterdistance(data)
@@ -553,7 +553,7 @@ ensure that periodic behavior with longer periods can also be detected.
 The *k*-means and *k*-medians algorithms are implemented as the function
 ``kcluster`` in ``Bio.Cluster``:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import kcluster
     >>> clusterid, error, nfound = kcluster(data)
@@ -615,7 +615,7 @@ The ``kmedoids`` routine performs *k*-medoids clustering on a given set
 of items, using the distance matrix and the number of clusters passed by
 the user:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import kmedoids
     >>> clusterid, error, nfound = kmedoids(distance)
@@ -630,7 +630,7 @@ initialid=None)\|
    -  as a 2D Numerical Python array (in which only the left-lower part
       of the array will be accessed):
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([[0.0, 1.1, 2.3],
                             [1.1, 0.0, 4.5],
@@ -639,14 +639,14 @@ initialid=None)\|
    -  as a 1D Numerical Python array containing consecutively the
       distances in the left-lower part of the distance matrix:
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([1.1, 2.3, 4.5])
 
    -  as a list containing the rows of the left-lower part of the
       distance matrix:
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = [array([]|,
                       array([1.1]),
@@ -773,7 +773,7 @@ items.
 To create a new ``Node`` object, we need to specify ``left`` and
 ``right``; ``distance`` is optional.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import Node
     >>> Node(2,3)
@@ -784,7 +784,7 @@ To create a new ``Node`` object, we need to specify ``left`` and
 The attributes ``left``, ``right``, and ``distance`` of an existing
 ``Node`` object can be modified directly:
 
-.. code:: verbatim
+.. code:: python
 
     >>> node = Node(4,5)
     >>> node.left = 6
@@ -800,7 +800,7 @@ The Python class ``Tree`` represents a full hierarchical clustering
 solution. A ``Tree`` object can be created from a list of ``Node``
 objects:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import Node, Tree
     >>> nodes = [Node(1,2,0.2), Node(0,3,0.5), Node(-2,4,0.6), Node(-1,-3,0.9)]
@@ -814,7 +814,7 @@ objects:
 The ``Tree`` initializer checks if the list of nodes is a valid
 hierarchical clustering result:
 
-.. code:: verbatim
+.. code:: python
 
     >>> nodes = [Node(1,2,0.2), Node(0,2,0.5)]
     >>> Tree(nodes)
@@ -825,7 +825,7 @@ hierarchical clustering result:
 Individual nodes in a ``Tree`` object can be accessed using square
 brackets:
 
-.. code:: verbatim
+.. code:: python
 
     >>> nodes = [Node(1,2,0.2), Node(0,-1,0.5)]
     >>> tree = Tree(nodes)
@@ -840,7 +840,7 @@ As a ``Tree`` object is read-only, we cannot change individual nodes in
 a ``Tree`` object. However, we can convert the tree to a list of nodes,
 modify this list, and create a new tree from this list:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = Tree([Node(1,2,0.1), Node(0,-1,0.5), Node(-2,3,0.9)])
     >>> print tree
@@ -863,7 +863,7 @@ programs such as Java Treeview, it is better to scale all node distances
 such that they are between zero and one. This can be accomplished by
 calling the ``scale`` method on an existing ``Tree`` object:
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree.scale()
 
@@ -873,7 +873,7 @@ After hierarchical clustering, the items can be grouped into *k*
 clusters based on the tree structure stored in the ``Tree`` object by
 cutting the tree:
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid = tree.cut(nclusters=1)
 
@@ -890,7 +890,7 @@ Performing hierarchical clustering
 To perform hierarchical clustering, use the ``treecluster`` function in
 ``Bio.Cluster``.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(data)
@@ -926,7 +926,7 @@ To apply hierarchical clustering on a precalculated distance matrix,
 specify the ``distancematrix`` argument when calling ``treecluster``
 function instead of the ``data`` argument:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import treecluster
     >>> tree = treecluster(distancematrix=distance)
@@ -939,7 +939,7 @@ In this case, the following arguments are defined:
    -  as a 2D Numerical Python array (in which only the left-lower part
       of the array will be accessed):
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([[0.0, 1.1, 2.3], 
                             [1.1, 0.0, 4.5],
@@ -948,14 +948,14 @@ In this case, the following arguments are defined:
    -  as a 1D Numerical Python array containing consecutively the
       distances in the left-lower part of the distance matrix:
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = array([1.1, 2.3, 4.5])
 
    -  as a list containing the rows of the left-lower part of the
       distance matrix:
 
-      .. code:: verbatim
+      .. code:: python
 
           distance = [array([]),
                       array([1.1]),
@@ -1056,7 +1056,7 @@ number of iterations in the SOM algorithm is specified by the user.
 
 To run ``somcluster``, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import somcluster
     >>> clusterid, celldata = somcluster(data)
@@ -1152,7 +1152,7 @@ the ``pca`` routine.
 To apply Principal Component Analysis to a rectangular matrix ``data``,
 use
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio.Cluster import pca
     >>> columnmean, coordinates, components, eigenvalues = pca(data)
@@ -1193,7 +1193,7 @@ Cluster/TreeView-type data file. To store the information contained in
 the data file in a ``Record`` object, we first open the file and then
 read it:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("mydatafile.txt")
@@ -1203,14 +1203,14 @@ read it:
 This two-step process gives you some flexibility in the source of the
 data. For example, you can use
 
-.. code:: verbatim
+.. code:: python
 
     >>> import gzip # Python standard library
     >>> handle = gzip.open("mydatafile.txt.gz")
 
 to open a gzipped file, or
 
-.. code:: verbatim
+.. code:: python
 
     >>> import urllib # Python standard library
     >>> handle = urllib.urlopen("http://somewhere.org/mydatafile.txt")
@@ -1272,7 +1272,7 @@ Calculating the distance matrix
 To calculate the distance matrix between the items stored in the record,
 use
 
-.. code:: verbatim
+.. code:: python
 
     >>> matrix = record.distancematrix()
 
@@ -1296,7 +1296,7 @@ Calculating the cluster centroids
 To calculate the centroids of clusters of items stored in the record,
 use
 
-.. code:: verbatim
+.. code:: python
 
     >>> cdata, cmask = record.clustercentroids()
 
@@ -1321,7 +1321,7 @@ Calculating the distance between clusters
 To calculate the distance between clusters of items stored in the
 record, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> distance = record.clusterdistance()
 
@@ -1362,7 +1362,7 @@ Performing hierarchical clustering
 To perform hierarchical clustering on the items stored in the record,
 use
 
-.. code:: verbatim
+.. code:: python
 
     >>> tree = record.treecluster()
 
@@ -1403,7 +1403,7 @@ Performing *k*-means or *k*-medians clustering
 To perform *k*-means or *k*-medians clustering on the items stored in
 the record, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid, error, nfound = record.kcluster()
 
@@ -1443,7 +1443,7 @@ Calculating a Self-Organizing Map
 To calculate a Self-Organizing Map of the items stored in the record,
 use
 
-.. code:: verbatim
+.. code:: python
 
     >>> clusterid, celldata = record.somcluster()
 
@@ -1485,7 +1485,7 @@ Saving the clustering result
 
 To save the clustering result, use
 
-.. code:: verbatim
+.. code:: python
 
     >>> record.save(jobname, geneclusters, expclusters)
 
@@ -1529,7 +1529,7 @@ used. No scaling is needed in this case, as the distances in ``exptree``
 are already between zero and two. The example data ``cyano.txt`` can be
 found in the ``data`` subdirectory.
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("cyano.txt")
@@ -1545,7 +1545,7 @@ and ``cyano_result.atr``.
 
 Similarly, we can save a *k*-means clustering solution:
 
-.. code:: verbatim
+.. code:: python
 
     >>> from Bio import Cluster
     >>> handle = open("cyano.txt")
