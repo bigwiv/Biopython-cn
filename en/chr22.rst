@@ -104,3 +104,5 @@ into a handle. The following example shows how to do this using
     >>> second_line = my_info_handle.readline()
     >>> print second_line
      with multiple lines.
+
+

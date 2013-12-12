@@ -671,3 +671,5 @@ matches with low level scores lets use find one additional hit:
     >>> result = ScanProsite.read(handle)
     >>> result.n_match
     7
+
+

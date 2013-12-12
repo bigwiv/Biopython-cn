@@ -24,7 +24,7 @@ The following four clustering approaches are implemented in
 -  Principal Component Analysis.
 
 Data representation
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 The data to be clustered are represented by a *n* × *m* Numerical Python
 array ``data``. Within the context of gene expression data clustering,
@@ -34,7 +34,7 @@ algorithms in ``Bio.Cluster`` can be applied both to rows (genes) and to
 columns (experiments).
 
 Missing values
-~~~~~~~~~~~~~~
+--------------
 
 Often in microarray experiments, some of the data values are missing,
 which is indicated by an additional *n* × *m* Numerical Python integer
@@ -42,7 +42,7 @@ array ``mask``. If ``mask[i,j]==0``, then ``data[i,j]`` is missing and
 is ignored in the analysis.
 
 Random number generator
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 The *k*-means/medians/medoids clustering algorithms and Self-Organizing
 Maps (SOMs) include the use of a random number generator. The uniform
@@ -1567,4 +1567,5 @@ This will create the files ``cyano_result_K_G2_A2.cdt``,
 
 ``version()`` returns the version number of the underlying C Clustering
 Library as a string.
+
 

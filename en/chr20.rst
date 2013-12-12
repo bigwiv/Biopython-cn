@@ -319,3 +319,5 @@ letters, and n is a value.
        >>> ftab = FreqTable.FreqTable(my_count_dictionary,FreqTable.COUNT)
        >>> ftab = FreqTable.read_count(open('myCountFile'))
        >>> ftab = FreqTable.read_frequency(open('myFrequencyFile'))
+
+

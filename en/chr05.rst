@@ -1366,3 +1366,5 @@ recommend using ``Bio.SeqIO.write()``, as in the following example:
 
 Making a single call to ``SeqIO.write(...)`` is also much quicker than
 multiple calls to the ``SeqRecord.format(...)`` method.
+
+

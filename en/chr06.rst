@@ -1,5 +1,4 @@
-﻿
-Chapter 6  Multiple Sequence Alignment objects
+﻿Chapter 6  Multiple Sequence Alignment objects
 ==============================================
 
 This chapter is about Multiple Sequence Alignments, by which we mean a
@@ -1490,3 +1489,5 @@ Note - Biopython includes its own pairwise alignment code in the
 fallback available too). This doesn’t work with alignment objects, so we
 have not covered it within this chapter. See the module’s docstring
 (built in help) for details.
+
+

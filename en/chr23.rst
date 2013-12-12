@@ -1,4 +1,3 @@
-
 References
 ==========
 
@@ -174,3 +173,4 @@ References
     Alok Saldanha: “Java Treeview—extensible visualization of microarray
     data”. *Bioinformatics* **20** (17): 3246–3248 (2004).
     `http://dx.doi.org/10.1093/bioinformatics/bth349 <http://dx.doi.org/10.1093/bioinformatics/bth349>`__
+

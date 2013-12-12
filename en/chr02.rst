@@ -181,7 +181,7 @@ look at how to do a search like this from within Python.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you open the lady slipper orchids FASTA file
-```ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
 in your favourite text editor, you’ll see that the file starts like
 this:
 
@@ -224,7 +224,7 @@ Notice that the FASTA format does not specify the alphabet, so
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now let’s load the GenBank file
-```ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+`ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
 instead - notice that the code to do this is almost identical to the
 snippet used above for the FASTA file - the only difference is we change
 the filename and the format string:
@@ -326,3 +326,5 @@ to improve the documentation so it can help the next person do what you
 want to do.
 
 Enjoy the code!
+
+

@@ -414,35 +414,24 @@ Before talking about transcription, I want to try and clarify the strand
 issue. Consider the following (made up) stretch of double stranded DNA
 which encodes a short peptide:
 
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-|      | DNA coding strand (aka Crick strand, strand +1)      |      |
-+------+------------------------------------------------------+------+
-| 5’   | ``ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG``          | 3’   |
-+------+------------------------------------------------------+------+
-|      | ``|||||||||||||||||||||||||||||||||||||||``          |      |
-+------+------------------------------------------------------+------+
-| 3’   | ``TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC``          | 5’   |
-+------+------------------------------------------------------+------+
-|      | DNA template strand (aka Watson strand, strand −1)   |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-|      | \|                                                   |      |
-+------+------------------------------------------------------+------+
-|      | Transcription                                        |      |
-+------+------------------------------------------------------+------+
-|      | ↓                                                    |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
-| 5’   | ``AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG``          | 3’   |
-+------+------------------------------------------------------+------+
-|      | Single stranded messenger RNA                        |      |
-+------+------------------------------------------------------+------+
-|      |
-+------+------------------------------------------------------+------+
+.. math::
+
+    \begin{equation}
+    \\
+       & _{DNA coding strand (aka Crick strand, strand $+1$)} & \\
+    5' & \texttt{ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG} & 3' \\
+       & \texttt{|||||||||||||||||||||||||||||||||||||||} & \\
+    3' & \texttt{TACCGGTAACATTACCCGGCGACTTTCCCACGGGCTATC} & 5' \\
+       & _{DNA template strand (aka Watson strand, strand $-1$)} & \\
+    \\
+       & {$|$} &\\
+       & Transcription & \\
+       & {$\downarrow$} &\\
+    \\
+    5' & \texttt{AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG} & 3' \\
+       & _{Single stranded messenger RNA} & \\
+    \\
+    \end{equation}
 
 The actual biological transcription process works from the template
 strand, doing a reverse complement (TCAG → CUGA) to give the mRNA.
@@ -978,3 +967,5 @@ will accept plain Python strings, ``Seq`` objects (including
     'AVMGRWKGGRAAG*'
 
 You are, however, encouraged to work with ``Seq`` objects by default.
+
+
