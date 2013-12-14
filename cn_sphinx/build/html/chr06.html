@@ -1,0 +1,1066 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第6章 多序列比对 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第7章 BLAST" href="chr07.html" />
+    <link rel="prev" title="第5章 序列输入和输出" href="chr05.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr07.html" title="第7章 BLAST"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr05.html" title="第5章 序列输入和输出"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>第6章 多序列比对<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>多序列比对（Multiple Sequence Alignment, MSA）是指对多个序列进行对位排列。 这通常需要保证序列间的等同位点处在同一列上，并通过引进小横线（-）以保证最终的序列具有相同的长度。这种序列比对可以视作是由字符组成的矩阵。在Biopython中，多序列比对中每一个序列是以 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象来表示的。</p>
+<p>这里我们介绍一种新的对象 &#8211; <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 来表示这样一类数据，我们还将介绍 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块来读写不同格式的多序列比对数据（ <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 在设计上与之前介绍的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块是类似的）。Biopython中， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 都能读写各种格式的多序列比对数据。在实际处理中，使用哪一个模块取决于用户需要对数据进行何种操作。</p>
+<p>本章的最后一部分是关于各种常用多序列比对程序（ClustalW和MUSCLE）的Biopython命令行封装。</p>
+<div class="section" id="id2">
+<h2>6.1 读取多序列比对数据<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>在Biopython中，有两种方法读取多序列比对数据， <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 。这两种方法跟 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 处理一个和多个数据的设计方式是一样的。 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> 只能读取一个多序列比对而 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 可以依次读取多个序列比对数据。</p>
+<p>使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 将会返回一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 的 <em>迭代器（iterator）</em> 。迭代器往往在循环中使用。在实际数据分析过程中会时常处理包含有多个多序列比对的文件。例如PHYLIP中的 <tt class="docutils literal"><span class="pre">seqboot</span></tt> ，EMBOSS工具箱中的 <tt class="docutils literal"><span class="pre">water</span></tt> 和 <tt class="docutils literal"><span class="pre">needle</span></tt>, 以及Bill Pearson的FASTA程序。</p>
+<p>然而在大多数情况下，你所遇到的文件仅仅包括一个多序列比对。这时，你应该使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> ，这将返回一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象。</p>
+<p>这两个函数都接受两个必须参数：</p>
+<ol class="arabic simple">
+<li>第一个参数为包含有多序列比对数据的 <em>句柄（handle）</em> 。在实际操作中，这往往是一个打开的文件（详细信息请见 <a class="reference external" href="#sec:appendix-handles">22.1</a> ）或者文件名。</li>
+<li>第二个参数为多序列比对文件格式（小写）。与 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块支持的多序列比对数据格式可以在 <a class="reference external" href="http://biopython.org/wiki/AlignIO">http://biopython.org/wiki/AlignIO</a> 中找到。</li>
+</ol>
+<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块还接受一个可选参数 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 。这一参数将在 <a class="reference external" href="#sec:AlignIO-count-argument">6.1.3</a> 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。</p>
+<p>另一个可选参数 <tt class="docutils literal"><span class="pre">alphabet</span></tt> 允许用户指定序列比对文件的字符（alphabet），它可以用来说明序列比对的类型（DNA，RNA或蛋白质）。因为大多数序列比对格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 默认将使用一般字符（generic alphabet），这将不区分各种序列比对类型。</p>
+<div class="section" id="id3">
+<h3>6.1.1 单一的序列比对<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>例如，请见以下PFAM（或者Stockholm）格式的蛋白序列比对文件。</p>
+<div class="code python highlight-python"><pre># STOCKHOLM 1.0
+#=GS COATB_BPIKE/30-81  AC P03620.1
+#=GS COATB_BPIKE/30-81  DR PDB; 1ifl ; 1-52;
+#=GS Q9T0Q8_BPIKE/1-52  AC Q9T0Q8.1
+#=GS COATB_BPI22/32-83  AC P15416.1
+#=GS COATB_BPM13/24-72  AC P69541.1
+#=GS COATB_BPM13/24-72  DR PDB; 2cpb ; 1-49;
+#=GS COATB_BPM13/24-72  DR PDB; 2cps ; 1-49;
+#=GS COATB_BPZJ2/1-49   AC P03618.1
+#=GS Q9T0Q9_BPFD/1-49   AC Q9T0Q9.1
+#=GS Q9T0Q9_BPFD/1-49   DR PDB; 1nh4 A; 1-49;
+#=GS COATB_BPIF1/22-73  AC P03619.2
+#=GS COATB_BPIF1/22-73  DR PDB; 1ifk ; 1-50;
+COATB_BPIKE/30-81             AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA
+#=GR COATB_BPIKE/30-81  SS    -HHHHHHHHHHHHHH--HHHHHHHH--HHHHHHHHHHHHHHHHHHHHH----
+Q9T0Q8_BPIKE/1-52             AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA
+COATB_BPI22/32-83             DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA
+COATB_BPM13/24-72             AEGDDP...AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA
+#=GR COATB_BPM13/24-72  SS    ---S-T...CHCHHHHCCCCTCCCTTCHHHHHHHHHHHHHHHHHHHHCTT--
+COATB_BPZJ2/1-49              AEGDDP...AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA
+Q9T0Q9_BPFD/1-49              AEGDDP...AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA
+#=GR Q9T0Q9_BPFD/1-49   SS    ------...-HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH--
+COATB_BPIF1/22-73             FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA
+#=GR COATB_BPIF1/22-73  SS    XX-HHHH--HHHHHH--HHHHHHH--HHHHHHHHHHHHHHHHHHHHHHH---
+#=GC SS_cons                  XHHHHHHHHHHHHHHHCHHHHHHHHCHHHHHHHHHHHHHHHHHHHHHHHC--
+#=GC seq_cons                 AEssss...AptAhDSLpspAT-hIu.sWshVsslVsAsluIKLFKKFsSKA
+//</pre>
+</div>
+<p>这是PFAM数据库中Phage_Coat_Gp8的种子排列（PF05371）。该排列下载于一个已经过期的PFAM数据库版本（ <a class="reference external" href="http://pfam.sanger.ac.uk/">http://pfam.sanger.ac.uk/</a> ），但这并不影响我们的例子（假设你已经将以上内容下载到一个名为&#8217;&#8216;PF05371_seed.sth&#8217;&#8216;的文件中，并在Python的当前工作目录下）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这段代码将在屏幕上打印出该序列比对的概要信息：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 52 columns</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRL...SKA COATB_BPI22/32-83</span>
+<span class="go">AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPM13/24-72</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>你会注意到，以上输出截短了中间一部分序列的内容。你也可以很容易地通过控制多序列比对中每一条序列（作为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象）来输出你所喜欢的格式。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;Alignment length </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">alignment</span><span class="o">.</span><span class="n">get_alignment_length</span><span class="p">()</span>
+<span class="go">Alignment length 52</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83</span>
+<span class="go">AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - COATB_BPM13/24-72</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA - COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>你也可以使用上面alignment对象的 <tt class="docutils literal"><span class="pre">format</span></tt> 方法来以指定的格式显示它。具体信息可以参见 <a class="reference external" href="#sec:alignment-format-method">6.2.2</a> 。</p>
+<p>你是否已经注意到以上原始数据文件中包含有蛋白数据库（PDB）交叉引用以及相关二级结构的信息？你可以尝试以下代码：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">dbxrefs</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">dbxrefs</span>
+<span class="go">COATB_BPIKE/30-81 [&#39;PDB; 1ifl ; 1-52;&#39;]</span>
+<span class="go">COATB_BPM13/24-72 [&#39;PDB; 2cpb ; 1-49;&#39;, &#39;PDB; 2cps ; 1-49;&#39;]</span>
+<span class="go">Q9T0Q9_BPFD/1-49 [&#39;PDB; 1nh4 A; 1-49;&#39;]</span>
+<span class="go">COATB_BPIF1/22-73 [&#39;PDB; 1ifk ; 1-50;&#39;]</span>
+</pre></div>
+</div>
+<p>如果你希望显示所有的序列注释信息，请使用以下例子：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span>
+</pre></div>
+</div>
+<p>Sanger网站
+<a class="reference external" href="http://pfam.sanger.ac.uk/family?acc=PF05371">http://pfam.sanger.ac.uk/family?acc=PF05371</a>
+可以让你下载各种不同的序列比对的格式。以下例子为FASTA格式：</p>
+<div class="code python highlight-python"><pre>&gt;COATB_BPIKE/30-81
+AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA
+&gt;Q9T0Q8_BPIKE/1-52
+AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA
+&gt;COATB_BPI22/32-83
+DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA
+&gt;COATB_BPM13/24-72
+AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA
+&gt;COATB_BPZJ2/1-49
+AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA
+&gt;Q9T0Q9_BPFD/1-49
+AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA
+&gt;COATB_BPIF1/22-73
+FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA</pre>
+</div>
+<p>注意Sanger网站有一个选项可以将序列比对中的间隔（gap）用小圆点或者是小横线表示。在以上例子中，序列间隔由小横线表示。假设你已经下载该文件，并保存为 “PF05371_seed.faa”。你可以使用以下代码来读入该序列比对。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.faa&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">alignment</span>
+</pre></div>
+</div>
+<p>你可能已经发现，以上代码中唯一的变化只是指定格式的参数。所返回的alignment对象将会包含同样的序列和序列名字。但是仔细的读者会发现，每一个alignment的SeqRecord中并不包含数据的引用注释。这是因为FASTA格式本身并没有包含这一类信息。</p>
+<p>此外，除了使用Sanger网站，你也可以利用 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 来将原始的Stockholm格式转换成FASTA文件格式（见下文）。</p>
+<p>对于任何一种Biopython支持的格式，你都可以用同样的方式读取它（通过指定文件的格式）。例如，你可以使用“phylip”来表示PHYLIP格式文件，用&#8221;nexus&#8221;来指定NEXUS格式文件或者用“emboss”来指定EMBOSS工具箱的输出文件。读者可以在以下链接中找到所有支持的格式（ <a class="reference external" href="http://biopython.org/wiki/AlignIO">http://biopython.org/wiki/AlignIO</a> ），或者内置的帮助中（以及在线文档 <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.AlignIO-module.html">online</a> ）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">AlignIO</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>6.1.2  多个序列比对<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>在前一章中，我们旨在读取仅包含有一个序列比对的文件。然而，在很多情况下，文件可能包含有多个序列比对。这时，你可以使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 来读取它们。</p>
+<p>假设我们有一个PHYLIP格式的很小的序列比对：</p>
+<div class="code python highlight-python"><pre>    5    6
+Alpha     AACAAC
+Beta      AACCCC
+Gamma     ACCAAC
+Delta     CCACCA
+Epsilon   CCAAAC</pre>
+</div>
+<p>如果你想用PHYLIP工具包来bootstrap一个系统发生树，其中的一个步骤是用 <tt class="docutils literal"><span class="pre">bootseq</span></tt> 程序来产生许多序列比对。这将给出类似于以下格式的序列比对：</p>
+<div class="code python highlight-python"><pre>    5     6
+Alpha     AAACCA
+Beta      AAACCC
+Gamma     ACCCCA
+Delta     CCCAAC
+Epsilon   CCCAAA
+    5     6
+Alpha     AAACAA
+Beta      AAACCC
+Gamma     ACCCAA
+Delta     CCCACC
+Epsilon   CCCAAA
+    5     6
+Alpha     AAAAAC
+Beta      AAACCC
+Gamma     AACAAC
+Delta     CCCCCA
+Epsilon   CCCAAC
+...
+    5     6
+Alpha     AAAACC
+Beta      ACCCCC
+Gamma     AAAACC
+Delta     CCCCAA
+Epsilon   CAAACC</pre>
+</div>
+<p>如果你想用 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 来读取这个文件，你可以使用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignments</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;resampled.phy&quot;</span><span class="p">,</span> <span class="s">&quot;phylip&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">alignments</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">alignment</span>
+    <span class="k">print</span>
+</pre></div>
+</div>
+<p>这将给出以下的输出（这时只显示缩略的一部分）：</p>
+<div class="code python highlight-python"><pre>SingleLetterAlphabet() alignment with 5 rows and 6 columns
+AAACCA Alpha
+AAACCC Beta
+ACCCCA Gamma
+CCCAAC Delta
+CCCAAA Epsilon
+
+SingleLetterAlphabet() alignment with 5 rows and 6 columns
+AAACAA Alpha
+AAACCC Beta
+ACCCAA Gamma
+CCCACC Delta
+CCCAAA Epsilon
+
+SingleLetterAlphabet() alignment with 5 rows and 6 columns
+AAAAAC Alpha
+AAACCC Beta
+AACAAC Gamma
+CCCCCA Delta
+CCCAAC Epsilon
+
+...
+
+SingleLetterAlphabet() alignment with 5 rows and 6 columns
+AAAACC Alpha
+ACCCCC Beta
+AAAACC Gamma
+CCCCAA Delta
+CAAACC Epsilon</pre>
+</div>
+<p>与 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse</span></tt> 一样， <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 将返回一个迭代器（iterator）。如果你希望把所有的序列比对都读取到内存中，以下代码将把它们储存在一个列表对象里。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">AlignIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;resampled.phy&quot;</span><span class="p">,</span> <span class="s">&quot;phylip&quot;</span><span class="p">))</span>
+<span class="n">last_align</span> <span class="o">=</span> <span class="n">alignments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">first_align</span> <span class="o">=</span> <span class="n">alignments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id5">
+<h3>6.1.3  含糊的序列比对<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>许多序列比对的文件格式可以非常明确地储存多个序列比对。然而，例如FASTA一类的普通序列文件格式并没有很直接的分隔符来分开多个序列比对。读者可以见以下例子：</p>
+<div class="code python highlight-python"><pre>&gt;Alpha
+ACTACGACTAGCTCAG--G
+&gt;Beta
+ACTACCGCTAGCTCAGAAG
+&gt;Gamma
+ACTACGGCTAGCACAGAAG
+&gt;Alpha
+ACTACGACTAGCTCAGG--
+&gt;Beta
+ACTACCGCTAGCTCAGAAG
+&gt;Gamma
+ACTACGGCTAGCACAGAAG</pre>
+</div>
+<p>以上FASTA格式文件可以认为是一个包含有6条序列的序列比对（有重复序列名）。或者从文件名来看，这很可能是两个序列比对，每一个包含有三个序列，只是这两个序列比对恰好具有相同的长度。</p>
+<p>以下是另一个例子：</p>
+<div class="code python highlight-python"><pre>&gt;Alpha
+ACTACGACTAGCTCAG--G
+&gt;Beta
+ACTACCGCTAGCTCAGAAG
+&gt;Alpha
+ACTACGACTAGCTCAGG--
+&gt;Gamma
+ACTACGGCTAGCACAGAAG
+&gt;Alpha
+ACTACGACTAGCTCAGG--
+&gt;Delta
+ACTACGGCTAGCACAGAAG</pre>
+</div>
+<p>同样，这也可能是一个包含有六个序列的序列比对。然而，根据序列名判断，这很可能是三个两两间的序列比较，而且恰好有同样的长度。</p>
+<p>最后一个例子也类似：</p>
+<div class="code python highlight-python"><pre>&gt;Alpha
+ACTACGACTAGCTCAG--G
+&gt;XXX
+ACTACCGCTAGCTCAGAAG
+&gt;Alpha
+ACTACGACTAGCTCAGG
+&gt;YYY
+ACTACGGCAAGCACAGG
+&gt;Alpha
+--ACTACGAC--TAGCTCAGG
+&gt;ZZZ
+GGACTACGACAATAGCTCAGG</pre>
+</div>
+<p>在这一个例子中，由于序列有不同的长度，这不能被当作是一个包含六个序列的单独的序列比对。很显然，这可以被看成是三个两两间的序列比对。</p>
+<p>很明显，将多个序列比对以FASTA格式储存并不方便。然而，在某些情况下，如果你一定要这么做， <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 依然能够处理上述情形（但是所有的序列比对必须都含有相同的序列）。一个很常见的例子是，我们经常会使用EMBOSS工具箱中的 <tt class="docutils literal"><span class="pre">needle</span></tt> 和 <tt class="docutils literal"><span class="pre">water</span></tt> 来产生许多两两间的序列比对 —— 然而在这种情况下，你可以指定数据格式为“emboss”，<tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 仍然能够识别这些原始输出。</p>
+<p>为了处理这样的FASTA格式的数据，我们可以指定 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 的第三个可选参数 <tt class="docutils literal"><span class="pre">seq_count</span></tt> ，这一参数将告诉Biopython你所期望的每个序列比对中序列的个数。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">,</span> <span class="n">seq_count</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;Alignment length </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">alignment</span><span class="o">.</span><span class="n">get_alignment_length</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="k">print</span>
+</pre></div>
+</div>
+<p>这将给出：</p>
+<div class="code python highlight-python"><pre>Alignment length 19
+ACTACGACTAGCTCAG--G - Alpha
+ACTACCGCTAGCTCAGAAG - XXX
+
+Alignment length 17
+ACTACGACTAGCTCAGG - Alpha
+ACTACGGCAAGCACAGG - YYY
+
+Alignment length 21
+--ACTACGAC--TAGCTCAGG - Alpha
+GGACTACGACAATAGCTCAGG - ZZZ</pre>
+</div>
+<p>如果你使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> 或者 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 而不指定 <tt class="docutils literal"><span class="pre">seq_count</span></tt> ，这将返回一个包含有六条序列的序列比对。对于上面的第三个例子，由于序列长度不同，导致它们不能被解析为一个序列比对，Biopython将会抛出一个异常。</p>
+<p>如果数据格式本身包含有分割符， <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 可以很聪明地自动确定文件中每一个序列比对，而无需指定 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 选项。如果你仍然指定 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 但是却与数据本身的分隔符相冲突，Biopython将产生一个错误。</p>
+<p>注意指定这一可选的 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 参数将假设文件中所有的序列比对都包含相同数目的序列。假如你真的遇到每一个序列比对都有不同数目的序列， <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 将无法读取。这时，我们建议你使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来读取数据，然后将序列转换为序列比对。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>6.2  序列比对的写出<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>我们已经讨论了 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 来读取各种格式的序列比对，现在让我们来使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 写出序列比对文件。</p>
+<p>这一函数接受三个参数：一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象（或者是一个 <tt class="docutils literal"><span class="pre">Alignment</span></tt> 对象），一个可写的文件句柄（handle）或者期望写出的文件名，以及写出文件的格式。</p>
+<p>这里有一个手动构造一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象的例子（注意 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 是由若干个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 组成的）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">generic_dna</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio.Align</span> <span class="kn">import</span> <span class="n">MultipleSeqAlignment</span>
+
+<span class="n">align1</span> <span class="o">=</span> <span class="n">MultipleSeqAlignment</span><span class="p">([</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACTGCTAGCTAG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Alpha&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACT-CTAGCTAG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Beta&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACTGCTAGDTAG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Gamma&quot;</span><span class="p">),</span>
+         <span class="p">])</span>
+
+<span class="n">align2</span> <span class="o">=</span> <span class="n">MultipleSeqAlignment</span><span class="p">([</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;GTCAGC-AG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Delta&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;GACAGCTAG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Epsilon&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;GTCAGCTAG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Zeta&quot;</span><span class="p">),</span>
+         <span class="p">])</span>
+
+<span class="n">align3</span> <span class="o">=</span> <span class="n">MultipleSeqAlignment</span><span class="p">([</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACTAGTACAGCTG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Eta&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACTAGTACAGCT-&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Theta&quot;</span><span class="p">),</span>
+             <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;-CTACTACAGGTG&quot;</span><span class="p">,</span> <span class="n">generic_dna</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Iota&quot;</span><span class="p">),</span>
+         <span class="p">])</span>
+
+<span class="n">my_alignments</span> <span class="o">=</span> <span class="p">[</span><span class="n">align1</span><span class="p">,</span> <span class="n">align2</span><span class="p">,</span> <span class="n">align3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>现在我们有一个包含三个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象的列表（ <tt class="docutils literal"><span class="pre">my_alignments</span></tt> ），现在我们将它写出为PHYLIP格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">my_alignments</span><span class="p">,</span> <span class="s">&quot;my_example.phy&quot;</span><span class="p">,</span> <span class="s">&quot;phylip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果你用你喜欢的文本编辑器在你当前的工作目录下打开 <tt class="docutils literal"><span class="pre">my_example.phy</span></tt> 文件，你会看到以下内容：</p>
+<div class="code python highlight-python"><pre> 3 12
+Alpha      ACTGCTAGCT AG
+Beta       ACT-CTAGCT AG
+Gamma      ACTGCTAGDT AG
+ 3 9
+Delta      GTCAGC-AG
+Epislon    GACAGCTAG
+Zeta       GTCAGCTAG
+ 3 13
+Eta        ACTAGTACAG CTG
+Theta      ACTAGTACAG CT-
+Iota       -CTACTACAG GTG</pre>
+</div>
+<p>在更多情况下，你希望读取一个已经含有序列比对的文件，经过某些操作（例如去掉一些行和列）然后将它重新储存起来。</p>
+<p>假如你希望知道有多少序列比对被 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数写入句柄中。如果你的序列比对都被放在一个列表中（如同以上的例子），你可以很容易地使用 <tt class="docutils literal"><span class="pre">len(my_alignments)</span></tt> 来获得这一信息。然而，如果你的序列比对在一个生成器/迭代器对象中，你无法轻松地完成这件事情。为此， <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 将会返回它所写出的序列比对个数。</p>
+<p><em>注意</em> - 如果你所指定给 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 的文件已经存在在当前目录下，这一文件将被直接覆盖掉而不会有任何警告。</p>
+<div class="section" id="id7">
+<h3>6.2.1  序列比对的格式间转换<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块中的序列比对格式转换功能与 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （见 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ）模块的格式转换是一样的。在通常情况下，我们建议使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 来读取序列比对数据，然后使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数来写出。或者你也可以直接使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.convert()</span></tt> 函数来实现格式的转换。</p>
+<p>在本例中，我们将读取PFAM/Stockholm格式的序列比对，然后将其保存为Clustal格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">,</span> <span class="s">&quot;PF05371_seed.aln&quot;</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> alignments&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>或者，使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> ：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignments</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignments</span><span class="p">,</span> <span class="s">&quot;PF05371_seed.aln&quot;</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> alignments&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数默认处理的情形是一个包括有多个序列比对的对象。在以上例子中，我们给予 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 的参数是一个由 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 函数返回的一个迭代器。</p>
+<p>在以下例子中，我们知道序列比对文件中仅包含有一个序列比对，因此我们使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> 函数来读取数据，然后使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 来将数据保存为另一种格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">alignment</span><span class="p">],</span> <span class="s">&quot;PF05371_seed.aln&quot;</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用以上两个例子，你都可以将PFAM/Stockholm格式的序列比对数据转换为Clustal格式：</p>
+<div class="code python highlight-python"><pre>CLUSTAL X (1.81) multiple sequence alignment
+
+
+COATB_BPIKE/30-81                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSS
+Q9T0Q8_BPIKE/1-52                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVS
+COATB_BPI22/32-83                   DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSS
+COATB_BPM13/24-72                   AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTS
+COATB_BPZJ2/1-49                    AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFAS
+Q9T0Q9_BPFD/1-49                    AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTS
+COATB_BPIF1/22-73                   FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVS
+
+COATB_BPIKE/30-81                   KA
+Q9T0Q8_BPIKE/1-52                   RA
+COATB_BPI22/32-83                   KA
+COATB_BPM13/24-72                   KA
+COATB_BPZJ2/1-49                    KA
+Q9T0Q9_BPFD/1-49                    KA
+COATB_BPIF1/22-73                   RA</pre>
+</div>
+<p>另外，你也可以使用以下代码将它保存为PHYLIP格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">AlignIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">,</span> <span class="s">&quot;PF05371_seed.phy&quot;</span><span class="p">,</span> <span class="s">&quot;phylip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>你可以获得以下PHYLIP格式的文件输出：</p>
+<div class="code python highlight-python"><pre> 7 52
+COATB_BPIK AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
+Q9T0Q8_BPI AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIKLFKKFVS
+COATB_BPI2 DGTSTATSYA TEAMNSLKTQ ATDLIDQTWP VVTSVAVAGL AIRLFKKFSS
+COATB_BPM1 AEGDDP---A KAAFNSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+COATB_BPZJ AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFAS
+Q9T0Q9_BPF AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+COATB_BPIF FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
+
+           KA
+           RA
+           KA
+           KA
+           KA
+           KA
+           RA</pre>
+</div>
+<p>PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是都为10个字符（ID中多出的字符将被截短）。在这一个例子中，截短的序列ID依然是唯一的（只是缺少了可读性）。在某些情况下，我们并没有一个好的方式去压缩序列的ID。以下例子提供了另一种解决方案 —— 利用自定义的序列ID来代替原本的序列ID：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="n">name_mapping</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">record</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alignment</span><span class="p">):</span>
+    <span class="n">name_mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">record</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;seq</span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">i</span>
+<span class="k">print</span> <span class="n">name_mapping</span>
+
+<span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">([</span><span class="n">alignment</span><span class="p">],</span> <span class="s">&quot;PF05371_seed.phy&quot;</span><span class="p">,</span> <span class="s">&quot;phylip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>以上代码将会建立一个字典对象实现自定义的ID和原始ID的映射：</p>
+<div class="code python highlight-python"><pre>{0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', ...}</pre>
+</div>
+<p>以下为PHYLIP的格式输出：</p>
+<div class="code python highlight-python"><pre> 7 52
+seq0       AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
+seq1       AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIKLFKKFVS
+seq2       DGTSTATSYA TEAMNSLKTQ ATDLIDQTWP VVTSVAVAGL AIRLFKKFSS
+seq3       AEGDDP---A KAAFNSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+seq4       AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFAS
+seq5       AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
+
+           KA
+           RA
+           KA
+           KA
+           KA
+           KA
+           RA</pre>
+</div>
+<p>由于序列ID的限制性，PHYLIP格式不是储存序列比对的理想格式。我们建议你将数据储存成PFAM/Stockholm或者其它能对序列比对进行注释的格式来保存你的数据。</p>
+</div>
+<div class="section" id="formatted-strings">
+<h3>6.2.2  将序列比对对象转换为格式化字符串（formatted strings）<a class="headerlink" href="#formatted-strings" title="Permalink to this headline">¶</a></h3>
+<p>因为 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块是基于文件句柄的，因此你如果想将序列比对读入为一个字符串对象，你需要做一些额外的工作。然而，我们提供一个 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法来帮助你实现这项任务。 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法需要用户提供一个小写的格式参数（这可以是任何 <tt class="docutils literal"><span class="pre">AlignIO</span></tt> 支持的序列比对格式）。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">alignment</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们在 <a class="reference external" href="#sec:SeqRecord-format">4.5</a> 中讲到， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 也有一个对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 输出的方法。</p>
+<p><tt class="docutils literal"><span class="pre">format()</span></tt> 方法是利用 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 以及 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="n">alignments</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+
+<span class="n">out_handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+<span class="n">AlignIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">alignments</span><span class="p">,</span> <span class="n">out_handle</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="n">clustal_data</span> <span class="o">=</span> <span class="n">out_handle</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="n">clustal_data</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>6.3  序列比对的操纵<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>现在我们已经了解了如何读入和写出序列比对。让我们继续看看如何对读入的序列比对进行操作。</p>
+<div class="section" id="slice">
+<h3>6.3.1  序列比对的切片（slice）操作<a class="headerlink" href="#slice" title="Permalink to this headline">¶</a></h3>
+<p>首先，用户可以认为读入的序列比对是一个由 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象构成的Python列表（list）。有了这样一个印象以后，你可以使用 <tt class="docutils literal"><span class="pre">len()</span></tt> 方法来得到行数（序列比对的个数），你也可以对序列比对进行迭代。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;Number of rows: </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+<span class="go">Number of rows: 7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> - </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83</span>
+<span class="go">AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - COATB_BPM13/24-72</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA - COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>你可以使用列表所拥有的 <tt class="docutils literal"><span class="pre">append</span></tt> 和 <tt class="docutils literal"><span class="pre">extend</span></tt> 方法来给序列比对增加序列。请读者一定要正确理解序列比对与其包含的序列的关系，这样你就可以使用切片操作来获得其中某些序列比对。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 52 columns</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81</span>
+<span class="go">AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRL...SKA COATB_BPI22/32-83</span>
+<span class="go">AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPM13/24-72</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+<span class="go">SingleLetterAlphabet() alignment with 4 rows and 52 columns</span>
+<span class="go">AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPM13/24-72</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>假如你需要获得特定的列该怎么办呢？如果你接触过Numpy矩阵那么一定对下面的语法非常熟悉，使用双切片：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="go">T</span>
+</pre></div>
+</div>
+<p>使用两个整数来获得序列比对中的一个字符，这其实是以下操作的简化方式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+<span class="go">T</span>
+</pre></div>
+</div>
+<p>你可以用下面的代码来获取整列：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[:,</span><span class="mi">6</span><span class="p">]</span>
+<span class="go">TTT---T</span>
+</pre></div>
+</div>
+<p>你也可以同时选择特定的行和列。例如，以下代码将打印出第3到6行的前6列：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">,:</span><span class="mi">6</span><span class="p">]</span>
+<span class="go">SingleLetterAlphabet() alignment with 3 rows and 6 columns</span>
+<span class="go">AEGDDP COATB_BPM13/24-72</span>
+<span class="go">AEGDDP COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP Q9T0Q9_BPFD/1-49</span>
+</pre></div>
+</div>
+<p>使用 <tt class="docutils literal"><span class="pre">:</span></tt> 将打印出所有行：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[:,:</span><span class="mi">6</span><span class="p">]</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 6 columns</span>
+<span class="go">AEPNAA COATB_BPIKE/30-81</span>
+<span class="go">AEPNAA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTA COATB_BPI22/32-83</span>
+<span class="go">AEGDDP COATB_BPM13/24-72</span>
+<span class="go">AEGDDP COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDP Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDA COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>切片给我们提供了一个简单的方式来去除一部分序列比对。在以下例子中，有三条序列的7，8，9三列为间隔（-）。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[:,</span><span class="mi">6</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 3 columns</span>
+<span class="go">TNY COATB_BPIKE/30-81</span>
+<span class="go">TNY Q9T0Q8_BPIKE/1-52</span>
+<span class="go">TSY COATB_BPI22/32-83</span>
+<span class="go">--- COATB_BPM13/24-72</span>
+<span class="go">--- COATB_BPZJ2/1-49</span>
+<span class="go">--- Q9T0Q9_BPFD/1-49</span>
+<span class="go">TSQ COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>你也可以通过切片来获得第9列以后的所有序列：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">alignment</span><span class="p">[:,</span><span class="mi">9</span><span class="p">:]</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 43 columns</span>
+<span class="go">ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81</span>
+<span class="go">ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">ATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83</span>
+<span class="go">AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA COATB_BPM13/24-72</span>
+<span class="go">AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA COATB_BPZJ2/1-49</span>
+<span class="go">AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49</span>
+<span class="go">AKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>现在，你可以通过列来操纵序列比对。这也是你能够去除序列比对中的许多列。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">edited</span> <span class="o">=</span> <span class="n">alignment</span><span class="p">[:,:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="n">alignment</span><span class="p">[:,</span><span class="mi">9</span><span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">edited</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 49 columns</span>
+<span class="go">AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81</span>
+<span class="go">AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83</span>
+<span class="go">AEGDDPAKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA COATB_BPM13/24-72</span>
+<span class="go">AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA COATB_BPZJ2/1-49</span>
+<span class="go">AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49</span>
+<span class="go">FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73</span>
+</pre></div>
+</div>
+<p>另一个经常使用的序列比对操作是将多个基因的序列比对拼接成一个大的序列比对（meta-alignment）。
+在进行这种操作时一定要注意序列的ID需要匹配（具体请见 <a class="reference external" href="#sec:SeqRecord-addition">4.7</a> 关于 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
+的说明)。为了达到这种目的，用 <tt class="docutils literal"><span class="pre">sort()</span></tt> 方法将序列ID按照字母顺序进行排列可能会有所帮助：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">edited</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">edited</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 49 columns</span>
+<span class="go">DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83</span>
+<span class="go">FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73</span>
+<span class="go">AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81</span>
+<span class="go">AEGDDPAKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA COATB_BPM13/24-72</span>
+<span class="go">AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFASKA COATB_BPZJ2/1-49</span>
+<span class="go">AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52</span>
+<span class="go">AEGDDPAKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA Q9T0Q9_BPFD/1-49</span>
+</pre></div>
+</div>
+<p>注意：只有当两个序列比对拥有相同的行的时候才能进行序列比对的拼接。</p>
+</div>
+<div class="section" id="id9">
+<h3>6.3.2  序列比对作为数组<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>根据你的需要，有时将序列比对转换为字符数组是非常方便的。你可以用 <tt class="docutils literal"><span class="pre">Numpy</span></tt> 来实现这一目的：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">character</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align_array</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(7, 52)</span>
+</pre></div>
+</div>
+<p>如果你需要频繁地使用列操作，你可以让 <tt class="docutils literal"><span class="pre">Numpy</span></tt> 将序列比对以列的形式进行储存（与Fortran一样），而不是 <tt class="docutils literal"><span class="pre">Numpy</span></tt> 默认形式（与C一样以行储存）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">align_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">character</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s">&quot;F&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>注意， <tt class="docutils literal"><span class="pre">Numpy</span></tt> 的数组和Biopython默认的序列比对对象是分别储存在内存中的，编辑其中的一个不会更新另一个的值。</p>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>6.4  构建序列比对的工具<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>目前有非常多的算法来帮助你构建一个序列比对，包括两两间的比对和多序列比对。这些算法在计算上往往是非常慢的，你一定不会希望用Python来实现他们。然而，你可以使用Biopython来运行命令行程序。通常你需要：</p>
+<ol class="arabic simple">
+<li>准备一个包含未比对序列的输入文件，一般为FASTA格式的序列。你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来创建一个 (具体见第5章 &lt;#chapter:Bio.SeqIO&gt;`__).</li>
+<li>在Biopython中运行一个命令行程序来构建序列比对（我们将在这里详细介绍）。这需要通过Biopython的打包程序（wrapper）来实现。</li>
+<li>读取以上程序的输出，也就是排列好的序列比对。这往往可以通过 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 来实现（请看本章前部分内容）。</li>
+</ol>
+<p>本章所介绍的所有的命令行打包程序都将以同样的方式使用。你创造一个命令行对象来指定各种参数（例如：输入文件名，输出文件名等），然后通过Python的系统命令模块来运行这一程序（例如：使用 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 进程）。</p>
+<p>大多数的打包程序都在 <tt class="docutils literal"><span class="pre">Bio.Align.Applications</span></tt> 中定义：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">Bio.Align.Applications</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">Bio</span><span class="o">.</span><span class="n">Align</span><span class="o">.</span><span class="n">Applications</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">[&#39;ClustalwCommandline&#39;, &#39;DialignCommandline&#39;, &#39;MafftCommandline&#39;, &#39;MuscleCommandline&#39;,</span>
+<span class="go">&#39;PrankCommandline&#39;, &#39;ProbconsCommandline&#39;, &#39;TCoffeeCommandline&#39; ...]</span>
+</pre></div>
+</div>
+<p>（以下划线开头的记录不是Biopython打包程序，这些变量在Python中有特殊的含义。） <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 中包含对 <a class="reference external" href="http://emboss.sourceforge.net/">EMBOSS</a> 的打包程序（包括 <tt class="docutils literal"><span class="pre">needle</span></tt> 和 <tt class="docutils literal"><span class="pre">water</span></tt> ）。EMBOSS和PHYLIP的打包程序将在 <a class="reference external" href="#seq:emboss-needle-water">6.4.5</a> 节中详细介绍。在本章中，我们并不打算将所有的序列比对程序都予以介绍，但是Biopython中各种序列比对程序都具有相同的使用方式。</p>
+<div class="section" id="clustalw">
+<h3>6.4.1  ClustalW<a class="headerlink" href="#clustalw" title="Permalink to this headline">¶</a></h3>
+<p>ClustalW是一个非常流行的进行多序列比对的命令行程序（其还有一个图形化的版本称之为ClustalX）。Biopython的 <tt class="docutils literal"><span class="pre">Bio.Align.Applications</span></tt> 模块包含这一多序列比对程序的打包程序。</p>
+<p>我们建议你在Python中使用ClustalW之前在命令行界面下手动使用ClustalW，这样能使你更清楚这一程序的参数。你会发现Biopython打包程序非常严格地遵循实际的命令行API：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">ClustalwCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">ClustalwCommandline</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>作为最简单的一个例子，你仅仅需要一个FASTA格式的序列文件作为输入，例如： <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta">opuntia.fasta</a> （你可以在线或者在Biopython/Doc/examples文件夹中找到该序列）。 <cite>opuntia.fasta</cite> 包含着7个prickly-pear的DNA序列（来自仙人掌科）。</p>
+<p>ClustalW在默认情况下会产生一个包括所有输入序列的序列比对以及一个由输入序列名字构成的指导树（guide tree）。例如，用上述文件作为输入，ClustalW将会输出 <tt class="docutils literal"><span class="pre">opuntia.aln</span></tt> 和 <tt class="docutils literal"><span class="pre">opuntia.dnd</span></tt> 两个文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">ClustalwCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cline</span> <span class="o">=</span> <span class="n">ClustalwCommandline</span><span class="p">(</span><span class="s">&quot;clustalw2&quot;</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cline</span>
+<span class="go">clustalw2 -infile=opuntia.fasta</span>
+</pre></div>
+</div>
+<p>注意这里我们给出的执行文件名是 <tt class="docutils literal"><span class="pre">clustalw2</span></tt> ，这是ClustalW的第二个版本（第一个版本的文件名为 <tt class="docutils literal"><span class="pre">clustalw</span></tt> ）。ClustalW的这两个版本具有相同的参数，并且在功能上也是一致的。</p>
+<p>你可能会发现，尽管你安装了ClustalW，以上的命令行却无法正确运行。你可能会得到“command not found”的错误信息（尤其是在Windows上）。这往往是由于ClustalW的运行程序并不在系统的工作目录PATH下（一个包含着运行程序路径的环境变量）。你既可以修改PATH，使其包括ClustalW的运行程序（不同系统需要以不同的方式修改），或者你也可以直接指定程序的绝对路径。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">ClustalwCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clustalw_exe</span> <span class="o">=</span> <span class="s">r&quot;C:\Program Files\new clustal\clustalw2.exe&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clustalw_cline</span> <span class="o">=</span> <span class="n">ClustalwCommandline</span><span class="p">(</span><span class="n">clustalw_exe</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">clustalw_exe</span><span class="p">),</span> <span class="s">&quot;Clustal W executable missing&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">clustalw_cline</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>注意，Python中 <tt class="docutils literal"><span class="pre">\n</span></tt> 和 <tt class="docutils literal"><span class="pre">\t</span></tt> 会被解析为一个新行和制表空白（tab）。然而，如果你将一个小写的“r”放在字符串的前面，这一字符串就将保留原始状态，而不被解析。这种方式对于指定Windows风格的文件名来说是一种良好的习惯。</p>
+<p>Biopython在内部使用较新的 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 模块来实现打包程序，而不是 <tt class="docutils literal"><span class="pre">os.system()</span></tt> 和 <tt class="docutils literal"><span class="pre">os.popen*</span></tt> 。</p>
+<p>现在，我们有必要去了解命令行工具是如何工作的。当你使用一个命令行时，它往往会在屏幕上输出一些内容。这一输出可以被保存或重定向。在系统输出中，有两种管道（pipe）来区分不同的输出信息&#8211;标准输出（standard output）包含正常的输出内容，标准错误（standard error）显示错误和调试信息。同时，系统也接受标准输入（standard input）。这也是命令行工具如何读取数据文件的。当程序运行结束以后，它往往会返回一个整数。一般返回值为0意味着程序正常结束。</p>
+<p>当你使用Biopython打包程序来调用命令行工具的时候，它将会等待程序结束，并检查程序的返回值。如果返回值不为0，Biopython将会提示一个错误信息。Biopython打包程序将会输出两个字符串，标准输出和标准错误。</p>
+<p>在ClustalW的例子中，当你使用程序时，所有重要的输出都被保存到输出文件中。所有打印在屏幕上的内容（通过 stdout or stderr）可以被忽略掉（假设它已经成功运行）。</p>
+<p>当运行ClustalW的时候，我们所关心的往往是输出的序列比对文件和指导树文件。ClustalW会自动根据输入数据的文件名来命名输出文件。在本例中，输出文件将是 <tt class="docutils literal"><span class="pre">opuntia.aln</span></tt> 。当你成功运行完ClustalW以后，你可以使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 来读取输出结果：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;opuntia.aln&quot;</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 906 columns</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF191</span>
+<span class="go">TATACATAAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273286|gb|AF191660.1|AF191</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191</span>
+</pre></div>
+</div>
+<p>另一个输出文件 <tt class="docutils literal"><span class="pre">opuntia.dnd</span></tt> 中包含有一个newick格式的指导树，你可以使用Biopython中的 <tt class="docutils literal"><span class="pre">Bio.Phylo</span></tt> 来读取它：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Phylo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;opuntia.dnd&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_ascii</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<span class="go">                             _______________ gi|6273291|gb|AF191665.1|AF191665</span>
+<span class="go">  __________________________|</span>
+<span class="go"> |                          |   ______ gi|6273290|gb|AF191664.1|AF191664</span>
+<span class="go"> |                          |__|</span>
+<span class="go"> |                             |_____ gi|6273289|gb|AF191663.1|AF191663</span>
+<span class="go"> |</span>
+<span class="go">_|_________________ gi|6273287|gb|AF191661.1|AF191661</span>
+<span class="go"> |</span>
+<span class="go"> |__________ gi|6273286|gb|AF191660.1|AF191660</span>
+<span class="go"> |</span>
+<span class="go"> |    __ gi|6273285|gb|AF191659.1|AF191659</span>
+<span class="go"> |___|</span>
+<span class="go">     | gi|6273284|gb|AF191658.1|AF191658</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="#sec:Phylo">13</a>  章中详细介绍了如何使用Biopython对进化树数据进行处理。</p>
+</div>
+<div class="section" id="muscle">
+<h3>6.4.2  MUSCLE<a class="headerlink" href="#muscle" title="Permalink to this headline">¶</a></h3>
+<p>MUSCLE是另一个较新的序列比对工具，Biopython的 <tt class="docutils literal"><span class="pre">Bio.Align.Applications</span></tt> 中也有针对Muscle的打包程序。与ClustalW一样，我们也建议你先在命令行界面下使用MUSCLE以后再使用Biopython打包程序。你会发现，Biopython的打包程序非常严格地包括了所有命令行输入参数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">MuscleCommandline</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>作为最简单的例子，你只需要一个Fasta格式的数据文件作为输入。例如： <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta">opuntia.fasta</a> 然后你可以告诉MUSCLE来读取该FASTA文件，并将序列比对写出：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s">&quot;opuntia.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cline</span>
+<span class="go">muscle -in opuntia.fasta -out opuntia.txt</span>
+</pre></div>
+</div>
+<p>注意，MUSCLE使用“-in”和“-out”来指定输入和输出文件，而在Biopython中，我们使用“input”和“out”作为关键字来指定输入输出。这是由于“in”是Python的一个关键词而被保留。</p>
+<p>默认情况下，MUSCLE的输出文件将是包含间隔（gap）的FASTA格式文件。 当你指定 <tt class="docutils literal"><span class="pre">format=fasta</span></tt> 时， <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 能够读取该FASTA文件。你也可以告诉MUSCLE来输出ClustalW-like的文件结果：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s">&quot;opuntia.aln&quot;</span><span class="p">,</span> <span class="n">clw</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cline</span>
+<span class="go">muscle -in opuntia.fasta -out opuntia.aln -clw</span>
+</pre></div>
+</div>
+<p>或者，严格的ClustalW的输出文件（这将输出原始的ClustalW的文件标签）。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s">&quot;opuntia.aln&quot;</span><span class="p">,</span> <span class="n">clwstrict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cline</span>
+<span class="go">muscle -in opuntia.fasta -out opuntia.aln -clwstrict</span>
+</pre></div>
+</div>
+<p>你可以使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 的 <tt class="docutils literal"><span class="pre">format=&quot;clustal&quot;</span></tt> 参数来读取这些序列比对输出。</p>
+<p>MUSCLE也可以处理GCG和MSF（使用 <tt class="docutils literal"><span class="pre">msf</span></tt> 参数）甚至HTML格式，但是目前Biopython并不能读取它们。</p>
+<p>你也可以设置MUSCLE其它的可选参数，例如最大数目的迭代数。具体信息请查阅Biopython的内部帮助文档。</p>
+</div>
+<div class="section" id="id11">
+<h3>6.4.3  MUSCLE标准输出<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>使用以上的MUSCLE命令行将会把序列比对结果写出到一个文件中。然而MUSCLE也允许你将序列比对结果作为系统的标准输出。Biopython打包程序可以利用这一特性来避免创建一个临时文件。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">muscle_cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">muscle_cline</span>
+<span class="go">muscle -in opuntia.fasta</span>
+</pre></div>
+</div>
+<p>如果你使用打包程序运行上述命令，程序将返回一个字符串对象。为了读取它，我们可以使用 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 模块。记住MUSCLE将默认以FASTA格式输出序列比对：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">muscle_cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">muscle_cline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdout</span><span class="p">),</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 906 columns</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF191661</span>
+<span class="go">TATACATAAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273286|gb|AF191660.1|AF191660</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658</span>
+</pre></div>
+</div>
+<p>以上是一个非常简单的例子，如果你希望处理较大的输出数据，我们并不建议你将它们全部读入内存中。对于这种情况， <tt class="docutils literal"><span class="pre">subprocess</span></tt> 模块可以非常方便地处理。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">muscle_cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">child</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">muscle_cline</span><span class="p">),</span>
+<span class="gp">... </span>                         <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">!=</span><span class="s">&quot;win32&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 7 rows and 906 columns</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF191661</span>
+<span class="go">TATACATAAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273286|gb|AF191660.1|AF191660</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id12">
+<h3>6.4.4  以标准输入和标准输出使用MUSCLE<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>事实上，我们并不需要将序列放在一个文件里来使用MUSCLE。MUSCLE可以读取系统标准输入的内容。注意，这有一点高级和繁琐，若非必须，你可以不用关心这个技术。</p>
+<p>为了让MUSCLE读取标准输入的内容，我们首先需要将未排列的序列以 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的形式读入到内存。在这里，我们将以一个规则来选择特定的序列（序列长度小于900bp的），使用生成器表达式。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">900</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>随后，我们需要建立一个MUSCLE命令行，但是不指定输入和输出（MUSCLE默认为标准输入和标准输出）。这里，我们将指定输出格式为严格的Clustal格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">MuscleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">muscle_cline</span> <span class="o">=</span> <span class="n">MuscleCommandline</span><span class="p">(</span><span class="n">clwstrict</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">muscle_cline</span>
+<span class="go">muscle -clwstrict</span>
+</pre></div>
+</div>
+<p>我们使用Python的内置模块 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 来实现这一目的：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">child</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cline</span><span class="p">),</span>
+<span class="gp">... </span>                         <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">!=</span><span class="s">&quot;win32&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>这一命令将启动MUSCLE，但是它将会等待FASTA格式的输入数据。我们可以通过标准输入句柄来提供给它：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">child</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>在将6条序列写入句柄后，MUSCLE仍将会等待，判断是否所有的FASTA序列全部输入完毕了。我们可以关闭句柄来提示给MUSCLE。这时，MUSCLE将开始运行。最后，我们可以在标准输出中获得结果：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 6 rows and 900 columns</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166</span>
+<span class="go">TATACATAAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273286|gb|AF191660.1|AF19166</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF19165</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF19165</span>
+</pre></div>
+</div>
+<p>现在我们在没有创造一个FASTA文件的情况下获得了一个序列比对。然而，由于你没有在Biopython外运行MUSCLE，这会使调试程序的难度增大，而且存在程序跨平台使用的问题（Windows和Linux）。</p>
+<p>如果你觉得 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 不方便使用，Biopython提供了另一种方式。如果你用 <tt class="docutils literal"><span class="pre">muscle_cline()</span></tt> 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： <tt class="docutils literal"><span class="pre">muscle_cline(stdin=...)</span></tt> 。假如你的序列文件不大，你可以将其储存为 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 对象（具体见 <a class="reference external" href="#sec:appendix-handles">22.1</a>)：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">900</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>你可以以下方式运行外部程序和读取结果：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">muscle_cline</span><span class="p">(</span><span class="n">stdin</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdout</span><span class="p">),</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 6 rows and 900 columns</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166</span>
+<span class="go">TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166</span>
+<span class="go">TATACATAAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273286|gb|AF191660.1|AF19166</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF19165</span>
+<span class="go">TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF19165</span>
+</pre></div>
+</div>
+<p>你可能觉得这种方式更便捷，但它需要更多的内存（这是由于我们是以字符串对象来储存输入的FASTA文件和输出的Clustal排列）。</p>
+</div>
+<div class="section" id="embossneedlewater">
+<h3>6.4.5  EMBOSS包的序列比对工具——needle和water<a class="headerlink" href="#embossneedlewater" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://emboss.sourceforge.net/">EMBOSS</a> 包有两个序列比对程序—— <tt class="docutils literal"><span class="pre">water</span></tt> 和 <tt class="docutils literal"><span class="pre">needle</span></tt> 来实现Smith-Waterman做局部序列比对（local alignment）和Needleman-Wunsch算法来做全局排列（global alignment）。这两个程序具有相同的使用方式，因此我们仅以 <tt class="docutils literal"><span class="pre">needle</span></tt> 为例。</p>
+<p>假设你希望做全局的序列两两排列，你可以将FASTA格式序列以如下方式储存：</p>
+<div class="code python highlight-python"><pre>&gt;HBA_HUMAN
+MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHG
+KKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTP
+AVHASLDKFLASVSTVLTSKYR</pre>
+</div>
+<p>以上内容在 <tt class="docutils literal"><span class="pre">alpha.fasta</span></tt> 文件中，另一个在 <tt class="docutils literal"><span class="pre">beta.fasta</span></tt> 中如下：</p>
+<div class="code python highlight-python"><pre>&gt;HBB_HUMAN
+MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK
+VKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFG
+KEFTPPVQAAYQKVVAGVANALAHKYH</pre>
+</div>
+<p>让我们开始使用一个完整的 <tt class="docutils literal"><span class="pre">needle</span></tt> 命令行对象：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Emboss.Applications</span> <span class="kn">import</span> <span class="n">NeedleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span> <span class="o">=</span> <span class="n">NeedleCommandline</span><span class="p">(</span><span class="n">asequence</span><span class="o">=</span><span class="s">&quot;alpha.faa&quot;</span><span class="p">,</span> <span class="n">bsequence</span><span class="o">=</span><span class="s">&quot;beta.faa&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                 <span class="n">gapopen</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">gapextend</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="s">&quot;needle.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">needle_cline</span>
+<span class="go">needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5</span>
+</pre></div>
+</div>
+<p>你可能会有疑问，为什么不直接在终端里运行这一程序呢？你会发现，它将进行一个序列两两间的排列，并把结果记录在 <tt class="docutils literal"><span class="pre">needle.txt</span></tt> 中（以EMBOSS默认的序列比对格式）。</p>
+<p>即使你安装了EMBOSS，使用以上命令仍可能会出错，你可能获得一个错误消息“command not found”，尤其是在Windows环境中。这很可能是由于EMBOSS工具的安装目录并不在系统的PATH中。遇到这种情况，你既可以更新系统的环境变量，也可以在Biopython中指定EMBOSS的安装路径。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Emboss.Applications</span> <span class="kn">import</span> <span class="n">NeedleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span> <span class="o">=</span> <span class="n">NeedleCommandline</span><span class="p">(</span><span class="s">r&quot;C:\EMBOSS\needle.exe&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                 <span class="n">asequence</span><span class="o">=</span><span class="s">&quot;alpha.faa&quot;</span><span class="p">,</span> <span class="n">bsequence</span><span class="o">=</span><span class="s">&quot;beta.faa&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                 <span class="n">gapopen</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">gapextend</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="s">&quot;needle.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在Python中， <tt class="docutils literal"><span class="pre">\n</span></tt> 和 <tt class="docutils literal"><span class="pre">\t</span></tt> 分别意味着换行符和制表符。而在字符串前有一个“r”代表着raw字符串（ <tt class="docutils literal"><span class="pre">\n</span></tt> 和 <tt class="docutils literal"><span class="pre">\t</span></tt> 将保持它们本来的状态）。</p>
+<p>现在你可以自己尝试着手动运行EMBOSS工具箱中的程序，比较一下各个参数以及其对应的Biopython打包程序帮助文档：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Emboss.Applications</span> <span class="kn">import</span> <span class="n">NeedleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">NeedleCommandline</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>提示：你也可以指定特定的参数设置。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Emboss.Applications</span> <span class="kn">import</span> <span class="n">NeedleCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span> <span class="o">=</span> <span class="n">NeedleCommandline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span><span class="o">.</span><span class="n">asequence</span><span class="o">=</span><span class="s">&quot;alpha.faa&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span><span class="o">.</span><span class="n">bsequence</span><span class="o">=</span><span class="s">&quot;beta.faa&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span><span class="o">.</span><span class="n">gapopen</span><span class="o">=</span><span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span><span class="o">.</span><span class="n">gapextend</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">needle_cline</span><span class="o">.</span><span class="n">outfile</span><span class="o">=</span><span class="s">&quot;needle.txt&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">needle_cline</span>
+<span class="go">needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">needle_cline</span><span class="o">.</span><span class="n">outfile</span>
+<span class="go">needle.txt</span>
+</pre></div>
+</div>
+<p>现在我们获得了一个 <tt class="docutils literal"><span class="pre">needle</span></tt> 命令行，并希望在Python中运行它。我们在之前解释过，如果你希望完全地控制这一过程， <tt class="docutils literal"><span class="pre">subprocess</span></tt> 是最好的选择，但是如果你只是想尝试使用打包程序，以下命令足以达到目的：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">needle_cline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">stdout</span> <span class="o">+</span> <span class="n">stderr</span>
+<span class="go">Needleman-Wunsch global alignment of two sequences</span>
+</pre></div>
+</div>
+<p>随后，我们需要载入 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块来读取needle输出（ <tt class="docutils literal"><span class="pre">emboss</span></tt> 格式）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;needle.txt&quot;</span><span class="p">,</span> <span class="s">&quot;emboss&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">align</span>
+<span class="go">SingleLetterAlphabet() alignment with 2 rows and 149 columns</span>
+<span class="go">MV-LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTY...KYR HBA_HUMAN</span>
+<span class="go">MVHLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRF...KYH HBB_HUMAN</span>
+</pre></div>
+</div>
+<p>在这个例子中，我们让EMBOSS将结果保存到一个输出文件中，但是你也可以让其写入标准输出中（这往往是在不需要临时文件的情况下的选择，你可以使用 <tt class="docutils literal"><span class="pre">stdout=True</span></tt> 参数而不是 <tt class="docutils literal"><span class="pre">outfile</span></tt> 参数）。与MUSCLE的例子一样，你也可以从标准输入里读取序列（ <tt class="docutils literal"><span class="pre">asequence=&quot;stdin&quot;</span></tt> 参数）。</p>
+<p>以上例子仅仅介绍了 <tt class="docutils literal"><span class="pre">needle</span></tt> 和 <tt class="docutils literal"><span class="pre">water</span></tt> 最简单的使用。一个有用的小技巧是，第二个序列文件可以包含有多个序列，EMBOSS工具将将每一个序列与第一个文件进行两两序列比对。</p>
+<p>注意，Biopython有它自己的两两比对模块 <tt class="docutils literal"><span class="pre">Bio.pairwise2</span></tt> （用C语言编写）。但是它无法与序列比对对象一起工作，因此我们不在本章讨论它。具体信息请查阅模块的docstring（内部帮助文档）。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第6章 多序列比对</a><ul>
+<li><a class="reference internal" href="#id2">6.1 读取多序列比对数据</a><ul>
+<li><a class="reference internal" href="#id3">6.1.1 单一的序列比对</a></li>
+<li><a class="reference internal" href="#id4">6.1.2  多个序列比对</a></li>
+<li><a class="reference internal" href="#id5">6.1.3  含糊的序列比对</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">6.2  序列比对的写出</a><ul>
+<li><a class="reference internal" href="#id7">6.2.1  序列比对的格式间转换</a></li>
+<li><a class="reference internal" href="#formatted-strings">6.2.2  将序列比对对象转换为格式化字符串（formatted strings）</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id8">6.3  序列比对的操纵</a><ul>
+<li><a class="reference internal" href="#slice">6.3.1  序列比对的切片（slice）操作</a></li>
+<li><a class="reference internal" href="#id9">6.3.2  序列比对作为数组</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10">6.4  构建序列比对的工具</a><ul>
+<li><a class="reference internal" href="#clustalw">6.4.1  ClustalW</a></li>
+<li><a class="reference internal" href="#muscle">6.4.2  MUSCLE</a></li>
+<li><a class="reference internal" href="#id11">6.4.3  MUSCLE标准输出</a></li>
+<li><a class="reference internal" href="#id12">6.4.4  以标准输入和标准输出使用MUSCLE</a></li>
+<li><a class="reference internal" href="#embossneedlewater">6.4.5  EMBOSS包的序列比对工具——needle和water</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr05.html"
+                        title="previous chapter">第5章  序列输入和输出</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr07.html"
+                        title="next chapter">第7章  BLAST</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr06.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr07.html" title="第7章 BLAST"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr05.html" title="第5章 序列输入和输出"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

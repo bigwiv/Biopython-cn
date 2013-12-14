@@ -1,0 +1,930 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第5章 序列输入和输出 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第6章 多序列比对" href="chr06.html" />
+    <link rel="prev" title="第4章 序列注释对象" href="chr04.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr06.html" title="第6章 多序列比对"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr04.html" title="第4章 序列注释对象"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>第5章  序列输入和输出<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>本章将详细讨论 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块，该模块在第 <a class="reference external" href="#chapter:quick-start">2</a> 章已经做过简单的介绍并在第 <a class="reference external" href="#chapter:SeqRecord">4</a> 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 维基页面（ <a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a> ）和内置文档（ <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html">SeqIO</a> ）:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">SeqIO</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>学习本章的要领是学会使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象（请见第<a class="reference external" href="#chapter:SeqRecord">4</a> 章），该对象包含一个 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象（请见第 <a class="reference external" href="#chapter:Bio.Seq">3</a> 章）和注释信息（如序列ID和描述信息）。</p>
+<div class="section" id="id2">
+<h2>5.1 解析/读取序列<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>该模块的主要函数是 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> ，它用于读取序列文件生成 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，包含两个参数：</p>
+<ol class="arabic simple">
+<li>第一个参数是一个文件名或者一个句柄（ <em>handle</em> ）。句柄可以是打开的文件，命令行程序的输出，或者来自下载的数据(请见第 <a class="reference external" href="#sec:SeqIO_Online">5.3</a> 节)。更多关于句柄的信息请见第 <a class="reference external" href="#sec:appendix-handles">22.1</a> 节。</li>
+<li>第二个参数是一个小写字母字符串，用于指定序列格式（我们并不推测文件格式！），支持的文件格式请见 <a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a> 。</li>
+</ol>
+<p>还有一个用于指定字符集的 <tt class="docutils literal"><span class="pre">alphabet</span></tt> 参数，这对FASTA这样的文件格式非常有用，在这里 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 默认参数为字母表。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 函数返回一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象迭代器（ <em>iterator</em> ），迭代器通常用在循环中。</p>
+<p>有时你需要处理只包含一个序列条目的文件，此时请使用函数 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 。它使用与函数 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 相同的参数，当文件有且仅有一个序列条目时返回一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，否则触发异常。</p>
+<div class="section" id="id3">
+<h3>5.1.1 读取序列文件<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>总的来说， <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 用于读取序列文件并返回 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，并通常用在循环中，如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>上面的示例来自第 <a class="reference external" href="#sec:sequence-parsing">2.4</a> 节，它将读取来自FASTA格式文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a> 的兰花DNA序列。如果你想读取GenBank格式文件，如 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk">ls_orchid.gbk</a> ，只需要更改文件名和格式字符串：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">seq</span>
+    <span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>同样地，如果需要读取其他格式文件，并且 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 支持该文件格式，你只需要修改到相应的格式字符串，如“swiss”为SwissProt格式文件，“embl”为EMBL格式文本文件。详细的清单请见维基页面（ <a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a> ）和内置文档（ <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html">在线文档</a> ）。</p>
+<p>另外一个非常常见的使用Python迭代器的地方是在列表解析（list comprehension，或者生成器表达式generator expression）。例如，如果需要从文件中提取序列ID列表，我们可以通过以下的列表推导很容易地实现：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identifiers</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq_record</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identifiers</span>
+<span class="go">[&#39;Z78533.1&#39;, &#39;Z78532.1&#39;, &#39;Z78531.1&#39;, &#39;Z78530.1&#39;, &#39;Z78529.1&#39;, &#39;Z78527.1&#39;, ..., &#39;Z78439.1&#39;]</span>
+</pre></div>
+</div>
+<p>更多关于 <tt class="docutils literal"><span class="pre">SeqIO.parse()</span></tt> 在列表推导中运用的示例请见第 <a class="reference external" href="#seq:sequence-parsing-plus-pylab">18.2</a> 节（e.g. 对序列长度或GC%作图）。</p>
+</div>
+<div class="section" id="id4">
+<h3>5.1.2 遍历序列文件<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>在上述示例中，我们通常使用for循环遍历所有的序列条目（records）。你可以对for循环使用所有类型的支持迭代接口的Python对象（包括列表，元组（tuple）和字符串）。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 返回的对象实际上是一个返回 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的迭代器。你将顺序地获得每个条目，但是有且仅有一次；优势是，当处理大文件时，迭代器可以有效地节约内存空间。</p>
+<p>除了使用for循环，还可以使用迭代器的 <tt class="docutils literal"><span class="pre">.next()</span></tt> 方法遍历序列条目，如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">record_iterator</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+
+<span class="n">first_record</span> <span class="o">=</span> <span class="n">record_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">id</span>
+<span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">description</span>
+
+<span class="n">second_record</span> <span class="o">=</span> <span class="n">record_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">second_record</span><span class="o">.</span><span class="n">id</span>
+<span class="k">print</span> <span class="n">second_record</span><span class="o">.</span><span class="n">description</span>
+</pre></div>
+</div>
+<p>注意：如果使用 <tt class="docutils literal"><span class="pre">.next()</span></tt> 方法，当没有序列条目时，将抛出 <tt class="docutils literal"><span class="pre">StopIteration</span></tt> 异常。</p>
+<p>一种特殊情形是，序列文件包含多个序列条目，而你只需要第一个条目。在这种情况下，可使用以下代码，非常简洁：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">first_record</span>  <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>注意：像上述示例中使用 <tt class="docutils literal"><span class="pre">.next()</span></tt> 方法将忽略文件中其余的序列。如果序列文件“有且仅有”一条序列条目，如本章后面的某些在线示例、包含单条染色体序列的GenBank文件，请使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 函数。该函数会检查文件是否包含额外的序列条目。</p>
+</div>
+<div class="section" id="id5">
+<h3>5.1.3  获得序列文件中序列条目列表<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>在上一节中，我们讨论了如何使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 返回一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 迭代器，然后顺序地获取序列条目。往往我们需要以任意顺序获取序列条目，Python列表数据类型便可以达到这个目的。使用Python内置函数 <tt class="docutils literal"><span class="pre">list()</span></tt> ，我们可以将序列条目迭代器转变成 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表，如下：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">))</span>
+
+<span class="k">print</span> <span class="s">&quot;Found </span><span class="si">%i</span><span class="s"> records&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;The last record&quot;</span>
+<span class="n">last_record</span> <span class="o">=</span> <span class="n">records</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c">#using Python&#39;s list tricks</span>
+<span class="k">print</span> <span class="n">last_record</span><span class="o">.</span><span class="n">id</span>
+<span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">last_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">last_record</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="s">&quot;The first record&quot;</span>
+<span class="n">first_record</span> <span class="o">=</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c">#remember, Python counts from zero</span>
+<span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">id</span>
+<span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">first_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>运行结果:</p>
+<div class="code python highlight-python"><pre>Found 94 records
+The last record
+Z78439.1
+Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', IUPACAmbiguousDNA())
+592
+The first record
+Z78533.1
+Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
+740</pre>
+</div>
+<p>当然，你仍然可以对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表使用for循环。使用列表比使用迭代器灵活得多（例如，可以根据列表大小知道序列条目数量），但缺点是for循环要同时读取所有的内容，需要更多的内存空间。</p>
+</div>
+<div class="section" id="id6">
+<h3>5.1.4 提取数据<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象及其注释信息在第 <a class="reference external" href="#chapter:SeqRecord">4</a> 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk">ls_orchid.gbk</a> 中解析出第一个序列条目，并将其输出：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">record_iterator</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">first_record</span> <span class="o">=</span> <span class="n">record_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">first_record</span>
+</pre></div>
+</div>
+<p>输出结果:</p>
+<div class="code python highlight-python"><pre>ID: Z78533.1
+Name: Z78533
+Description: C.irapeanum 5.8S rRNA gene and ITS1 and ITS2 DNA.
+Number of features: 5
+/sequence_version=1
+/source=Cypripedium irapeanum
+/taxonomy=['Eukaryota', 'Viridiplantae', 'Streptophyta', ..., 'Cypripedium']
+/keywords=['5.8S ribosomal RNA', '5.8S rRNA gene', ..., 'ITS1', 'ITS2']
+/references=[...]
+/accessions=['Z78533']
+/data_file_division=PLN
+/date=30-NOV-2006
+/organism=Cypripedium irapeanum
+/gi=2765658
+Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())</pre>
+</div>
+<p>这可以得到 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 大部分的易读的注释汇总信息。在此例中，我们将使用 <tt class="docutils literal"><span class="pre">.annotations</span></tt> 属性-即Python字典（dictionary）。该注释字典的内容如上述示例结果，你也可以直接输出：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">annotations</span>
+</pre></div>
+</div>
+<p>与其他Python字典一样，你可以轻松地获得键列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>或者值列表:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>通常，注释值是字符串或者字符串列表。一个特例是，文件中的所有参考文献（references）都以引用（reference）对象方式存储。</p>
+<p>例如你想从GenBank文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk">ls_orchid.gbk</a> 中提取出物种列表。我们需要的信息 <em>Cypripedium irapeanum</em> 被保存在这个注释字典的‘source’和‘organism’键中，我们可以用下面的方式获取：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">]</span>
+<span class="go">Cypripedium irapeanum</span>
+</pre></div>
+</div>
+<p>或:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">first_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;organism&quot;</span><span class="p">]</span>
+<span class="go">Cypripedium irapeanum</span>
+</pre></div>
+</div>
+<p>通常，‘organism’ 用于学名（拉丁名，e.g. <em>Arabidopsis thaliana</em> ），而 ‘source’ 用于俗名（common name）（e.g. thale cress）。在此例中，以及在通常情况下，这两个字段是相同的。</p>
+<p>现在，让我们遍历所有的序列条目， 创建一个包含所有兰花序列的物种列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">all_species</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">):</span>
+    <span class="n">all_species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;organism&quot;</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">all_species</span>
+</pre></div>
+</div>
+<p>另外一种方式是使用列表解析：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">all_species</span> <span class="o">=</span> <span class="p">[</span><span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;organism&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> \
+               <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)]</span>
+<span class="k">print</span> <span class="n">all_species</span>
+</pre></div>
+</div>
+<p>两种方式的输出结果相同：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;Cypripedium irapeanum&#39;</span><span class="p">,</span> <span class="s">&#39;Cypripedium californicum&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="s">&#39;Paphiopedilum barbatum&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>因为GenBank文件注释是以标准方式注释，所以相当简单。</p>
+<p>现在，假设你需要从一个FASTA文件而不是GenBank文件提取出物种列表，那么你不得不多写一些代码，用以从序列条目的描述行提取需要的数据。使用的示例FASTA文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a> 格式如下：</p>
+<div class="code python highlight-python"><pre>&gt;gi|2765658|emb|Z78533.1|CIZ78533 C.irapeanum 5.8S rRNA gene and ITS1 and ITS2 DNA
+CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAACGATCGAGTG
+AATCCGGAGGACCGGTGTACTCAGCTCACCGGGGGCATTGCTCCCGTGGTGACCCTGATTTGTTGTTGGG
+...</pre>
+</div>
+<p>你可以手动检查，对于每一个序列条目，物种名都是描述行的第二个单词。这意味着如果我们以空白分割序列条目的 <tt class="docutils literal"><span class="pre">.description</span></tt> ，物种名将会是第1个元素（第0个元素是序列ID），我们可以这样做：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">all_species</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">):</span>
+    <span class="n">all_species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">print</span> <span class="n">all_species</span>
+</pre></div>
+</div>
+<p>将得到:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;C.irapeanum&#39;</span><span class="p">,</span> <span class="s">&#39;C.californicum&#39;</span><span class="p">,</span> <span class="s">&#39;C.fasciculatum&#39;</span><span class="p">,</span> <span class="s">&#39;C.margaritaceum&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="s">&#39;P.barbatum&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>使用更简洁的列表解析：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">all_species</span> <span class="o">==</span> <span class="p">[</span><span class="n">seq_record</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> \
+                <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)]</span>
+<span class="k">print</span> <span class="n">all_species</span>
+</pre></div>
+</div>
+<p>通常，对FASTA描述行提取信息不是那么方便。如果你能获得对目标序列注释很好的文件格式如GenBank或者EMBL，那么这类注释信息就很容易处理。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>5.2 从压缩文档读取解析序列信息<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>在上一节中，我们研究了从文件中解析序列信息。除了使用文件名，你可以让 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 使用文件句柄（请见第 <a class="reference external" href="#sec:appendix-handles">22.1</a> 节）。在这一节，我们将使用文件句柄从压缩文件中解析序列信息。</p>
+<p>正如你上面看到的，我们可以使用文件名作为 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 或 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 的参数 - 例如在这个例子中，我们利用生成器表达式计算GenBank文件中多条序列条目的总长：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">))</span>
+<span class="go">67518</span>
+</pre></div>
+</div>
+<p>此处，我们使用文件句柄，并使用 <tt class="docutils literal"><span class="pre">with</span></tt> 语句（Python 2.5及以上版本）自动关闭句柄：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">with_statement</span> <span class="c">#Needed on Python 2.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">))</span>
+<span class="go">67518</span>
+</pre></div>
+</div>
+<p>或者，用旧版本的方式，手动关闭句柄：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">))</span>
+<span class="go">67518</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>现在，如果我们有一个gzip压缩的文件呢？这种类型的文件在Linux系统中被普遍使用。我们可以使用Python的 <tt class="docutils literal"><span class="pre">gzip</span></tt> 模块打开压缩文档以读取数据 - 返回一个句柄对象：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gzip</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk.gz&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">))</span>
+<span class="go">67518</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>相同地，如果我们有一个bzip2压缩文件（遗憾的是与函数的名字是不太一致）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bz2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">bz2</span><span class="o">.</span><span class="n">BZ2File</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk.bz2&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">))</span>
+<span class="go">67518</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>如果你在使用Python2.7及以上版本， <tt class="docutils literal"><span class="pre">with</span></tt> 也可以读取gzip和bz2文件。然而在这之前的版本中使用将中断程序(<a class="reference external" href="http://bugs.python.org/issue3860">Issue 3860</a> ), 抛出 <tt class="docutils literal"><span class="pre">__exit__</span></tt> 缺失这类 <tt class="docutils literal"><span class="pre">属性错误</span></tt> （ <tt class="docutils literal"><span class="pre">AttributeError</span></tt> ）。</p>
+<p>有一种gzip（GNU zip）变种称为BGZF（Blocked GNU Zip Format），它可以作为普通gzip文件被读取，但具有随机读取的优点，我们将在稍后的第 <a class="reference external" href="#sec:SeqIO-index-bgzf">5.4.4</a> 节讨论。</p>
+</div>
+<div class="section" id="id8">
+<h2>5.3 解析来自网络的序列<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>在上一节中，我们研究了从文件（使用文件名或者文件句柄）和压缩文件（使用文件句柄）解析序列数据。这里我们将使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 的另一种类型句柄，网络连接，从网络下载和解析序列。</p>
+<p>请注意，你可以一气呵成地下载序列并解析成为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，这并不意味这是一个好主意。通常，你可能需要下载序列并存入文件以重复使用。</p>
+<div class="section" id="genbank">
+<h3>5.3.1 解析来自网络的GenBank序列条目<a class="headerlink" href="#genbank" title="Permalink to this headline">¶</a></h3>
+<p>第 <a class="reference external" href="#sec:efetch">9.6</a> 节将更详细地讨论Entrez EFetch接口，但是现在我们将通过它连接到NCBI，通过GI号从GenBank获得 <em>Opuntia</em> （刺梨）序列。</p>
+<p>首先，我们只获取一条序列条目。如果你不关注注释和相关信息，下载FASTA文件是个不错的选择，因为他们相对紧凑。请记住，当你希望处理的对象包含有且仅有一条序列条目时，使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 函数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;fasta&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;6273291&quot;</span><span class="p">)</span>
+<span class="n">seq_record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> with </span><span class="si">%i</span><span class="s"> features&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">features</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>输出结果为:</p>
+<div class="code python highlight-python"><pre>gi|6273291|gb|AF191665.1|AF191665 with 0 features</pre>
+</div>
+<p>NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009年复活节，Entrez EFetch API使用“genbank”作为返回类型。然而NCBI现在坚持使用“gb” （蛋白使用“gp”）作为官方返回类型，具体描述参见 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html">EFetch for Sequence and other Molecular Biology Databases</a> 。因此，Biopython1.50及以后版本的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 中，我们支持“gb”作为“genbank”的别名。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;6273291&quot;</span><span class="p">)</span>
+<span class="n">seq_record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">)</span> <span class="c">#using &quot;gb&quot; as an alias for &quot;genbank&quot;</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> with </span><span class="si">%i</span><span class="s"> features&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">features</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>输出结果为：</p>
+<div class="code python highlight-python"><pre>AF191665.1 with 3 features</pre>
+</div>
+<p>请注意，这次我们获得3个特征。</p>
+<p>现在，让我们获取多个序列条目。这次句柄包含多条序列条目，因此我们必须使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 函数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">,</span> \
+                       <span class="nb">id</span><span class="o">=</span><span class="s">&quot;6273291,6273290,6273289&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">seq_record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">description</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;...&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;Sequence length </span><span class="si">%i</span><span class="s">,&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="p">),</span>
+    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> features,&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">features</span><span class="p">),</span>
+    <span class="k">print</span> <span class="s">&quot;from: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">]</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>输出结果为：</p>
+<div class="code python highlight-python"><pre>AF191665.1 Opuntia marenae rpl16 gene; chloroplast gene for c...
+Sequence length 902, 3 features, from: chloroplast Opuntia marenae
+AF191664.1 Opuntia clavata rpl16 gene; chloroplast gene for c...
+Sequence length 899, 3 features, from: chloroplast Grusonia clavata
+AF191663.1 Opuntia bradtiana rpl16 gene; chloroplast gene for...
+Sequence length 899, 3 features, from: chloroplast Opuntia bradtianaa</pre>
+</div>
+<p>更多关于 <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> 模块的信息请见第 <a class="reference external" href="#chapter:entrez">9</a> 章，并阅读NCBI Entrez使用指南（第 <a class="reference external" href="#sec:entrez-guidelines">9.1</a> 节）。</p>
+</div>
+<div class="section" id="swissprot">
+<h3>5.3.2 解析来自网络的SwissProt序列条目<a class="headerlink" href="#swissprot" title="Permalink to this headline">¶</a></h3>
+<p>现在我们使用句柄下载来自ExPASy的SwissProt文件，更深入的信息请见第 <a class="reference external" href="#chapter:swiss_prot">10</a> 章。如上面提到的，当你希望处理的对象包含有且仅有一条序列条目时，使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 函数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">ExPASy</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="n">ExPASy</span><span class="o">.</span><span class="n">get_sprot_raw</span><span class="p">(</span><span class="s">&quot;O23729&quot;</span><span class="p">)</span>
+<span class="n">seq_record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;swiss&quot;</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">id</span>
+<span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">name</span>
+<span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">description</span>
+<span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Length </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_record</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="s">&quot;keywords&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>如果网络连接正常，你将会得到：</p>
+<div class="code python highlight-python"><pre>O23729
+CHS3_BROFI
+RecName: Full=Chalcone synthase 3; EC=2.3.1.74; AltName: Full=Naringenin-chalcone synthase 3;
+Seq('MAPAMEEIRQAQRAEGPAAVLAIGTSTPPNALYQADYPDYYFRITKSEHLTELK...GAE', ProteinAlphabet())
+Length 394
+['Acyltransferase', 'Flavonoid biosynthesis', 'Transferase']</pre>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>5.4 序列文件作为字典<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>我们将介绍 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块中3个相关函数，用于随机读取多序列文件。这里需要权衡灵活性和内存使用。总之：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 最灵活但内存占用最大 （请见第 <a class="reference external" href="#SeqIO:to_dict">5.4.1</a> 节）。这基本上是一个辅助函数，用于建立Python <tt class="docutils literal"><span class="pre">字典</span></tt> ，每个条目以 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象形式存储在内存中，允许你修改这些条目。</li>
+<li><tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 处于中间水平，类似于只读字典，当需要时解析序列到 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象（请见第 <a class="reference external" href="#sec:SeqIO-index">5.4.2</a> 节）。</li>
+<li><tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 也类似于只读字典，但是将文件中的ID和文件偏移值存储到硬盘（SQLite3数据库），这意味着它对内存需求很低（请见第 <a class="reference external" href="#sec:SeqIO-index-db">5.4.3</a> 节），但会慢一点。</li>
+</ul>
+<p>全面的概述请见讨论部分（第 <a class="reference external" href="#sec:SeqIO-indexing-discussion">5.4.5</a> 节）。</p>
+<div class="section" id="id10">
+<h3>5.4.1 序列文件作为字典-在内存中<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>我们对兰花数据文件接下来的处理将用于展示如何对他们建立索引，以及使用Python的 <tt class="docutils literal"><span class="pre">dictionary</span></tt>  数量类型（与Perl中hash类似）以类似于数据库的方式读取数据。这常用于从中等大小的文件中读取某些特定元素，形成一个很好的快速数据库。如果处理较大的文件，内存将是个问题，请见下面第 <a class="reference external" href="#sec:SeqIO-index">5.4.2</a> 节。</p>
+<p>你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 函数创建一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 字典（在内存中）。默认会使用每条序列条目的ID（i.e.  <tt class="docutils literal"><span class="pre">.id</span></tt> 属性）作为键。让我们用GenBank文件试一试：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 仅需一个参数，即能够得到 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的列表或生成器，这里我们使用 <tt class="docutils literal"><span class="pre">SeqIO.parse</span></tt> 函数输出。顾名思义， <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 返回一个Python字典。</p>
+<p>因为变量 <tt class="docutils literal"><span class="pre">orchid_dict</span></tt>  是一个普通的Python字典，我们可以查看所有的键：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;Z78484.1&#39;, &#39;Z78464.1&#39;, &#39;Z78455.1&#39;, &#39;Z78442.1&#39;, &#39;Z78532.1&#39;, &#39;Z78453.1&#39;, ..., &#39;Z78471.1&#39;]</span>
+</pre></div>
+</div>
+<p>如果你确实需要，你甚至可以一次性查看所有的序列条目：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="c">#lots of output!</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>我们可以通过键读取单个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>  对象并操作改对象：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">seq_record</span> <span class="o">=</span> <span class="n">orchid_dict</span><span class="p">[</span><span class="s">&quot;Z78475.1&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">description</span>
+<span class="go">P.supardii 5.8S rRNA gene and ITS1 and ITS2 DNA.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">seq_record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="go">Seq(&#39;CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT&#39;, IUPACAmbiguousDNA())</span>
+</pre></div>
+</div>
+<p>因此，可以用我们的GenBank序列条目轻松地在内存中创建一个数据库（in memory “database”）。接下来我们将尝试使用FASTA文件。</p>
+<p>值得注意的是，对有Python使用经验的人来说，可以轻松地创建一个类似的字典。然而，典型的字典构建方法不能很好地处理重复键的情况。使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 函数将明确检查重复键，如果发现任何重复键将引发异常并退出。</p>
+<div class="section" id="id11">
+<h4>5.4.1.1 指定字典键<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<p>使用上述相同的代码，仅将文件改为FASTA文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="k">print</span> <span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这次键为：</p>
+<div class="code python highlight-python"><pre>['gi|2765596|emb|Z78471.1|PDZ78471', 'gi|2765646|emb|Z78521.1|CCZ78521', ...
+ ..., 'gi|2765613|emb|Z78488.1|PTZ78488', 'gi|2765583|emb|Z78458.1|PHZ78458']</pre>
+</div>
+<p>这结果是之前在第 <a class="reference external" href="#sec:fasta-parsing">2.4.1</a> 节中我们解析的FASTA文件结果。如果你需要别的作为键，如登录号（Accession Number），可使用 <tt class="docutils literal"><span class="pre">SeqIO.to_dict()</span></tt> 的可选参数 <tt class="docutils literal"><span class="pre">key_function</span></tt> ，它允许你根据你的序列条目特点，自定义字典键。</p>
+<p>首先，你必须写一个函数，当使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象作为参数时，可以返回你需要的键（字符串）。通常，函数的细节依赖于你要处理的序列条目的特点。但是对于我们的兰花数据，我们只需要使用“管道”符号（|）切分ID并返回第四个条目（第三个元素）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_accession</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Given a SeqRecord, return the accession number as a string.</span>
+
+<span class="sd">    e.g. &quot;gi|2765613|emb|Z78488.1|PTZ78488&quot; -&gt; &quot;Z78488.1&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;|&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;gi&quot;</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;emb&quot;</span>
+    <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>然后我们可以将此函数赋与 <tt class="docutils literal"><span class="pre">SeqIO.to_dict()</span></tt> 函数用于构建字典：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">),</span> <span class="n">key_function</span><span class="o">=</span><span class="n">get_accession</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>最终可到到新的字典键：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;Z78484.1&#39;, &#39;Z78464.1&#39;, &#39;Z78455.1&#39;, &#39;Z78442.1&#39;, &#39;Z78532.1&#39;, &#39;Z78453.1&#39;, ..., &#39;Z78471.1&#39;]</span>
+</pre></div>
+</div>
+<p>不是太困难！</p>
+</div>
+<div class="section" id="seguid">
+<h4>5.4.1.2 使用SEGUID校验和对字典建立索引<a class="headerlink" href="#seguid" title="Permalink to this headline">¶</a></h4>
+<p>为了介绍另外一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象字典的示例，我们将使用SEGUID校验和函数。这是一个相对较新的校验和，冲突非常罕见（i.e. 两条不同序列具有相同的校验和），相对CRC64校验和有所提升。</p>
+<p>让我们再一次处理兰花GenBank文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqUtils.CheckSum</span> <span class="kn">import</span> <span class="n">seguid</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">seguid</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>将得到：</p>
+<div class="code python highlight-python"><pre>Z78533.1 JUEoWn6DPhgZ9nAyowsgtoD9TTo
+Z78532.1 MN/s0q9zDoCVEEc+k/IFwCNF2pY
+...
+Z78439.1 H+JfaShya/4yyAj7IbMqgNkxdxQ</pre>
+</div>
+<p>现在，再次调用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 函数 <tt class="docutils literal"><span class="pre">key_function</span></tt> 参数， <tt class="docutils literal"><span class="pre">key_function</span></tt> 参数需要一个函数将 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 转变为字符串。我们不能直接使用`seguid() `` 函数，因为它需要 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象（或字符串）作为参数。不过，我们可以使用Python的 <tt class="docutils literal"><span class="pre">lambda</span></tt> 特性创建一个一次性（“one off”）函数，然后传递给 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> ：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqUtils.CheckSum</span> <span class="kn">import</span> <span class="n">seguid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seguid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">),</span>
+<span class="gp">... </span>                            <span class="k">lambda</span> <span class="n">rec</span> <span class="p">:</span> <span class="n">seguid</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">seguid_dict</span><span class="p">[</span><span class="s">&quot;MN/s0q9zDoCVEEc+k/IFwCNF2pY&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span>
+<span class="go">Z78532.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">description</span>
+<span class="go">C.californicum 5.8S rRNA gene and ITS1 and ITS2 DNA.</span>
+</pre></div>
+</div>
+<p>将会返回文件中第二个序列条目 <tt class="docutils literal"><span class="pre">Z78532.1</span></tt> 。</p>
+</div>
+</div>
+<div class="section" id="id12">
+<h3>5.4.2 序列文件作为字典 - 索引文件<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>之前众多示例试图解释的是使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 的灵活性。然而，因为它将所有的信息都存储在内存中，你能处理的文件大小受限于电脑的RAM。通常，这仅能处理一些小文件或中等大小文件。</p>
+<p>对于更大的文件，应该考虑使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> ，工作原理上略有不同。尽管仍然是返回一个类似于字典的对象，它并不将所有的信息存储在内存中。相反，它仅仅记录每条序列条目在文件中的位置 - 当你需要读取某条特定序列条目时，它才进行解析。</p>
+<p>让我们使用之前相同的GenBank文件作为示例：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;Z78484.1&#39;, &#39;Z78464.1&#39;, &#39;Z78455.1&#39;, &#39;Z78442.1&#39;, &#39;Z78532.1&#39;, &#39;Z78453.1&#39;, ..., &#39;Z78471.1&#39;]</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">seq_record</span> <span class="o">=</span> <span class="n">orchid_dict</span><span class="p">[</span><span class="s">&quot;Z78475.1&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">seq_record</span><span class="o">.</span><span class="n">description</span>
+<span class="go">P.supardii 5.8S rRNA gene and ITS1 and ITS2 DNA.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seq_record</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Seq(&#39;CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT&#39;, IUPACAmbiguousDNA())</span>
+</pre></div>
+</div>
+<p>注意： <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 不接受句柄参数，仅仅接受文件名。这有充分的理由，但是过于技术性。第二个参数是文件格式（与其它 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 函数一样的小写字符串）。你可以使用许多其他的简单的文件格式，包括FASTA和FASTQ文件（示例参见第 <a class="reference external" href="#sec:fastq-indexing">18.1.11</a> 节），但不支持比对文件格式，如PHYLIP或Clustal。最后有个可选参数，你可以指定字符集或者键函数。</p>
+<p>下面是使用FASTA文件做的相同的示例 - 仅改变了文件名和格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;gi|2765596|emb|Z78471.1|PDZ78471&#39;, &#39;gi|2765646|emb|Z78521.1|CCZ78521&#39;, ...</span>
+<span class="go"> ..., &#39;gi|2765613|emb|Z78488.1|PTZ78488&#39;, &#39;gi|2765583|emb|Z78458.1|PHZ78458&#39;]</span>
+</pre></div>
+</div>
+<div class="section" id="id13">
+<h4>5.4.2.1 指定字典键<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
+<p>如果想使用与之前一样的键，像第 <a class="reference external" href="#seq:seqio-todict-functionkey">5.4.1.1</a> 节 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 示例，你需要写一个小函数，从FASTA ID（字符串）中匹配你想要的键：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">get_acc</span><span class="p">(</span><span class="n">identifier</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Given a SeqRecord identifier string, return the accession number as a string.</span>
+
+<span class="sd">    e.g. &quot;gi|2765613|emb|Z78488.1|PTZ78488&quot; -&gt; &quot;Z78488.1&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">identifier</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;|&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;gi&quot;</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;emb&quot;</span>
+    <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>然后我们将此函数赋与 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数用于构建字典：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">,</span> <span class="n">key_function</span><span class="o">=</span><span class="n">get_acc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">orchid_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;Z78484.1&#39;, &#39;Z78464.1&#39;, &#39;Z78455.1&#39;, &#39;Z78442.1&#39;, &#39;Z78532.1&#39;, &#39;Z78453.1&#39;, ..., &#39;Z78471.1&#39;]</span>
+</pre></div>
+</div>
+<p>当你知道怎样实现就变得很简单了。</p>
+</div>
+<div class="section" id="id14">
+<h4>5.4.2.2 获取序列条目原始数据<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<p>来自 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 的字典样对象以 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象形式返回序列条目。但是，有时候从文件中直接获取原始数据非常有用。对于此种情况，使用 <tt class="docutils literal"><span class="pre">get_raw()</span></tt> 方法，它仅需要一个参数（序列ID），然后返回一个字符串（提取自文件的未处理数据）。</p>
+<p>一个重要的例子就是从大文件中提取出一个序列子集，特别是当 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 还不支持这种输出格式（e.g. SwissProt文件格式的文本文件 ） 或者需要完整地保留源文件（Biopython的GenBank和EMBL格式输出并不会保留每一点注释信息）。</p>
+<p>假如你已经从UniProt FTP站点下载了整个数据库的SwissPort格式文本文件（ <a class="reference external" href="ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz">ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz</a> ），并也已经解压为文件 <tt class="docutils literal"><span class="pre">uniprot_sprot.dat</span></tt> ，你需要从中提取一部分序列条目：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniprot</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;uniprot_sprot.dat&quot;</span><span class="p">,</span> <span class="s">&quot;swiss&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;selected.dat&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">acc</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;P33487&quot;</span><span class="p">,</span> <span class="s">&quot;P19801&quot;</span><span class="p">,</span> <span class="s">&quot;P13689&quot;</span><span class="p">,</span> <span class="s">&quot;Q8JZQ5&quot;</span><span class="p">,</span> <span class="s">&quot;Q9TRC7&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">uniprot</span><span class="o">.</span><span class="n">get_raw</span><span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>在第 <a class="reference external" href="#sec:SeqIO-sort">18.1.5</a> 节有更多关于使用 <tt class="docutils literal"><span class="pre">SeqIO.index()</span></tt> 函数对大文件序列排序的示例（不需要一次加载所有信息到内存）。</p>
+</div>
+</div>
+<div class="section" id="id15">
+<h3>5.4.3 序列文件作为字典 - 数据库索引文件<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>Biopython 1.57引入一个替代的函数， <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 。由于它将序列信息以文件方式存储在硬盘上（使用SQLite3数据库）而不是内存中，因此它可以处理超大文件。同时，你可以同时对多个文件建立索引（前提是所有序列条目的ID是唯一的）。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数有三个参数：</p>
+<ul class="simple">
+<li>索引文件名，我们建议使用以 <tt class="docutils literal"><span class="pre">.idx</span></tt> 结尾的字符，改索引文件实质上是SQLite3数据库；</li>
+<li>要建立索引的文件列表（或者单个文件名）；</li>
+<li>文件格式（与 <tt class="docutils literal"><span class="pre">SeqIO</span></tt> 模块中其它函数一样的小写字符串）。</li>
+</ul>
+<p>将以NCBI FTP站点 <a class="reference external" href="ftp://ftp.ncbi.nih.gov/genbank/">ftp://ftp.ncbi.nih.gov/genbank/</a> 的GenBank文本文件为例，这些文件为gzip压缩文件。对于GenBank版本182，病毒序列共包含16个文件， <tt class="docutils literal"><span class="pre">gbvrl1.seq</span></tt>  -  <tt class="docutils literal"><span class="pre">gbvrl16.seq</span></tt> ，共包含约一百万条序列条目。对这些文件，你可以像这样建立索引：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;gbvrl</span><span class="si">%i</span><span class="s">.seq&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gb_vrl</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index_db</span><span class="p">(</span><span class="s">&quot;gbvrl.idx&quot;</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> sequences indexed&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">gb_vrl</span><span class="p">)</span>
+<span class="go">958086 sequences indexed</span>
+</pre></div>
+</div>
+<p>在我个人电脑上，运行大约需要2分钟。如果你重新运行，索引文件（这里为 <tt class="docutils literal"><span class="pre">gbvrl.idx</span></tt> ）将在不到一秒的时间内加载。你可以将这个索引作为一个只读的Python字典，并不需要去担心序列来自哪个文件，e.g.:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">gb_vrl</span><span class="p">[</span><span class="s">&quot;GQ333173.1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">description</span>
+<span class="go">HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial cds.</span>
+</pre></div>
+</div>
+<div class="section" id="id16">
+<h4>5.4.3.1 获取序列条目原始数据<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+<p>与第 <a class="reference external" href="#sec:seqio-index-getraw">5.4.2.2</a> 节讨论的 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数一样，该字典样对象同样允许你获取每个序列条目的原始文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">gb_vrl</span><span class="o">.</span><span class="n">get_raw</span><span class="p">(</span><span class="s">&quot;GQ333173.1&quot;</span><span class="p">)</span>
+<span class="go">LOCUS       GQ333173                 459 bp    DNA     linear   VRL 21-OCT-2009</span>
+<span class="go">DEFINITION  HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial</span>
+<span class="go">            cds.</span>
+<span class="go">ACCESSION   GQ333173</span>
+<span class="gp">...</span>
+<span class="go">//</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id17">
+<h3>5.4.4 对压缩文件建立索引<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>经常你要建立索引的文件可能非常大，因此你想对它进行压缩。不幸的是，对常规的文件格式如gzip和bzip2高效的随机读取通常很困难。在这种情况下，BGZF (Blocked GNU Zip Format)非常有用。它是gzip变体（也可以使用标准的gzip工具解压），因BAM文件格式得到推广，<a class="reference external" href="http://samtools.sourceforge.net/">samtools</a> 和 <a class="reference external" href="http://samtools.sourceforge.net/tabix.shtml">tabix</a> ；</p>
+<p>你可以使用samtools的命令行工具 <tt class="docutils literal"><span class="pre">bgzip</span></tt> 创建BGZF格式压缩文件。在我们的示例中，使用文件扩展名 <tt class="docutils literal"><span class="pre">*.bgz</span></tt> ，以区分于普通的压缩文件（命名为 <tt class="docutils literal"><span class="pre">*.gz</span></tt> ）。你也可以在Python中使用 <tt class="docutils literal"><span class="pre">Bio.bgzf</span></tt> 模块读写BGZF文件。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 函数均可以用于BGZF压缩文件。例如，如果使用过未压缩的GenBank文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+</pre></div>
+</div>
+<p>你可以使用如下的命令行命令压缩该文件（同时保留源文件） - 不需要担心，压缩文件和别的示例及已经包含：</p>
+<div class="code python highlight-python"><pre>$ bgzip -c ls_orchid.gbk &gt; ls_orchid.gbk.bgz</pre>
+</div>
+<p>你可以用相同的方式使用压缩文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk.bgz&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+</pre></div>
+</div>
+<p>或：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orchid_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index_db</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk.bgz.idx&quot;</span><span class="p">,</span> <span class="s">&quot;ls_orchid.gbk.bgz&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">orchid_dict</span><span class="p">)</span>
+<span class="go">94</span>
+</pre></div>
+</div>
+<p><cite>SeqIO `</cite> 建立索引时自动检测是否为BGZF压缩格式。注意：压缩文件和未压缩文件不能使用相同的索引文件。</p>
+</div>
+<div class="section" id="id18">
+<h3>5.4.5 讨论<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>这些方法你该使用哪种及其原因，取决于你要做什么（以及你要处理的数据有多大）。然而，通常 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 是个不错的选择。如果你正在处理上百万条序列条目，多个文件，或者重复性分析，那么看看 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 。</p>
+<p>选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.to_dict()</span></tt> 而不选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 或 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 的原因主要是它的灵活性，尽管会占用更多内存。存储 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象到内存的优势在于可以随意被改变，添加或者删除。除了高内存消耗这个缺点外，建立索引也可能花费更长的时间，因为所有的条目都需要被完全解析。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 都是在需要时才解析序列条目。当建立索引时，他们扫描文件，寻找每个序列条目的起始，并做尽可能少的工作提取出ID信息。</p>
+<p>选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 而不选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 的原因包括以下：</p>
+<ul class="simple">
+<li>建立索引更快（需要注意的是简单文件格式）</li>
+<li>读取 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象稍快（但是这种差异只有在解析简单格式文件是才可见）</li>
+<li>可以使用不可变的Python对象作为字典键而不仅仅是字符串（e.g. 如字符串元组、不可变容器（frozen set））</li>
+<li>如果被建立索引的序列文件改变，不需要担心索引数据库过期。</li>
+</ul>
+<p>选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> 而不选择 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 的原因包括以下：</p>
+<ul class="simple">
+<li>没有内存限制 - 这对通常多达10亿的二代测序文件来说非常重要，如果使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 可能需要超过4G的RAM和64位Python</li>
+<li>索引数据量保存在硬盘上，可重复使用。尽管建立索引数据库需要花费更多的时间，但是从长远看来。如果你有个脚本重新运行这个相同的数据库，可以节约时间</li>
+<li>可以同时对多个文件建立索引</li>
+<li><cite>get_raw() `</cite> 方法可以快得多，因为对于大多数文件格式只需要存储序列条目的长度和偏移量（offset）</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id19">
+<h2>5.5 写入序列文件<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<p>我们已经讨论了使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 输入序列（读取文件），现在我们将研究使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出序列（写入文件）。该函数需要三个参数：某些 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，要写入的句柄或文件名，和序列格式。</p>
+<p>我们先用硬编码方式（手动创建而不是从文件中加载）创建一个些新的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，示例如下：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">generic_protein</span>
+
+<span class="n">rec1</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;SSAC&quot;</span><span class="p">,</span> <span class="n">generic_protein</span><span class="p">),</span>
+                 <span class="nb">id</span><span class="o">=</span><span class="s">&quot;gi|14150838|gb|AAK54648.1|AF376133_1&quot;</span><span class="p">,</span>
+                 <span class="n">description</span><span class="o">=</span><span class="s">&quot;chalcone synthase [Cucumis sativus]&quot;</span><span class="p">)</span>
+
+<span class="n">rec2</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;YPDYYFRITNREHKAELKEKFQRMCDKSMIKKRYMYLTEEILKENPSMCEYMAPSLDARQ&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;DMVVVEIPKLGKEAAVKAIKEWGQ&quot;</span><span class="p">,</span> <span class="n">generic_protein</span><span class="p">),</span>
+                 <span class="nb">id</span><span class="o">=</span><span class="s">&quot;gi|13919613|gb|AAK33142.1|&quot;</span><span class="p">,</span>
+                 <span class="n">description</span><span class="o">=</span><span class="s">&quot;chalcone synthase [Fragaria vesca subsp. bracteata]&quot;</span><span class="p">)</span>
+
+<span class="n">rec3</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;MVTVEEFRRAQCAEGPATVMAIGTATPSNCVDQSTYPDYYFRITNSEHKVELKEKFKRMC&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;EKSMIKKRYMHLTEEILKENPNICAYMAPSLDARQDIVVVEVPKLGKEAAQKAIKEWGQP&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;KSKITHLVFCTTSGVDMPGCDYQLTKLLGLRPSVKRFMMYQQGCFAGGTVLRMAKDLAEN&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;NKGARVLVVCSEITAVTFRGPNDTHLDSLVGQALFGDGAAAVIIGSDPIPEVERPLFELV&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;SAAQTLLPDSEGAIDGHLREVGLTFHLLKDVPGLISKNIEKSLVEAFQPLGISDWNSLFW&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;IAHPGGPAILDQVELKLGLKQEKLKATRKVLSNYGNMSSACVLFILDEMRKASAKEGLGT&quot;</span> \
+                    <span class="o">+</span><span class="s">&quot;TGEGLEWGVLFGFGPGLTVETVVLHSVAT&quot;</span><span class="p">,</span> <span class="n">generic_protein</span><span class="p">),</span>
+                 <span class="nb">id</span><span class="o">=</span><span class="s">&quot;gi|13925890|gb|AAK49457.1|&quot;</span><span class="p">,</span>
+                 <span class="n">description</span><span class="o">=</span><span class="s">&quot;chalcone synthase [Nicotiana tabacum]&quot;</span><span class="p">)</span>
+
+<span class="n">my_records</span> <span class="o">=</span> <span class="p">[</span><span class="n">rec1</span><span class="p">,</span> <span class="n">rec2</span><span class="p">,</span> <span class="n">rec3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>现在我们得到一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表，将它写入一个FASTA格式文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">my_records</span><span class="p">,</span> <span class="s">&quot;my_example.faa&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果用你喜欢的文本编辑软件打开，可得到：</p>
+<div class="code python highlight-python"><pre>&gt;gi|14150838|gb|AAK54648.1|AF376133_1 chalcone synthase [Cucumis sativus]
+MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD
+GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK
+NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
+SSAC
+&gt;gi|13919613|gb|AAK33142.1| chalcone synthase [Fragaria vesca subsp. bracteata]
+YPDYYFRITNREHKAELKEKFQRMCDKSMIKKRYMYLTEEILKENPSMCEYMAPSLDARQ
+DMVVVEIPKLGKEAAVKAIKEWGQ
+&gt;gi|13925890|gb|AAK49457.1| chalcone synthase [Nicotiana tabacum]
+MVTVEEFRRAQCAEGPATVMAIGTATPSNCVDQSTYPDYYFRITNSEHKVELKEKFKRMC
+EKSMIKKRYMHLTEEILKENPNICAYMAPSLDARQDIVVVEVPKLGKEAAQKAIKEWGQP
+KSKITHLVFCTTSGVDMPGCDYQLTKLLGLRPSVKRFMMYQQGCFAGGTVLRMAKDLAEN
+NKGARVLVVCSEITAVTFRGPNDTHLDSLVGQALFGDGAAAVIIGSDPIPEVERPLFELV
+SAAQTLLPDSEGAIDGHLREVGLTFHLLKDVPGLISKNIEKSLVEAFQPLGISDWNSLFW
+IAHPGGPAILDQVELKLGLKQEKLKATRKVLSNYGNMSSACVLFILDEMRKASAKEGLGT
+TGEGLEWGVLFGFGPGLTVETVVLHSVAT</pre>
+</div>
+<p>怎样才能知道 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数写入了多少条序列条目到句柄呢？如果你的序列条目保存在一个列表中，只需要使用 <tt class="docutils literal"><span class="pre">len(my_records)</span></tt> ，但是你不能对来自生成器/迭代器的序列条目。 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数本身就返回写入文件的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象个数。</p>
+<ul class="simple">
+<li>注意 - 如果你 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数要写入的文件已经存在，旧文件将会被覆写，并且不会得到任何警告信息。</li>
+</ul>
+<div class="section" id="round-trips">
+<h3>5.5.1 可逆读写（Round trips）<a class="headerlink" href="#round-trips" title="Permalink to this headline">¶</a></h3>
+<p>某些人需要他们的解析器是“可逆”的，即当你读入某个文件后和可以按原样写回。这需要解析器提取足够多的信息用于 * 精确 * 还原原始文件， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 不打算这么做。</p>
+<p>一个简单的例子是，FASTA文件中，允许序列以任意字符数换行。解析以下两条序列得到一个相同的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，这两条序列仅在换行上不同：</p>
+<div class="code python highlight-python"><pre>&gt;YAL068C-7235.2170 Putative promoter sequence
+TACGAGAATAATTTCTCATCATCCAGCTTTAACACAAAATTCGCACAGTTTTCGTTAAGA
+GAACTTAACATTTTCTTATGACGTAAATGAAGTTTATATATAAATTTCCTTTTTATTGGA
+
+&gt;YAL068C-7235.2170 Putative promoter sequence
+TACGAGAATAATTTCTCATCATCCAGCTTTAACACAAAATTCGCA
+CAGTTTTCGTTAAGAGAACTTAACATTTTCTTATGACGTAAATGA
+AGTTTATATATAAATTTCCTTTTTATTGGA</pre>
+</div>
+<p>为了创建一个可逆读写的FASTA解析器，需要记录序列换行发生的位置，而这些额外的信息通常毫无意义。因此，Biopython在输出时使用默认的60字符换行。空白字符在许多其他文件格式中运用也存在相同的问题。另外一个问题是，在某些情况下，Biopython并不能保存每一点注释信息（e.g. GenBank和EMBL）。</p>
+<p>少数时候，重要的是保留原来的布局（这可能有点怪异），第 <a class="reference external" href="#sec:seqio-index-getraw">5.4.2.2</a> 节关于 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 字典样对象的 <tt class="docutils literal"><span class="pre">get_raw()</span></tt> 方法提供了可能的解决方案。</p>
+</div>
+<div class="section" id="id20">
+<h3>5.5.2 序列格式间的转换<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p>在之前的例子中我们使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表作为 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数的输入，但是它也接受如来自于 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 迭代器 - 这允许我们通过结合使用这两个函数实现文件转换。</p>
+<p>在这个例子中，我们将读取GenBank格式文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk">ls_orchid.gbk</a> ，然后输出为FASTA格式文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;my_example.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> records&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这仍然有点复杂，因为文件格式转换是比较常见的任务，有一个辅助函数可以替代上述代码：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">,</span> <span class="s">&quot;my_example.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> records&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 函数可以使用句柄或文件名。然而需要注意的是，如果输出文件已存在，将覆写该文件。想了解更多信息，请使用内置帮助文档：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>原理上讲，只需要改变文件名和格式字符串，该代码即可实现Biopython支持的文件格式间的转换。然而，写入某种格式时需要某些特定的信息（e.g. 质量值），而其他格式文件不包含此信息。例如，你可以将FASTQ转化为FASTA文件，却不能进行逆操作。不同FASTQ格式间的相互转变请见cookbook章第 <a class="reference external" href="#sec:SeqIO-fastq-conversion">18.1.9</a> 节和第 <a class="reference external" href="#sec:SeqIO-fasta-qual-conversion">18.1.10</a> 节。</p>
+<p>最后，使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 函数额外的好处是更快，（最大的好处是代码会更短）原因是该转换函数可以利用几个文件格式特殊的优化条件和技巧。</p>
+</div>
+<div class="section" id="id21">
+<h3>5.5.3 转化序列到反向互补序列<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<p>假设你有一个核苷酸序列文件，需要转换成一个包含其反向互补的文件。这时，需要做些工作，将从文件得到的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象转化为适合存储到输出文件的信息。</p>
+<p>首先，我们将使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 加载文件中的核酸序列，然后使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的内置方法 <tt class="docutils literal"><span class="pre">.reverse_complement()</span></tt> 输出其反向互补序列（请见第 <a class="reference external" href="#sec:seq-reverse-complement">3.7</a> 节）。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>现在，如果我们想保存这些反向互补序列到某个文件，需要创建 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象。我们可以使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的内置方法 <tt class="docutils literal"><span class="pre">.reverse_complement()</span></tt> （请见第 <a class="reference external" href="#sec:SeqRecord-reverse-complement">4.8</a> 节），但是我们必须决定新的序列条目怎么命名。</p>
+<p>这是一个绝好的展示列表解析效率地方，列表解析通过在内存中创建一个列表实现：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">rec</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;rc_&quot;</span><span class="o">+</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;reverse complement&quot;</span><span class="p">)</span> \
+<span class="gp">... </span>           <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这时就用到了列表解析的绝妙之处，在其中添加一个条件语句：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">rec</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;rc_&quot;</span><span class="o">+</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;reverse complement&quot;</span><span class="p">)</span> \
+<span class="gp">... </span>           <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">700</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+<span class="go">18</span>
+</pre></div>
+</div>
+<p>这将在内存中创建一个序列小于700bp的反向互补序列列表。我们可以以相同的方式使用生成器表达式 - 但是更有优势的是，它不需要同时在内存中创建所有序列条目的列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;rc_&quot;</span><span class="o">+</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;reverse complement&quot;</span><span class="p">)</span> \
+<span class="gp">... </span>          <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">700</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>完整的示例如下：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;rc_&quot;</span><span class="o">+</span><span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;reverse complement&quot;</span><span class="p">)</span> \
+<span class="gp">... </span>           <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">700</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;rev_comp.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="go">18</span>
+</pre></div>
+</div>
+<p>在第 <a class="reference external" href="#sec:SeqIO-translate">18.1.3</a> 节有一个相关的示例，将FASTA文件中核酸序列翻译为氨基酸。</p>
+</div>
+<div class="section" id="seqrecord">
+<h3>5.5.4 获得格式化为字符串的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象<a class="headerlink" href="#seqrecord" title="Permalink to this headline">¶</a></h3>
+<p>有时你不需要将序列条目写入文件或者句柄，而是想获得包含特定格式序列条目的字符串。 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 接口基于句柄，但是Python有一个有用的内置模块，提供基于字符串的句柄。</p>
+<p>举个例子来说明如果使用这个功能，我们先从兰花GenBank文件加载一系列 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，然后创建一个包含FASTA格式序列条目的字符串：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">out_handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">out_handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">fasta_data</span> <span class="o">=</span> <span class="n">out_handle</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">fasta_data</span>
+</pre></div>
+</div>
+<p>当你第一次看到，会觉得这并不够简单明了。在特殊情况下，你希望得到一个只包含特定格式的单条序列条目的字符串，可以使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 类的 <tt class="docutils literal"><span class="pre">format()</span></tt> （请见第 <a class="reference external" href="#sec:SeqRecord-format">4.5</a> 节）。</p>
+<p>注意：尽管我们不鼓励这么做，你可以使用 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法写入文件，示例如下：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">out_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;ls_orchid_long.tab&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">out_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;tab&quot;</span><span class="p">))</span>
+<span class="n">out_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这类代码可以处理顺序文件格式如FASTA或者此处使用的简单的制表符分割文件，但不能处理更复杂的或是交错式文件格式。这就是为什么我们仍然强调使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 的原因，如下面的示例：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;ls_orchid.tab&quot;</span><span class="p">,</span> <span class="s">&quot;tab&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>同时 ，单次调用 <tt class="docutils literal"><span class="pre">SeqIO.write(...)</span></tt> 也比多次调用 <tt class="docutils literal"><span class="pre">SeqRecord.format(...)</span></tt> 方法更快。</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第5章  序列输入和输出</a><ul>
+<li><a class="reference internal" href="#id2">5.1 解析/读取序列</a><ul>
+<li><a class="reference internal" href="#id3">5.1.1 读取序列文件</a></li>
+<li><a class="reference internal" href="#id4">5.1.2 遍历序列文件</a></li>
+<li><a class="reference internal" href="#id5">5.1.3  获得序列文件中序列条目列表</a></li>
+<li><a class="reference internal" href="#id6">5.1.4 提取数据</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">5.2 从压缩文档读取解析序列信息</a></li>
+<li><a class="reference internal" href="#id8">5.3 解析来自网络的序列</a><ul>
+<li><a class="reference internal" href="#genbank">5.3.1 解析来自网络的GenBank序列条目</a></li>
+<li><a class="reference internal" href="#swissprot">5.3.2 解析来自网络的SwissProt序列条目</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id9">5.4 序列文件作为字典</a><ul>
+<li><a class="reference internal" href="#id10">5.4.1 序列文件作为字典-在内存中</a><ul>
+<li><a class="reference internal" href="#id11">5.4.1.1 指定字典键</a></li>
+<li><a class="reference internal" href="#seguid">5.4.1.2 使用SEGUID校验和对字典建立索引</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id12">5.4.2 序列文件作为字典 - 索引文件</a><ul>
+<li><a class="reference internal" href="#id13">5.4.2.1 指定字典键</a></li>
+<li><a class="reference internal" href="#id14">5.4.2.2 获取序列条目原始数据</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id15">5.4.3 序列文件作为字典 - 数据库索引文件</a><ul>
+<li><a class="reference internal" href="#id16">5.4.3.1 获取序列条目原始数据</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id17">5.4.4 对压缩文件建立索引</a></li>
+<li><a class="reference internal" href="#id18">5.4.5 讨论</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id19">5.5 写入序列文件</a><ul>
+<li><a class="reference internal" href="#round-trips">5.5.1 可逆读写（Round trips）</a></li>
+<li><a class="reference internal" href="#id20">5.5.2 序列格式间的转换</a></li>
+<li><a class="reference internal" href="#id21">5.5.3 转化序列到反向互补序列</a></li>
+<li><a class="reference internal" href="#seqrecord">5.5.4 获得格式化为字符串的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr04.html"
+                        title="previous chapter">第4章  序列注释对象</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr06.html"
+                        title="next chapter">第6章 多序列比对</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr05.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr06.html" title="第6章 多序列比对"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr04.html" title="第4章 序列注释对象"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to biopython_cn’s documentation! &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="#" />
+    <link rel="next" title="第1章 介绍" href="chr01.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr01.html" title="第1章 介绍"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-biopython-cn-s-documentation">
+<h1>Welcome to biopython_cn&#8217;s documentation!<a class="headerlink" href="#welcome-to-biopython-cn-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chr01.html">第1章 介绍</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr01.html#biopython">1.1  什么是Biopython？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr01.html#id2">1.2  在Biopython包中我能发现什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr01.html#id3">1.3  安装Biopython</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr01.html#faq">1.4  常见问答（FAQ）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr02.html">第2章 快速开始 —— 你能用Biopython做什么？</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id1">2.1  Biopython功能概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id2">2.2  处理序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id3">2.3  用法示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id4">2.4  解析序列文件格式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id6">2.5  连接生物学数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr02.html#id7">2.6  下一步做什么</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr03.html">第3章     生物序列对象</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id2">3.1  序列和字母表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id3">3.2  序列表现的像字符串一样</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id4">3.3  切取序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id5">3.4  将序列对象转换成字符串</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id6">3.5  连接或添加序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id7">3.6  改变大小写</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id8">3.7  核苷酸序列和（反向）互补序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id9">3.8  转录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id10">3.9  翻译</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id11">3.10  翻译表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#seq">3.11  比较Seq对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#mutableseq">3.12  MutableSeq对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#unknownseq">3.13  UnknownSeq对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr03.html#id12">3.14  直接使用字符串</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr04.html">第4章  序列注释对象</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#seqrecord">4.1  SeqRecord对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#id2">4.2  创建 SeqRecord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#feature-location-position">4.3  Feature, location 和 position对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#references">4.4  References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#id4">4.5  格式化方法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#id5">4.6  SeqRecord切片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#id6">4.7  SeqRecord对象相加</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr04.html#id7">4.8  反向互补SeqRecord对象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr05.html">第5章  序列输入和输出</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr05.html#id2">5.1 解析/读取序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr05.html#id7">5.2 从压缩文档读取解析序列信息</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr05.html#id8">5.3 解析来自网络的序列</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr05.html#id9">5.4 序列文件作为字典</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr05.html#id19">5.5 写入序列文件</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr06.html">第6章 多序列比对</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr06.html#id2">6.1 读取多序列比对数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr06.html#id6">6.2  序列比对的写出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr06.html#id8">6.3  序列比对的操纵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr06.html#id10">6.4  构建序列比对的工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr07.html">第7章  BLAST</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#internetblast">7.1  通过Internet运行BLAST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#id1">7.2  本地运行BLAST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#id3">7.3  解析BLAST 输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#id4">7.4  BLAST 记录类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#id5">7.5  废弃的BLAST 解析器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#psi-blast">7.6  处理PSI-BLAST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr07.html#rps-blast">7.7  处理 RPS-BLAST</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr08.html">第8章  BLAST和其他序列搜索工具(<em>实验性质的代码</em>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr08.html#searchio">8.1  SearchIO对象模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr08.html#id2">8.2  一个关于标准和惯例的注意事项</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr08.html#id3">8.3  读取搜索输出文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr08.html#id4">8.4  用索引处理含有大量搜索输出的文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr08.html#id5">8.5  写入和转换搜索输出文件</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr09.html">第9章  访问NCBI Entrez数据库</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#entrez">9.1  Entrez 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#einfo-entrez">9.2  EInfo: 获取Entrez数据库的信息</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#esearch-entrez">9.3  ESearch: 搜索Entrez数据库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#epost-identifiers">9.4  EPost: 上传identifiers的列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#esummary-ids">9.5  ESummary: 通过主要的IDs来获取摘要</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#efetch-entrez">9.6  EFetch: 从Entrez下载更多的记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#elink-ncbi-entrez">9.7  ELink: 在NCBI Entrez中搜索相关的条目</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#egquery">9.8  EGQuery: 全局搜索- 统计搜索的条目</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#espell">9.9  ESpell: 获得拼写建议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#entrez-xml">9.10  解析大的Entrez XML文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#id1">9.11  错误处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#id2">9.12  专用的解析器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#id3">9.13  使用代理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#id4">9.14  实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr09.html#webenv">9.15  使用历史记录和WebEnv</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr10.html">第10章 Swiss-Prot和ExPASy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#swiss-prot">10.1  解析Swiss-Prot文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#prosite">10.2  解析Prosite记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#id2">10.3  解析Prosite文件记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#id3">10.4  解析酶记录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#accessing-the-expasy-server">10.5  Accessing the ExPASy server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr10.html#id6">10.6  浏览Prosite数据库</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr11.html">第11章  走向3D：PDB模块</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id1">11.1  晶体结构文件的读与写</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id3">11.2  结构的表示</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id9">11.3  紊乱</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id15">11.4  异质残基</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#structure">11.5  浏览Structure对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id25">11.6  分析结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id34">11.7  PDB文件中的常见问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#protein-data-bank">11.8  访问Protein Data Bank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr11.html#id46">11.9  常见问题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr12.html">第12章  Bio.PopGen：群体遗传学</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr12.html#genepop">12.1  GenePop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr12.html#coalescent-simulation">12.2  溯祖模拟（Coalescent simulation）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr12.html#id3">12.3  其它应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr12.html#id6">12.4  未来发展</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr13.html">第13章  Bio.Phylo系统发育分析</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#id1">13.1  示例: 树中有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#i-o">13.2  I/O 函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#id3">13.3  查看和导出树</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#treeclade">13.4  使用Tree和Clade对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#id7">13.5  运行外部程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#paml">13.6  PAML整合</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr13.html#id8">13.7  未来计划</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr14.html">第14章   使用Bio.motifs进行模体序列分析</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id1">14.1  模体对象</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id6">14.2  位置权重矩阵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id7">14.3  位置特异性得分矩阵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id8">14.4  搜索实例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id11">14.5  模体对象自身相关的位置特异性得分矩阵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id12">14.6  模体比较</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#de-novo">14.7  查找 <em>De novo</em> 模体</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#id14">14.8  相关链接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr14.html#bio-motif">14.9  旧版Bio.Motif模块</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr15.html">第15章 聚类分析</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id2">数据表示法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id3">缺失值</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id4">随机数生成器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id5">15.1 距离函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id7">15.2  计算类的相关性质</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id10">15.3  划分算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id11">15.4  系统聚类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#self-organizing-maps">15.5  Self-Organizing Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id14">15.6  主成分分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#cluster-treeview-type">15.7  处理 Cluster/TreeView-type 文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id20">15.8  示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr15.html#id21">15.9  附加函数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr16.html">第16章 监督学习方法</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr16.html#logistic">16.1 Logistic 回归模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr16.html#k-knn">16.2 <em>k</em>-最近邻居法（ <em>KNN</em> ）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr16.html#naive">16.3 Naive贝叶斯</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr16.html#id8">16.4 最大熵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr16.html#id9">16.5  马尔科夫模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr17.html">第17章 Graphics模块中的基因组可视化包—GenomeDiagram</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr17.html#genomediagram">17.1  基因组可视化包—GenomeDiagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr17.html#id12">17.2 染色体</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr18.html">第18章  Cookbook – 用它做一些很酷的事情</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr18.html#id1">18.1  操作序列文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr18.html#id10">18.2  序列解析与简单作图</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr18.html#id14">18.3  处理序列比对</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr18.html#id19">18.4  替换矩阵</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr18.html#biosql">18.5  BioSQL – 存储序列到关系数据库中</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr19.html">第19章 Biopython测试框架</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr19.html#id1">19.1  运行测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr19.html#id2">19.2  编写测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr19.html#doctests">19.3  编写 doctests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr20.html">第20章 高级</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr20.html#id2">20.1  解析器的设计</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr20.html#id3">20.2  替换矩阵</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr21.html">第21章 为Biopython做贡献</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id1">21.1  错误报告与功能需求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id2">21.2  邮件列表与帮助新手</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id3">21.3  贡献文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id4">21.4  贡献学习手册示例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id5">21.5  维护跨平台发行版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#unit-tests">21.6  贡献单元测试（Unit Tests）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chr21.html#id6">21.7  贡献源码</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr22.html">第22章 附录：Python相关知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chr22.html#handle">22.1  到底什么是句柄（handle）？</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chr23.html">References</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to biopython_cn&#8217;s documentation!</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr01.html"
+                        title="next chapter">第1章 介绍</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr01.html" title="第1章 介绍"
+             >next</a> |</li>
+        <li><a href="#">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

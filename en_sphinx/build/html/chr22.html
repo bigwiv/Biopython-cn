@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chapter 22 Appendix: Useful stuff about Python &mdash; biopython_en 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_en 0.1 documentation" href="index.html" />
+    <link rel="next" title="References" href="chr23.html" />
+    <link rel="prev" title="Chapter 21 Where to go from here – contributing to Biopython" href="chr21.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr23.html" title="References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr21.html" title="Chapter 21 Where to go from here – contributing to Biopython"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chapter-22-appendix-useful-stuff-about-python">
+<h1>Chapter 22  Appendix: Useful stuff about Python<a class="headerlink" href="#chapter-22-appendix-useful-stuff-about-python" title="Permalink to this headline">¶</a></h1>
+<p>If you haven’t spent a lot of time programming in Python, many questions
+and problems that come up in using Biopython are often related to Python
+itself. This section tries to present some ideas and code that come up
+often (at least for us!) while using the Biopython libraries. If you
+have any suggestions for useful pointers that could go here, please
+contribute!</p>
+<div class="section" id="what-the-heck-is-a-handle">
+<h2>22.1  What the heck is a handle?<a class="headerlink" href="#what-the-heck-is-a-handle" title="Permalink to this headline">¶</a></h2>
+<p>Handles are mentioned quite frequently throughout this documentation,
+and are also fairly confusing (at least to me!). Basically, you can
+think of a handle as being a “wrapper” around text information.</p>
+<p>Handles provide (at least) two benefits over plain text information:</p>
+<ol class="arabic simple">
+<li>They provide a standard way to deal with information stored in
+different ways. The text information can be in a file, or in a string
+stored in memory, or the output from a command line program, or at
+some remote website, but the handle provides a common way of dealing
+with information in all of these formats.</li>
+<li>They allow text information to be read incrementally, instead of all
+at once. This is really important when you are dealing with huge text
+files which would use up all of your memory if you had to load them
+all.</li>
+</ol>
+<p>Handles can deal with text information that is being read (e. g. reading
+from a file) or written (e. g. writing information to a file). In the
+case of a “read” handle, commonly used functions are <tt class="docutils literal"><span class="pre">read()</span></tt>, which
+reads the entire text information from the handle, and <tt class="docutils literal"><span class="pre">readline()</span></tt>,
+which reads information one line at a time. For “write” handles, the
+function <tt class="docutils literal"><span class="pre">write()</span></tt> is regularly used.</p>
+<p>The most common usage for handles is reading information from a file,
+which is done using the built-in Python function <tt class="docutils literal"><span class="pre">open</span></tt>. Here, we open
+a handle to the file <a class="reference external" href="examples/m_cold.fasta">m_cold.fasta</a> (also
+available online
+<a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/m_cold.fasta">here</a>):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="go">&quot;&gt;gi|8332116|gb|BE037100.1|BE037100 MP14H09 MP Mesembryanthemum ...\n&quot;</span>
+</pre></div>
+</div>
+<p>Handles are regularly used in Biopython for passing information to
+parsers. For example, since Biopython 1.54 the main functions in
+<tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> and <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> have allowed you to use a filename
+instead of a handle:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On older versions of Biopython you had to use a handle, e.g.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This pattern is still useful - for example suppose you have a gzip
+compressed FASTA file you want to parse:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">gzip</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;m_cold.fasta.gz&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">):</span>
+    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>See Section <a class="reference external" href="#sec:SeqIO_compressed">5.2</a> for more examples like
+this, including reading bzip2 compressed files.</p>
+<div class="section" id="creating-a-handle-from-a-string">
+<h3>22.1.1  Creating a handle from a string<a class="headerlink" href="#creating-a-handle-from-a-string" title="Permalink to this headline">¶</a></h3>
+<p>One useful thing is to be able to turn information contained in a string
+into a handle. The following example shows how to do this using
+<tt class="docutils literal"><span class="pre">cStringIO</span></tt> from the Python standard library:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_info</span> <span class="o">=</span> <span class="s">&#39;A string</span><span class="se">\n</span><span class="s"> with multiple lines.&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_info</span>
+<span class="go">A string</span>
+<span class="go"> with multiple lines.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_info_handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">my_info</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first_line</span> <span class="o">=</span> <span class="n">my_info_handle</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">first_line</span>
+<span class="go">A string</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">second_line</span> <span class="o">=</span> <span class="n">my_info_handle</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">second_line</span>
+<span class="go"> with multiple lines.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Chapter 22  Appendix: Useful stuff about Python</a><ul>
+<li><a class="reference internal" href="#what-the-heck-is-a-handle">22.1  What the heck is a handle?</a><ul>
+<li><a class="reference internal" href="#creating-a-handle-from-a-string">22.1.1  Creating a handle from a string</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr21.html"
+                        title="previous chapter">Chapter 21  Where to go from here – contributing to Biopython</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr23.html"
+                        title="next chapter">References</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr22.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr23.html" title="References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr21.html" title="Chapter 21 Where to go from here – contributing to Biopython"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

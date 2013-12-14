@@ -1,0 +1,469 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第19章 Biopython测试框架 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第20章 高级" href="chr20.html" />
+    <link rel="prev" title="第18章 Cookbook – 用它做一些很酷的事情" href="chr18.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr20.html" title="第20章 高级"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr18.html" title="第18章 Cookbook – 用它做一些很酷的事情"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="biopython">
+<h1>第19章 Biopython测试框架<a class="headerlink" href="#biopython" title="Permalink to this headline">¶</a></h1>
+<p>Biopython具有一个基于Python标准单元测试框架 <cite>unittest&lt;http://docs.python.org/library/unittest.html&gt;</cite>
+的回归测试框架（文件 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt>）。而为模块提供全面测试，
+是确保Biopython代码在使用期内尽可能无bug的一个最重要的方面。
+也经常是最被轻视的方面之一。本章旨在使运行Biopython测试和编
+写测试代码尽可能容易。理想情况下，进入Biopython的每个模块都
+应该有一个测试（还应该有对应文档！）。强烈鼓励我们所有开发
+者，以及任何从源码安装Biopython的人运行单元测试。</p>
+<div class="section" id="id1">
+<h2>19.1  运行测试<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>在你下载Biopython源码或者从我们的源码仓库签出时，你会发现一
+个子目录调用 <tt class="docutils literal"><span class="pre">Tests</span></tt>。 这包括关键脚本 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt>、
+名为 <tt class="docutils literal"><span class="pre">test_XXX.py</span></tt> 的很多独立脚本、一个叫 <tt class="docutils literal"><span class="pre">output</span></tt> 的子目录和
+很多其他包含测试套件输入文件的子目录。</p>
+<p>作为构建和安装Biopython的一部分，你通常会在命令行上从Biopython
+源码顶层目录运行整个测试套件如下：</p>
+<div class="code python highlight-python"><pre>python setup.py test</pre>
+</div>
+<p>这事实上等价于转到 <tt class="docutils literal"><span class="pre">Tests</span></tt> 子目录，并运行：</p>
+<div class="code python highlight-python"><pre>python run_tests.py</pre>
+</div>
+<p>你通常会想要只运行测试的一部分，这可以如下来操作：</p>
+<div class="code python highlight-python"><pre>python run_tests.py test_SeqIO.py test_AlignIO.py</pre>
+</div>
+<p>当给出测试列表时， <tt class="docutils literal"><span class="pre">.py</span></tt> 扩展名是可选的，所以你可以只需打字：</p>
+<div class="code python highlight-python"><pre>python run_tests.py test_SeqIO test_AlignIO</pre>
+</div>
+<p>要运行 docstring 测试（见 <a class="reference external" href="#section:doctest">19.3</a> 节）的话，
+你可以用</p>
+<div class="code python highlight-python"><pre>python run_tests.py doctest</pre>
+</div>
+<p>缺省情况下， <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 运行所有测试，包括docstring测试。</p>
+<p>如果一单个测试失败了，你还可以尝试直接运行它，它会给出更多信息。</p>
+<p>重要的是，要注意单个单元测试有两类作用：</p>
+<ul class="simple">
+<li>简单打印和比较脚本。 这些单元测试本质上是简短的 Python 示例
+程序，它们会打印出各种输出文本。对于一个名为 <tt class="docutils literal"><span class="pre">test_XXX.py</span></tt>
+的测试文件，在 <tt class="docutils literal"><span class="pre">output</span></tt> 子目录（包含期望的输出）下会有一个
+叫做 <tt class="docutils literal"><span class="pre">test_XXX</span></tt> 的匹配文本文件。测试框架所做的全部就是运行
+脚本并检查输出的一致性。</li>
+<li>基于 <tt class="docutils literal"><span class="pre">unittest</span></tt> 的标准测试。 这些会 <tt class="docutils literal"><span class="pre">import</span> <span class="pre">unittest</span></tt> ，然
+后定义 <tt class="docutils literal"><span class="pre">unittest.TestCase</span></tt> 类，这些类的每一个都带有一或多个
+像以 <tt class="docutils literal"><span class="pre">test_</span></tt> 开头、检查代码的某些方面的方法那样的子测试。这
+些测试不应该直接打印任何输出。</li>
+</ul>
+<p>目前，大约一半的 Biopython 测试是 <tt class="docutils literal"><span class="pre">unittest</span></tt> 风格的测试，另一半
+是 print-and-compare 测试。</p>
+<p>直接运行一个简单的 print-and-compare 测试通常会在屏幕上给出大量
+输出，但是并不检查输出是否跟期望的一样。如果测试以一个意外的错误
+而失败，那么应该很容易精确定位脚本失败的位置。例如，对于一个print-and-compare 测试，试一下：</p>
+<div class="code python highlight-python"><pre>python test_SeqIO.py</pre>
+</div>
+<p>基于 <tt class="docutils literal"><span class="pre">unittest</span></tt> 的测试反倒是精确地显示你测试的哪一个小块失败了。
+例如，</p>
+<div class="code python highlight-python"><pre>python test_Cluster.py</pre>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>19.2  编写测试<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>假如说你想为一个叫做 <tt class="docutils literal"><span class="pre">Biospam</span></tt> 的模块写一些测试。这可以是你写的
+一个模块，或者是一个还没有任何测试的现存模块。在下面的例子中，我们
+假设 <tt class="docutils literal"><span class="pre">Biospam</span></tt> 是一个做简单数学的模块。</p>
+<p>每个 Biopython 测试都可以有三个重要的文件和相关目录：</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> – 关于你的模块的真正测试代码。</li>
+<li><tt class="docutils literal"><span class="pre">Biospam</span></tt> [optional]– 一个包含任何必要输入文件的目录。任何会
+生成的输出文件也应该写在这里（并且最好在测试结束后打扫干净)以防
+堵塞主 Tests 目录。</li>
+<li><tt class="docutils literal"><span class="pre">output/Biospam</span></tt> – [只针对 print-and-compare 测试] 这个文件
+包括运行 <tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> 的期望输出。这个文件对于 <tt class="docutils literal"><span class="pre">unittest</span></tt>
+风格的测试不是必须的，因为测试脚本 <tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> 会自己做验证。</li>
+</ol>
+<p>你要自己决定你是想编写一个 print-and-compare 测试脚本还是一个 <tt class="docutils literal"><span class="pre">unittest</span></tt>
+风格的测试脚本。重要的是你不能把这两种风格混合在一个
+测试脚本中。尤其是，不要在一个 print-and-compare 测试中使用``unittest``
+特征。</p>
+<p><tt class="docutils literal"><span class="pre">Tests</span></tt> 目录中任何具有 <tt class="docutils literal"><span class="pre">test_</span></tt> 前缀的脚本都会被 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt>
+找到并运行。下面，我们展示一个示例测试脚本 <tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> ，针对
+一个 print-and-compare 测试和一个基于 <tt class="docutils literal"><span class="pre">unittest</span></tt> 的测试。如果你把这个
+脚本放进 Biopython的 <tt class="docutils literal"><span class="pre">Tests</span></tt> 目录，那么 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 就会找到它并
+执行其中包含的测试：</p>
+<div class="code python highlight-python"><pre>$ python run_tests.py
+test_Ace ... ok
+test_AlignIO ... ok
+test_BioSQL ... ok
+test_BioSQL_SeqIO ... ok
+test_Biospam ... ok
+test_CAPS ... ok
+test_Clustalw ... ok</pre>
+</div>
+<p>…</p>
+<div class="code python highlight-python"><pre>----------------------------------------------------------------------
+Ran 107 tests in 86.127 seconds</pre>
+</div>
+<div class="section" id="print-and-compare">
+<h3>19.2.1  编写一个 print-and-compare 测试<a class="headerlink" href="#print-and-compare" title="Permalink to this headline">¶</a></h3>
+<p>一个 print-and-compare 风格的测试对于初学者和新手来说是很容易写的- 本质上它只是一个使用你的模块的示例脚本。</p>
+<p>为了写一个关于 <tt class="docutils literal"><span class="pre">Biospam</span></tt> 的 print-and-compare 测试，这是你应该
+做的：</p>
+<ol class="arabic">
+<li><p class="first">编写一个叫 <tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> 的脚本</p>
+<ul class="simple">
+<li>这个脚本应该位于 Tests 目录</li>
+<li>脚本应该测试模块的所有重要功能（当然，你测试的越多、你的测试就
+越好！）。</li>
+<li>尽量避免任何平台特异的东西，例如打印浮点数而不用显式格式字符串
+来避免有太多小数位（不同的平台会给出稍微不同的值）。</li>
+</ul>
+</li>
+<li><p class="first">如果脚本需要文件来进行测试，这些应转到目录 Tests/Biospam 中进行
+（如果你只需一些通用的东西，像一个 FASTA 序列文件，或者一条
+GenBank 记录，试着用一个现存的样品输入文件来代替）。</p>
+</li>
+<li><p class="first">写出测试输出并验证输出是正确的。</p>
+<p>有两种方法可以做到这一点：</p>
+<ol class="arabic simple">
+<li>长期方法：<ul>
+<li>运行脚本并将输出写到一个文件中。在 UNIX （包括 Linux 和 Mac OS X
+）机器上，你可以这样做： <tt class="docutils literal"><span class="pre">python</span> <span class="pre">test_Biospam.py</span> <span class="pre">&gt;</span> <span class="pre">test_Biospam</span></tt>
+这会把输出写到文件 <tt class="docutils literal"><span class="pre">test_Biospam</span></tt> 中。</li>
+<li>手动查看文件 <tt class="docutils literal"><span class="pre">test_Biospam</span></tt> 来确保输出正确。当你确定都没问
+题、没有bug后，你需要快速编辑 <tt class="docutils literal"><span class="pre">test_Biospam</span></tt> 文件使其首行为：
+‘<tt class="docutils literal"><span class="pre">test_Biospam</span></tt>’  （不含引号）。</li>
+<li>复制文件 <tt class="docutils literal"><span class="pre">test_Biospam</span></tt> 到目录 Tests/output 中。</li>
+</ul>
+</li>
+<li>快速方法:<ul>
+<li>运行 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">run_tests.py</span> <span class="pre">-g</span> <span class="pre">test_Biospam.py</span></tt> 。回归测试框架
+很聪明的会以他喜欢的方式把输出放在恰当的地方。</li>
+<li>转到输出（应该在 <tt class="docutils literal"><span class="pre">Tests/output/test_Biospam</span></tt>）并复查输出以确
+保其完全正确。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p class="first">现在改换到 Tests 目录并运行 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">run_tests.py</span></tt> 进行回归测试。
+这会运行所有测试，而你会看到你的测试也在运行（并通过）。</p>
+</li>
+<li><p class="first">好了！这样你就得到了可用于签入或提交到Biopython的、关于你的模块的
+一个友好的测试。恭喜你！</p>
+</li>
+</ol>
+<p>例如，测试 <tt class="docutils literal"><span class="pre">Biospam</span></tt> 模块中的 <tt class="docutils literal"><span class="pre">addition</span></tt> 和 <tt class="docutils literal"><span class="pre">multiplication</span></tt> 功
+能的测试脚本 <tt class="docutils literal"><span class="pre">test_Biospam.py</span></tt> 也许看起来是下面这个样子：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Biospam</span>
+
+<span class="k">print</span> <span class="s">&quot;2 + 3 =&quot;</span><span class="p">,</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;9 - 1 =&quot;</span><span class="p">,</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;2 * 3 =&quot;</span><span class="p">,</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">multiplication</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;9 * (- 1) =&quot;</span><span class="p">,</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">multiplication</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们用 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">run_tests.py</span> <span class="pre">-g</span> <span class="pre">test_Biospam.py</span></tt> 来生成对应的输出，
+并检查输出文件 <tt class="docutils literal"><span class="pre">output/test_Biospam</span></tt> ：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">test_Biospam</span>
+<span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="mi">9</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="mi">9</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="o">-</span><span class="mi">9</span>
+</pre></div>
+</div>
+<p>通常，更大的 print-and-compare 测试的困难在于追踪输出行与测试脚本
+命令之间的对应关系。为此，打印出一些标记是很重要的，这些标记帮助你
+把输入脚本按行和产生的输出匹配起来。</p>
+</div>
+<div class="section" id="unittest">
+<h3>19.2.2  编写一个基于 unittest 的测试<a class="headerlink" href="#unittest" title="Permalink to this headline">¶</a></h3>
+<p>我们想要Biopython中的所有模块都具有单元测试，并且一个简单的
+print-and-compare 测试比一点儿测试都没有要好。不过，尽管有一个陡峭的
+学习曲线，使用 <tt class="docutils literal"><span class="pre">unittest</span></tt> 框架能给出一个更结构化的结果，并且如果有
+一个测试失败，这能够清晰准确地指出测试的哪部分出了问题。子测试也可以
+单独运行，这对于测试和排错很有帮助。</p>
+<p>从2.1版开始 <tt class="docutils literal"><span class="pre">unittest</span></tt> 框架就包含在Python中了，并且存档在
+Python Library Reference （就是所推荐的你的枕边书）。也有 <a class="reference external" href="http://docs.python.org/library/unittest.html">关于unittest
+的在线文档</a>。如果你
+熟悉 <tt class="docutils literal"><span class="pre">unittest</span></tt> 系统（或类似于某些噪音测试框架的东西），你应该不会有
+什么麻烦。你也许发现，寻找Biopython中的现成例子很有帮助。</p>
+<p>这是关于 <tt class="docutils literal"><span class="pre">Biospam</span></tt> 的一个 <tt class="docutils literal"><span class="pre">unittest</span></tt> 风格的极小测试脚本，你可以
+复制粘贴过去运行它：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Biospam</span>
+
+<span class="k">class</span> <span class="nc">BiospamTestAddition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_addition1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_addition2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">BiospamTestDivision</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_division1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">division</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_division2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">division</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">testRunner</span><span class="o">=</span><span class="n">runner</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在分割测试中，我们使用 <tt class="docutils literal"><span class="pre">assertAlmostEqual</span></tt> 而不是 <tt class="docutils literal"><span class="pre">assertEqual</span></tt>
+以免因舍入误差造成的测试失败；详情以及 <tt class="docutils literal"><span class="pre">unittest</span></tt> 中的其他可用功能
+参见Python文档中的 <tt class="docutils literal"><span class="pre">unittest</span></tt> 章节（<a class="reference external" href="http://docs.python.org/library/unittest.html">在线参考</a>）。</p>
+<p>这里是基于 <tt class="docutils literal"><span class="pre">unittest</span></tt> 的测试的一些关键点：</p>
+<ul>
+<li><p class="first">测试实例存储在 <tt class="docutils literal"><span class="pre">unittest.TestCase</span></tt> 的子类中并涵盖了你的代码
+的一个基本方面。</p>
+</li>
+<li><p class="first">对于任何在每个测试方法前后都要运行的重复代码，你可以使用方法
+<tt class="docutils literal"><span class="pre">setUp</span></tt> 和 <tt class="docutils literal"><span class="pre">tearDown</span></tt> 。例如 <tt class="docutils literal"><span class="pre">setUp</span></tt> 方法可用于创建你正在
+测试的对象的实例，或打开一个文件句柄。 <tt class="docutils literal"><span class="pre">tearDown</span></tt> 可做任何整理，
+例如关闭文件句柄。</p>
+</li>
+<li><p class="first">测试以 <tt class="docutils literal"><span class="pre">test_</span></tt> 为前缀并且每项测试应覆盖你所想要测试的内容的一个
+具体部分。一个类中你想包含多少个测试都行。</p>
+</li>
+<li><p class="first">在测试脚本的末尾，你可以用</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">testRunner</span><span class="o">=</span><span class="n">runner</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>来执行测试脚本，当脚本是从        自己运行（而不是从 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 导入）时。
+如果你运行该脚本，那么你会见到类似下面的东西:</p>
+<div class="code python highlight-python"><pre>$ python test_BiospamMyModule.py
+test_addition1 (__main__.TestAddition) ... ok
+test_addition2 (__main__.TestAddition) ... ok
+test_division1 (__main__.TestDivision) ... ok
+test_division2 (__main__.TestDivision) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.059s
+
+OK</pre>
+</div>
+</li>
+<li><p class="first">为了更清晰地表明每个测试都干了什么，你可以给每个测试加上 docstrings 。
+它们会在运行测试的时候显示出来，如果一个测试失败这会是有用的信息。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Biospam</span>
+
+<span class="k">class</span> <span class="nc">BiospamTestAddition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_addition1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An addition test&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_addition2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A second addition test&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">addition</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">BiospamTestDivision</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">test_division1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Now let&#39;s check division&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">division</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_division2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A second division test&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Biospam</span><span class="o">.</span><span class="n">division</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">verbosity</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">testRunner</span><span class="o">=</span><span class="n">runner</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>运行脚本你就会看到：</p>
+<div class="code python highlight-python"><pre>$ python test_BiospamMyModule.py
+An addition test ... ok
+A second addition test ... ok
+Now let's check division ... ok
+A second division test ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK</pre>
+</div>
+</li>
+</ul>
+<p>如果你的模块包含 docstring 测试（见`19.3 &lt;#section:doctest&gt;`__小节），
+你也许想在要运行的测试中包含这些。你可以修改 <tt class="docutils literal"><span class="pre">if</span> <span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">&quot;__main__&quot;:</span></tt>
+下面的代码如下面这样：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest_suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestLoader</span><span class="p">()</span><span class="o">.</span><span class="n">loadTestsFromName</span><span class="p">(</span><span class="s">&quot;test_Biospam&quot;</span><span class="p">)</span>
+    <span class="n">doctest_suite</span> <span class="o">=</span> <span class="n">doctest</span><span class="o">.</span><span class="n">DocTestSuite</span><span class="p">(</span><span class="n">Biospam</span><span class="p">)</span>
+    <span class="n">suite</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TestSuite</span><span class="p">((</span><span class="n">unittest_suite</span><span class="p">,</span> <span class="n">doctest_suite</span><span class="p">))</span>
+    <span class="n">runner</span> <span class="o">=</span> <span class="n">unittest</span><span class="o">.</span><span class="n">TextTestRunner</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">verbosity</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">suite</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这只与你执行 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">test_Biospam.py</span></tt> 时是否想要运行 docstring 测试
+有关；运行 <tt class="docutils literal"><span class="pre">python</span> <span class="pre">run_tests.py</span></tt> ，docstring 测试会自动运行（假设他们
+被包含在 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 中的 docstring 测试列表中，见下面的小节）。</p>
+</div>
+</div>
+<div class="section" id="doctests">
+<h2>19.3  编写 doctests<a class="headerlink" href="#doctests" title="Permalink to this headline">¶</a></h2>
+<p>Python 模块、类和函数支持使用 docstrings 创建文档。 <a class="reference external" href="http://docs.python.org/library/doctest.html">doctest 框架</a> （包含在Python中）
+允许开发者将工作例子嵌入在 docstrings 中，并自动测试这些例子。</p>
+<p>目前只有一小部分 Biopython 包含 doctests 。 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 脚本
+看护着 doctests 的运行。为此， <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 脚本开头是要测试
+的模块的一个手动编译列表，该列表允许我们跳过那些可能没有安装可选
+外部依赖库的模块（例如 Reportlab 和 NumPy 库）。所以如果你在 Biopython
+模块中加一些针对 dostrings 的 doctests ，为了把它们包含在 Biopython
+套件中，你必须更新 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 以包含你的模块。现在，
+<tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 的相关部分看起来像下面这样：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="c"># This is the list of modules containing docstring tests.</span>
+<span class="c"># If you develop docstring tests for other modules, please add</span>
+<span class="c"># those modules here.</span>
+<span class="n">DOCTEST_MODULES</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Bio.Seq&quot;</span><span class="p">,</span>
+                   <span class="s">&quot;Bio.SeqRecord&quot;</span><span class="p">,</span>
+                   <span class="s">&quot;Bio.SeqIO&quot;</span><span class="p">,</span>
+                   <span class="s">&quot;...&quot;</span><span class="p">,</span>
+                  <span class="p">]</span>
+<span class="c">#Silently ignore any doctests for modules requiring numpy!</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span>
+    <span class="n">DOCTEST_MODULES</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s">&quot;Bio.Statistics.lowess&quot;</span><span class="p">])</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>注意我们首先把 doctests 看做文档，所以你应该坚持典型用法。通常处理错
+误条件等诸如此类的复杂例子最好留给一个专门的单元测试。</p>
+<p>注意，如果你想编写涉及文件解析的 doctests ，定义文件位置复杂性是很要
+紧的。理想情况下，假设代码会从 <tt class="docutils literal"><span class="pre">Tests</span></tt> 目录运行，使用相对路径即可，
+关于这一点的一个例子参见 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> doctests 。</p>
+<p>要想只运行 docstring 测试，使用</p>
+<div class="code python highlight-python"><pre>$ python run_tests.py doctest</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第19章 Biopython测试框架</a><ul>
+<li><a class="reference internal" href="#id1">19.1  运行测试</a></li>
+<li><a class="reference internal" href="#id2">19.2  编写测试</a><ul>
+<li><a class="reference internal" href="#print-and-compare">19.2.1  编写一个 print-and-compare 测试</a></li>
+<li><a class="reference internal" href="#unittest">19.2.2  编写一个基于 unittest 的测试</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#doctests">19.3  编写 doctests</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr18.html"
+                        title="previous chapter">第18章  Cookbook – 用它做一些很酷的事情</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr20.html"
+                        title="next chapter">第20章 高级</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr19.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr20.html" title="第20章 高级"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr18.html" title="第18章 Cookbook – 用它做一些很酷的事情"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

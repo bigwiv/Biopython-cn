@@ -1,0 +1,1509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第15章 聚类分析 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第16章 监督学习方法" href="chr16.html" />
+    <link rel="prev" title="第14章 使用Bio.motifs进行模体序列分析" href="chr14.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr16.html" title="第16章 监督学习方法"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr14.html" title="第14章 使用Bio.motifs进行模体序列分析"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>第15章 聚类分析<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>聚类分析是根据元素相似度，进行分组的过程。在生物信息学中，聚类分析广泛
+用于基因表达数据分析，用来对具有相似表达谱的基因归类；从而鉴定功能相关的基
+因，或预测未知基因的功能。</p>
+<p>Biopython中的 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 模块提供了常用的聚类算法。虽然Bio.Cluster被设计用于
+基因表达数据，它也可用于其他类型数据的聚类。 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>
+和其使用的C聚类库的说明见De Hoon <em>et al.</em> [<a class="reference external" href="#dehoon2004">14</a>].</p>
+<p><tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 包含了以下四种聚类算法：</p>
+<ul class="simple">
+<li>系统聚类（成对重心法，最短距离，最大距离和平均连锁法);</li>
+<li><em>k</em>-means, <em>k</em>-medians, 和 <em>k</em>-medoids 聚类;</li>
+<li>自组织映射（Self-Organizing Maps）;</li>
+<li>主成分分析</li>
+</ul>
+<div class="section" id="id2">
+<h2>数据表示法<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>用于聚类的输入为一个 <em>n</em> x <em>m</em> 的Python 数值矩阵 <tt class="docutils literal"><span class="pre">data</span></tt>。在基因表达数据聚类中，
+每一行表示不同的基因，每一列表示不同的实验条件。 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 既可以
+针对每行（基因），也可以针对每列（实验条件）进行聚类。</p>
+</div>
+<div class="section" id="id3">
+<h2>缺失值<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>在芯片实验中，经常会有些缺失值，可以用一个额外的 <em>n</em> × <em>m</em> Numerical Python
+整型矩阵 <tt class="docutils literal"><span class="pre">mask</span></tt> 表示。例如 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt> ，表示 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 是个缺失值，
+并且在分析中被忽略。</p>
+</div>
+<div class="section" id="id4">
+<h2>随机数生成器<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p><em>k</em>-means/medians/medoids 聚类和 Self-Organizing
+Maps (SOMs) 需要调用随机数生成器。在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，正态分布随机数
+生成器的算法是基于L’Ecuyer [<a class="reference external" href="#lecuyer1988">25</a>],二项分布的随机数
+生成器算法是基于Kachitvichyanukul and Schmeiser [<a class="reference external" href="#kachitvichyanukul1988">23</a>]
+开发的BTPE算法。随机数生成器在调用时会首先进行初始化。由于随机数生成器使用了
+两个乘同余发生器（multiplicative linear congruential generators），所以初始化时需要两个整型的
+种子。这两个种子可以调用系统提供的 <tt class="docutils literal"><span class="pre">rand</span></tt> （C标准库）函数生成。在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，
+我们首先调用 <tt class="docutils literal"><span class="pre">srand</span></tt> 使用以秒为单位的时间戳的值初始值，再用 <tt class="docutils literal"><span class="pre">rand</span></tt> 随机产生两
+个随机数作为种子来产生正态分布的随机数。</p>
+</div>
+<div class="section" id="id5">
+<h2>15.1 距离函数<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>为了对元素根据相似度进行聚类，第一步需要定义相似度。<tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 提供了八种不同
+的距离函数来衡量相似度或者距离，分别用不同的字母代表：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'e'</span></tt>: Euclidean 距离;</li>
+<li><tt class="docutils literal"><span class="pre">'b'</span></tt>: City-block 距离.</li>
+<li><tt class="docutils literal"><span class="pre">'c'</span></tt>: Pearson 相关系数;</li>
+<li><tt class="docutils literal"><span class="pre">'a'</span></tt>: Pearson相关系数的绝对值;</li>
+<li><tt class="docutils literal"><span class="pre">'u'</span></tt>: Uncentered Pearson correlation （相当于两个数据向量的夹角余弦值）</li>
+<li><tt class="docutils literal"><span class="pre">'x'</span></tt>: uncentered Pearson correlation的绝对值;</li>
+<li><tt class="docutils literal"><span class="pre">'s'</span></tt>: Spearman’s 秩相关系数;</li>
+<li><tt class="docutils literal"><span class="pre">'k'</span></tt>: Kendall’s τ.</li>
+</ul>
+<p>前两个距离函数满足三角形的两边和大于第三边的特点：</p>
+<div class="math">
+\[d\left(\underline{u},\underline{v}\right) \leq d\left(\underline{u},\underline{w}\right) + d\left(\underline{w},\underline{v}\right) \textrm{ for all } \underline{u}, \underline{v}, \underline{w},\]</div>
+<p>所以称之为 <em>metrics</em>。 在任何语言中，这个意味着两点之间直线最短。</p>
+<p>剩余的六种距离函数跟相关系数有关，距离 <em>d</em> 是由相关性 <em>r</em> 确定： <em>d</em>=1−<em>r</em>。
+请注意这类距离函数是 <em>semi-metrics</em> ，因此不满足三角形的两边之和大于第三边的
+性质。例如</p>
+<div class="math">
+\[\underline{u}=\left(1,0,-1\right);\]\[\underline{v}=\left(1,1,0\right);\]\[\underline{w}=\left(0,1,1\right);\]</div>
+<p>通过计算Pearson距离，可以得到 <em>d</em>(<em>u</em>,<em>w</em>) = 1.8660, 而
+<em>d</em>(<em>u</em>,<em>v</em>)+<em>d</em>(<em>v</em>,<em>w</em>) = 1.6340.</p>
+<div class="section" id="euclidean">
+<h3>Euclidean 距离<a class="headerlink" href="#euclidean" title="Permalink to this headline">¶</a></h3>
+<p>在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中, Euclidean 距离被定义为</p>
+<div class="math">
+\[d = {\frac{1} {n}} \sum_{i=1}^{n} \left(x_i-y_i\right)^{2}.\]</div>
+<p>求和时只考虑*x*<sub>*i*</sub> 和 <em>y</em><sub>*i*</sub> 都存在的值, 分母 <em>n</em>
+也相应的做出调整。当分析表达谱数据时，由于 <em>x</em><sub>*i*</sub> 和 <em>y</em><sub>*i*</sub>
+会直接相减, 因此在使用Euclidean距离前，请对表达谱数据标准化处理。</p>
+</div>
+<div class="section" id="city-block-distance">
+<h3>City-block distance<a class="headerlink" href="#city-block-distance" title="Permalink to this headline">¶</a></h3>
+<p>city-block distance也称之为Manhattan 距离，跟Euclidean距离有一定的相似性。Euclidean距离
+表示的是两点间最短的距离，而city-block距离则是两点在所有维度中距离的和。由于基因表达的数据
+经常会有缺失数据，在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，city-block距离定义为总距离除以总维度：</p>
+<div class="math">
+\[d = {\frac{1} {n}} \sum_{i=1}^n \left|x_i-y_i\right|.\]</div>
+<p>City-block distance类似于当你在从城市里一个位置到另一个位置时，所经过街道的距离。
+而在Euclidean 距离中，表达谱的数据会直接相减，因此必须先对数据进行标准化。</p>
+</div>
+<div class="section" id="pearson">
+<h3>Pearson 相关系数<a class="headerlink" href="#pearson" title="Permalink to this headline">¶</a></h3>
+<p>Pearson相关系数定义为：</p>
+<div class="math">
+\[r = \frac{1}{n} \sum_{i=1}^n \left( \frac{x_i -\bar{x}}{\sigma_x} \right) \left(\frac{y_i -\bar{y}}{\sigma_y} \right),\]</div>
+<p>其中 x, ȳ 分别是 <em>x</em> 和 <em>y</em> 的样品均值, σ<sub>*x*</sub>, σ<sub>*y*</sub>
+是 <em>x</em> 和 <em>y</em> 的样品标准差. Pearson相关系数是用于测量 <em>x</em> and <em>y</em> 散点图对直线的
+拟合程度。如果所有的点都在直线上，那么Pearson相关系数为 +1 or -1, 取决于直线的斜率
+是正还是负。如果Pearson 相关系数等于0，表明 <em>x</em> 和 <em>y</em> 之间没有相关性。</p>
+<p><em>Pearson distance</em> 定义为</p>
+<div class="math">
+\[d_{\textrm{P}} \equiv 1 - r.\]</div>
+<p>由于Pearson 相关性的值介于 -1 和 1之间, Pearson 距离的范围为 0 和 2 之间.</p>
+</div>
+<div class="section" id="absolute-pearson-correlation">
+<h3>Absolute Pearson correlation<a class="headerlink" href="#absolute-pearson-correlation" title="Permalink to this headline">¶</a></h3>
+<p>通过对Pearson相关系数取绝对值，可以得到一个0和1之间的数。如果绝对值是1，
+所有的点都位于一条斜率为正或负直线上。当绝对值为0时，表明 <em>x</em> and <em>y</em> 没有相关性。</p>
+<p>对应的距离定义为：</p>
+<div class="math">
+\[d_{\textrm A} \equiv 1 - \left|r\right|,\]</div>
+<p>其中 <em>r</em> 是 Pearson 相关系数. 由于Pearson的相关系数的绝对值介于 0 和 1之间, 对应的
+距离也位于0和1之间。</p>
+<p>在基因表达数据分析中，应当注意，当相关性的绝对值等于1时，表明两组基因的表达情况完全一样或者完全
+相反。</p>
+</div>
+<div class="section" id="uncentered-correlation">
+<h3>Uncentered correlation (夹角余弦)<a class="headerlink" href="#uncentered-correlation" title="Permalink to this headline">¶</a></h3>
+<p>在某些情况下，使用 <em>uncentered correlation</em> 比常规的Pearson相关系数更合适。
+uncentered correlation 定义为：</p>
+<div class="math">
+\[r_{\textrm U} = \frac{1}{n} \sum_{i=1}^{n} \left(\frac{x_i}{\sigma_x^{(0)}} \right) \left(\frac{y_i}{\sigma_y^{(0)}} \right),\]</div>
+<p>其中</p>
+<div class="math">
+\[\begin{split}\begin{eqnarray}
+\sigma_x^{(0)} &amp; = &amp; \sqrt{{\frac{1}{n}} \sum_{i=1}^{n}x_i^2}; \nonumber \\
+\sigma_y^{(0)} &amp; = &amp; \sqrt{{\frac{1}{n}} \sum_{i=1}^{n}y_i^2}. \nonumber
+\end{eqnarray}\end{split}\]</div>
+<p>这个公式同Pearson相关系数的公式形式一样，只是把样本均值 x, ȳ 设为0 。
+uncentered correlation 适用于表达量基准为0的情况。例如，在对基因表达分析中，使用
+比值对数时，当log-ratio 等于0 表明红绿信号强度相等，也意味着实验处理
+不影响基因的表达量。</p>
+<p>uncentered correlation 系数对应的距离计算方法为：</p>
+<div class="math">
+\[d_{\mbox{U}} \equiv 1 - r_{\mbox{U}},\]</div>
+<p>其中 <em>r</em><sub>U</sub> 是uncentered 相关性系数。 由于uncentered系数位于-1 和 1
+之间，对应的距离范围为 0 与 2之间。</p>
+<p>由于 uncentered 相关系数值等同于两个数据向量在 <em>n</em> 维空间里的夹角余弦，因此也常称为夹角余弦。</p>
+</div>
+<div class="section" id="absolute-uncentered-correlation">
+<h3>Absolute uncentered correlation<a class="headerlink" href="#absolute-uncentered-correlation" title="Permalink to this headline">¶</a></h3>
+<p>与 Pearson 相关性类似, 也可以用uncentered correlation的绝对值来定义距离:</p>
+<div class="math">
+\[d_{\mbox{AU}} \equiv 1 - \left|r_{\mbox{U}}\right|,\]</div>
+<p>其中 <em>r</em><sub>U</sub> 是 uncentered相关系数。由于uncentered 相关系数的
+绝对值位于 0 和 1 之间，对应的距离也为位于 0 和 1之间。</p>
+<p>从几何学上来讲，uncentered相关系数的绝对值等于两个数据所在向量的支持线（supporting lines）
+的角度余弦值（即不考虑向量的方向性）。</p>
+</div>
+<div class="section" id="spearman-rank-correlation">
+<h3>Spearman rank correlation<a class="headerlink" href="#spearman-rank-correlation" title="Permalink to this headline">¶</a></h3>
+<p>Spearman秩相关系数是一种非参的相关性测量方法，对于数据中的离群点，比Pearson相关系数
+有更好的稳健性。</p>
+<p>为了计算Spearman秩相关系数，首先对每个数据集里的数据按值排序，得到每个数据的对应的
+秩。然后，计算对两个数据的秩集合计算Pearson相关系数，得到Spearman的相关系数。</p>
+<p>同Pearson相关性类似，Spearman秩相关系数对应的距离定义为：</p>
+<div class="math">
+\[d_{\mbox{S}} \equiv 1 - r_{\mbox{S}},\]</div>
+<p>其中 <em>r</em><sub>S</sub> 是Spearman秩相关系数。</p>
+</div>
+<div class="section" id="kendalls">
+<h3>Kendall’s τ<a class="headerlink" href="#kendalls" title="Permalink to this headline">¶</a></h3>
+<p>Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它不对数据进行排序，
+而是使用相对秩来计算  τ (see Snedecor &amp; Cochran [<a class="reference external" href="#snedecor1989">29</a>]) 。</p>
+<p>Kendall’s τ 对应的距离计算为：</p>
+<div class="math">
+\[d_{\mbox{K}} \equiv 1 - \tau.\]</div>
+<p>因为 Kendall’s τ 位于 -1 和 1之间, 对应的距离位于 0 和 2之间。</p>
+</div>
+<div class="section" id="weighting">
+<h3>Weighting<a class="headerlink" href="#weighting" title="Permalink to this headline">¶</a></h3>
+<p>对于 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中大部分距离函数，都可以使用加权向量。加权向量包含着
+数据集中每个元素的权重。如果元素 <em>i</em> 的权重为 <em>w</em><sub>*i*</sub>，那么将会认为该元素
+出现了 <em>w</em><sub>*i*</sub> 次 。权重值可以不为整数。对于 Spearman 秩相关系数
+和Kendall’s τ, 权重没有太大的意义，因此不适用于这两个函数。</p>
+</div>
+<div class="section" id="id6">
+<h3>计算距离矩阵<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>距离矩阵是 <tt class="docutils literal"><span class="pre">data</span></tt> 中，所有元素的两两间的距离的平方矩阵，可以用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 模块中 <tt class="docutils literal"><span class="pre">distancematrix</span></tt> 函数计算：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">distancematrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">distancematrix</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，包含以下参数：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt> (必选)</dt>
+<dd><p class="first last">包含所有元素的矩阵</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 表明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">weight</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">权重矩阵。若 <tt class="docutils literal"><span class="pre">weight==None</span></tt>, 则假设所有的数据使用相同的权重。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)来计算距离.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>为了节省内存，函数返回的距离矩阵是一个一维数组的列表。每行的列数等于行号。
+因此，第一行有0个元素。例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">array</span><span class="p">([]),</span>
+ <span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">]),</span>
+ <span class="n">array</span><span class="p">([</span><span class="mf">7.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span>
+ <span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])]</span>
+</pre></div>
+</div>
+<p>对应的距离矩阵为：</p>
+<div class="math">
+\[\begin{split}\left(
+\begin{array}{cccc}
+0 &amp; 1 &amp; 7 &amp; 4  \\
+1 &amp; 0 &amp; 3 &amp; 2  \\
+7 &amp; 3 &amp; 0 &amp; 6  \\
+4 &amp; 2 &amp; 6 &amp; 0
+\end{array}
+\right).\end{split}\]</div>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>15.2  计算类的相关性质<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h3>计算类中心<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>类中心可以定义为该类中在每个维度上所有元素的平均值或者中值，可以用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中的 <tt class="docutils literal"><span class="pre">clustercentroids</span></tt>
+函数计算：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">clustercentroids</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cdata</span><span class="p">,</span> <span class="n">cmask</span> <span class="o">=</span> <span class="n">clustercentroids</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>包含了以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt> (必选)</dt>
+<dd><p class="first last">包含所有元素的矩阵。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 则明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">clusterid</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">一个表示每个元素的所属类的整型向量。如果 <tt class="docutils literal"><span class="pre">clusterid</span></tt> 是 <tt class="docutils literal"><span class="pre">None</span></tt>, 表明所有的元素属于相同的类。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'a'</span></tt>)</dt>
+<dd><p class="first last">指定使用算术平方根 (<tt class="docutils literal"><span class="pre">method=='a'</span></tt>) 或者中值(<tt class="docutils literal"><span class="pre">method=='m'</span></tt>) 来计算类中心。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>) 来计算类中心.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>这个函数返回值为元组 <tt class="docutils literal"><span class="pre">(cdata,</span> <span class="pre">cmask)</span></tt>。 类中心的数据存储在一个二维的Numerical Python
+数组 <tt class="docutils literal"><span class="pre">cdata</span></tt> 中, 缺失值的结果存储在二维的Numerical Python整型数组 <tt class="docutils literal"><span class="pre">cmask</span></tt> 中。 当 <tt class="docutils literal"><span class="pre">transpose</span></tt> = <tt class="docutils literal"><span class="pre">0</span></tt> 时，
+这两个数组的维度是（类数，列数），当 <tt class="docutils literal"><span class="pre">transpose</span></tt> = <tt class="docutils literal"><span class="pre">1</span></tt> 时，数组的长度为 （行数，类数）。
+其中每一行（当 <tt class="docutils literal"><span class="pre">transpose</span></tt> = <tt class="docutils literal"><span class="pre">0</span></tt>) 或者 每一列（当 <tt class="docutils literal"><span class="pre">transpose</span></tt> = <tt class="docutils literal"><span class="pre">1</span></tt> ）
+包含着对应每类对应的数据的平均值。</p>
+</div>
+<div class="section" id="id9">
+<h3>计算类间距离<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>根据每个 <em>items</em> 的距离函数，我们可以计算出两个 <em>clusters</em> 的距离。两个类别的
+算术平均值之间的距离通常用于重心法聚类和 <em>k</em>-means 聚类，而 <em>k</em>-medoids
+聚类中，通常利用两类的中值进行计算。最短距离法利用的是两类间最近的元素之间的距离，
+而最大距离法利用最长的元素之间的距离。在两两平均连锁聚类法中，
+类间的距离定义为类内所有对应元素两两间距离的平均值。</p>
+<p>为了计算两类之间的距离，可以利用:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">clusterdistance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="n">clusterdistance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，包含的参数有：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt> (必选)</dt>
+<dd><p class="first last">包含所有元素的矩阵。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 则明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">weight</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">权重矩阵。若 <tt class="docutils literal"><span class="pre">weight==None</span></tt>, 则假设所有的数据使用相同的权重。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">index1</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">第一个类所包含的元素索引的列表。如果一个类别只包含一个元素 <em>i</em> ，则数据类型
+可以为一个列表 <tt class="docutils literal"><span class="pre">[i]</span></tt>, 或者整数 <tt class="docutils literal"><span class="pre">i</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">index2</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">第二个类所包含的元素的列表。如果一个类别只包含一个元素 <em>i</em> ，则数据类型
+可以为一个列表 <tt class="docutils literal"><span class="pre">[i]</span></tt>, 或者整数 <tt class="docutils literal"><span class="pre">i</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'a'</span></tt>)</dt>
+<dd><p class="first last">选择计算类别间距离的方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'a'</span></tt>: 使用两个类中心的距离 (算术平均值);</li>
+<li><tt class="docutils literal"><span class="pre">'m'</span></tt>: 使用两个类中心的距离 (中值);</li>
+<li><tt class="docutils literal"><span class="pre">'s'</span></tt>: 使用两类中最短的两个元素之间的距离;</li>
+<li><tt class="docutils literal"><span class="pre">'x'</span></tt>: 使用两类中最长的两个元素之间的距离;</li>
+<li><tt class="docutils literal"><span class="pre">'v'</span></tt>: 使用两类中对应元素间的距离的平均值作为距离。</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)来计算距离.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>15.3  划分算法<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>划分算法依据所有元素到各自聚类中心距离之和最小化原则，
+将元素分为 <em>k</em> 类。类的个数 <em>k</em> 由用户定义。 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 提供了三种不同
+的算法:</p>
+<ul class="simple">
+<li><em>k</em>-means 聚类</li>
+<li><em>k</em>-medians 聚类</li>
+<li><em>k</em>-medoids 聚类</li>
+</ul>
+<p>这些算法的区别在于如何定义聚类中心。在 <em>k</em>-means 中, 聚类中心定义为该类中所有
+元素的平均值。 在 <em>k</em>-medians 聚类中， 利用每个维度的中间值来计算。
+最后， <em>k</em>-medoids 聚类中，聚类中心定义为该类中，距离其他所有元素距离之和最小的元素所在的位置。
+这个方法适用于已知距离矩阵，但是原始数据矩阵未知的情况，例如根据结构相似度对蛋白进行聚类。</p>
+<p>expectation-maximization (EM) 算法通常用于将数据分成 <em>k</em> 组。在 EM算法的起始阶段,
+随机的把元素分配到不同的组。为了保证所有的类都包含元素，可以利用二项分布的方法随机
+为每类挑选元素。然后，随机的对分组进行排列，保证每个元素有相同的概率被分到任何一个类别。
+最终，保证每类中至少含有一个元素。</p>
+<p>之后进行迭代:</p>
+<ul class="simple">
+<li>利用均值，中值或者medoid计算每类的中心;</li>
+<li>计算每类的元素离各自中心的距离;</li>
+<li>对于每个元素，判别其离哪个聚类中心最近;</li>
+<li>将元素重新分配到最近的聚类，当不能进行调整时，迭代终止。</li>
+</ul>
+<p>为了避免迭代中产生空的类别，在 <em>k</em>-means 和 <em>k</em>-medians 聚类中，算法始终记录着每类中元素的
+个数，并且阻止最后一个元素被分到其他的类别中。对于 <em>k</em>-medoids 聚类, 这种检查就是没有必要的，
+因为当只剩最后一个元素时，它离中心的距离为0，所以不会被分配到其他的类别中。</p>
+<p>由于起始阶段的每类中的元素分配是随机的，而通常当EM算法执行时，可能产生不同的聚类结果。为了找到最优的聚类结果，
+可以对进行 <em>k</em>-means 算法重复多次，每次都以不同的随机分配作为起始。每次运行后，都会保存所有元素距离
+其中心距离之和，并且选择总距离最小的运行结果最为最终的结果。</p>
+<p>EM算法运行的次数取决于需要聚类元素的多少。一般而言，我们可以根据最优解被发现的次数来选择。
+这个次数会作为划分算法的返回值。如果最优解被多次返回，那么不太可能存在比这个
+更优的解。然后，如果最优解只被发现一次，那么可能存在着距离更小的解。但是，如果需要聚类的
+元素过多的话（多余几百），那么很难找到一个全局最优解。</p>
+<p>EM算法会在不能进行任何分配的时候停止。我们注意到，在某些随机的起始分配中，由于
+相同的解会在迭代中周期性的重复，从而导致EM算法的失败。因此，我们在迭代中也会
+检查是否有周期性出现的解存在。首先，在给定数目的迭代后，当前的聚类结果会保存作为一个参考。之后
+继续迭代一定次数，比较该结果同之前保存的结果，可以确定之前的结果是否重复出现。
+如果有重复出现，迭代会终止。如果没有出现，那么再次迭代后的结果会保存作为新的参考。
+通常，会首先重复10次迭代，再保存结果为新的参考。之后，迭代的次数会翻倍，保证在长的周期中也可以
+检测到该解。</p>
+<div class="section" id="k-means-and-k-medians">
+<h3><em>k</em>-means and <em>k</em>-medians<a class="headerlink" href="#k-means-and-k-medians" title="Permalink to this headline">¶</a></h3>
+<p><em>k</em>-means 和 <em>k</em>-medians 算法可以利用 <tt class="docutils literal"><span class="pre">Bio.Cluster``中的</span> <span class="pre">``kcluster</span></tt> 实现:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">kcluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">nfound</span> <span class="o">=</span> <span class="n">kcluster</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，包含的参数有：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt> (必选)</dt>
+<dd><p class="first last">包含所有元素的矩阵。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">nclusters</span></tt> (默认: <tt class="docutils literal"><span class="pre">2</span></tt>)</dt>
+<dd><p class="first last">期望的类的数目 <em>k</em>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 则明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">weight</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">权重矩阵。若 <tt class="docutils literal"><span class="pre">weight==None</span></tt>, 则假设所有的数据使用相同的权重。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)来计算距离.
+-  <tt class="docutils literal"><span class="pre">npass</span></tt> (默认: <tt class="docutils literal"><span class="pre">1</span></tt>)
+<em>k</em>-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+如果指定了 <tt class="docutils literal"><span class="pre">initialid</span></tt> , 程序会忽略``npass`` 的值，并且聚类算法只会运行一次。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">a</span></tt>)</dt>
+<dd><p class="first last">指定聚类中心计算方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">method=='a'</span></tt>: 算数平均值 (<em>k</em>-means clustering);</li>
+<li><tt class="docutils literal"><span class="pre">method=='m'</span></tt>: 中值 (<em>k</em>-medians clustering).</li>
+</ul>
+<p>当指定 <tt class="docutils literal"><span class="pre">method</span></tt> 使用其他值时，算法会采用算数平均值。</p>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).
+尽管八种距离都可以用于 <tt class="docutils literal"><span class="pre">kcluster</span></tt> 计算,
+但从经验上来讲，Euclidean 距离适合 <em>k</em>-means 算法, city-block 距离适合 <em>k</em>-medians.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">initialid</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">指定EM算法运行初始的聚类类别。如果 <tt class="docutils literal"><span class="pre">initialid==None</span></tt>, 那么每运行一次EM算法时，
+都会采取不同的随机初始聚类，总共运行的次数由 <tt class="docutils literal"><span class="pre">npass</span></tt> 决定。如果 <tt class="docutils literal"><span class="pre">initialid</span></tt> 不是 <tt class="docutils literal"><span class="pre">None</span></tt>,
+那么它应该为一个长度为类别数的1维数组，每类中至少含有一个元素。通常当初始分类确定后，EM算法的结果也就确定了。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>这个函数的返回值为一个包含 <tt class="docutils literal"><span class="pre">(clusterid,</span> <span class="pre">error,</span> <span class="pre">nfound)</span></tt> 的元组，其中 <tt class="docutils literal"><span class="pre">clusterid</span></tt> 是
+一个整型矩阵，为每行或列所在的类。 <tt class="docutils literal"><span class="pre">error</span></tt> 是最优聚类解中，每类内距离的总和，
+<tt class="docutils literal"><span class="pre">nfound</span></tt> 指的是最优解出现的次数。</p>
+</div>
+<div class="section" id="k-medoids">
+<h3><em>k</em>-medoids 聚类<a class="headerlink" href="#k-medoids" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">kmedoids</span></tt> 函数根据提供的距离矩阵和聚类数，来运行 <em>k</em>-medoids 聚类：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">kmedoids</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">nfound</span> <span class="o">=</span> <span class="n">kmedoids</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，包含的参数有: , nclusters=2, npass=1,
+initialid=None)|</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">distance</span></tt> (必选)</dt>
+<dd><p class="first last">两两元素间的距离矩阵，可以通过三种不同的方法提供：</p>
+</dd>
+</dl>
+<ul>
+<li><p class="first">提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">distance</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">输入一个一维的 Numerical Python 数组，包含了距离矩阵左下角的数据：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">distance</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">输入一个列表，包含距离矩阵左下角的数据：</p>
+<div class="code python highlight-python"><pre>distance = [array([]|,
+            array([1.1]),
+            array([2.3, 4.5])
+           ]</pre>
+</div>
+</li>
+</ul>
+<p>三种方法对应着同样的距离矩阵。</p>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">nclusters</span></tt> (默认: <tt class="docutils literal"><span class="pre">2</span></tt>)</dt>
+<dd><p class="first last">期望的类的数目 <em>k</em>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">npass</span></tt> (默认: <tt class="docutils literal"><span class="pre">1</span></tt>)</dt>
+<dd><p class="first last"><em>k</em>-medoids 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+如果指定了 <tt class="docutils literal"><span class="pre">initialid</span></tt> , <tt class="docutils literal"><span class="pre">npass</span></tt> 的值会忽略，并且聚类算法只会运行一次。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">initialid</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">指定EM算法运行初始的聚类类别。如果 <tt class="docutils literal"><span class="pre">initialid==None</span></tt>, 那么每运行一次EM算法时，
+都会采取不同的随机初始聚类，总共运行的次数由 <tt class="docutils literal"><span class="pre">npass</span></tt> 决定。如果 <tt class="docutils literal"><span class="pre">initialid</span></tt> 不是 <tt class="docutils literal"><span class="pre">None</span></tt>,
+那么它应该为一个长度为类别数的1维数组，每类中至少含有一个元素。通常当初始分类确定后，EM算法的结果也就确定了。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>函数返回值为一个 包含 <tt class="docutils literal"><span class="pre">(clusterid,</span> <span class="pre">error,</span> <span class="pre">nfound)</span></tt> 的元组, 其中
+<tt class="docutils literal"><span class="pre">clusterid</span></tt> 一个整型矩阵，为每行或列类所在的类。<tt class="docutils literal"><span class="pre">error</span></tt> 是在最优解中，类内距离的总和，
+<tt class="docutils literal"><span class="pre">nfound</span></tt> 指的是最优解出现的次数。需要注意的是， <tt class="docutils literal"><span class="pre">clusterid</span></tt> 中的类号是指的是代表聚类中心的元素号。</p>
+</div>
+</div>
+<div class="section" id="id11">
+<h2>15.4  系统聚类<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>系统聚类同 <em>k</em>-means 聚类有本质的不同。在系统聚类中，基因间或者实验条件间的相似度是通过
+树的形式展现出来的。由于可以利用Treeview或者Java Treeview来查看这些树的结构，因此系统聚类在基因表达谱数据中得到普遍应用。</p>
+<p>系统聚类的第一步是计算所有元素间的距离矩阵。之后，融合两个最近的元素成为一个节点。然后，不断的
+通过融合相近的元素或者节点来形成新的节点，直到所有的元素都属于同一个节点。在追溯元素和节点融合
+的过程的同时形成了树的结构。不同于 <em>k</em>-means 使用的EM算法，系统聚类的过程是固定的。</p>
+<p>系统聚类也存在着几个不同的方法，他们区别在于如何计算子节点间的距离。在
+<tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，提供了最短距离法（ pairwise single）,最长距离法（maximum）, 类平均法（average）,
+和重心法（centroid linkage）。</p>
+<ul class="simple">
+<li>在最短距离法中，节点间的距离被定义两个节点最近样品间距离。</li>
+<li>在最短距离法中，节点间的距离被定义两个节点最远样品间距离。</li>
+<li>在类平均法中，节点间的距离被定义为所有样品对之间的平均距离。</li>
+<li>在重心法中，节点间的距离被定义为两个节点重心间的距离。重心的计算是通过对
+每类中所有元素进行计算的。由于每次都要计算新的节点与 其他元素和已存在节点的距离，
+因此重心法的运行时间比其他系统聚类的方法更长。该方法另外一个特性是，当聚类树的
+长大的时候，距离并不会增加，有时候反而减少。这是由于使用Pearson相关系数作为距离时，
+对重心的计算和距离的计算不一致产生:因为Pearson相关系数在计算距离时会对数据进行有效归一化，，
+但是重心的计算不会存在该种归一化。</li>
+</ul>
+<p>对于最短距离法，最长距离法和类平均法时，两个节点之间的距离是直接对类别里的元素计算得到的。
+因此，聚类的算法在得到距离矩阵后，不一定需要提供最开始的基因表达数据。而对于重心法而言，
+新生成的节点的中心必须依靠原始的数据，而不是仅仅依靠距离矩阵。</p>
+<p>最短距离法的实现是根据 SLINK algorithm (R. Sibson, 1973), 这个算法具有快速和高效的特点。
+并且这个方法聚类的结果同传统的方法结果一致。并且该算法，也可以有效的运用于大量的数据，而传统的
+算法则需要大量的内存需求和运行时间。</p>
+<div class="section" id="id12">
+<h3>展示系统聚类的结果<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>系统聚类的结果是用树的结构展示所有节点，每个节点包含两个元素或者子节点。通常，我们既关心那个元素
+或者哪个子节点互相融合，也关心二者之间的距离（或者相似度）。我们可以调用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中的
+<tt class="docutils literal"><span class="pre">Node</span></tt> 类，来存储聚类树的一个节点。 <tt class="docutils literal"><span class="pre">Node</span></tt> 的实例包含以下三个属性：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">left</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">right</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">distance</span></tt></li>
+</ul>
+<p>其中, <tt class="docutils literal"><span class="pre">left</span></tt> 和 <tt class="docutils literal"><span class="pre">right</span></tt> 是合并到该节点两个元素或子节点的编号。
+<tt class="docutils literal"><span class="pre">distance</span></tt> 指的是二者间的距离。其中元素的编号是从0到（元素数目-1），
+而聚类的组别是从-1到-（元素数目-1）。请注意，节点的数目比元素的数目少一。</p>
+<p>为了创建一个新的 <tt class="docutils literal"><span class="pre">Node</span></tt> 对象,我们需要指定 <tt class="docutils literal"><span class="pre">left</span></tt> 和 <tt class="docutils literal"><span class="pre">right</span></tt>;
+<tt class="docutils literal"><span class="pre">distance</span></tt> 是可选的。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">(2, 3): 0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">0.91</span><span class="p">)</span>
+<span class="go">(2, 3): 0.91</span>
+</pre></div>
+</div>
+<p>对于已存在 <tt class="docutils literal"><span class="pre">Node</span></tt> 对象的 <tt class="docutils literal"><span class="pre">left</span></tt>, <tt class="docutils literal"><span class="pre">right</span></tt>, 和 <tt class="docutils literal"><span class="pre">distance</span></tt> 都是可以直接修改的：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="mf">0.73</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span>
+<span class="go">(6, 2): 0.73</span>
+</pre></div>
+</div>
+<p>当 <tt class="docutils literal"><span class="pre">left</span></tt> 和 <tt class="docutils literal"><span class="pre">right</span></tt> 不是整数的时候，或者 <tt class="docutils literal"><span class="pre">distance</span></tt> 不能被转化成浮点值，会抛出错误。</p>
+<blockquote>
+<div>Python的类 <tt class="docutils literal"><span class="pre">Tree</span></tt> 包含着整个系统聚类的结果。 <tt class="docutils literal"><span class="pre">Tree</span></tt> 的对象可以通过
+一个 <tt class="docutils literal"><span class="pre">Node</span></tt> 的列表创建:</div></blockquote>
+<div class="code python highlight-python"><pre>   &gt;&gt;&gt; from Bio.Cluster import Node, Tree
+   &gt;&gt;&gt; nodes = [Node(1,2,0.2), Node(0,3,0.5), Node(-2,4,0.6), Node(-1,-3,0.9)]
+   &gt;&gt;&gt; tree = Tree(nodes)
+   &gt;&gt;&gt; print tree
+   (1, 2): 0.2
+   (0, 3): 0.5
+   (-2, 4): 0.6
+   (-1, -3): 0.9
+
+``Tree`` 的初始器会检查包含节点的列表是否是一个正确的系统聚类树的结果:</pre>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">Node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Tree</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">?</span>
+<span class="gr">ValueError</span>: <span class="n">Inconsistent tree</span>
+</pre></div>
+</div>
+<p>也可以使用中括号来对 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象进行检索：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">Node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">(1, 2): 0.2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">(0, -1): 0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">(0, -1): 0.5</span>
+</pre></div>
+</div>
+<p>因为 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象是只读的，我们不能对 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象中任何一个节点进行改变。然而，我们可以将其
+转换成一个节点的列表，对列表进行操作，最后创建新的树。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">([</span><span class="n">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.1</span><span class="p">),</span> <span class="n">Node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">Node</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mf">0.9</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">tree</span>
+<span class="go">(1, 2): 0.1</span>
+<span class="go">(0, -1): 0.5</span>
+<span class="go">(-2, 3): 0.9</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">tree</span>
+<span class="go">(0, 1): 0.2</span>
+<span class="go">(2, -1): 0.5</span>
+<span class="go">(-2, 3): 0.9</span>
+</pre></div>
+</div>
+<p>这个性质保证了``Tree`` 结果的正确性。</p>
+<p>为了利用可视化工具，例如Java Treeview，来查看系统聚类树，最好对所有节点的距离进行标准化，
+使其位于0和1之间。可以通过对 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象调用 <tt class="docutils literal"><span class="pre">scale</span></tt> 方法来实现这个功能：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">scale</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这个方法不需要任何参数，返回值是 <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+<p>经过系统聚类后，可以对 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象进行剪接，将所有的元素分为 <em>k</em> 类：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">nclusters</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中 <tt class="docutils literal"><span class="pre">nclusters</span></tt> (默认是 <tt class="docutils literal"><span class="pre">1</span></tt>) 是期望的类别数 <em>k</em>。这个方法会忽略树结构里面的
+最高的 <em>k</em>−1 节点，最终形成 <em>k</em> 个独立的类别。对于 <em>k</em> 必须为正数，并且小于或者等于
+元素的数目。这个方法会返回一个数组 <tt class="docutils literal"><span class="pre">clusterid</span></tt> ,包含着每个元素对应的类。</p>
+</div>
+<div class="section" id="id13">
+<h3>运行系统聚类<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>为了进行系统聚类，可以用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中的 <tt class="docutils literal"><span class="pre">treecluster</span></tt> 函数。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">treecluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">treecluster</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>包括以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt></dt>
+<dd><p class="first last">包含所有元素的矩阵。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 则明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">weight</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">权重矩阵。若 <tt class="docutils literal"><span class="pre">weight==None</span></tt>, 则假设所有的数据使用相同的权重。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)来计算距离.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'m'</span></tt>)</dt>
+<dd><p class="first last">选择节点间距离计算方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">method=='s'</span></tt>: 最小距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='m'</span></tt>: 最大距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='c'</span></tt>: 重心法</li>
+<li><tt class="docutils literal"><span class="pre">method=='a'</span></tt>: 类平均法</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>为了对距离矩阵进行系统聚类，可以在调用 <tt class="docutils literal"><span class="pre">treecluster</span></tt> 时，
+用 <tt class="docutils literal"><span class="pre">distancematrix</span></tt> 参数来代替 <tt class="docutils literal"><span class="pre">data</span></tt> 参数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">treecluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">treecluster</span><span class="p">(</span><span class="n">distancematrix</span><span class="o">=</span><span class="n">distance</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这种情况下，需要定义下列参数：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">distancematrix</span></tt></dt>
+<dd><p class="first last">元素两两间的距离矩阵，可以通过三种不同的方法提供：</p>
+</dd>
+</dl>
+<ul>
+<li><p class="first">提供一个2D的 Numerical Python 数组 (函数只会使用矩阵里左下角数据):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">distance</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">2.3</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">输入一个一维的 Numerical Python 数组，包含了距离矩阵左下角的数据：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">distance</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">输入一个列表，包含距离矩阵左下角的数据：</p>
+<div class="code python highlight-python"><pre>distance = [array([]),
+            array([1.1]),
+            array([2.3, 4.5])</pre>
+</div>
+<p>三种方法对应着同样的距离矩阵。由于 <tt class="docutils literal"><span class="pre">treecluster</span></tt> 会对距离矩阵中的值进行随机洗牌，
+如果后面需要调用这个距离矩阵，请在调用 <tt class="docutils literal"><span class="pre">treecluster</span></tt> 之情，事先存到一个新的变量</p>
+</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt></dt>
+<dd><p class="first last">选择节点间距离计算方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">method=='s'</span></tt>: 最小距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='m'</span></tt>: 最大距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='a'</span></tt>: 类平均法</li>
+</ul>
+<p>其中，最小距离法、最大距离法和类平均法可以只通过距离矩阵计算，而重心法却不行。</p>
+</li>
+</ul>
+<p>当调用 <tt class="docutils literal"><span class="pre">treecluster``时,</span>&nbsp; <span class="pre">``data</span></tt> 或者 <tt class="docutils literal"><span class="pre">distancematrix</span></tt> 总有一个必须为 <tt class="docutils literal"><span class="pre">None</span></tt>。</p>
+<p>函数返回一个 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象，该对象包含着 (元素数目-1）个节点，当选择行作为聚类时，元素的
+数目同行数一致；当使用列作为聚类时，元素的数目同列数一致。每个节点都意味着一对相邻连锁的
+事件，其中节点的性质 <tt class="docutils literal"><span class="pre">left</span></tt> 和 <tt class="docutils literal"><span class="pre">right</span></tt> 包含着每个合并的元素或者子节点的编号， <tt class="docutils literal"><span class="pre">distance</span></tt>
+是两个合并元素或者子节点的距离。元素编号是从 0 到 (元素数目 − 1) , 而类别是从 -1 到 −(元素
+数目 -1 ）</p>
+</div>
+</div>
+<div class="section" id="self-organizing-maps">
+<h2>15.5  Self-Organizing Maps<a class="headerlink" href="#self-organizing-maps" title="Permalink to this headline">¶</a></h2>
+<p>Self-Organizing Maps (SOMs) 是由 Kohonen 在描述神经网络的时候发明的 (see for instance Kohonen, 1997 [<a class="reference external" href="#kohonen1997">24</a>]).
+Tamayo (1999) 第一次讲 Self-Organizing Maps 应用到基因表达数据上。
+[<a class="reference external" href="#tamayo1999">30</a>].</p>
+<p>SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的拓扑结构。在SOMs生成的类别中，相邻的
+两个类的拓扑结构相似度高于他们对其他的相似度。</p>
+<p>计算SOM的第一步是随机分配数据向量到每个类别中，如果使用行进行聚类，那么每个数据向量中的元素
+个数等于列数。</p>
+<p>一个SOM 会一次读入一行，并且找到该向量最近的拓扑聚类结构。之后利用找到的数据向量对
+这个类别的数据向量和相邻的类别的数据向量进行调整。调整如下：</p>
+<div class="math">
+\[\Delta \underline{x}_{\textrm{cell}} = \tau \cdot \left(\underline{x}_{\textrm{row}} - \underline{x}_{\textrm{cell}} \right).\]</div>
+<p>参数 τ 会随着迭代次数增加而减少。可以用一个简单的线性函数来定义其与迭代次数的关系：</p>
+<div class="math">
+\[\tau = \tau_{\textrm{init}} \cdot \left(1 - {\frac{1}{n}}\right),\]</div>
+<p>τ<sub>init</sub> 是指定的起始的 τ 值， <em>i</em> 是当前迭代的次数， <em>n</em> 是总的需要迭代的次数。
+在迭代开始时，τ变化很快，然而在迭代末尾，变化越来越小。</p>
+<p>所有在半径 <em>R</em> 内的类别都会在每次迭代中进行调整。半径也会随着迭代的增加而减小：</p>
+<div class="math">
+\[R = R_{\textrm{max}} \cdot \left(1 - {\frac{1}{n}}\right),\]</div>
+<p>其中最大的半径定义为：</p>
+<div class="math">
+\[R_{\textrm{max}} = \sqrt{N_x^2 + N_y^2},\]</div>
+<p>其中 (<em>N</em><sub>*x*</sub>, <em>N</em><sub>*y*</sub>) 是定义拓扑结构的矩形维度。</p>
+<p>函数 <tt class="docutils literal"><span class="pre">somcluster</span></tt> 可以用来在一个矩形的网格里计算 Self-Organizing Map。
+首先，初始化一个随机数产生器。利用随机化产生器来对节点数据进行初始化。在SOM中，
+基因或者芯片的调整顺序同样是随机的。用户可以定义总的SOM迭代的次数。</p>
+<p>运行 <tt class="docutils literal"><span class="pre">somcluster</span></tt>, 例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">somcluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span><span class="p">,</span> <span class="n">celldata</span> <span class="o">=</span> <span class="n">somcluster</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>其中，可以定义一下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt> (required)</dt>
+<dd><p class="first last">包含所有元素的矩阵。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">缺失数据矩阵。若 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 缺失。若 <tt class="docutils literal"><span class="pre">mask==None</span></tt>, 则明没有缺失数据。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">weight</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">权重矩阵。若 <tt class="docutils literal"><span class="pre">weight==None</span></tt>, 则假设所有的数据使用相同的权重。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用 <tt class="docutils literal"><span class="pre">data</span></tt> 中的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)来聚类.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">nxgrid,</span> <span class="pre">nygrid</span></tt> (默认: <tt class="docutils literal"><span class="pre">2,</span> <span class="pre">1</span></tt>)</dt>
+<dd><p class="first last">当Self-Organizing Map计算的时候，矩形的网格所包含的横向和纵向的格子。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">inittau</span></tt> (默认: <tt class="docutils literal"><span class="pre">0.02</span></tt>)</dt>
+<dd><p class="first last">SOM算法中，参数 τ 的初始值，默认是 0.02。 这个初始值同Michael Eisen’s Cluster/TreeView 一致。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">niter</span></tt> (默认: <tt class="docutils literal"><span class="pre">1</span></tt>)</dt>
+<dd><p class="first last">迭代运行的次数。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>这个函数返回的是一个元组 <tt class="docutils literal"><span class="pre">(clusterid,</span> <span class="pre">celldata)</span></tt>:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">clusterid</span></tt>:</dt>
+<dd><p class="first last">一个两列的数组，行的数目等于待聚类元素的个数。每行包含着在矩形SOM网格中，将每个元素分配到的
+格子的 <em>x</em> 和 <em>y</em> 的坐标。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">celldata</span></tt>:</dt>
+<dd><p class="first last">当以行进行聚类时，生成的矩阵维度为 (<tt class="docutils literal"><span class="pre">nxgrid</span></tt>, <tt class="docutils literal"><span class="pre">nygrid</span></tt>, number of columns)；
+当以列进行聚类时，生成的矩阵维度为 (<tt class="docutils literal"><span class="pre">nxgrid</span></tt>, <tt class="docutils literal"><span class="pre">nygrid</span></tt>, number of  rows)。
+在这个矩阵里， <tt class="docutils literal"><span class="pre">[ix][iy]</span></tt> 表示着一个一维向量，其中用于计算该类中心的这基因的表达谱数据.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h2>15.6  主成分分析<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<p>主成分分析 (PCA) 被广泛的用于分析多维数据，一个将主成分分析应用于表达谱数据的请见
+Yeung and Ruzzo (2001) [<a class="reference external" href="#yeung2001">33</a>].</p>
+<p>简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分的
+线性关系显示。主成分的选择是基于是残差尽可能的小的原则。例如，一个 <em>n</em> × 3 的数据矩阵可以表示为三维
+空间内的一个椭圆球形的点的云。第一主成分是这个椭圆球形的最长轴，第二主成分是次长轴，第三主成分
+是最短的轴。矩阵中，每一行都可以用主成分的线性关系展示。一般而言，为了对数据进行降维，只保留最
+重要的几个主成分。剩余的残差认为是不可解释的方差。</p>
+<p>可以通过计算数据的协方差矩阵的特征向量来得到主成分。每个主成分对应的特征值决定了
+其在数据中代表的方差的大小。</p>
+<p>在进行主成分分析前，矩阵的数据每一列都要减去其平均值。在上面椭圆球形云的例子中，数据在3D
+空间中，围绕着其中心分布，而主成分则显示着每个点对其中心的变化。</p>
+<p>函数 <tt class="docutils literal"><span class="pre">pca</span></tt> 首先使用奇异值分解（singular value decomposition）来计算矩阵的特征值和
+特征向量。奇异值分解使用的是Algol写的C语言的 <tt class="docutils literal"><span class="pre">svd</span></tt> [<a class="reference external" href="#golub1971">16</a>], 利用的是
+Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据在主成分上的坐标和主成分
+对应的特征值都会被计算出来，并按照特征值的降序排列。如果需要数据中心，则需要在调用 <tt class="docutils literal"><span class="pre">pca</span></tt>
+前，对每列数据减去其平均值。</p>
+<p>将主成分分析应用于二维矩阵 <tt class="docutils literal"><span class="pre">data</span></tt>,可以：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">pca</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">columnmean</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>函数会返回一个元组 <tt class="docutils literal"><span class="pre">columnmean,</span> <span class="pre">coordinates,</span> <span class="pre">components,</span> <span class="pre">eigenvalues</span></tt> :</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">columnmean</span></tt></dt>
+<dd><p class="first last">包含 <tt class="docutils literal"><span class="pre">data</span></tt> 每列均值的数组 .</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">coordinates</span></tt></dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">data</span></tt> 中每行数据在主成分上对应的坐标。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">components</span></tt></dt>
+<dd><p class="first last">主成分</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">eigenvalues</span></tt></dt>
+<dd><p class="first last">每个主成分对应的特征值</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>原始的数据 <tt class="docutils literal"><span class="pre">data</span></tt> 可以通过计算 <tt class="docutils literal"><span class="pre">columnmean</span> <span class="pre">+</span>&nbsp; <span class="pre">dot(coordinates,</span> <span class="pre">components)</span></tt> 得到。</p>
+</div>
+<div class="section" id="cluster-treeview-type">
+<h2>15.7  处理 Cluster/TreeView-type 文件<a class="headerlink" href="#cluster-treeview-type" title="Permalink to this headline">¶</a></h2>
+<p>Cluster/TreeView 是一个对基因表达数据可视化的工具。他们最初由 <a class="reference external" href="http://rana.lbl.gov">Michael
+Eisen</a> 在 Stanford University 完成。<tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>
+包含着读写 Cluster/TreeView 对应的文件格式的函数。因此，将结果保存为该格式后，
+可以用Treeview对结果进行直接的查看。我们推荐使用 Alok Saldanha 的
+<a class="reference external" href="http://jtreeview.sourceforge.net/">http://jtreeview.sourceforge.net/</a>Java
+TreeView 程序。这个软件可以显示系统聚类和 <em>k</em>-means 聚类的结果。</p>
+<p>类 <tt class="docutils literal"><span class="pre">Record</span></tt> 的一个对象包含着一个 Cluster/TreeView-type数据文件需要的所有信息。
+为了将结果保存到一个 <tt class="docutils literal"><span class="pre">Record</span></tt> 对象中，首先需要打开一个文件，并读取：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Cluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;mydatafile.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>两步操作使得你可以较灵活地操作不同来源的数据，例如：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gzip</span> <span class="c"># Python standard library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;mydatafile.txt.gz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>来打开一个gzipped文件，或者利用</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">urllib</span> <span class="c"># Python standard library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s">&quot;http://somewhere.org/mydatafile.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>来打开一个网络文件，然后调用 <tt class="docutils literal"><span class="pre">read</span></tt>.</p>
+<p><tt class="docutils literal"><span class="pre">read</span></tt> 命令会读取一个由制表符分割的文本文件 <tt class="docutils literal"><span class="pre">mydatafile.txt</span></tt>，文件包含着
+符合Michael Eisen’s Cluster/TreeView格式的基因表达数据。具体的格式说明，可以参见
+Cluster/TreeView手册，链接见 <a class="reference external" href="http://rana.lbl.gov/manuals/ClusterTreeView.pdf">Michael Eisen’s lab
+website</a> 或者 <a class="reference external" href="http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf">our
+website</a>.</p>
+<p>一个 <tt class="docutils literal"><span class="pre">Record</span></tt> 对象有以下的性质:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">data</span></tt></dt>
+<dd><p class="first last">包含基因表达数据的矩阵，每行为基因，每列为芯片。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">mask</span></tt></dt>
+<dd><p class="first last">缺失值的整型数组。如果 <tt class="docutils literal"><span class="pre">mask[i,j]==0</span></tt>, 则 <tt class="docutils literal"><span class="pre">data[i,j]</span></tt> 是缺失的. 如果 <tt class="docutils literal"><span class="pre">mask==None</span></tt>,
+那么没有数据缺失。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">geneid</span></tt></dt>
+<dd><p class="first last">包含每个基因的独特说明的列表 (例如 ORF 数目).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">genename</span></tt></dt>
+<dd><p class="first last">包含每个基因说明的列表（例如基因名）。如果文件中不包含该数据，
+那么 <tt class="docutils literal"><span class="pre">genename</span></tt> 被设为 <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">gweight</span></tt></dt>
+<dd><p class="first last">计算表达谱数据中，基因间的距离使用的权重。如果文件中不含该信息，则
+<tt class="docutils literal"><span class="pre">gweight</span></tt> 为 <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">gorder</span></tt></dt>
+<dd><p class="first last">期望输出文件中基因的排列的顺序。如果文件中不含该信息，则
+<tt class="docutils literal"><span class="pre">gorder</span></tt> 为``None``.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">expid</span></tt></dt>
+<dd><p class="first last">包含每个芯片说明的列表，例如实验条件。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">eweight</span></tt></dt>
+<dd><p class="first last">计算表达谱数据中，不同芯片间的距离使用的权重。如果文件中不含该信息，则
+<tt class="docutils literal"><span class="pre">eweight</span></tt> 为 <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">eorder</span></tt></dt>
+<dd><p class="first last">期望输出文件中基因的排列的顺序。如果文件中不含该信息，则 <tt class="docutils literal"><span class="pre">eorder</span></tt> 为  <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">uniqid</span></tt></dt>
+<dd><p class="first last">用于代替文件中 UNIQID 的字符串.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>在载入 <tt class="docutils literal"><span class="pre">Record</span></tt> 对象后，上述的每个性质可以直接读取和修改。例如，可以对
+<tt class="docutils literal"><span class="pre">record.data</span></tt> 直接取对数来对数据进行log转换。</p>
+<div class="section" id="id15">
+<h3>计算距离矩阵<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>为了计算record中存储元素的距离矩阵，可以用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">distancematrix</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>其中，包含以下参数：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择对 <tt class="docutils literal"><span class="pre">data</span></tt> 的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)计算距离。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择合适的元素距离算法 (见
+<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>函数会返回一个距离矩阵，每行的列数等于行数。(see section
+<a class="reference external" href="#subsec:distancematrix">15.1</a>).</p>
+</div>
+<div class="section" id="id16">
+<h3>计算聚类中心<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p>为了计算存储在record中的元素的聚类中心，利用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cdata</span><span class="p">,</span> <span class="n">cmask</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">clustercentroids</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">clusterid</span></tt> (默认: <tt class="docutils literal"><span class="pre">None</span></tt>)</dt>
+<dd><p class="first last">展示每个元素所属类的整型向量。如果缺少 <tt class="docutils literal"><span class="pre">clusterid</span></tt>,默认所有的元素属于同一类。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'a'</span></tt>)</dt>
+<dd><p class="first last">选择使用算术平均值 (<tt class="docutils literal"><span class="pre">method=='a'</span></tt>) 或者中值 (<tt class="docutils literal"><span class="pre">method=='m'</span></tt>)来计算聚类中心。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择计算``data`` 的行 (<tt class="docutils literal"><span class="pre">transpose==0</span></tt>), 或者列 (<tt class="docutils literal"><span class="pre">transpose==1</span></tt>)计算中心。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>函数返回元组 <tt class="docutils literal"><span class="pre">cdata,</span> <span class="pre">cmask</span></tt> ; 见 section
+<a class="reference external" href="#subsec:clustercentroids">15.2</a> for a description.</p>
+</div>
+<div class="section" id="id17">
+<h3>计算两类间的距离<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>为了计算存储在record中的两类的距离，利用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">clusterdistance</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>其中，包含以下参数：</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">index1</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">第一个类别所包含的元素的列表。如果一个类别只包含一个元素 <em>i</em>
+可以为一个列表 <tt class="docutils literal"><span class="pre">[i]</span></tt>, 或者整数 <tt class="docutils literal"><span class="pre">i</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">index2</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">第二个类别所包含的元素的列表。如果一个类别只包含一个元素 <em>i</em>
+可以为一个列表 <tt class="docutils literal"><span class="pre">[i]</span></tt>, 或者整数 <tt class="docutils literal"><span class="pre">i</span></tt>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'a'</span></tt>)</dt>
+<dd><p class="first last">选择计算类别间距离的方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">'a'</span></tt>: 使用两个聚类中心的距离 (算术平均值);</li>
+<li><tt class="docutils literal"><span class="pre">'m'</span></tt>: 使用两个聚类中心的距离 (中值);</li>
+<li><tt class="docutils literal"><span class="pre">'s'</span></tt>: 使用两类中最短的两个元素之间的距离;</li>
+<li><tt class="docutils literal"><span class="pre">'x'</span></tt>: 使用两类中最长的两个元素之间的距离;</li>
+<li><tt class="docutils literal"><span class="pre">'v'</span></tt>: 使用两类中两两元素距离的平均值作为距离。</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择使用的距离函数 (见
+<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择 使用 <tt class="docutils literal"><span class="pre">data</span></tt> 的行 ( <tt class="docutils literal"><span class="pre">transpose==0</span></tt> ), 或者列 ( <tt class="docutils literal"><span class="pre">transpose==1</span></tt> )计算距离。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id18">
+<h3>进行系统聚类<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>为了对存储在record中的数据进行系统聚类，利用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">treecluster</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>包含以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择使用行 ( <tt class="docutils literal"><span class="pre">transpose==0</span></tt> ) 或者列 ( <tt class="docutils literal"><span class="pre">transpose==1</span></tt> ) 用于聚类</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">'m'</span></tt>)</dt>
+<dd><p class="first last">选择合适的节点距离计算方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">method=='s'</span></tt>: 最小距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='m'</span></tt>: 最大距离法</li>
+<li><tt class="docutils literal"><span class="pre">method=='c'</span></tt>: 重心法</li>
+<li><tt class="docutils literal"><span class="pre">method=='a'</span></tt>: 类平均法</li>
+</ul>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
+<dd><p class="first last">选择使用的距离函数(见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt></dt>
+<dd><p class="first last">选择使用基因或者芯片进行聚类，如果是 <tt class="docutils literal"><span class="pre">transpose==0</span></tt> , 则使用基因 (行) 进行聚类，如果使用
+<tt class="docutils literal"><span class="pre">transpose==1</span></tt>, 芯片 (列) 用于聚类.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>函数返回 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象。对象包含 (元素数目 − 1） 节点, 如果使用行进行聚类时，元素数目为总行数；
+当使用列进行聚类时，元素数目为总列数。每个节点描述着一对节点连接，然而节点的性质 <tt class="docutils literal"><span class="pre">left</span></tt> 和
+<tt class="docutils literal"><span class="pre">right</span></tt> 包含着相邻节点所有的元素和子节点数， <tt class="docutils literal"><span class="pre">distance</span></tt> 显示着左右节点的距离。
+元素从 0 到 (元素数目 − 1) 进行索引, 而类别从 -1 to −(元素数目−1)进行索引。</p>
+</div>
+<div class="section" id="k-means-or-k-medians">
+<h3>进行 <em>k</em>-means or <em>k</em>-medians 聚类<a class="headerlink" href="#k-means-or-k-medians" title="Permalink to this headline">¶</a></h3>
+<p>为了对存储在record中的元素进行 <em>k</em>-means 或者 <em>k</em>-medians 聚类，可以使用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">nfound</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">kcluster</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>包含以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">nclusters</span></tt> (默认: <tt class="docutils literal"><span class="pre">2</span></tt>)</dt>
+<dd><p class="first last">类的数目 <em>k</em>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt>)</dt>
+<dd><p class="first last">选择 使用 <tt class="docutils literal"><span class="pre">data</span></tt> 的行 ( <tt class="docutils literal"><span class="pre">transpose==0</span></tt> ), 或者列 ( <tt class="docutils literal"><span class="pre">transpose==1</span></tt> )计算距离。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">npass</span></tt> (默认: <tt class="docutils literal"><span class="pre">1</span></tt>)</dt>
+<dd><p class="first last"><em>k</em>-means/-medians 聚类算法运行的次数，每次运行使用不同的随机的起始值。
+如果指定了 <tt class="docutils literal"><span class="pre">initialid</span></tt> , <tt class="docutils literal"><span class="pre">npass</span></tt> 的值会忽略，并且聚类算法只会运行一次。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">method</span></tt> (默认: <tt class="docutils literal"><span class="pre">a</span></tt>)</dt>
+<dd><p class="first last">指定确定聚类中心的方法:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">method=='a'</span></tt>: 算数平均值 (<em>k</em>-means clustering);</li>
+<li><tt class="docutils literal"><span class="pre">method=='m'</span></tt>: 中间值 (<em>k</em>-medians clustering).</li>
+</ul>
+<p>当指定 <tt class="docutils literal"><span class="pre">method</span></tt> 使用其他值时，算法会采用算数平均值。</p>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt> , Euclidean distance)</dt>
+<dd><p class="first last">选择使用的距离函数 (see
+<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>这个函数返回的是一个元组 <tt class="docutils literal"><span class="pre">(clusterid,</span> <span class="pre">error,</span> <span class="pre">nfound)</span></tt> , 其中 <tt class="docutils literal"><span class="pre">clusterid</span></tt> 是一个每行或则列对应的类的编号。
+<tt class="docutils literal"><span class="pre">error</span></tt> 是最优解的类内的距离和， <tt class="docutils literal"><span class="pre">nfound</span></tt> 是最优解被发现的次数。</p>
+</div>
+<div class="section" id="self-organizing-map">
+<h3>计算Self-Organizing Map<a class="headerlink" href="#self-organizing-map" title="Permalink to this headline">¶</a></h3>
+<p>可以利用以下命令，计算对存储在record中元素计算 Self-Organizing Map ：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">clusterid</span><span class="p">,</span> <span class="n">celldata</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">somcluster</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>包含以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">transpose</span></tt> (默认: <tt class="docutils literal"><span class="pre">0</span></tt> )</dt>
+<dd><p class="first last">选择 使用 <tt class="docutils literal"><span class="pre">data</span></tt> 的行 ( <tt class="docutils literal"><span class="pre">transpose==0</span></tt> ), 或者列 ( <tt class="docutils literal"><span class="pre">transpose==1</span></tt> )计算距离.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">nxgrid,</span> <span class="pre">nygrid</span></tt> (默认: <tt class="docutils literal"><span class="pre">2,</span> <span class="pre">1</span></tt>)</dt>
+<dd><p class="first last">当Self-Organizing Map计算时，在矩形网格里的横向和纵向格子数目</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">inittau</span></tt> (默认: <tt class="docutils literal"><span class="pre">0.02</span></tt>)</dt>
+<dd><p class="first last">用于SOM算法的参数 τ 的初始值。默认的 <tt class="docutils literal"><span class="pre">inittau</span></tt> 是0.02，同Michael Eisen’s Cluster/TreeView 程序中
+使用的参数一致。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">niter</span></tt> (默认: <tt class="docutils literal"><span class="pre">1</span></tt> )</dt>
+<dd><p class="first last">迭代运行的次数。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt> , Euclidean distance)</dt>
+<dd><p class="first last">选择使用的距离函数(见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>函数返回一个元组 <tt class="docutils literal"><span class="pre">(clusterid,</span> <span class="pre">celldata)</span></tt> :</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">clusterid</span></tt>:</dt>
+<dd><p class="first last">一个二维数组，行数同待聚类的元素数目相同。每行的内容对应着该元素在矩形SOM方格内 <em>x</em> 和 <em>y</em> 的坐标。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">celldata</span></tt>:</dt>
+<dd><p class="first last">格式为一个矩阵，如果是对行聚类，内容为 ( <tt class="docutils literal"><span class="pre">nxgrid</span></tt> , <tt class="docutils literal"><span class="pre">nygrid</span></tt> , 列数)，如果是对列聚类，
+那么内容为 ( <tt class="docutils literal"><span class="pre">nxgrid</span></tt> , <tt class="docutils literal"><span class="pre">nygrid</span></tt> , 行数) 。矩阵中，坐标 <tt class="docutils literal"><span class="pre">[ix][iy]</span></tt> 对应的是该坐标的网格里的
+基因表达数据的聚类中心的一维向量。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id19">
+<h3>保存聚类结果<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>为了保存聚类结果，可以利用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">jobname</span><span class="p">,</span> <span class="n">geneclusters</span><span class="p">,</span> <span class="n">expclusters</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>包含以下参数:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">jobname</span></tt></dt>
+<dd><p class="first last">字符串 <tt class="docutils literal"><span class="pre">jobname</span></tt> 作为保存的文件名。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">geneclusters</span></tt></dt>
+<dd><p class="first last">这个参数指的是基因（以行聚类）的结果。在 <em>k</em>-means 聚类中，这个参数是一个一维的数组，包含着
+每个基因对应的类别，可以通过 <tt class="docutils literal"><span class="pre">kcluster</span></tt> 得到。在系统聚类中， <tt class="docutils literal"><span class="pre">geneclusters</span></tt> 是一个 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">expclusters</span></tt></dt>
+<dd><p class="first last">这个参数指的是实验条件（以列聚类）的结果。在 <em>k</em>-means 聚类中，这个参数是一个一维的数组，包含着
+每个实验条件对应的类别，可以通过 <tt class="docutils literal"><span class="pre">kcluster</span></tt> 得到。在系统聚类中， <tt class="docutils literal"><span class="pre">geneclusters</span></tt> 是一个``Tree`` 对象。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>这个方法会生成文本文件 <tt class="docutils literal"><span class="pre">jobname.cdt</span></tt>, <tt class="docutils literal"><span class="pre">jobname.gtr</span></tt>, <tt class="docutils literal"><span class="pre">jobname.atr</span></tt>, <tt class="docutils literal"><span class="pre">jobname*.kgg</span></tt>,
+和/或 <tt class="docutils literal"><span class="pre">jobname*.kag</span></tt> 。 这些文件可以用于后续分析。如果 <tt class="docutils literal"><span class="pre">geneclusters</span></tt> 和 <tt class="docutils literal"><span class="pre">expclusters</span></tt>
+都是 <tt class="docutils literal"><span class="pre">None</span></tt> , 那这个方法只会生成 <tt class="docutils literal"><span class="pre">jobname.cdt</span></tt> ; 这个文件可以被读取，生成一个新的 <tt class="docutils literal"><span class="pre">Record</span></tt> 对象.</p>
+</div>
+</div>
+<div class="section" id="id20">
+<h2>15.8  示例<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<p>以下是一个系统聚类的例子，其中使用最短距离法对基因进行聚类，用最大距离法对实验条件进行聚类。
+由于使用 Euclidean 距离对基因进行聚类，因此需要将节点距离 <tt class="docutils literal"><span class="pre">genetree</span></tt> 进行调整，使其处于0和1之间。
+这种调整对于Java TreeView正确显示树结构也是很必须的。同时使用 uncentered correlation 对实验条件进行聚类。
+在这种情况下，不需要任何的调整，因为 <tt class="docutils literal"><span class="pre">exptree</span></tt> 中的结果已经位于0和2之间。 示例中使用的
+文件 <tt class="docutils literal"><span class="pre">cyano.txt</span></tt> 可以从 <tt class="docutils literal"><span class="pre">data</span></tt> 文件夹中找到。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Cluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;cyano.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genetree</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">treecluster</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&#39;s&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">genetree</span><span class="o">.</span><span class="n">scale</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exptree</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">treecluster</span><span class="p">(</span><span class="n">dist</span><span class="o">=</span><span class="s">&#39;u&#39;</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;cyano_result&quot;</span><span class="p">,</span> <span class="n">genetree</span><span class="p">,</span> <span class="n">exptree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这个命令会生成 <tt class="docutils literal"><span class="pre">cyano_result.cdt</span></tt> , <tt class="docutils literal"><span class="pre">cyano_result.gtr</span></tt> , 和 <tt class="docutils literal"><span class="pre">cyano_result.atr</span></tt> 等文件。</p>
+<p>同样的，也可以保存一个 <em>k</em>-means 聚类的结果:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Cluster</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;cyano.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Cluster</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">geneclusters</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">ifound</span><span class="p">)</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">kcluster</span><span class="p">(</span><span class="n">nclusters</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">npass</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">expclusters</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">ifound</span><span class="p">)</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">kcluster</span><span class="p">(</span><span class="n">nclusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">npass</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s">&quot;cyano_result&quot;</span><span class="p">,</span> <span class="n">geneclusters</span><span class="p">,</span> <span class="n">expclusters</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>上述代码将生成文件 <tt class="docutils literal"><span class="pre">cyano_result_K_G2_A2.cdt</span></tt> , <tt class="docutils literal"><span class="pre">cyano_result_K_G2.kgg</span></tt> , 和 <tt class="docutils literal"><span class="pre">cyano_result_K_A2.kag</span></tt> 。</p>
+</div>
+<div class="section" id="id21">
+<h2>15.9  附加函数<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">median(data)</span></tt> 返回一维数组 <tt class="docutils literal"><span class="pre">data</span></tt> 的中值</p>
+<p><tt class="docutils literal"><span class="pre">mean(data)</span></tt> 返回一维数组 <tt class="docutils literal"><span class="pre">data</span></tt> 的均值。</p>
+<p><tt class="docutils literal"><span class="pre">version()</span></tt> 返回使用的C聚类库的版本号。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第15章 聚类分析</a><ul>
+<li><a class="reference internal" href="#id2">数据表示法</a></li>
+<li><a class="reference internal" href="#id3">缺失值</a></li>
+<li><a class="reference internal" href="#id4">随机数生成器</a></li>
+<li><a class="reference internal" href="#id5">15.1 距离函数</a><ul>
+<li><a class="reference internal" href="#euclidean">Euclidean 距离</a></li>
+<li><a class="reference internal" href="#city-block-distance">City-block distance</a></li>
+<li><a class="reference internal" href="#pearson">Pearson 相关系数</a></li>
+<li><a class="reference internal" href="#absolute-pearson-correlation">Absolute Pearson correlation</a></li>
+<li><a class="reference internal" href="#uncentered-correlation">Uncentered correlation (夹角余弦)</a></li>
+<li><a class="reference internal" href="#absolute-uncentered-correlation">Absolute uncentered correlation</a></li>
+<li><a class="reference internal" href="#spearman-rank-correlation">Spearman rank correlation</a></li>
+<li><a class="reference internal" href="#kendalls">Kendall’s τ</a></li>
+<li><a class="reference internal" href="#weighting">Weighting</a></li>
+<li><a class="reference internal" href="#id6">计算距离矩阵</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">15.2  计算类的相关性质</a><ul>
+<li><a class="reference internal" href="#id8">计算类中心</a></li>
+<li><a class="reference internal" href="#id9">计算类间距离</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10">15.3  划分算法</a><ul>
+<li><a class="reference internal" href="#k-means-and-k-medians"><em>k</em>-means and <em>k</em>-medians</a></li>
+<li><a class="reference internal" href="#k-medoids"><em>k</em>-medoids 聚类</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id11">15.4  系统聚类</a><ul>
+<li><a class="reference internal" href="#id12">展示系统聚类的结果</a></li>
+<li><a class="reference internal" href="#id13">运行系统聚类</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#self-organizing-maps">15.5  Self-Organizing Maps</a></li>
+<li><a class="reference internal" href="#id14">15.6  主成分分析</a></li>
+<li><a class="reference internal" href="#cluster-treeview-type">15.7  处理 Cluster/TreeView-type 文件</a><ul>
+<li><a class="reference internal" href="#id15">计算距离矩阵</a></li>
+<li><a class="reference internal" href="#id16">计算聚类中心</a></li>
+<li><a class="reference internal" href="#id17">计算两类间的距离</a></li>
+<li><a class="reference internal" href="#id18">进行系统聚类</a></li>
+<li><a class="reference internal" href="#k-means-or-k-medians">进行 <em>k</em>-means or <em>k</em>-medians 聚类</a></li>
+<li><a class="reference internal" href="#self-organizing-map">计算Self-Organizing Map</a></li>
+<li><a class="reference internal" href="#id19">保存聚类结果</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id20">15.8  示例</a></li>
+<li><a class="reference internal" href="#id21">15.9  附加函数</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr14.html"
+                        title="previous chapter">第14章   使用Bio.motifs进行模体序列分析</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr16.html"
+                        title="next chapter">第16章 监督学习方法</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr15.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr16.html" title="第16章 监督学习方法"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr14.html" title="第14章 使用Bio.motifs进行模体序列分析"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

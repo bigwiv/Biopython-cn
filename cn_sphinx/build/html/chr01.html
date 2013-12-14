@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第1章 介绍 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第2章 快速开始 —— 你能用Biopython做什么？" href="chr02.html" />
+    <link rel="prev" title="Welcome to biopython_cn’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr02.html" title="第2章 快速开始 —— 你能用Biopython做什么？"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to biopython_cn’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="id1">
+<h1>第1章 介绍<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="biopython">
+<h2>1.1  什么是Biopython？<a class="headerlink" href="#biopython" title="Permalink to this headline">¶</a></h2>
+<p>Biopython工程是一个使用Python来开发计算分子生物学工具的国际团体。(<a class="reference external" href="http://www.python.org">http://www.python.org</a>)
+Python是一种面向对象的、解释型的、灵活的语言，在计算机科学中日益流行。Python易学，语法明晰，并且能很容易的使用以C，C++或
+者FORTRAN编写的模块实现扩展。</p>
+<p>Biopython官网(<a class="reference external" href="http://www.biopython.org">http://www.biopython.org</a>)为使用和研究生物信息学的开发者提供了一个在线的
+资源库，包括模块、脚本以及一些基于Python的软件的网站链接。一般来讲，Biopython致力于通过创造高质量的和可重复利用的模块及
+类，从而使得Python在生物信息学中的应用变得更加容易。Biopython的特点包括解析各种生物信息学格式的文件(BLAST， Clustalw， FASTA，
+Genbank...)，访问在线的服务器(NCBI，Expasy...)，常见和不那么常见程序的接口(Clustalw， DSSP，MSMS...)，标准的序列类，各
+种收集的模块，KD树数据结构等等，还有一些文档。</p>
+<p>基本来说，我们喜欢使用Python来编程，并且希望通过创建高质量、可复用的模块和脚本来使得Python在生物信息学中的应用变得容易。</p>
+</div>
+<div class="section" id="id2">
+<h2>1.2  在Biopython包中我能发现什么？<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>主要的Biopython发行版本有很多种功能，包括：</p>
+<ul class="simple">
+<li>将生物信息学文件解析为Python可用的数据结构，包含以下支持的格式：<ul>
+<li>Blast输出结果 – standalone和在线Blast</li>
+<li>Clustalw</li>
+<li>FASTA</li>
+<li>GenBank</li>
+<li>PubMed和Medline</li>
+<li>ExPASy文件, 如Enzyme和Prosite</li>
+<li>SCOP, 包括‘dom’和‘lin’文件</li>
+<li>UniGene</li>
+<li>SwissProt</li>
+</ul>
+</li>
+<li>被支持格式的文件可以通过记录来重复或者通过字典界面来索引。</li>
+<li>处理常见的生物信息学在线数据库的代码：<ul>
+<li>NCBI – Blast, Entrez和PubMed服务</li>
+<li>ExPASy – Swiss-Prot和Prosite条目, 包括Prosite搜索</li>
+</ul>
+</li>
+<li>常见生物信息学程序的接口，例如：<ul>
+<li>NCBI的Standalone Blast</li>
+<li>Clustalw比对程序</li>
+<li>EMBOSS命令行工具</li>
+</ul>
+</li>
+<li>一个能处理序列、ID和序列特征的标准序列类。</li>
+<li>对序列实现常规操作的工具，如翻译，转录和权重计算。</li>
+<li>利用k最近邻接、Bayes或SVM对数据进行分类的代码。</li>
+<li>处理比对的代码，包括创建和处理替换矩阵的标准方法。</li>
+<li>分发并行任务到不同进程的代码。</li>
+<li>实现序列的基本操作，翻译以及BLAST等功能的GUI程序。</li>
+<li>使用这些模块的详细文档和帮助，包括此文件，在线的wiki文档，网站和邮件列表。</li>
+<li>整合BioSQL，一个也被BioPerl和BioJava支持的数据库架构。</li>
+</ul>
+<p>我们希望这些能给你足够的理由去下载并开始使用Biopython！</p>
+</div>
+<div class="section" id="id3">
+<h2>1.3  安装Biopython<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>Biopython的所有安装信息在此文档中分开，以便于更容易保持更新。</p>
+<p>简短的版本去我们的下载页面(<a class="reference external" href="http://biopython.org/wiki/Download">http://biopython.org/wiki/Download</a>),
+下载并安装所列举的dependencies，然后下载并安装Biopython。Biopython能在多种平台上运行（Windows，Mac，各种版本的Linux和Unix）。
+对于Windows我们提供预编译的一键式安装程序，而对Unix和其他操作系统，你必须按照附带的README文件从源开始安装。这通常
+是很简单的，只要标准命令：</p>
+<div class="code python highlight-python"><pre>python setup.py build
+python setup.py test
+sudo python setup.py install</pre>
+</div>
+<p>（事实上你可以跳过build和test，直接install。但最好是确保所有的东西看起来都没问题。）</p>
+<p>我们的安装说明的详细版本包括了Python的安装，Biopython dependencies的安装以及Biopython本身的安装。可从PDF
+(<a class="reference external" href="http://biopython.org/DIST/docs/install/Installation.pdf">http://biopython.org/DIST/docs/install/Installation.pdf</a>)
+和HTML格式获得。
+(<a class="reference external" href="http://biopython.org/DIST/docs/install/Installation.html">http://biopython.org/DIST/docs/install/Installation.html</a>)。</p>
+</div>
+<div class="section" id="faq">
+<h2>1.4  常见问答（FAQ）<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first"><em>在科学出版中我怎样引用Biopython？</em></p>
+<p>请引用我们的应用笔记 [<a class="reference external" href="#cock2009">1</a>, Cock <em>et al.</em> ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
+引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
+（更多信息可在我们网站上获得）：</p>
+<ul class="simple">
+<li>对于官方项目声明: [<a class="reference external" href="#chapman2000">13</a>,
+Chapman and Chang, 2000];</li>
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.PDB</span></tt>: [<a class="reference external" href="#hamelryck2003a">18</a>, Hamelryck and
+Manderick, 2003];</li>
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>: [<a class="reference external" href="#dehoon2004">14</a>, De Hoon <em>et al.</em>,
+2004];</li>
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Graphics.GenomeDiagram</span></tt>: [<a class="reference external" href="#pritchard2006">2</a>,
+Pritchard <em>et al.</em>, 2006];</li>
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Phylo</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.Phylo.PAML</span></tt>: [<a class="reference external" href="#talevich2012">9</a>,
+Talevich <em>et al.</em>, 2012];</li>
+<li>对于在Biopython，BioPerl，BioRuby，BioJava和EMBOSS支持的FASTQ格
+式文件：[<a class="reference external" href="#cock2010">7</a>, Cock <em>et al.</em>, 2010].</li>
+</ul>
+</li>
+<li><p class="first"><em>我该怎样以大写字母写“Biopython”？写成“BioPython”可以吗？</em></p>
+<p>正确的大写是“Biopython”而不是“BioPython”（虽然对于BioPerl，BioRuby
+和BioJava是这样）。</p>
+</li>
+<li><p class="first"><em>我怎样查看自己安装的Biopython的版本？</em></p>
+<p>使用以下代码：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">Bio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Bio</span><span class="o">.</span><span class="n">__version__</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>如果 “<tt class="docutils literal"><span class="pre">import</span> <span class="pre">Bio</span></tt>” 这行报错，说明Biopython未被安装。如果第二行报错，
+你的版本已经很过时了。如果版本号以“+”号结束，说明你用的并不是官方版本，而
+是开发代码的快照。</p>
+</li>
+<li><p class="first"><em>此文档的最新版本在哪里？</em></p>
+<p>如果你下载的是一个Biopython源代码包，那么它将包含此文档HTML和PDF两种格式
+的相应版本。此文档最新出版的版本可通过在线获得（每个版本的更新）：</p>
+<ul class="simple">
+<li><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.html">http://biopython.org/DIST/docs/tutorial/Tutorial.html</a></li>
+<li><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial.pdf">http://biopython.org/DIST/docs/tutorial/Tutorial.pdf</a></li>
+</ul>
+<p>如果你使用的是从我们库中获得的尚未发布的最新代码，你可以在这里找到还在开发中
+的教程的拷贝：</p>
+<ul class="simple">
+<li><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html">http://biopython.org/DIST/docs/tutorial/Tutorial-dev.html</a></li>
+<li><a class="reference external" href="http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf">http://biopython.org/DIST/docs/tutorial/Tutorial-dev.pdf</a></li>
+</ul>
+</li>
+<li><p class="first"><em>我需要哪一个“Numerical Python”？</em></p>
+<p>对于Biopython 1.48或更早的版本，你需要老的Numeric模块。对于Biopython 1.49
+及更高的版本，你需要更新的NumPy来代替。Numeric和NumPy都可以在同一台机器上安
+装。也可以访问： <a class="reference external" href="http://numpy.scipy.org/">http://numpy.scipy.org/</a></p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象缺少了这篇教程里的（反向）transcription和translation方法？</em></p>
+<p>你需要Biopython 1.49或更新的版本。或者，使用以下 <a class="reference external" href="#sec:seq-module-functions">3.14</a> 部分中的 <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 模块
+功能。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象缺少了这篇教程中的upper和lower方法？</em></p>
+<p>你需要Biopython 1.53或更新版本。或者，使用 <tt class="docutils literal"><span class="pre">str(my_seq).upper()</span></tt> 来获得
+大写字符串。如果你需要一个Seq对象，试试 <tt class="docutils literal"><span class="pre">Seq(str(my_seq).upper())</span></tt> ，但是
+要小心重用相同的字母。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象的translation方法不支持本教程中描述的</em> <tt class="docutils literal"><span class="pre">cds</span></tt> <em>选项？</em></p>
+<p>你需要Biopython 1.51或更新版本。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> <em>不能正常工作？它导入正常但是没有解析函数等。</em></p>
+<p>你需要Biopython 1.43或更新版本。较老的版本确实包含了一些相关的代码在 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 下面但是后来就被移除了——这就是为什么import是正常的。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> <em>不能正常工作？该模块导入正常但是并没有read函数！</em></p>
+<p>你需要Biopython 1.45或更新的版本。或者，使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse(...).next()</span></tt> 来代替。</p>
+</li>
+<li><p class="first"><em>为什么没有</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> <em>？模块导入失败！</em></p>
+<p>你需要Biopython 1.46或更新的版本。</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> <em>读写什么样的文件格式？</em></p>
+<p>请检查内建文档（<tt class="docutils literal"><span class="pre">from</span> <span class="pre">Bio</span> <span class="pre">import</span> <span class="pre">SeqIO</span></tt>，然后 <tt class="docutils literal"><span class="pre">help(SeqIO)</span></tt> ），或见wiki上的最
+新条目：
+<a class="reference external" href="http://biopython.org/wiki/SeqIO">http://biopython.org/wiki/SeqIO</a>
+以及
+<a class="reference external" href="http://biopython.org/wiki/AlignIO">http://biopython.org/wiki/AlignIO</a></p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> <em>的input函数不让我提供一个序列字母？</em></p>
+<p>你需要Biopython 1.49或更新版本。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> <em>函数</em> <tt class="docutils literal"><span class="pre">parse</span></tt> <em>，</em> <tt class="docutils literal"><span class="pre">read</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">write</span></tt> <em>不能使用文件名？它们坚持句柄！</em></p>
+<p>你需要Biopython 1.54或更新的版本。或者明确使用句柄。
+(见 Section <a class="reference external" href="#sec:appendix-handles">22.1</a>). 一定要记得当你写完数据后关闭输
+出句柄。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> <em>函数不接受单个记录
+或比对？它们坚持需要一个列表或迭代器！</em></p>
+<p>你需要Biopython 1.54或更新版本，或将该条目以 <tt class="docutils literal"><span class="pre">[...]</span></tt> 包起来形成一个单元素的列表。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">str(...)</span></tt> <em>不给我一个</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象的全序列？</em></p>
+<p>你需要Biopython 1.45或更新的版本。或者，与其使用 <tt class="docutils literal"><span class="pre">str(my_seq)</span></tt>，不如试试 <tt class="docutils literal"><span class="pre">my_seq.tostring()</span></tt> 这也能在最近的Biopython版本上工作）。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.Blast</span></tt> <em>不能处理最新的NCBI blast输出文本文件结果？</em></p>
+<p>NCBI在不断的调整BLAST工具的纯文本输出，导致我们的解析器需要不断更新。
+如果你没使用最新版本的Biopython，你可以试试升级。但是，我们（还有NCBI）推荐你使用
+HTML格式输出来代替，因为HTML是设计给电脑程序读取的。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.Entrez.read()</span></tt> <em>不能正常工作？模块导入正常但是没有read函数！</em></p>
+<p>你需要Biopython 1.46或更新的版本。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.Entrez.parse()</span></tt> <em>不能正常工作？模块导入正常但是没有parse函数！</em></p>
+<p>你需要Biopython 1.52或更新的版本。</p>
+</li>
+<li><p class="first"><em>为什么我的脚本使用了</em> <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> <em>便停止工作了？</em></p>
+<p>这可能是由于NCBI在2012年2月引进EFetch 2.0后发生了改变。首先，他们改变了默认的返回方式——
+你可能想添加 <tt class="docutils literal"><span class="pre">retmode=&quot;text&quot;</span></tt> 到你的call。其次，他们对于怎么提供一个ID列表变得更加严格——
+Biopython 1.59及之后版本或自动将一个列表转换成逗号分隔的字符串。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIWWW.qblast()</span></tt> <em>没有给出与NCBI BLAST网站上相同的结果？</em></p>
+<p>你需要指定相同的选项——NCBI经常调整网站上的默认设置，并且他们不再匹配QBLAST的默认设置了。
+请检查gap罚分和期望值阈值。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIXML.read()</span></tt> <em>不正常工作？模块导入了但是没有read函数！</em></p>
+<p>你需要Biopython 1.50或更新的版本。或者，使用 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIXML.parse(...).next()</span></tt> 代替。</p>
+</li>
+<li><p class="first"><em>为什么我的</em> <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> <em>对象没有一个</em> <tt class="docutils literal"><span class="pre">letter_annotations</span></tt> <em>的属性？</em></p>
+<p>Per-letter-annotation已经被加入到Biopython 1.50中。</p>
+</li>
+<li><p class="first"><em>为什么我无法切片我的</em> <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> <em>来获取一个子记录？</em>
+你需要Biopython 1.50或更新版本。</p>
+</li>
+<li><p class="first"><em>为什么我无法一起添加</em> <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> <em>对象？</em></p>
+<p>你需要Biopython 1.53或更新版本。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> <em>或</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO.convert()</span></tt> <em>不能正常工作？模块导入
+正常但是没有convert函数！</em></p>
+<p>你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合 <tt class="docutils literal"><span class="pre">parse</span></tt> 和 <tt class="docutils literal"><span class="pre">write</span></tt> 函数。
+（见 Sections <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> 和 <a class="reference external" href="#sec:converting-alignments">6.2.1</a>）。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> <em>不能正常工作？模块导入正常但是没有index函数！</em></p>
+<p>你需要Biopython 1.52或更新版本。</p>
+</li>
+<li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.index_db()</span></tt> <em>不能正常工作？模块导入正常但是没有</em> <tt class="docutils literal"><span class="pre">index_db</span></tt> <em>函数！</em></p>
+<p>你需要Biopython 1.57或更新版本。（有SQLite3的Python支持）</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> <em>对象在哪里？</em> <tt class="docutils literal"><span class="pre">Bio.Align</span></tt> <em>模块导入正常但是这个类不在那里！</em></p>
+<p>你需要Biopython 1.54或更新版本。或者，较早的 <tt class="docutils literal"><span class="pre">Bio.Align.Generic.Alignment</span></tt> 类支持它的一些功能，
+但是现在不推荐使用这个。</p>
+</li>
+<li><p class="first"><em>为什么我不能直接从应用程序包装器上运行命令行工具？</em></p>
+<p>你需要Biopython 1.55或更新版本。或者，直接使用Python的 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 模块。</p>
+</li>
+<li><p class="first"><em>我看到过一个代码的目录，但是我找不到那个能干嘛的代码了。它藏在哪儿了？</em></p>
+<p>我们知道，我们的代码存放在 <tt class="docutils literal"><span class="pre">__init__.py</span></tt> 文件里。如果你此前没有在这个文件里寻找代码那么这可能会
+让人困惑。我们这样做的原因是为了让用户更容易导入。比如，不一定要像 <tt class="docutils literal"><span class="pre">from</span> <span class="pre">Bio.GenBank</span> <span class="pre">import</span> <span class="pre">GenBank</span></tt>
+来导入一个“repetitive”，你仅需使用 <tt class="docutils literal"><span class="pre">from</span> <span class="pre">Bio</span> <span class="pre">import</span> <span class="pre">GenBank</span></tt> 就行。</p>
+</li>
+<li><p class="first"><em>为什么CVS的代码貌似过期了？</em></p>
+<p>2009年9月下旬，在Biopython 1.52发布之后，我们从使用CVS转变为使用git，git是一个分散式的版本控制系统。
+旧的CVS服务仍可作为静态和只读备份，但是如果你想获取最新的代码，你需要使用git。详见我们的网站获取更多
+信息。</p>
+</li>
+</ol>
+<p>对于更一般的问题，Python FAQ页面 <a class="reference external" href="http://www.python.org/doc/faq/">http://www.python.org/doc/faq/</a>
+可能会有帮助。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第1章 介绍</a><ul>
+<li><a class="reference internal" href="#biopython">1.1  什么是Biopython？</a></li>
+<li><a class="reference internal" href="#id2">1.2  在Biopython包中我能发现什么？</a></li>
+<li><a class="reference internal" href="#id3">1.3  安装Biopython</a></li>
+<li><a class="reference internal" href="#faq">1.4  常见问答（FAQ）</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to biopython_cn&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr02.html"
+                        title="next chapter">第2章 快速开始 —— 你能用Biopython做什么？</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr01.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr02.html" title="第2章 快速开始 —— 你能用Biopython做什么？"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to biopython_cn’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

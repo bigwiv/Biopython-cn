@@ -1,0 +1,651 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第7章 BLAST &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第8章 BLAST和其他序列搜索工具(实验性质的代码)" href="chr08.html" />
+    <link rel="prev" title="第6章 多序列比对" href="chr06.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr08.html" title="第8章 BLAST和其他序列搜索工具(实验性质的代码)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr06.html" title="第6章 多序列比对"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="blast">
+<h1>第7章  BLAST<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h1>
+<p>嗨，每个人都喜欢BLAST，对吧？我是指，通过BLAST把你的序列和世界上已知的序列
+比较是多么简单方便啊。不过，这章当然不是讲Blast有多么酷，因为我们都已经
+知道了。这章是来解决使用Blast的一些麻烦地方——处理大量的BLAST比对结果数据
+通常是困难的，还有怎么自动运行BLAST序列比对。</p>
+<p>幸运的是，Biopython社区的人早就了解了这些难处。所以，他们已经发展了很多
+工具来简化BlAST使用和结果处理。这章会具体讲解怎么用这些工具来做些有用的
+事情。</p>
+<p>使用BLAST通常可以分成2个步。这两步都可以用上Biopython。第一步，提交你的查询
+序列，运行BLAST，并得到输出数据。第二步，用Python解析BLAST的输出，并作进一步
+分析。</p>
+<p>你第一次接触并运行BLAST也许就是通过NCBI的web服务。事实上，你可以通过多种方式
+(这些方式可以分成几类)来使用BLAST。这些方式最重要的区别在于你是在你的自己
+电脑上运行一个本地BLAST，还是在远程服务器（另外一台电脑，通常是NCBI的服务器）上运行。
+我们将在一个Python脚本里调用NCBI在线BLAST服务来开始这章的内容。</p>
+<p><em>注意</em>: 接下来的 <a class="reference external" href="#chapter:searchio">第8章</a> 介绍的 <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> 是一个
+Biopython实验性质的模块。我们准备最终用它来替换原来的 <tt class="docutils literal"><span class="pre">Bio.Blast</span></tt> 模块。
+因为它提供了一个更为通用的序列搜索相关的框架。不过，在这个模块的稳定版本发布之前，在实际工作中的代码里，请继续用 <tt class="docutils literal"><span class="pre">Bio.Blast</span></tt>
+模块来处理NCBI BLAST。</p>
+<div class="section" id="internetblast">
+<h2>7.1  通过Internet运行BLAST<a class="headerlink" href="#internetblast" title="Permalink to this headline">¶</a></h2>
+<p>我们使用 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIWWW</span></tt> 模块的函数 <tt class="docutils literal"><span class="pre">qblast()</span></tt> 来调用在线版本的BLAST。
+这个函数有3个必需的参数:</p>
+<ul class="simple">
+<li>第一个参数是用来搜索的blast程序，这是小写的字符串。对这个参数的选项和描述可以在
+<a class="reference external" href="http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml">http://www.ncbi.nlm.nih.gov/BLAST/blast_program.shtml</a>.
+查到。目前 <tt class="docutils literal"><span class="pre">qblast</span></tt> 只支持 blastn, blastp, blastx, tblast 和 tblastx.</li>
+<li>第二个参数指定了将要搜索的数据库。同样地，这个参数的选项也可以在
+<a class="reference external" href="http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml">http://www.ncbi.nlm.nih.gov/BLAST/blast_databases.shtml</a>.
+查到</li>
+<li>第三个参数是一个包含你要查询序列的字符串。这个字符串可以是序列的本身
+（fasta格式的），或者是一个类似GI的id。</li>
+</ul>
+<p><tt class="docutils literal"><span class="pre">qblast</span></tt> 函数还可以接受许多其他选项和参数。这些参数基本上类似于你在BLAST网站页面
+能够设置的参数。在这里我们只强调其中的一些：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">qblast</span></tt> 函数可以返回多种格式的BLAST结果。你可以通过可选参数 <tt class="docutils literal"><span class="pre">format_type</span></tt>
+指定格式关键字为：<tt class="docutils literal"><span class="pre">&quot;HTML&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;Text&quot;</span></tt>, <tt class="docutils literal"><span class="pre">&quot;ASN.1&quot;</span></tt>, 或 <tt class="docutils literal"><span class="pre">&quot;XML&quot;</span></tt> 。默认
+格式是 <tt class="docutils literal"><span class="pre">&quot;XML&quot;</span></tt> ，这是解析器期望的格式，<a class="reference external" href="#sec:parsing-blast">7.3节</a> 对其有详细的描述。</li>
+<li>参数 <tt class="docutils literal"><span class="pre">expect</span></tt>  指定期望值，即阀值 e-value。</li>
+</ul>
+<p>更多可选的BLAST参数，请参照NCBI的文档，或者是Biopython内置的文档。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>请注意，NCBI BLAST 网站上的默认参数和QBLAST的默认参数不完全相同。如果你得到了
+不同的结果，你就需要检查下参数设置 （比如，e-value阈值和gap值）.</p>
+<p>举个例子，如果你有条核酸序列，想使用BLAST对核酸数据库（nt）进行搜索，已知这条查询序列的GI号，
+你可以这样做：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">(</span><span class="s">&quot;blastn&quot;</span><span class="p">,</span> <span class="s">&quot;nt&quot;</span><span class="p">,</span> <span class="s">&quot;8332116&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>或者，我们想要查询的序列在FASTA文件中，那么我们只需打开这个文件并把这条记录读入到字符串，然后用这个字符串作为查询参数:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fasta_string</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">(</span><span class="s">&quot;blastn&quot;</span><span class="p">,</span> <span class="s">&quot;nt&quot;</span><span class="p">,</span> <span class="n">fasta_string</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们同样可以读取FASTA文件为一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 序列对象，然后以这个序列自身作为参数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">(</span><span class="s">&quot;blastn&quot;</span><span class="p">,</span> <span class="s">&quot;nt&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>只提供序列意味着BLAST会自动分配给你一个ID。你可能更喜欢用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
+对象的format方法来包装一个fasta字符串，因为这个对象会包含fasta文件中已有的ID</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;m_cold.fasta&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">(</span><span class="s">&quot;blastn&quot;</span><span class="p">,</span> <span class="s">&quot;nt&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>如果你的序列在一个非FASTA格式的文件中并且你用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> (看第5章`5 &lt;#chapter:Bio.SeqIO&gt;`__)
+把序列取出来了，那么这个方法更有用。</p>
+<p>不论你给 <tt class="docutils literal"><span class="pre">qblast()</span></tt> 函数提供了什么参数，都应该返回一个handle object的结果(
+默认是XML格式)。下一步就是将这个XML输出解析为代表BLAST搜索结果的Python
+对象（<a class="reference external" href="#sec:parsing-blast">7.3</a>）。
+不过，也许你想先把这个XML输出保存一个本地文件副本。当调试从BLAST结果提取信息的代码的时候，我发现这样做
+尤其有用。(因为重新运行在线BLAST搜索很慢并且会浪费NCBI服务器的运行时间)。</p>
+<p>这里我们需要注意下：因为用 <tt class="docutils literal"><span class="pre">result_handle.read()</span></tt> 来读取BLAST结果只能用一次 -
+再次调用 <tt class="docutils literal"><span class="pre">result_handle.read()</span></tt> 会返回一个空的字符串.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">save_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;my_blast.xml&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">result_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这些做好后，结果已经存储在 <tt class="docutils literal"><span class="pre">my_blast.xml</span></tt> 文件中了并且原先的handle中的数据
+已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 <tt class="docutils literal"><span class="pre">parse</span></tt> 函数（描述见<a class="reference external" href="#sec:parsing-blast">7.3</a>)
+采用一个文件句柄类的对象，所以我们只需打开已经保存的文件作为输入。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;my_blast.xml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>既然现在已经把BLAST的结果又一次读回handle，我们可以分析下这些结果。所以我们正好可以去读
+关于结果解析的章节（看下面  <a class="reference external" href="#sec:parsing-blast">7.3</a> ）。你现在也许想跳过去看吧 ...</p>
+</div>
+<div class="section" id="id1">
+<h2>7.2  本地运行BLAST<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>7.2.1  介绍<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>在本地运行BLAST（跟通过internet运行比，见 <a class="reference external" href="#sec:running-www-blast">7.1</a> ）
+至少有2个主要优点：</p>
+<ul class="simple">
+<li>本地运行BLAST可能比通过internet运行更快；</li>
+<li>本地运行可以让你建立自己的数据库来对序列进行搜索。</li>
+</ul>
+<p>处理有版权的或者没有发表的序列数据也许是本地运行BLAST的另一个原因。你也许
+不能泄露这些序列数据，所以没法提交给NCBI来BLAST。</p>
+<p>不幸的是，本地运行也有些缺点 - 安装所有的东东并成功运行需要花些力气：</p>
+<ul class="simple">
+<li>本地运行BLAST需要你安装相关命令行工具。</li>
+<li>本地运行BLAST需要安装一个很大的BLAST的数据库（并且需要保持数据更新）.</li>
+</ul>
+<p>更令人困惑的是，至少有4种不同的BLAST安装程序包，并且还有其他的一些工具能
+产生类似的BLAST 输出文件，比如BLAT。</p>
+</div>
+<div class="section" id="ncbiblast">
+<h3>7.2.2  单机版的NCBI老版本BLAST<a class="headerlink" href="#ncbiblast" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&amp;PAGE_TYPE=BlastDocs&amp;DOC_TYPE=Download">NCBI “老版本” BLAST</a>
+包括命令行工具 <tt class="docutils literal"><span class="pre">blastall</span></tt> ， <tt class="docutils literal"><span class="pre">blastpgp</span></tt> 和 <tt class="docutils literal"><span class="pre">rpsblast</span></tt> 。
+这是NCBI发布它的替代品BLAST+ 前使用最为广泛的单机版BLAST工具。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.Blast.Applications</span></tt> 模块有个对老版本NCBI BLAST 工具像 <tt class="docutils literal"><span class="pre">blastall</span></tt> ， <tt class="docutils literal"><span class="pre">blastpgp</span></tt>
+和 <tt class="docutils literal"><span class="pre">rpsblast</span></tt> 的封装， 并且在 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIStandalone</span></tt> 还有个辅助函数。
+这些东东现在都被认为是过时的，并且当用户们迁移到BLAST+程序套件后，这些都会被弃用，
+最终从Biopython删除。</p>
+<p>为了减少你的困惑，我们在这个指南中不会提到怎么从Biopython调用这些老版本的工具。
+如果你有兴趣，可以看下在Biopython 1.52中包含的基本指南。（看下 <tt class="docutils literal"><span class="pre">biopython-1.52.tar.gz</span></tt>
+或者 <tt class="docutils literal"><span class="pre">biopython-1.52.zip</span></tt> 中Doc目录下的指南的PDF文件 或者 HTML 文件）。</p>
+</div>
+<div class="section" id="ncbi-blast">
+<h3>7.2.3  单机版 NCBI BLAST+<a class="headerlink" href="#ncbi-blast" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&amp;PAGE_TYPE=BlastDocs&amp;DOC_TYPE=Download">NCBI “新版本”的
+BLAST+</a>
+在2009年发布。它替代了原来老版本的BLAST程序包。<tt class="docutils literal"><span class="pre">Bio.Blast.Applications</span></tt> 模块
+包装了这些新工具像 <tt class="docutils literal"><span class="pre">blastn</span></tt> , <tt class="docutils literal"><span class="pre">blastp</span></tt> , <tt class="docutils literal"><span class="pre">blastx</span></tt> , <tt class="docutils literal"><span class="pre">tblastn</span></tt> , <tt class="docutils literal"><span class="pre">tblastx</span></tt>
+(这些以前都是由 <tt class="docutils literal"><span class="pre">blastall</span></tt>  处理)。而 <tt class="docutils literal"><span class="pre">rpsblast</span></tt> 和 <tt class="docutils literal"><span class="pre">rpstblastn</span></tt> （替代了
+原来的 <tt class="docutils literal"><span class="pre">rpsblast</span></tt> ）。我们这里不包括对 <tt class="docutils literal"><span class="pre">makeblastdb</span></tt> 的包装，它在BLAST+中用于从FASTA文件
+建立一个本地BLAST数据库，还有其在老版本BLAST中的等效工具 <tt class="docutils literal"><span class="pre">formatdb</span></tt> 。</p>
+<p>这节将简要地介绍怎样在Python中使用这些工具。如果你已经阅读了并试过
+<a class="reference external" href="#sec:alignment-tools">6.4</a> 节的序列联配（alignment）工具，下面介绍
+的方法应该是很简单直接的。首先，我们构建一个命令行字符串（就像你使用单机版
+BLAST的时候，在终端打入命令行一样）。然后，我们在Python中运行这个命令。</p>
+<p>举个例子，你有个FASTA格式的核酸序列文件，你想用它通过BLASTX（翻译）来搜索
+非冗余（NR）蛋白质数据库。如果你（或者你的系统管理员）下载并安装好了这个数据库，
+那么你只要运行：</p>
+<div class="code python highlight-python"><pre>blastx -query opuntia.fasta -db nr -out opuntia.xml -evalue 0.001 -outfmt 5</pre>
+</div>
+<p>这样就完成了运行BLASTX查找非冗余蛋白质数据库，用0.001的e值并产生XML格式的
+输出结果文件（这样我们可以继续下一步解析）。在我的电脑上运行这条命令花了大约6分钟
+- 这就是为什么我们需要保存输出到文件。这样我们就可以在需要时重复任何基于这个输出的分析。</p>
+<p>在Biopython中，我们可以用NCBI BLASTX包装模块  <tt class="docutils literal"><span class="pre">Bio.Blast.Applications</span></tt> 来构建
+命令行字符串并运行它：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast.Applications</span> <span class="kn">import</span> <span class="n">NcbiblastxCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">NcbiblastxCommandline</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blastx_cline</span> <span class="o">=</span> <span class="n">NcbiblastxCommandline</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&quot;nr&quot;</span><span class="p">,</span> <span class="n">evalue</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+<span class="gp">... </span>                                     <span class="n">outfmt</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="s">&quot;opuntia.xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blastx_cline</span>
+<span class="go">NcbiblastxCommandline(cmd=&#39;blastx&#39;, out=&#39;opuntia.xml&#39;, outfmt=5, query=&#39;opuntia.fasta&#39;,</span>
+<span class="go">db=&#39;nr&#39;, evalue=0.001)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blastx_cline</span>
+<span class="go">blastx -out opuntia.xml -outfmt 5 -query opuntia.fasta -db nr -evalue 0.001</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">blastx_cline</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>在这个例子中，终端里应该没有任何从BLASTX的输出，所以stdout和stderr是空的。
+你可能想要检查下输出文件 <tt class="docutils literal"><span class="pre">opuntia.xml</span></tt> 是否已经创建。</p>
+<p>如果你回想下这个指南的中的早先的例子，<tt class="docutils literal"><span class="pre">opuntia.fasta</span></tt> 包含7条序列，
+所以BLAST XML 格式的结果输出文件应该包括多个结果。因此，我们在
+下面的`7.3 &lt;#sec:parsing-blast&gt;`__ 节将用 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIXML.parse()</span></tt> 来
+解析这个结果文件。</p>
+</div>
+<div class="section" id="wu-blast-ab-blast">
+<h3>7.2.4  WU-BLAST 和 AB-BLAST<a class="headerlink" href="#wu-blast-ab-blast" title="Permalink to this headline">¶</a></h3>
+<p>你也许会碰到 <a class="reference external" href="http://blast.wustl.edu/">Washington University BLAST</a> (WU-BLAST)，
+和它的后继版本`Advanced Biocomputing BLAST &lt;<a class="reference external" href="http://blast.advbiocomp.com">http://blast.advbiocomp.com</a>&gt;`__ (AB-BLAST,
+在2009年发布，免费但是没有开源）。这些程序包包括了命令工具行
+<tt class="docutils literal"><span class="pre">wu-blastall</span></tt> 和 <tt class="docutils literal"><span class="pre">ab-blastall</span></tt> 。</p>
+<p>Biopython 目前还没有提供调用这些工具的包装程序，但是应该可以解析它们
+与NCBI兼容的输出结果。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>7.3  解析BLAST 输出<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>就像上面提过的那样，BLAST能生成多种格式的输出，比如 XML， HTML 和纯文本格式。
+以前，Biopython有针对HTML 和纯文本格式输出文件的解析器，因为当时只有这两种
+格式的输出结果文件。不幸的是，这两种方式的BLAST 输出结果一直在变动，而每次
+变动就会导致解析器失效。 所以，我们删除了针对HTML格式的解析器，不过纯文本格式
+的解析还可以用（见 <a class="reference external" href="#sec:parsing-blast-deprecated">7.5</a> ）。使用这个解析器
+有一定的风险，它可能能工作也可能无效，依赖于你正在使用哪个BLAST版本。</p>
+<p>跟上BLAST输出文件格式的改变很难，特别是当用户使用不同版本的BLAST的时候。
+我们推荐使用XML格式的解析器。因为最近版本的BLAST能生成这种格式的输出结果。
+XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起来更加容易自动化，
+从而提高整个Biopython整体的稳定性。</p>
+<p>你可以通过好几个途径来获得XML格式的BLAST输出文件。对解析器来说，不管你是
+怎么生成输出的，只要是输出的格式是XML就行。</p>
+<ul class="simple">
+<li>你可以通过Biopython来运行因特网上的BLAST，就像 <a class="reference external" href="#sec:running-www-blast">7.1</a>
+节描述的那样。</li>
+<li>你可以通过Biopython来运行本地的BLAST，就像 <a class="reference external" href="#sec:running-local-blast">7.2</a>
+节描述的那样。</li>
+<li>你可以在通过浏览器在NCBI网站上进行BLAST搜索，然后保存结果文件。你需要选择输出
+结果文件是XML格式的，并保存最终的结果网页（你知道，就是包含所有有趣结果的那个网页）
+到文件。</li>
+<li>你也可以直接运行本地电脑上的BlAST，不通过Biopython，保存输出结果到文件。
+同样的你也需要选择输出文件格式为XML。</li>
+</ul>
+<p>关键点就是你不必用Biopython脚本来获取数据才能解析它。通过以上任何一种方式
+获取了结果输出，你然后需要获得文件句柄来处理它。在Python中，一个文件句柄就是一种
+用于描述到任何信息源的输入的良好通用的方式，以便于这些信息能够使用 <tt class="docutils literal"><span class="pre">read()</span></tt> 和 <tt class="docutils literal"><span class="pre">readline()</span></tt>
+函数（见章节 sec:appendix-handles）来获取。</p>
+<p>如果你一直跟着上几节用来和BLAST交互的代码的话，你已经有了个 <tt class="docutils literal"><span class="pre">result_handle</span></tt>
+，一个用来得到BLAST的结果文件句柄。 比如通过GI号来进行一个在线BLAST搜索：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIWWW</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="n">NCBIWWW</span><span class="o">.</span><span class="n">qblast</span><span class="p">(</span><span class="s">&quot;blastn&quot;</span><span class="p">,</span> <span class="s">&quot;nt&quot;</span><span class="p">,</span> <span class="s">&quot;8332116&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果你通过其他方式运行了BLAST，并且XML格式的BLAST结果输出文件是 <tt class="docutils literal"><span class="pre">my_blast.xml</span></tt> ,
+那么你只需要打开文件来读：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;my_blast.xml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>好的，现在我们已经有了个文件句柄，可以解析输出结果了。解析结果的代码
+很短。如果你想要一条BLAST输出结果（就是说，你只用了一条序列去搜索）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIXML</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>或者， 你有许多搜索结果（就是说，你用了多条序列去BLAST搜索）</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIXML</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_records</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>就像 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> (参见 章节 <a class="reference external" href="#chapter:Bio.SeqIO">5</a>
+和 <a class="reference external" href="#chapter:Bio.AlignIO">6</a>), 我们有一对输入函数， <tt class="docutils literal"><span class="pre">read</span></tt> 和
+<tt class="docutils literal"><span class="pre">parse</span></tt> 。 当你只有一个输出结果的时候用 <tt class="docutils literal"><span class="pre">read</span></tt> 。当你有许多
+输出结果的时候，可以用 <tt class="docutils literal"><span class="pre">parse</span></tt> 这个迭代器。 但是，我们调用函数获得结果
+不是 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 或者 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象，我们得到BLAST记录对象。</p>
+<p>为了能处理BLAST结果文件很大有很多结果这种情况， <tt class="docutils literal"><span class="pre">NCBIXML.parse()</span></tt>
+返回一个迭代器。简单来说，一个迭代器可以让你一个接着一个地获得BLAST
+的搜索结果。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIXML</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_records</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_records</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="go"># ... do something with blast_record</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_records</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="go"># ... do something with blast_record</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_records</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="go"># ... do something with blast_record</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_records</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">StopIteration</span>
+<span class="go"># No further records</span>
+</pre></div>
+</div>
+<p>或者，你也可以使用 <tt class="docutils literal"><span class="pre">for</span></tt> - 循环</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">blast_record</span> <span class="ow">in</span> <span class="n">blast_records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="c"># Do something with blast_record</span>
+</pre></div>
+</div>
+<p>注意对每个BLAST搜索结果只能迭代一次。通常，对于每个BLAST记录，你可能会保存你
+感兴趣的信息。如果你想保存所有返回的BLAST记录，你可以把迭代
+转换成列表。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">blast_records</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在，你可以像通常的做法通过索引从这个列表中获得每一条BLAST结果。 如果你的BLAST输出
+结果文件很大，那么当把它们全部放入一个列表时，你也许会遇到内存不够的情况。</p>
+<p>一般来说，你会一次运行一个BLAST搜索。然后，你只需提取第一条BLAST 搜索记录到
+<tt class="docutils literal"><span class="pre">blast_records</span></tt> :</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIXML</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_records</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_records</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or more elegantly:</p>
+<p>或者更加优雅地：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIXML</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">NCBIXML</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我猜你现在在想BLAST搜索记录中到底有什么。</p>
+</div>
+<div class="section" id="id4">
+<h2>7.4  BLAST 记录类<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>一个BLAST搜索结果记录包括了所有你想要从中提取出来的信息。现在，我们将
+用一个例子说明你怎么从BLAST搜索结果提取出一些信息。但是，如果你想从BLAST
+搜索结果获得的信息没有在这里提到，你可以详细阅读BLAST搜索记录类，
+并且可以参考下源代码 或者 是自动生成的文档 - 文档字符串里面包含了许多
+关于各部分源代码是什么的很有用的信息。</p>
+<p>继续我们的例子，让我们打印出所有大于某一特定阈值的BLAST命中结果的一些汇总信息。
+代码如下：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">E_VALUE_THRESH</span> <span class="o">=</span> <span class="mf">0.04</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">alignments</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">hsp</span> <span class="ow">in</span> <span class="n">alignment</span><span class="o">.</span><span class="n">hsps</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span> <span class="o">&lt;</span> <span class="n">E_VALUE_THRESH</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;****Alignment****&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;sequence:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">title</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;length:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">length</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;e value:&#39;</span><span class="p">,</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">sbjct</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+</pre></div>
+</div>
+<p>上面代码会打印出如下图的总结报告：</p>
+<div class="code python highlight-python"><pre>****Alignment****
+sequence: &gt;gb|AF283004.1|AF283004 Arabidopsis thaliana cold acclimation protein WCOR413-like protein
+alpha form mRNA, complete cds
+length: 783
+e value: 0.034
+tacttgttgatattggatcgaacaaactggagaaccaacatgctcacgtcacttttagtcccttacatattcctc...
+||||||||| | ||||||||||| || ||||  || || |||||||| |||||| |  | |||||||| ||| ||...
+tacttgttggtgttggatcgaaccaattggaagacgaatatgctcacatcacttctcattccttacatcttcttc...</pre>
+</div>
+<p>基本上，一旦你解析了BLAST搜索结果文件，你可以提取任何你需要的信息。
+当然，这取决于你想要获得什么信息。但是希望这里的例子能够帮助你开始工作。</p>
+<p>在用Biopython提取BLAST搜索结果信息的时候，重要的是你需要考虑到信息存储在什么
+（Biopython）对象中。在Biopython中，解析器返回 <tt class="docutils literal"><span class="pre">Record</span></tt>  对象，这个对象
+可以是 <tt class="docutils literal"><span class="pre">Blast</span></tt> 类型的，也可以是 <tt class="docutils literal"><span class="pre">PSIBlast</span></tt> 类型的，具体哪个取决你
+解析什么。这些对象的定义都可以在  <tt class="docutils literal"><span class="pre">Bio.Blast.Record</span></tt> 找到 并且很完整。</p>
+<p>下面是 我尝试画的 <tt class="docutils literal"><span class="pre">Blast</span></tt> 和 <tt class="docutils literal"><span class="pre">PSIBlast</span></tt> 记录类的UML图。如果你对UML图很熟悉，不妨
+看看下面的UML图是否有错误或者可以改进的地方，如果有，请联系我。
+BLAST类图在这里 <a class="reference external" href="#fig:blastrecord">7.4</a> 。</p>
+<p><img alt="image1" src="_images/BlastRecord.png" /></p>
+<p>PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里 <a class="reference external" href="#fig:psiblastrecord">7.4</a> 。</p>
+<p><img alt="image2" src="_images/PSIBlastRecord.png" /></p>
+</div>
+<div class="section" id="id5">
+<h2>7.5  废弃的BLAST 解析器<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>老版本的Biopython 有针对纯文本和HTML格式输出结果的解析器。但是经过几年
+我们发现维护这些解析器很困难。基本上，任何BLAST输出的任何小改变都会导致
+这些解析器失效。所以我们推荐你解析XML格式的BLAST输出结果，就像在
+<a class="reference external" href="#sec:parsing-blast">7.3</a> 描述的那样。</p>
+<p>取决于你使用Biopython的版本，纯文本格式的解析器也许有效也许失效。
+用这个解析器的所带来的风险由你自己承担。</p>
+<div class="section" id="id6">
+<h3>7.5.1  解析纯文本格式的BLAST输出<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>纯文本格式的解析器在 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIStandalone</span></tt> 。</p>
+<p>和xml解析器类似， 我们也需要一个能够传给解析器的文件句柄。这个文件句柄必须
+实现了 <tt class="docutils literal"><span class="pre">readline()</span></tt> 方法 。通常要获得这样文件句柄，既可以用Biopython提供的
+<tt class="docutils literal"><span class="pre">blastall</span></tt> 或 <tt class="docutils literal"><span class="pre">blastpgp</span></tt> 函数来调用本地的BLAST，或者从命令行运行本地的
+BLAST， 并且如下处理：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;my_file_of_blast_output.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>好了，既然现在得到了个文件句柄（我们称它是 <tt class="docutils literal"><span class="pre">result_handle</span></tt> ），
+我们已经做好了解析它的准备。按下面的代码来解析：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIStandalone</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_parser</span> <span class="o">=</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">BlastParser</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result_handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这样就能把BALST的搜索结果报告解析到Blast记录类中（取决你于你解析的对象，
+解析结果可能返回一条 Blast 或者 PSIBlast记录）。这样你就可以从中提取
+信息了。在我们的例子里，我们来打印出大于某个阈值的所有比对的一个总结
+信息。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">E_VALUE_THRESH</span> <span class="o">=</span> <span class="mf">0.04</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">alignments</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">hsp</span> <span class="ow">in</span> <span class="n">alignment</span><span class="o">.</span><span class="n">hsps</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span> <span class="o">&lt;</span> <span class="n">E_VALUE_THRESH</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;****Alignment****&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;sequence:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">title</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;length:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">length</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="s">&#39;e value:&#39;</span><span class="p">,</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+<span class="gp">... </span>            <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">sbjct</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;...&#39;</span>
+</pre></div>
+</div>
+<p>如果你已经读过 <a class="reference external" href="#sec:parsing-blast">7.3 节</a> 关于解析XML格式的部分，
+你将会发现上面的代码和那个章节的是一样的。一旦你把输出文件解析到记录类中，
+你就能处理信息，不管你原来的BLAST输出格式是什么。很赞吧。</p>
+<p>好，解析一条记录是不错，那么如果我有一个包含许多记录的BLAST文件 -
+我该怎么处理它们呢？好吧，不要害怕，答案就在下个章节中。</p>
+</div>
+<div class="section" id="blastblast">
+<h3>7.5.2  解析包含多次BLAST结果的纯文本BLAST文件<a class="headerlink" href="#blastblast" title="Permalink to this headline">¶</a></h3>
+<p>我们可以用BLAST迭代器解析多次结果。为了得到一个迭代器，我们首先需要创建一个解析器，来
+解析BLAST的搜索结果报告为Blast记录对象。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIStandalone</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_parser</span> <span class="o">=</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">BlastParser</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>然后，我们假定我们有一个连接到一大堆blast记录的文件句柄，我们把这个文件句柄
+叫做  <tt class="docutils literal"><span class="pre">result_handle</span></tt> 。 怎么得到一个文件句柄在上面blast解析章节有详细
+描述。</p>
+<p>好了，我们现在有了一个解析器和一个文件句柄，我们可以用以下命令来创建
+一个迭代器。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_iterator</span> <span class="o">=</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">Iterator</span><span class="p">(</span><span class="n">result_handle</span><span class="p">,</span> <span class="n">blast_parser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>第二个参数，解析器，是可选的。如果我们没有提供一个解析器，那么迭代器将会
+一次返回一个原始的BLAST搜索结果。</p>
+<p>现在我们已经有了个迭代器，就可以开始通过 <tt class="docutils literal"><span class="pre">next()</span></tt> 方法来获取BLAST
+记录（由我们的解析器产生）。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_record</span> <span class="o">=</span> <span class="n">blast_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>每次调用next都会返回一条我们能处理的新记录。现在我们可以遍历所有记录，并打印一
+个我们最爱、漂亮的、简洁的BLAST记录报告。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">blast_record</span> <span class="ow">in</span> <span class="n">blast_iterator</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">E_VALUE_THRESH</span> <span class="o">=</span> <span class="mf">0.04</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">alignment</span> <span class="ow">in</span> <span class="n">blast_record</span><span class="o">.</span><span class="n">alignments</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">for</span> <span class="n">hsp</span> <span class="ow">in</span> <span class="n">alignment</span><span class="o">.</span><span class="n">hsps</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">if</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span> <span class="o">&lt;</span> <span class="n">E_VALUE_THRESH</span><span class="p">:</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="s">&#39;****Alignment****&#39;</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="s">&#39;sequence:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">title</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="s">&#39;length:&#39;</span><span class="p">,</span> <span class="n">alignment</span><span class="o">.</span><span class="n">length</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="s">&#39;e value:&#39;</span><span class="p">,</span> <span class="n">hsp</span><span class="o">.</span><span class="n">expect</span>
+<span class="gp">... </span>                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hsp</span><span class="o">.</span><span class="n">query</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">75</span><span class="p">:</span>
+<span class="gp">... </span>                    <span class="n">dots</span> <span class="o">=</span> <span class="s">&#39;...&#39;</span>
+<span class="gp">... </span>                <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>                    <span class="n">dots</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">query</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="n">dots</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="n">dots</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="n">hsp</span><span class="o">.</span><span class="n">sbjct</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">75</span><span class="p">]</span> <span class="o">+</span> <span class="n">dots</span>
+</pre></div>
+</div>
+<p>迭代器允许你处理很多blast记录而不出现内存不足的问题。因为，它使一次处理
+一个记录。我曾经用大处理过一个非常巨大的文件，没有出过任何问题。</p>
+</div>
+<div class="section" id="id7">
+<h3>7.5.3  在巨大的BLAST纯文本文件中发现不对的记录<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>当我开始解析一个巨大的blast 文件，有时候会碰到一个郁闷的问题就是解析器以一个
+ValueError异常终止了。这是个严肃的问题。因为你无法分辨导致ValueError异常的是
+解析器的问题还是BLAST的问题。更加糟糕是，你不知道在哪一行解析器失效了。所以，
+你不能忽略这个错误。不然，可能会忽视一个重要的数据。</p>
+<p>我们以前必须写一些小脚本来解决这个问题。不过，现在 <tt class="docutils literal"><span class="pre">Bio.Blast</span></tt> 模块包含了
+<tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt> ，可以更加简单地来解决这个问题。 <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt>
+和常规的 <tt class="docutils literal"><span class="pre">BlastParser</span></tt> 类似，但是它加了特别一层来捕获由解析器产生的ValueErrors
+异常，并尝试来诊断这些错误。</p>
+<p>让我们来看看怎样用这个解析器 - 首先我们定义我们准备解析的文件和报告错误情况的
+输出文件。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s">&quot;blast_out&quot;</span><span class="p">,</span> <span class="s">&quot;big_blast.out&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">error_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s">&quot;blast_out&quot;</span><span class="p">,</span> <span class="s">&quot;big_blast.problems&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们想要一个  <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt> ：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Blast</span> <span class="kn">import</span> <span class="n">NCBIStandalone</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">error_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">error_file</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_error_parser</span> <span class="o">=</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">BlastErrorParser</span><span class="p">(</span><span class="n">error_handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>注意，解析器有个关于文件句柄的可选参数。如果传递了这个参数，那么解析器就会
+把产生ValueError异常的记录写到这个文件句柄中。不然的话，这些错误记录就不会
+被记录下来。</p>
+<p>现在，我们可以像用常规的blast解析器一样地用 <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt> 。
+特别的是，我们也许想要一个一次读入一个记录的迭代器并用 <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt>
+来解析它。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">result_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">blast_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iterator</span> <span class="o">=</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">Iterator</span><span class="p">(</span><span class="n">result_handle</span><span class="p">,</span> <span class="n">blast_error_parser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们可以一次读一个记录，并且我们现在可以捕获并处理那些因为Blast引起的、
+不是解析器本身导致的错误。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">next_record</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="gp">... </span><span class="k">except</span> <span class="n">NCBIStandalone</span><span class="o">.</span><span class="n">LowQualityBlastError</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;LowQualityBlastError detected in id </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">.next()</span></tt> 方法通常被 <tt class="docutils literal"><span class="pre">for</span></tt> 循环间接地调用。现在， <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt>
+能够捕获如下的错误：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ValueError</span></tt> - 这就是和常规BlastParser产生的一样的错误。这个错误产生
+是因为解析器不能解析某个文件。通常是因为解析器有bug， 或者是
+因为你使用解析器的版本和你BLAST命令的版本不一致。</li>
+<li><tt class="docutils literal"><span class="pre">LowQualityBlastError</span></tt> - 当Blast一条低质量的序列时（比如，一条
+只有1个核苷酸的短序列），似乎Blast会终止并屏蔽掉整个序列，所有就没有什么可以
+解析了。 这种情况下，Blast就会产生一个不完整的报告导致解析器出现ValueError
+错误。 <tt class="docutils literal"><span class="pre">LowQualityBlastError</span></tt> 错误在这种情况下产生。这个错误返回如下
+信息：<ul>
+<li><tt class="docutils literal"><span class="pre">item[0]</span></tt> – The error message</li>
+<li><tt class="docutils literal"><span class="pre">item[0]</span></tt> - 错误消息</li>
+<li><tt class="docutils literal"><span class="pre">item[1]</span></tt> – The id of the input record that caused the error.
+This is really useful if you want to record all of the records
+that are causing problems.</li>
+<li><tt class="docutils literal"><span class="pre">item[1]</span></tt> - 导致错误产生的输入记录id。如果你想记录所有导致问题
+记录的时候很有用。</li>
+</ul>
+</li>
+</ul>
+<p>就像上面提到的那样，BlastErrorParser 将会把有问题的记录写到指定的``error_handle``。
+然后，你可以排查这些有问题记录。你可以针对某条记录来调试解析器，或者找到
+你运行blast中的问题。无论哪种方式，这些都是有用的经验。</p>
+<p>希望 <tt class="docutils literal"><span class="pre">BlastErrorParser</span></tt> 能帮你更简单的调试和处理一些数据巨大的Blast 文件。</p>
+</div>
+</div>
+<div class="section" id="psi-blast">
+<h2>7.6  处理PSI-BLAST<a class="headerlink" href="#psi-blast" title="Permalink to this headline">¶</a></h2>
+<p>你可以通过 <tt class="docutils literal"><span class="pre">Bio.Blast.Applications</span></tt> 模块中的包装函数来运行单机版本的PSI-BLAST
+（老版本的NCBI命令工具行 <tt class="docutils literal"><span class="pre">blastpgp</span></tt> 或者它的替代程序 <tt class="docutils literal"><span class="pre">psiblast</span></tt> ）。</p>
+<p>在写这篇指南的时候，没有迹象表明NCBI将会支持通过internet来进行PSI-BLAST
+搜索。</p>
+<p>请注意 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIXML</span></tt> 解析器能读入并解析当前版本PSI-BLAST的、XML格式的
+输出，但是像哪条序列在每个迭代循环中是新的还是复用的信息在XML格式输出中是没有的。
+如果，你需要这些信息你应该用纯文本输出和 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIStandalone</span></tt> 模块的
+<tt class="docutils literal"><span class="pre">PSIBlastParser</span></tt> 。</p>
+</div>
+<div class="section" id="rps-blast">
+<h2>7.7  处理 RPS-BLAST<a class="headerlink" href="#rps-blast" title="Permalink to this headline">¶</a></h2>
+<p>你可以通过 <tt class="docutils literal"><span class="pre">Bio.Blast.Applications</span></tt> 模块中的包装函数来运行单机版本的RPS-BLAST
+（或者老版本的NCBI命令工具行 <tt class="docutils literal"><span class="pre">rpsblast</span></tt> 或者同样名字的替代程序 ）。</p>
+<p>在写这篇指南的时候，没有迹象表明NCBI将会支持通过internet来进行RPS-BLAST
+搜索</p>
+<p>你可以通过 <tt class="docutils literal"><span class="pre">Bio.Blast.NCBIXML</span></tt> 这个解析器来读入并解析当前版本的RPS-BLAST的
+XML格式的输出。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第7章  BLAST</a><ul>
+<li><a class="reference internal" href="#internetblast">7.1  通过Internet运行BLAST</a></li>
+<li><a class="reference internal" href="#id1">7.2  本地运行BLAST</a><ul>
+<li><a class="reference internal" href="#id2">7.2.1  介绍</a></li>
+<li><a class="reference internal" href="#ncbiblast">7.2.2  单机版的NCBI老版本BLAST</a></li>
+<li><a class="reference internal" href="#ncbi-blast">7.2.3  单机版 NCBI BLAST+</a></li>
+<li><a class="reference internal" href="#wu-blast-ab-blast">7.2.4  WU-BLAST 和 AB-BLAST</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id3">7.3  解析BLAST 输出</a></li>
+<li><a class="reference internal" href="#id4">7.4  BLAST 记录类</a></li>
+<li><a class="reference internal" href="#id5">7.5  废弃的BLAST 解析器</a><ul>
+<li><a class="reference internal" href="#id6">7.5.1  解析纯文本格式的BLAST输出</a></li>
+<li><a class="reference internal" href="#blastblast">7.5.2  解析包含多次BLAST结果的纯文本BLAST文件</a></li>
+<li><a class="reference internal" href="#id7">7.5.3  在巨大的BLAST纯文本文件中发现不对的记录</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#psi-blast">7.6  处理PSI-BLAST</a></li>
+<li><a class="reference internal" href="#rps-blast">7.7  处理 RPS-BLAST</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr06.html"
+                        title="previous chapter">第6章 多序列比对</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr08.html"
+                        title="next chapter">第8章  BLAST和其他序列搜索工具(<em>实验性质的代码</em>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr07.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr08.html" title="第8章 BLAST和其他序列搜索工具(实验性质的代码)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr06.html" title="第6章 多序列比对"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

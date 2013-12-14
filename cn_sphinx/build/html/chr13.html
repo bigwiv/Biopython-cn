@@ -1,0 +1,696 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第13章 Bio.Phylo系统发育分析 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第14章 使用Bio.motifs进行模体序列分析" href="chr14.html" />
+    <link rel="prev" title="第12章 Bio.PopGen：群体遗传学" href="chr12.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr14.html" title="第14章 使用Bio.motifs进行模体序列分析"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr12.html" title="第12章 Bio.PopGen：群体遗传学"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="bio-phylo">
+<h1>第13章  Bio.Phylo系统发育分析<a class="headerlink" href="#bio-phylo" title="Permalink to this headline">¶</a></h1>
+<p>Biopython1.54开始引入了Bio.Phylo模块，与SeqIO和AlignIO类似，它的目的是提供
+一个通用的独立于源数据格式的方法来使用系统进化树，同时提供一致的API来进行
+I/O操作。</p>
+<p>Bio.Phylo在一篇开放获取的期刊文章中有介绍
+[<a class="reference external" href="#talevich2012">9</a>, Talevich <em>et al.</em>, 2012], 这可能对您也有所帮助。</p>
+<div class="section" id="id1">
+<h2>13.1  示例: 树中有什么？<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>为了熟悉这个模块，让我们首先从一个已经创建好的树开始，从几个不同的角度来审视
+它。接着我们将给树的分支上颜色，并使用一个特殊的phyloXML特性，最终保存树。</p>
+<p>译者注：本翻译中， <strong>分支</strong> 对应原文中的 <strong>branch</strong> ，原文中一般代表
+某一个节点的前导连线；而 <strong>进化枝</strong> 对应原文中的 <strong>clade</strong> ，代表某个节点所代表的整个
+进化分支，包括本身和它所有的后代；若clade代表biopython中的对象则保留原文</p>
+<p>在终端中使用你喜欢的编辑器创建一个简单的Newick文件：</p>
+<div class="code python highlight-python"><pre>% cat &gt; simple.dnd &lt;&lt;EOF
+&gt; (((A,B),(C,D)),(E,F,G));
+&gt; EOF</pre>
+</div>
+<p>这棵树没有分支长度，只有一个拓扑结构和标记的端点。（如果你有一个真正的树文件，
+你也可以使用它来替代进行示例操作。）</p>
+<p>选择启动你的Python解释器：</p>
+<div class="code python highlight-python"><pre>% ipython -pylab</pre>
+</div>
+<p>对于交互式操作，使用参数 <tt class="docutils literal"><span class="pre">-pylab</span></tt> 启动IPython解释器能启用 <strong>matplotlib</strong> 整合
+功能，这样图像就能自动弹出来。我们将在这个示例中使用该功能。</p>
+<p>现在，在Python终端中，读取树文件，给定文件名和格式名。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Phylo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;simple.dnd&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>以字符串打印该树对象我们将得到整个对象的层次结构概况。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">tree</span>
+
+<span class="go">Tree(weight=1.0, rooted=False, name=&quot;&quot;)</span>
+<span class="go">    Clade(branch_length=1.0)</span>
+<span class="go">        Clade(branch_length=1.0)</span>
+<span class="go">            Clade(branch_length=1.0)</span>
+<span class="go">                Clade(branch_length=1.0, name=&quot;A&quot;)</span>
+<span class="go">                Clade(branch_length=1.0, name=&quot;B&quot;)</span>
+<span class="go">            Clade(branch_length=1.0)</span>
+<span class="go">                Clade(branch_length=1.0, name=&quot;C&quot;)</span>
+<span class="go">                Clade(branch_length=1.0, name=&quot;D&quot;)</span>
+<span class="go">        Clade(branch_length=1.0)</span>
+<span class="go">            Clade(branch_length=1.0, name=&quot;E&quot;)</span>
+<span class="go">            Clade(branch_length=1.0, name=&quot;F&quot;)</span>
+<span class="go">            Clade(branch_length=1.0, name=&quot;G&quot;)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Tree</span></tt> 对象包含树的全局信息，如树是有根树还是无根树。它包含一个根进化枝，
+和以此往下以列表嵌套的所有进化枝，直至叶子分支。</p>
+<p>函数 <tt class="docutils literal"><span class="pre">draw_ascii</span></tt> 创建一个简单的ASCII-art(纯文本)系统发生图。在没有更好
+图形工具的情况下，这对于交互研究来说是一个方便的可视化展示方式。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_ascii</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<span class="go">                                                    ________________________ A</span>
+<span class="go">                           ________________________|</span>
+<span class="go">                          |                        |________________________ B</span>
+<span class="go">  ________________________|</span>
+<span class="go"> |                        |                         ________________________ C</span>
+<span class="go"> |                        |________________________|</span>
+<span class="go">_|                                                 |________________________ D</span>
+<span class="go"> |</span>
+<span class="go"> |                         ________________________ E</span>
+<span class="go"> |                        |</span>
+<span class="go"> |________________________|________________________ F</span>
+<span class="go">                          |</span>
+<span class="go">                          |________________________ G</span>
+</pre></div>
+</div>
+<p>如果你安装有 <strong>matplotlib</strong> 或者 <strong>pylab</strong>, 你可以使用 <tt class="docutils literal"><span class="pre">draw</span></tt> 函数一个图像(见 Fig.
+<a class="reference external" href="#fig:phylo-simple-draw">13.1</a>):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">rooted</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image5" src="_images/phylo-simple-draw.png" /></p>
+<div class="section" id="id2">
+<h3>13.1.1  给树的分支上颜色<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>函数 <tt class="docutils literal"><span class="pre">draw</span></tt> 和 <tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 支持在树中显示不同的颜色和分支宽度。
+从Biopython 1.59开始，Clade对象就开始支持 <tt class="docutils literal"><span class="pre">color</span></tt> 和 <tt class="docutils literal"><span class="pre">width</span></tt> 属性，
+且使用他们不需要额外支持。这两个属性都表示导向给定的进化枝前面的分支的
+属性，并依次往下作用，所以所有的后代分支在显示时也都继承相同的宽度和颜
+色。</p>
+<p>在早期的Biopython版本中，PhyloXML树有些特殊的特性，使用这些属性需要首先
+将这个树转换为一个基本树对象的子类Phylogeny，该类在Bio.Phylo.PhyloXML模
+块中。</p>
+<p>在Biopython 1.55和之后的版本中，这是一个很方便的树方法：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">as_phyloxml</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>在Biopython 1.54中, 你能通过导入一个额外的模块实现相同的事情：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Phylo.PhyloXML</span> <span class="kn">import</span> <span class="n">Phylogeny</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylogeny</span><span class="o">.</span><span class="n">from_tree</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>注意Newick和Nexus文件类型并不支持分支颜色和宽度，如果你在Bio.Phylo中使用
+这些属性，你只能保存这些值到PhyloXML格式中。（你也可以保存成Newick或Nexus
+格式，但是颜色和宽度信息在输出的文件时会被忽略掉。）</p>
+<p>现在我们开始指定颜色。首先，我们将设置根进化枝为灰色。我们能通过赋值24位
+的颜色值来实现，用三位数的RGB值、HTML格式的十六进制字符串、或者预先设置好的
+颜色名称。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;#808080&quot;</span>
+</pre></div>
+</div>
+<p>Or:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;gray&quot;</span>
+</pre></div>
+</div>
+<p>一个进化枝的颜色会被当作从上而下整个进化枝的颜色，所以我们这里设置根的
+的颜色会将整个树的颜色变为灰色。我们能通过在树中下面分支赋值不同的颜色
+来重新定义某个分支的颜色。</p>
+<p>让我们先定位“E”和“F”最近祖先（MRCA）节点。方法 <tt class="docutils literal"><span class="pre">common_ancestor</span></tt> 返回
+原始树中这个进化枝的引用，所以当我们设置该进化枝为“salmon”颜色时，这个颜
+色则会在原始的树中显示出来。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mrca</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">common_ancestor</span><span class="p">({</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;E&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="s">&quot;F&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mrca</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;salmon&quot;</span>
+</pre></div>
+</div>
+<p>当我们碰巧明确地知道某个进化枝在树中的位置，以嵌套列表的形式，我们就能
+通过索引的方式直接跳到那个位置。这里，索引 <tt class="docutils literal"><span class="pre">[0,1]</span></tt> 表示根节点的第一个
+子代节点的第二个子代。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">clade</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span>
+</pre></div>
+</div>
+<p>最后，展示一下我们的工作结果 (see Fig. <a class="reference external" href="#fig:phylo-color-draw">13.1.1</a>):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image6" src="_images/phylo-color-draw.png" /></p>
+<p>注意进化枝的颜色包括导向它的分支和它的子代的分支。E和F的共同祖先结果刚好
+在根分支下面，而通过这样上色，我们能清楚的看出这个树的根在哪里。</p>
+<p>我们已经完成了很多！现在让我们休息一下，保存一下我们的工作。使用一个文件
+名或句柄（这里我们使用标准输出来查看将会输出什么）和 <tt class="docutils literal"><span class="pre">phyloxml</span></tt> 格式来
+调用 <tt class="docutils literal"><span class="pre">write</span></tt> 函数。PhyloXML格式保存了我们设置的颜色，所以你能通过其他树
+查看工具，如Archaeopteryx，打开这个phyloXML文件，这些颜色也会显示出来。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+
+<span class="go">&lt;phy:phyloxml xmlns:phy=&quot;http://www.phyloxml.org&quot;&gt;</span>
+<span class="go">  &lt;phy:phylogeny rooted=&quot;true&quot;&gt;</span>
+<span class="go">    &lt;phy:clade&gt;</span>
+<span class="go">      &lt;phy:branch_length&gt;1.0&lt;/phy:branch_length&gt;</span>
+<span class="go">      &lt;phy:color&gt;</span>
+<span class="go">        &lt;phy:red&gt;128&lt;/phy:red&gt;</span>
+<span class="go">        &lt;phy:green&gt;128&lt;/phy:green&gt;</span>
+<span class="go">        &lt;phy:blue&gt;128&lt;/phy:blue&gt;</span>
+<span class="go">      &lt;/phy:color&gt;</span>
+<span class="go">      &lt;phy:clade&gt;</span>
+<span class="go">        &lt;phy:branch_length&gt;1.0&lt;/phy:branch_length&gt;</span>
+<span class="go">        &lt;phy:clade&gt;</span>
+<span class="go">          &lt;phy:branch_length&gt;1.0&lt;/phy:branch_length&gt;</span>
+<span class="go">          &lt;phy:clade&gt;</span>
+<span class="go">            &lt;phy:name&gt;A&lt;/phy:name&gt;</span>
+<span class="go">            ...</span>
+</pre></div>
+</div>
+<p>本章的其余部分将更加细致的介绍Bio.Phylo核心功能。关于Bio.Phylo的更多例
+子，请参见Biopython.org上的Cookbook手册页面。</p>
+<p><a class="reference external" href="http://biopython.org/wiki/Phylo_cookbook">http://biopython.org/wiki/Phylo_cookbook</a></p>
+</div>
+</div>
+<div class="section" id="i-o">
+<h2>13.2  I/O 函数<a class="headerlink" href="#i-o" title="Permalink to this headline">¶</a></h2>
+<p>和SeqIO、AlignIO类似, Phylo使用四个函数处理文件的输入输出： <tt class="docutils literal"><span class="pre">parse</span></tt> 、
+<tt class="docutils literal"><span class="pre">read</span></tt> 、 <tt class="docutils literal"><span class="pre">write</span></tt> 和 <tt class="docutils literal"><span class="pre">convert</span></tt> ，所有的函数都支持Newick、NEXUS、
+phyloXML和NeXML等树文件格式。</p>
+<p><tt class="docutils literal"><span class="pre">read</span></tt> 函数解析并返回给定文件中的单个树。注意，如果文件中包含多个或不包含任何树，它将抛出一个错误。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Phylo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;Tests/Nexus/int_node_labels.nwk&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">tree</span>
+</pre></div>
+</div>
+<p>（Biopython发布包的 <tt class="docutils literal"><span class="pre">Tests/Nexus/</span></tt> 和 <tt class="docutils literal"><span class="pre">Tests/PhyloXML/</span></tt> 文件夹中有相应的例子）</p>
+<p>处理多个（或者未知个数）的树文件，需要使用 <tt class="docutils literal"><span class="pre">parse</span></tt> 函数迭代给定文件中的每一个树。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">trees</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;Tests/PhyloXML/phyloxml_examples.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">tree</span>
+</pre></div>
+</div>
+<p>使用 <tt class="docutils literal"><span class="pre">write</span></tt> 函数输出一个或多个可迭代的树。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">trees</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Phylo</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;phyloxml_examples.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree1</span> <span class="o">=</span> <span class="n">trees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">others</span> <span class="o">=</span> <span class="n">trees</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">tree1</span><span class="p">,</span> <span class="s">&quot;tree1.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">others</span><span class="p">,</span> <span class="s">&quot;other_trees.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="go">12</span>
+</pre></div>
+</div>
+<p>使用 <tt class="docutils literal"><span class="pre">convert</span></tt> 函数转换任何支持的树格式。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;tree1.dnd&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">,</span> <span class="s">&quot;tree1.xml&quot;</span><span class="p">,</span> <span class="s">&quot;nexml&quot;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;other_trees.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">,</span> <span class="s">&quot;other_trees.nex&quot;</span><span class="p">,</span> <span class="s">&#39;nexus&quot;)</span>
+<span class="go">12</span>
+</pre></div>
+</div>
+<p>和SeqIO和AlignIO类似，当使用字符串而不是文件作为输入输出时，需要使用 ‵‵StringIO`` 函数。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Phylo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="s">&quot;(((A,B),(C,D)),(E,F,G));&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>13.3  查看和导出树<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>了解一个 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象概况的最简单的方法是用 <tt class="docutils literal"><span class="pre">print</span></tt> 函数将它打印出来：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;Tests/PhyloXML/example.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">tree</span>
+<span class="go">Phylogeny(rooted=&#39;True&#39;, description=&#39;phyloXML allows to use either a &quot;branch_length&quot;</span>
+<span class="go">attribute...&#39;, name=&#39;example from Prof. Joe Felsenstein&#39;s book &quot;Inferring Phyl...&#39;)</span>
+<span class="go">    Clade()</span>
+<span class="go">        Clade(branch_length=&#39;0.06&#39;)</span>
+<span class="go">            Clade(branch_length=&#39;0.102&#39;, name=&#39;A&#39;)</span>
+<span class="go">            Clade(branch_length=&#39;0.23&#39;, name=&#39;B&#39;)</span>
+<span class="go">        Clade(branch_length=&#39;0.4&#39;, name=&#39;C&#39;)</span>
+</pre></div>
+</div>
+<p>上面实际上是Biopython的树对象层次结构的一个概况。然而更可能的情况是，你希望见到
+画出树的形状，这里有三个函数来做这件事情。</p>
+<p>如我们在demo中看到的一样， <tt class="docutils literal"><span class="pre">draw_ascii</span></tt> 打印一个树的ascii-art图像（有根进化树）
+到标准输出，或者一个打开的文件句柄，若有提供。不是所有关于树的信息被显示出来，但是它提供了一个
+不依靠于任何外部依赖的快速查看树的方法。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;example.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_ascii</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+<span class="go">             __________________ A</span>
+<span class="go">  __________|</span>
+<span class="go">_|          |___________________________________________ B</span>
+<span class="go"> |</span>
+<span class="go"> |___________________________________________________________________________ C</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">draw</span></tt> 函数则使用matplotlib类库画出一个更加好看的图像。查看API文档以获得关于它所接受的
+用来定制输出的参数。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;example.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">branch_labels</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">branch_length</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image7" src="_images/phylo-draw-example.png" /></p>
+<p><tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 则画出一个无根的进化分枝图（cladogram），但是它要求你安装有Graphviz、
+PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
+<tt class="docutils literal"><span class="pre">dot</span></tt> 程序，让我们来画一个有根树（见图. <a class="reference external" href="#fig:phylo-dot">13.3</a> ）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;example.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s">&#39;dot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>                    <span class="c"># Displays the tree in an interactive viewer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;phylo-dot.png&#39;</span><span class="p">)</span>  <span class="c"># Creates a PNG file of the same graphic</span>
+</pre></div>
+</div>
+<p><img alt="image8" src="_images/phylo-dot.png" /></p>
+<p>（提示：如果你使用 <tt class="docutils literal"><span class="pre">-pylab</span></tt> 选项执行IPython，调用 <tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 将导致matplotlib
+查看器自动运行，而不需要手动的调用 <tt class="docutils literal"><span class="pre">show()</span></tt> 方法。）</p>
+<p>这将输出树对象到一个NetworkX图中，使用Graphviz来布局节点的位置，并使用matplotlib来显示
+它。这里有几个关键词参数来修改结果图像，包括大多数被NetworkX函数 <tt class="docutils literal"><span class="pre">networkx.draw</span></tt> 和
+<tt class="docutils literal"><span class="pre">networkx.draw_graphviz</span></tt> 所接受的参数。</p>
+<p>最终的显示也受所提供的树对象的 <tt class="docutils literal"><span class="pre">rooted</span></tt> 属性的影响。有根树在每个分支（branch）上显示
+一个“head”来表明它的方向（见图. <a class="reference external" href="#fig:phylo-rooted">13.3</a> ）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;simple.dnd&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">rooted</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphiz</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image9" src="_images/phylo-rooted.png" /></p>
+<p>“prog”参数指定Graphviz的用来布局的引擎。默认的引擎 <tt class="docutils literal"><span class="pre">twopi</span></tt> 对任何大小的树都表现很好，
+很可靠的避免交叉的分支出现。<tt class="docutils literal"><span class="pre">neato</span></tt> 程序可能画出更加好看的中等大小的树，但是有时候会
+有交叉分支出现（见图. <a class="reference external" href="#fig:phylo-color">13.3</a> ）。 <tt class="docutils literal"><span class="pre">dot</span></tt> 程序或许对小型的树有用，
+但是对于大一点的树的布局易产生奇怪的事情。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s">&quot;neato&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image10" src="_images/phylo-color.png" /></p>
+<p>这个查看方式非常方便研究大型的树，因为matplotlib查看器可以放大选择的区域，使得杂乱的图像
+变得稀疏。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;apaf.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s">&quot;neato&quot;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image11" src="_images/phylo-apaf.png" /> <img alt="image12" src="_images/phylo-apaf-zoom.png" /></p>
+<p>注意，分支长度并没有被正确地显示，因为Graphviz在布局时忽略了他们。然而，分支长度可以在输出
+树为NetworkX图对象（ <tt class="docutils literal"><span class="pre">to_networkx</span></tt> ）时重新获得。</p>
+<p>查看Biopython维基的Phylo页面
+(<a class="reference external" href="http://biopython.org/wiki/Phylo">http://biopython.org/wiki/Phylo</a>)
+以获得关于 <tt class="docutils literal"><span class="pre">draw_ascii</span></tt> 、 <tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 和 <tt class="docutils literal"><span class="pre">to_networkx</span></tt> 的更加高级的功能的描述
+和例子。</p>
+</div>
+<div class="section" id="treeclade">
+<h2>13.4  使用Tree和Clade对象<a class="headerlink" href="#treeclade" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">parse</span></tt> 和 <tt class="docutils literal"><span class="pre">read</span></tt> 方法产生的 <tt class="docutils literal"><span class="pre">Tree</span></tt> 对象是一些包含递归的子树的容器，连接到 <tt class="docutils literal"><span class="pre">Tree</span></tt>
+对象的 <tt class="docutils literal"><span class="pre">root</span></tt> 属性（不管进化树实际上被认为是否有根）。一个 <tt class="docutils literal"><span class="pre">Tree</span></tt> 包含进化树的全局信息，
+如有根性（rootedness）和指向一个单独的 <tt class="docutils literal"><span class="pre">Clade</span></tt> 的引用; 一个 <tt class="docutils literal"><span class="pre">Clade</span></tt> 包含节点和进化枝
+特异性信息，如分支长度（branch length）和一个它自身后代 <tt class="docutils literal"><span class="pre">Clade</span></tt> 实例的列表，附着在 <tt class="docutils literal"><span class="pre">clades</span></tt>
+属性上。</p>
+<p>所以，这里 <tt class="docutils literal"><span class="pre">tree</span></tt> 和 <tt class="docutils literal"><span class="pre">tree.root</span></tt> 间是有区别的. 然而，实际操作中，你几乎不需要担心它。为了
+缓和这个不同，<tt class="docutils literal"><span class="pre">Tree</span></tt> 和 <tt class="docutils literal"><span class="pre">Clade</span></tt> 两者都继承自 <tt class="docutils literal"><span class="pre">TreeMixin</span></tt>，它包含常用的用来查找、审视和
+修改树和任何它的进化枝的方法的实现。这意味着，所有 <tt class="docutils literal"><span class="pre">tree</span></tt> 所支持的方法在 <tt class="docutils literal"><span class="pre">tree.root</span></tt> 和
+任何它下面的clade中都能用。（ <tt class="docutils literal"><span class="pre">Clade</span></tt> 也有一个 <tt class="docutils literal"><span class="pre">root</span></tt> 属性，它返回clade对象本身。）</p>
+<div class="section" id="id4">
+<h3>13.4.1  查找和遍历类方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>为了方便起见，我们提供了两个简化的方法来直接返回所有的外部或内部节点为列表：</p>
+<dl class="docutils">
+<dt><strong>``get_terminals``</strong></dt>
+<dd>创建一个包含树的所有末端（叶子）节点的列表。</dd>
+<dt><strong>``get_nonterminals``</strong></dt>
+<dd>创建一个包含树的所有非末端（内部）节点的列表。</dd>
+</dl>
+<p>这两个都包装了一个能完全控制树的遍历的方法 <tt class="docutils literal"><span class="pre">find_clades</span></tt>。另外两个遍历方法 <tt class="docutils literal"><span class="pre">find_elements</span></tt>
+和 <tt class="docutils literal"><span class="pre">find_any</span></tt> 依赖于同样的核心功能，也接受同样的参数，没有更好的描述我们就把这个参数叫做
+“目标说明”（target specification）吧。它们指定哪些树中的对象将被匹配并在迭代过程中返回。
+第一个参数可以是下面的任何类型：</p>
+<ul>
+<li><p class="first">一个 <strong>TreeElement 实例</strong> ，那个树的元素将根据一致性被匹配——这样，使用Clade实例作为目标将找到
+树中的这个Clade；</p>
+</li>
+<li><p class="first">一个 <strong>string</strong> ，匹配树元素的字符串表示——特别地，Clade的 <tt class="docutils literal"><span class="pre">name</span></tt> <em>(在Biopython 1.56中引入)</em>；</p>
+</li>
+<li><p class="first">一个 <strong>class</strong> 或 <strong>type</strong>，这样每一个类型（或子类型）相同的树元素都被匹配；</p>
+</li>
+<li><p class="first">一个 <strong>dictionary</strong> ，其中键（key）是树元素的属性名，值（value）将匹配到每个树元素相应的属性值。
+它变得更加详细：</p>
+<ul class="simple">
+<li>如果提供的是 <tt class="docutils literal"><span class="pre">int</span></tt> 类型，它将匹配数值上相等的属性，即，1将匹配1或者1.0</li>
+<li>如果提供的是boolean类型（True或者False），对应的属性值将被当做boolean求值和检验</li>
+<li><tt class="docutils literal"><span class="pre">None</span></tt> 匹配 <tt class="docutils literal"><span class="pre">None</span></tt></li>
+<li>如果提供的是字符串，将被当做正则表达式对待（必须匹配对应元素属性的全部，不能只是前面的部分）。
+提供没有特殊正则表达式字符的字符串将精准的匹配字符串属性，所以如果你不适用正则表达式，不用
+担心它。例如，包含进化枝名称Foo1、Foo2和Foo3的一个树，
+<tt class="docutils literal"><span class="pre">tree.find_clades({&quot;name&quot;:</span> <span class="pre">&quot;Foo1&quot;})</span></tt> 将匹配 Foo1，
+<tt class="docutils literal"><span class="pre">{&quot;name&quot;:</span> <span class="pre">&quot;Foo.*&quot;}</span></tt> 匹配所有的三个进化枝，而
+<tt class="docutils literal"><span class="pre">{&quot;name&quot;:</span> <span class="pre">&quot;Foo&quot;}</span></tt> 并不匹配任何进化枝。</li>
+</ul>
+<p>由于浮点数值可能产生奇怪的行为，我们不支持直接匹配 <tt class="docutils literal"><span class="pre">float</span></tt>s 类型。作为替代，使用boolean值
+<tt class="docutils literal"><span class="pre">True</span></tt> 来匹配每个元素中指定属性的非零值，然后再对这个属性用不等式（或精确地数值，如果你喜欢
+危险地活着）进行手动过滤。</p>
+<p>如果该字典包含多个条目，匹配的元素必须匹配所有给定的属性值——以“and”方式思考，而不是“or”。</p>
+</li>
+<li><p class="first">一个接受一个参数（它将应用于树中的每一个元素），返回True或False的函数 <strong>function</strong> 。为方便起见，
+LookupError、AttributeError和ValueError被沉默，这样就提供了另外一个在树中查找浮点值的安全方式，
+或者一些更加复杂的特性。</p>
+</li>
+</ul>
+<p>在目标参数后面，有两个可选的关键词参数：</p>
+<dl class="docutils">
+<dt><strong>terminal</strong></dt>
+<dd>— 用来选择或排除末端进化枝（或者叫叶子节点）的一个boolean值：True仅搜索末端进化枝，False则搜索
+非末端（内部）进化枝，而默认为None，同时搜索末端和非末端进化枝，包括没有 <tt class="docutils literal"><span class="pre">is_terminal</span></tt> 方法的
+任何树元素。</dd>
+<dt><strong>order</strong></dt>
+<dd>— 树遍历的顺序：<tt class="docutils literal"><span class="pre">&quot;preorder&quot;</span></tt> （默认值）是深度优先搜索（depth-first search，DFS）， <tt class="docutils literal"><span class="pre">&quot;postorder&quot;</span></tt>
+是子节点先于父节点的DFS搜索， <tt class="docutils literal"><span class="pre">&quot;level&quot;</span></tt> 是宽度优先搜索（breadth-first search，BFS）。</dd>
+</dl>
+<p>最后，这些方法接受任意的关键词参数，这些参数将被以和词典“目标说明”相同的方式对待：键表示要搜索的元素
+属性的名称，参数值（string、integer、None或者boolean）将和找到的每个属性的值进行比较。如果没有提供
+关键词参数，则任何TreeElement类型将被匹配。这个的代码普遍比传入一个词典作为“目标说明”要短：
+<tt class="docutils literal"><span class="pre">tree.find_clades({&quot;name&quot;:</span> <span class="pre">&quot;Foo1&quot;})</span></tt> 可以简化为 <tt class="docutils literal"><span class="pre">tree.find_clades(name=&quot;Foo1&quot;)</span></tt>。</p>
+<p>（在Biopython 1.56和以后的版本中，这可以更短：<tt class="docutils literal"><span class="pre">tree.find_clades(&quot;Foo1&quot;)</span></tt> ）</p>
+<p>现在我们已经掌握了“目标说明”，这里有一些遍历树的方法：</p>
+<dl class="docutils">
+<dt><strong>``find_clades``</strong></dt>
+<dd><p class="first">查找每个包含匹配元素的进化枝。就是说，用 <tt class="docutils literal"><span class="pre">find_elements</span></tt> 查找每个元素，然而返回对应的clade对象。
+（这通常是你想要的。）</p>
+<p class="last">最终的结果是一个包含所有匹配对象的迭代器，默认为深度优先搜索。这不一定是和Newick、Nexus或XML原文件
+中显示的相同的顺序。</p>
+</dd>
+<dt><strong>``find_elements``</strong></dt>
+<dd><dl class="first last docutils">
+<dt>查找和给定属性匹配的所有树元素，返回匹配的元素本身。简单的Newick树没有复杂的子元素，所以它将和</dt>
+<dd><tt class="docutils literal"><span class="pre">find_clades</span></tt> 的行为一致。PhyloXML树通常在clade上附加有复杂的对象，所以这个方法对提取这些信息
+非常有用。</dd>
+</dl>
+</dd>
+<dt><strong>``find_any``</strong></dt>
+<dd>返回 <tt class="docutils literal"><span class="pre">find_elements()</span></tt> 所找到的第一个元素，或者None。这对于检测树中是否存在匹配的元素也非常有用，
+可以在条件判断语句中使用。</dd>
+</dl>
+<p>另外两个用于帮助在树的节点间导航的方法：</p>
+<dl class="docutils">
+<dt><strong>``get_path``</strong></dt>
+<dd>直接列出从树的根节点（或当前进化枝）到给定的目标间的所有clade。返回包含这个路径上所有clade对象的
+列表，以给定目标为结尾，但不包含根进化枝。</dd>
+<dt><strong>``trace``</strong></dt>
+<dd>列出树中两个目标间的所有clade对象，不包含起始和结尾。</dd>
+</dl>
+</div>
+<div class="section" id="id5">
+<h3>13.4.2  信息类方法<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>这些方法提供关于整个树（或任何进化枝）的信息。</p>
+<dl class="docutils">
+<dt><strong>``common_ancestor``</strong></dt>
+<dd>查找所提供的所有目标的最近共同祖先（the most recent common ancestor）
+（这将是一个Clade对象）。如果没有提供任何目标，将返回当前Clade（调用该
+方法的那个）的根；如果提供一个目标，将返回目标本身。然而，如果有任何提供
+的目标无法在当前tree（或clade）中找到，将引起一个异常。</dd>
+<dt><strong>``count_terminals``</strong></dt>
+<dd>计算树中末端（叶子）节点的个数。</dd>
+<dt><strong>``depths``</strong></dt>
+<dd>创建一个树中进化枝到其深度的映射。结果是一个字典，其中键是树中所有的Clade
+实例，值是从根到每个clade（包含末端）的距离。默认距离是到这个clade的分支
+长度累加，然而使用 <tt class="docutils literal"><span class="pre">unit_branch_lengths=True</span></tt> 选项，将只计算分支的个数
+（其在树中的级数）。</dd>
+<dt><strong>``distance``</strong></dt>
+<dd>计算两个目标间的分支长度总和。如果只指定一个目标，另一个则为该树的根。</dd>
+<dt><strong>``total_branch_length``</strong></dt>
+<dd>计算这个树中的分支长度总和。这在系统发生学中通常就称为树的长度“length”，
+但是我们使用更加明确的名称，以避免和Python的术语混淆。</dd>
+</dl>
+<p>余下的方法是boolean检测方法：</p>
+<dl class="docutils">
+<dt><strong>``is_bifurcating``</strong></dt>
+<dd>如果树是严格的二叉树；即，所有的节点有2个或者0个子代（对应的，内部或外部）。
+根节点可能有三个后代，然而仍然被认为是二叉树的一部分。</dd>
+<dt><strong>``is_monophyletic``</strong></dt>
+<dd>检验给定的所有目标是否组成一个完成的子进化枝——即，存在一个进化枝满足：它的
+末端节点和给定的目标是相同的集合。目标需要时树中的末端节点。为方便起见，若
+给定目标是一个单系（monophyletic），这个方法将返回它们的共同祖先（MCRA）（
+而不是 <tt class="docutils literal"><span class="pre">True</span></tt> ），否则将返回 <tt class="docutils literal"><span class="pre">False</span></tt> 。</dd>
+<dt><strong>``is_parent_of``</strong></dt>
+<dd>若目标是这个树的后代（descendant）则为True——不必为直接后代。检验一个进化枝的
+直接后代，只需要用简单的列表成员检测方法： <tt class="docutils literal"><span class="pre">if</span> <span class="pre">subclade</span> <span class="pre">in</span> <span class="pre">clade:</span> <span class="pre">...</span></tt></dd>
+<dt><strong>``is_preterminal``</strong></dt>
+<dd>若所有的直接后代都为末端则为True；否则任何一个直接后代不为末端则为False。</dd>
+</dl>
+</div>
+<div class="section" id="id6">
+<h3>13.4.3  修改类方法<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>这些方法都在原地对树进行修改，所以如果你想保持原来的树不变，你首先要使用Python的
+<tt class="docutils literal"><span class="pre">copy</span></tt> 模块对树进行完整的拷贝：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;example.xml&#39;</span><span class="p">,</span> <span class="s">&#39;phyloxml&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="n">newtree</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><strong>``collapse``</strong></dt>
+<dd>从树中删除目标，重新连接它的子代（children）到它的父亲节点（parent）。</dd>
+<dt><strong>``collapse_all``</strong></dt>
+<dd>删除这个树的所有后代（descendants），只保留末端节点（terminals）。
+分支长度被保留，即到每个末端节点的距离保持不变。如指定一个目标（见上），
+只坍塌（collapses）和指定匹配的内部节点。</dd>
+<dt><strong>``ladderize``</strong></dt>
+<dd>根据末端节点的个数，在原地对进化枝（clades）进行排序。越深的进化枝默认被放到最后，
+使用 <tt class="docutils literal"><span class="pre">reverse=True</span></tt> 将其放到最前。</dd>
+<dt><strong>``prune``</strong></dt>
+<dd>从树中修剪末端进化枝（terminal clade）。如果分类名（taxon）来自一个二叉枝（bifurcation），
+连接的节点将被坍塌，它的分支长度将被加到剩下的末端节点上。这可能不再是一个有意义的值。</dd>
+<dt><strong>``root_with_outgroup``</strong></dt>
+<dd><p class="first">使用包含给定目标的外群进化枝（outgroup clade）重新确定树的根节点，即外群的共同祖先。该方法
+只在Tree对象中能用，不能用于Clade对象。</p>
+<p>如果外群和self.root一致，将不发生改变。如果外群进化枝是末端（即一个末端节点被作为外群），一个
+新的二叉根进化枝将被创建，且到给定外群的分支长度为0。否则，外群根部的内部节点变为整个树的一个
+三叉根。如果原先的根是一个二叉，它将被从树中遗弃。</p>
+<p class="last">在所有的情况下，树的分支长度总和保持不变。</p>
+</dd>
+<dt><strong>``root_at_midpoint``</strong></dt>
+<dd>重新选择树中两个最远的节点的中点作为树的根。（这实际上是使用 <tt class="docutils literal"><span class="pre">root_with_outgroup</span></tt> 函数。）</dd>
+<dt><strong>``split``</strong></dt>
+<dd>产生 <em>n</em> （默认为2）个 新的后代。在一个物种树中，这是一个物种形成事件。新的进化枝拥有给定的
+<tt class="docutils literal"><span class="pre">branch_length</span></tt> 以及和这个进化枝的根相同的名字，名字后面包含一个整数后缀（从0开始计数）——
+例如，分割名为“A”的进化枝将生成子进化枝“A0”和“A1”。</dd>
+</dl>
+<p>查看Biopython维基的Phylo页面
+(<a class="reference external" href="http://biopython.org/wiki/Phylo">http://biopython.org/wiki/Phylo</a>)
+以获得更多已有方法的使用示例。</p>
+</div>
+<div class="section" id="phyloxml">
+<h3>13.4.4  PhyloXML树的特性<a class="headerlink" href="#phyloxml" title="Permalink to this headline">¶</a></h3>
+<p>phyloXML文件格式包含用来注释树的，采用额外数据格式和图像提示的字段。</p>
+<p>参加Biopython维基上的PhyloXML页面
+(<a class="reference external" href="http://biopython.org/wiki/PhyloXML">http://biopython.org/wiki/PhyloXML</a>)
+以查看关于使用PhyloXML提供的额外注释特性的描述和例子。</p>
+</div>
+</div>
+<div class="section" id="id7">
+<h2>13.5  运行外部程序<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>尽管Bio.Phylo本身不从序列比对推断进化树，但这里有一些第三方的程序可以使用。
+他们通过 <tt class="docutils literal"><span class="pre">Bio.Phylo.Applications</span></tt> 模块获得支持，使用和 <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 、
+<tt class="docutils literal"><span class="pre">Bio.Align.Applications</span></tt> 以及其他模块相同的通用框架。</p>
+<p>Biopython 1.58引入了一个PhyML的打包程序（wrapper）
+(<a class="reference external" href="http://www.atgc-montpellier.fr/phyml/">http://www.atgc-montpellier.fr/phyml/</a>)。
+该程序接受一个 <tt class="docutils literal"><span class="pre">phylip-relaxed</span></tt> 格式（它是Phylip格式，然而没有对分类名称的10个字符的限制）
+的比对输入和多种参数。一个快速的例子是：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Phylo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Phylo.Applications</span> <span class="kn">import</span> <span class="n">PhymlCommandline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmd</span> <span class="o">=</span> <span class="n">PhymlCommandline</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="s">&#39;Tests/Phylip/random.phy&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out_log</span><span class="p">,</span> <span class="n">err_log</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这生成一个树文件盒一个统计文件，名称为：
+[<em>input filename</em>]<tt class="docutils literal"><span class="pre">_phyml_tree.txt</span></tt> 和
+[<em>input filename</em>]<tt class="docutils literal"><span class="pre">_phyml_stats.txt</span></tt>. 树文件的格式是Newick格式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;Tests/Phylip/random.phy_phyml_tree.txt&#39;</span><span class="p">,</span> <span class="s">&#39;newick&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_ascii</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>一个类似的RAxML打包程序
+(<a class="reference external" href="http://sco.h-its.org/exelixis/software.html">http://sco.h-its.org/exelixis/software.html</a>)
+也已经被添加到Biopython 1.60中。</p>
+<p>注意，如果你系统中已经安装了EMBOSS的Phylip扩展，一些常用的Phylip程序，包括 <tt class="docutils literal"><span class="pre">dnaml</span></tt> 和 <tt class="docutils literal"><span class="pre">protml</span></tt>
+已经通过 <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 中的EMBOSS打包程序被支持。参见章节 <a class="reference external" href="#sec:alignment-tools">6.4</a>
+以查看使用这些程序的例子和提示。</p>
+</div>
+<div class="section" id="paml">
+<h2>13.6  PAML整合<a class="headerlink" href="#paml" title="Permalink to this headline">¶</a></h2>
+<p>Biopython 1.58引入了对PAML的支持
+(<a class="reference external" href="http://abacus.gene.ucl.ac.uk/software/paml.html">http://abacus.gene.ucl.ac.uk/software/paml.html</a>),
+它是一个采用最大似然法（maximum likelihood）进行系统进化分析的程序包。目前，对程序codeml、baseml和yn00的支持
+已经实现。由于PAML使用控制文件而不是命令行参数来控制运行时选项，这个打包程序（wrapper）的使用格式和Biopython
+的其他应用打包程序有些差异。</p>
+<p>一个典型的流程是：初始化一个PAML对象，指定一个比对文件，一个树文件，一个输出文件和工作路径。下一步，运行时
+选项通过 <tt class="docutils literal"><span class="pre">set_options()</span></tt> 方法或者读入一个已有的控制文件来设定。最后，程序通过 <tt class="docutils literal"><span class="pre">run()</span></tt> 方法来运行，输出文件
+将自动被解析到一个结果目录。</p>
+<p>下面是一个codeml典型用法的例子：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Phylo.PAML</span> <span class="kn">import</span> <span class="n">codeml</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span> <span class="o">=</span> <span class="n">codeml</span><span class="o">.</span><span class="n">Codeml</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s">&quot;Tests/PAML/alignment.phylip&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="s">&quot;Tests/PAML/species.tree&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span><span class="o">.</span><span class="n">out_file</span> <span class="o">=</span> <span class="s">&quot;results.out&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span><span class="o">.</span><span class="n">working_dir</span> <span class="o">=</span> <span class="s">&quot;./scratch&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cml</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">seqtype</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">noisy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">RateAncestor</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">model</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">NSsites</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">CodonFreq</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">cleandata</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">fix_alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">kappa</span><span class="o">=</span><span class="mf">4.54006</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">cml</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ns_sites</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;NSsites&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m0</span> <span class="o">=</span> <span class="n">ns_sites</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m0_params</span> <span class="o">=</span> <span class="n">m0</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;parameters&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">m0_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;omega&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>已有的输出文件也可以通过模块的 <tt class="docutils literal"><span class="pre">read()</span></tt> 方法来解析：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">codeml</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;Tests/PAML/Results/codeml/codeml_NSsites_all.out&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;lnL max&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>这个新模块的详细介绍目前在Biopython维基上可以看到：
+<a class="reference external" href="http://biopython.org/wiki/PAML">http://biopython.org/wiki/PAML</a></p>
+</div>
+<div class="section" id="id8">
+<h2>13.7  未来计划<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版本中添加的特性：</p>
+<dl class="docutils">
+<dt><strong>新方法</strong></dt>
+<dd>通常用来操作Tree和Clade对象的有用方法会首先出现在Biopython维基上，这样常规用户
+就能在我们添加到Bio.Phylo之前测试这些方法，看看它们是否有用：
+<a class="reference external" href="http://biopython.org/wiki/Phylo_cookbook">http://biopython.org/wiki/Phylo_cookbook</a></dd>
+<dt><strong>Bio.Nexus port</strong></dt>
+<dd><p class="first">这个模块的大部分是在2009年NESCent主办的谷歌编程夏令营中写的，作为实现Python对phyloXML数据格式（见
+<a class="reference external" href="#sec:PhyloXML">13.4.4</a> ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
+的一部分被添加到Bio.Phylo使用的新类中。</p>
+<p class="last">目前，Bio.Nexus包含一些还没有导入到Bio.Phylo类中的有用的特性——特别是，计算一致树（consensus tree）。
+如果你发现某些功能Bio.Phylo中没有，试试在Bio.Nexus中能不能找到。</p>
+</dd>
+</dl>
+<p>我们乐意接受任何增强该模块功能和使用性的建议；如果有，只需要通过邮件列表或我们的bug数据库让我们知道。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第13章  Bio.Phylo系统发育分析</a><ul>
+<li><a class="reference internal" href="#id1">13.1  示例: 树中有什么？</a><ul>
+<li><a class="reference internal" href="#id2">13.1.1  给树的分支上颜色</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#i-o">13.2  I/O 函数</a></li>
+<li><a class="reference internal" href="#id3">13.3  查看和导出树</a></li>
+<li><a class="reference internal" href="#treeclade">13.4  使用Tree和Clade对象</a><ul>
+<li><a class="reference internal" href="#id4">13.4.1  查找和遍历类方法</a></li>
+<li><a class="reference internal" href="#id5">13.4.2  信息类方法</a></li>
+<li><a class="reference internal" href="#id6">13.4.3  修改类方法</a></li>
+<li><a class="reference internal" href="#phyloxml">13.4.4  PhyloXML树的特性</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7">13.5  运行外部程序</a></li>
+<li><a class="reference internal" href="#paml">13.6  PAML整合</a></li>
+<li><a class="reference internal" href="#id8">13.7  未来计划</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr12.html"
+                        title="previous chapter">第12章  Bio.PopGen：群体遗传学</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr14.html"
+                        title="next chapter">第14章   使用Bio.motifs进行模体序列分析</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr13.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr14.html" title="第14章 使用Bio.motifs进行模体序列分析"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr12.html" title="第12章 Bio.PopGen：群体遗传学"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

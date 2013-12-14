@@ -1,0 +1,1721 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>hapter 9 Accessing NCBI’s Entrez databases &mdash; biopython_en 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_en 0.1 documentation" href="index.html" />
+    <link rel="next" title="Chapter 10 Swiss-Prot and ExPASy" href="chr10.html" />
+    <link rel="prev" title="Chapter 8 BLAST and other sequence search tools (experimental code)" href="chr08.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr10.html" title="Chapter 10 Swiss-Prot and ExPASy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr08.html" title="Chapter 8 BLAST and other sequence search tools (experimental code)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hapter-9-accessing-ncbis-entrez-databases">
+<h1>hapter 9  Accessing NCBI’s Entrez databases<a class="headerlink" href="#hapter-9-accessing-ncbis-entrez-databases" title="Permalink to this headline">¶</a></h1>
+<p>Entrez
+(<a class="reference external" href="http://www.ncbi.nlm.nih.gov/Entrez">http://www.ncbi.nlm.nih.gov/Entrez</a>)
+is a data retrieval system that provides users access to NCBI’s
+databases such as PubMed, GenBank, GEO, and many others. You can access
+Entrez from a web browser to manually enter queries, or you can use
+Biopython’s <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> module for programmatic access to Entrez. The
+latter allows you for example to search PubMed or download GenBank
+records from within a Python script.</p>
+<p>The <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> module makes use of the Entrez Programming Utilities
+(also known as EUtils), consisting of eight tools that are described in
+detail on NCBI’s page at
+<a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/utils/">http://www.ncbi.nlm.nih.gov/entrez/utils/</a>.
+Each of these tools corresponds to one Python function in the
+<tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> module, as described in the sections below. This module
+makes sure that the correct URL is used for the queries, and that not
+more than one request is made every three seconds, as required by NCBI.</p>
+<p>The output returned by the Entrez Programming Utilities is typically in
+XML format. To parse such output, you have several options:</p>
+<ol class="arabic simple">
+<li>Use <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt>’s parser to parse the XML output into a Python
+object;</li>
+<li>Use the DOM (Document Object Model) parser in Python’s standard
+library;</li>
+<li>Use the SAX (Simple API for XML) parser in Python’s standard library;</li>
+<li>Read the XML output as raw text, and parse it by string searching and
+manipulation.</li>
+</ol>
+<p>For the DOM and SAX parsers, see the Python documentation. The parser in
+<tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> is discussed below.</p>
+<p>NCBI uses DTD (Document Type Definition) files to describe the structure
+of the information contained in XML files. Most of the DTD files used by
+NCBI are included in the Biopython distribution. The <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt>
+parser makes use of the DTD files when parsing an XML file returned by
+NCBI Entrez.</p>
+<p>Occasionally, you may find that the DTD file associated with a specific
+XML file is missing in the Biopython distribution. In particular, this
+may happen when NCBI updates its DTD files. If this happens,
+<tt class="docutils literal"><span class="pre">Entrez.read</span></tt> will show a warning message with the name and URL of the
+missing DTD file. The parser will proceed to access the missing DTD file
+through the internet, allowing the parsing of the XML file to continue.
+However, the parser is much faster if the DTD file is available locally.
+For this purpose, please download the DTD file from the URL in the
+warning message and place it in the directory
+<tt class="docutils literal"><span class="pre">...site-packages/Bio/Entrez/DTDs</span></tt>, containing the other DTD files. If
+you don’t have write access to this directory, you can also place the
+DTD file in <tt class="docutils literal"><span class="pre">~/.biopython/Bio/Entrez/DTDs</span></tt>, where <tt class="docutils literal"><span class="pre">~</span></tt> represents
+your home directory. Since this directory is read before the directory
+<tt class="docutils literal"><span class="pre">...site-packages/Bio/Entrez/DTDs</span></tt>, you can also put newer versions of
+DTD files there if the ones in <tt class="docutils literal"><span class="pre">...site-packages/Bio/Entrez/DTDs</span></tt>
+become outdated. Alternatively, if you installed Biopython from source,
+you can add the DTD file to the source code’s <tt class="docutils literal"><span class="pre">Bio/Entrez/DTDs</span></tt>
+directory, and reinstall Biopython. This will install the new DTD file
+in the correct location together with the other DTD files.</p>
+<p>The Entrez Programming Utilities can also generate output in other
+formats, such as the Fasta or GenBank file formats for sequence
+databases, or the MedLine format for the literature database, discussed
+in Section <a class="reference external" href="#sec:entrez-specialized-parsers">9.12</a>.</p>
+<div class="section" id="entrez-guidelines">
+<h2>9.1  Entrez Guidelines<a class="headerlink" href="#entrez-guidelines" title="Permalink to this headline">¶</a></h2>
+<p>Before using Biopython to access the NCBI’s online resources (via
+<tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> or some of the other modules), please read the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen">NCBI’s
+Entrez User
+Requirements</a>.
+If the NCBI finds you are abusing their systems, they can and will ban
+your access!</p>
+<p>To paraphrase:</p>
+<ul>
+<li><p class="first">For any series of more than 100 requests, do this at weekends or
+outside USA peak times. This is up to you to obey.</p>
+</li>
+<li><p class="first">Use the
+<a class="reference external" href="http://eutils.ncbi.nlm.nih.gov">http://eutils.ncbi.nlm.nih.gov</a>
+address, not the standard NCBI Web address. Biopython uses this web
+address.</p>
+</li>
+<li><p class="first">Make no more than three requests every seconds (relaxed from at most
+one request every three seconds in early 2009). This is automatically
+enforced by Biopython.</p>
+</li>
+<li><p class="first">Use the optional email parameter so the NCBI can contact you if there
+is a problem. You can either explicitly set this as a parameter with
+each call to Entrez (e.g. include <tt class="docutils literal"><span class="pre">email=&quot;A.N.Other&#64;example.com&quot;</span></tt>
+in the argument list), or you can set a global email address:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> will then use this email address with each call to
+Entrez. The <tt class="docutils literal"><span class="pre">example.com</span></tt> address is a reserved domain name
+specifically for documentation (RFC 2606). Please DO NOT use a random
+email – it’s better not to give an email at all. The email parameter
+will be mandatory from June 1, 2010. In case of excessive usage, NCBI
+will attempt to contact a user at the e-mail address provided prior
+to blocking access to the E-utilities.</p>
+</li>
+<li><p class="first">If you are using Biopython within some larger software suite, use the
+tool parameter to specify this. You can either explicitly set the
+tool name as a parameter with each call to Entrez (e.g. include
+<tt class="docutils literal"><span class="pre">tool=&quot;MyLocalScript&quot;</span></tt> in the argument list), or you can set a
+global tool name:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">tool</span> <span class="o">=</span> <span class="s">&quot;MyLocalScript&quot;</span>
+</pre></div>
+</div>
+<p>The tool parameter will default to Biopython.</p>
+</li>
+<li><p class="first">For large queries, the NCBI also recommend using their session
+history feature (the WebEnv session cookie string, see
+Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>). This is only slightly more
+complicated.</p>
+</li>
+</ul>
+<p>In conclusion, be sensible with your usage levels. If you plan to
+download lots of data, consider other options. For example, if you want
+easy access to all the human genes, consider fetching each chromosome by
+FTP as a GenBank file, and importing these into your own BioSQL database
+(see Section <a class="reference external" href="#sec:BioSQL">18.5</a>).</p>
+</div>
+<div class="section" id="einfo-obtaining-information-about-the-entrez-databases">
+<h2>9.2  EInfo: Obtaining information about the Entrez databases<a class="headerlink" href="#einfo-obtaining-information-about-the-entrez-databases" title="Permalink to this headline">¶</a></h2>
+<p>EInfo provides field index term counts, last update, and available links
+for each of NCBI’s databases. In addition, you can use EInfo to obtain a
+list of all database names accessible through the Entrez utilities:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">einfo</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The variable <tt class="docutils literal"><span class="pre">result</span></tt> now contains a list of databases in XML format:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">result</span>
+<span class="go">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="go">&lt;!DOCTYPE eInfoResult PUBLIC &quot;-//NLM//DTD eInfoResult, 11 May 2002//EN&quot;</span>
+<span class="go"> &quot;http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd&quot;&gt;</span>
+<span class="go">&lt;eInfoResult&gt;</span>
+<span class="go">&lt;DbList&gt;</span>
+<span class="go">        &lt;DbName&gt;pubmed&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;protein&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;nucleotide&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;nuccore&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;nucgss&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;nucest&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;structure&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;genome&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;books&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;cancerchromosomes&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;cdd&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;gap&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;domains&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;gene&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;genomeprj&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;gensat&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;geo&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;gds&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;homologene&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;journals&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;mesh&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;ncbisearch&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;nlmcatalog&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;omia&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;omim&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;pmc&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;popset&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;probe&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;proteinclusters&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;pcassay&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;pccompound&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;pcsubstance&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;snp&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;taxonomy&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;toolkit&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;unigene&lt;/DbName&gt;</span>
+<span class="go">        &lt;DbName&gt;unists&lt;/DbName&gt;</span>
+<span class="go">&lt;/DbList&gt;</span>
+<span class="go">&lt;/eInfoResult&gt;</span>
+</pre></div>
+</div>
+<p>Since this is a fairly simple XML file, we could extract the information
+it contains simply by string searching. Using <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt>’s parser
+instead, we can directly parse this XML file into a Python object:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">einfo</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now <tt class="docutils literal"><span class="pre">record</span></tt> is a dictionary with exactly one key:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[u&#39;DbList&#39;]</span>
+</pre></div>
+</div>
+<p>The values stored in this key is the list of database names shown in the
+XML above:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;DbList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;pubmed&#39;, &#39;protein&#39;, &#39;nucleotide&#39;, &#39;nuccore&#39;, &#39;nucgss&#39;, &#39;nucest&#39;,</span>
+<span class="go"> &#39;structure&#39;, &#39;genome&#39;, &#39;books&#39;, &#39;cancerchromosomes&#39;, &#39;cdd&#39;, &#39;gap&#39;,</span>
+<span class="go"> &#39;domains&#39;, &#39;gene&#39;, &#39;genomeprj&#39;, &#39;gensat&#39;, &#39;geo&#39;, &#39;gds&#39;, &#39;homologene&#39;,</span>
+<span class="go"> &#39;journals&#39;, &#39;mesh&#39;, &#39;ncbisearch&#39;, &#39;nlmcatalog&#39;, &#39;omia&#39;, &#39;omim&#39;, &#39;pmc&#39;,</span>
+<span class="go"> &#39;popset&#39;, &#39;probe&#39;, &#39;proteinclusters&#39;, &#39;pcassay&#39;, &#39;pccompound&#39;,</span>
+<span class="go"> &#39;pcsubstance&#39;, &#39;snp&#39;, &#39;taxonomy&#39;, &#39;toolkit&#39;, &#39;unigene&#39;, &#39;unists&#39;]</span>
+</pre></div>
+</div>
+<p>For each of these databases, we can use EInfo again to obtain more
+information:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">einfo</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;DbInfo&quot;</span><span class="p">][</span><span class="s">&quot;Description&quot;</span><span class="p">]</span>
+<span class="go">&#39;PubMed bibliographic record&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;DbInfo&quot;</span><span class="p">][</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">&#39;17989604&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;DbInfo&quot;</span><span class="p">][</span><span class="s">&quot;LastUpdate&quot;</span><span class="p">]</span>
+<span class="go">&#39;2008/05/24 06:45&#39;</span>
+</pre></div>
+</div>
+<p>Try <tt class="docutils literal"><span class="pre">record[&quot;DbInfo&quot;].keys()</span></tt> for other information stored in this
+record. One of the most useful is a list of possible search fields for
+use with ESearch:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;DbInfo&quot;</span><span class="p">][</span><span class="s">&quot;FieldList&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%(Name)s</span><span class="s">, </span><span class="si">%(FullName)s</span><span class="s">, </span><span class="si">%(Description)s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">field</span>
+<span class="go">ALL, All Fields, All terms from all searchable fields</span>
+<span class="go">UID, UID, Unique number assigned to publication</span>
+<span class="go">FILT, Filter, Limits the records</span>
+<span class="go">TITL, Title, Words in title of publication</span>
+<span class="go">WORD, Text Word, Free text associated with publication</span>
+<span class="go">MESH, MeSH Terms, Medical Subject Headings assigned to publication</span>
+<span class="go">MAJR, MeSH Major Topic, MeSH terms of major importance to publication</span>
+<span class="go">AUTH, Author, Author(s) of publication</span>
+<span class="go">JOUR, Journal, Journal abbreviation of publication</span>
+<span class="go">AFFL, Affiliation, Author&#39;s institutional affiliation and address</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>That’s a long list, but indirectly this tells you that for the PubMed
+database, you can do things like <tt class="docutils literal"><span class="pre">Jones[AUTH]</span></tt> to search the author
+field, or <tt class="docutils literal"><span class="pre">Sanger[AFFL]</span></tt> to restrict to authors at the Sanger Centre.
+This can be very handy - especially if you are not so familiar with a
+particular database.</p>
+</div>
+<div class="section" id="esearch-searching-the-entrez-databases">
+<h2>9.3  ESearch: Searching the Entrez databases<a class="headerlink" href="#esearch-searching-the-entrez-databases" title="Permalink to this headline">¶</a></h2>
+<p>To search any of these databases, we use <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt>. For
+example, let’s search in PubMed for publications related to Biopython:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;biopython&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;19304878&#39;, &#39;18606172&#39;, &#39;16403221&#39;, &#39;16377612&#39;, &#39;14871861&#39;, &#39;14630660&#39;, &#39;12230038&#39;]</span>
+</pre></div>
+</div>
+<p>In this output, you see seven PubMed IDs (including 19304878 which is
+the PMID for the Biopython application note), which can be retrieved by
+EFetch (see section <a class="reference external" href="#sec:efetch">9.6</a>).</p>
+<p>You can also use ESearch to search GenBank. Here we’ll do a quick search
+for the <em>matK</em> gene in <em>Cypripedioideae</em> orchids (see
+Section <a class="reference external" href="#sec:entrez-einfo">9.2</a> about EInfo for one way to find
+out which fields you can search in each Entrez database):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;Cypripedioideae[Orgn] AND matK[Gene]&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">&#39;25&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;126789333&#39;, &#39;37222967&#39;, &#39;37222966&#39;, &#39;37222965&#39;, ..., &#39;61585492&#39;]</span>
+</pre></div>
+</div>
+<p>Each of the IDs (126789333, 37222967, 37222966, …) is a GenBank
+identifier. See section <a class="reference external" href="#sec:efetch">9.6</a> for information on how
+to actually download these GenBank records.</p>
+<p>Note that instead of a species name like <tt class="docutils literal"><span class="pre">Cypripedioideae[Orgn]</span></tt>, you
+can restrict the search using an NCBI taxon identifier, here this would
+be <tt class="docutils literal"><span class="pre">txid158330[Orgn]</span></tt>. This isn’t currently documented on the ESearch
+help page - the NCBI explained this in reply to an email query. You can
+often deduce the search term formatting by playing with the Entrez web
+interface. For example, including <tt class="docutils literal"><span class="pre">complete[prop]</span></tt> in a genome search
+restricts to just completed genomes.</p>
+<p>As a final example, let’s get a list of computational journal titles:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;journals&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;computational&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">&#39;16&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;30367&#39;, &#39;33843&#39;, &#39;33823&#39;, &#39;32989&#39;, &#39;33190&#39;, &#39;33009&#39;, &#39;31986&#39;,</span>
+<span class="go"> &#39;34502&#39;, &#39;8799&#39;, &#39;22857&#39;, &#39;32675&#39;, &#39;20258&#39;, &#39;33859&#39;, &#39;32534&#39;,</span>
+<span class="go"> &#39;32357&#39;, &#39;32249&#39;]</span>
+</pre></div>
+</div>
+<p>Again, we could use EFetch to obtain more information for each of these
+journal IDs.</p>
+<p>ESearch has many useful options — see the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/esearch_help.html">ESearch help
+page</a>
+for more information.</p>
+</div>
+<div class="section" id="epost-uploading-a-list-of-identifiers">
+<h2>9.4  EPost: Uploading a list of identifiers<a class="headerlink" href="#epost-uploading-a-list-of-identifiers" title="Permalink to this headline">¶</a></h2>
+<p>EPost uploads a list of UIs for use in subsequent search strategies; see
+the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/epost_help.html">EPost help
+page</a>
+for more information. It is available from Biopython through the
+<tt class="docutils literal"><span class="pre">Bio.Entrez.epost()</span></tt> function.</p>
+<p>To give an example of when this is useful, suppose you have a long list
+of IDs you want to download using EFetch (maybe sequences, maybe
+citations – anything). When you make a request with EFetch your list of
+IDs, the database etc, are all turned into a long URL sent to the
+server. If your list of IDs is long, this URL gets long, and long URLs
+can break (e.g. some proxies don’t cope well).</p>
+<p>Instead, you can break this up into two steps, first uploading the list
+of IDs using EPost (this uses an “HTML post” internally, rather than an
+“HTML get”, getting round the long URL problem). With the history
+support, you can then refer to this long list of IDs, and download the
+associated data with EFetch.</p>
+<p>Let’s look at a simple example to see how EPost works – uploading some
+PubMed identifiers:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">id_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;19304878&quot;</span><span class="p">,</span> <span class="s">&quot;18606172&quot;</span><span class="p">,</span> <span class="s">&quot;16403221&quot;</span><span class="p">,</span> <span class="s">&quot;16377612&quot;</span><span class="p">,</span> <span class="s">&quot;14871861&quot;</span><span class="p">,</span> <span class="s">&quot;14630660&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">epost</span><span class="p">(</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_list</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="go">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="go">&lt;!DOCTYPE ePostResult PUBLIC &quot;-//NLM//DTD ePostResult, 11 May 2002//EN&quot;</span>
+<span class="go"> &quot;http://www.ncbi.nlm.nih.gov/entrez/query/DTD/ePost_020511.dtd&quot;&gt;</span>
+<span class="go">&lt;ePostResult&gt;</span>
+<span class="go"> &lt;QueryKey&gt;1&lt;/QueryKey&gt;</span>
+<span class="go"> &lt;WebEnv&gt;NCID_01_206841095_130.14.22.101_9001_1242061629&lt;/WebEnv&gt;</span>
+<span class="go">&lt;/ePostResult&gt;</span>
+</pre></div>
+</div>
+<p>The returned XML includes two important strings, <tt class="docutils literal"><span class="pre">QueryKey</span></tt> and
+<tt class="docutils literal"><span class="pre">WebEnv</span></tt> which together define your history session. You would extract
+these values for use with another Entrez call such as EFetch:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">id_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;19304878&quot;</span><span class="p">,</span> <span class="s">&quot;18606172&quot;</span><span class="p">,</span> <span class="s">&quot;16403221&quot;</span><span class="p">,</span> <span class="s">&quot;16377612&quot;</span><span class="p">,</span> <span class="s">&quot;14871861&quot;</span><span class="p">,</span> <span class="s">&quot;14630660&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_results</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">epost</span><span class="p">(</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_list</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">webenv</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;WebEnv&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query_key</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;QueryKey&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Section <a class="reference external" href="#sec:entrez-webenv">9.15</a> shows how to use the history
+feature.</p>
+</div>
+<div class="section" id="esummary-retrieving-summaries-from-primary-ids">
+<h2>9.5  ESummary: Retrieving summaries from primary IDs<a class="headerlink" href="#esummary-retrieving-summaries-from-primary-ids" title="Permalink to this headline">¶</a></h2>
+<p>ESummary retrieves document summaries from a list of primary IDs (see
+the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/esummary_help.html">ESummary help
+page</a>
+for more information). In Biopython, ESummary is available as
+<tt class="docutils literal"><span class="pre">Bio.Entrez.esummary()</span></tt>. Using the search result above, we can for
+example find out more about the journal with ID 30367:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esummary</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;journals&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;30367&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Id&quot;</span><span class="p">]</span>
+<span class="go">&#39;30367&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Title&quot;</span><span class="p">]</span>
+<span class="go">&#39;Computational biology and chemistry&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Publisher&quot;</span><span class="p">]</span>
+<span class="go">&#39;Pergamon,&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="efetch-downloading-full-records-from-entrez">
+<h2>9.6  EFetch: Downloading full records from Entrez<a class="headerlink" href="#efetch-downloading-full-records-from-entrez" title="Permalink to this headline">¶</a></h2>
+<p>EFetch is what you use when you want to retrieve a full record from
+Entrez. This covers several possible databases, as described on the main
+<a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">EFetch Help
+page</a>.</p>
+<p>For most of their databases, the NCBI support several different file
+formats. Requesting a specific file format from Entrez using
+<tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> requires specifying the <tt class="docutils literal"><span class="pre">rettype</span></tt> and/or
+<tt class="docutils literal"><span class="pre">retmode</span></tt> optional arguments. The different combinations are described
+for each database type on the pages linked to on <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">NCBI efetch
+webpage</a>
+(e.g.
+<a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchlit_help.html">literature</a>,
+<a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchseq_help.html">sequences</a>
+and
+<a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchtax_help.html">taxonomy</a>).</p>
+<p>One common usage is downloading sequences in the FASTA or
+GenBank/GenPept plain text formats (which can then be parsed with
+<tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>, see Sections <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a>
+and <a class="reference external" href="#sec:efetch">9.6</a>). From the <em>Cypripedioideae</em> example above,
+we can download GenBank record 186972394 using <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;186972394&quot;</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="go">LOCUS       EU490707                1302 bp    DNA     linear   PLN 05-MAY-2008</span>
+<span class="go">DEFINITION  Selenipedium aequinoctiale maturase K (matK) gene, partial cds;</span>
+<span class="go">            chloroplast.</span>
+<span class="go">ACCESSION   EU490707</span>
+<span class="go">VERSION     EU490707.1  GI:186972394</span>
+<span class="go">KEYWORDS    .</span>
+<span class="go">SOURCE      chloroplast Selenipedium aequinoctiale</span>
+<span class="go">  ORGANISM  Selenipedium aequinoctiale</span>
+<span class="go">            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;</span>
+<span class="go">            Spermatophyta; Magnoliophyta; Liliopsida; Asparagales; Orchidaceae;</span>
+<span class="go">            Cypripedioideae; Selenipedium.</span>
+<span class="go">REFERENCE   1  (bases 1 to 1302)</span>
+<span class="go">  AUTHORS   Neubig,K.M., Whitten,W.M., Carlsward,B.S., Blanco,M.A.,</span>
+<span class="go">            Endara,C.L., Williams,N.H. and Moore,M.J.</span>
+<span class="go">  TITLE     Phylogenetic utility of ycf1 in orchids</span>
+<span class="go">  JOURNAL   Unpublished</span>
+<span class="go">REFERENCE   2  (bases 1 to 1302)</span>
+<span class="go">  AUTHORS   Neubig,K.M., Whitten,W.M., Carlsward,B.S., Blanco,M.A.,</span>
+<span class="go">            Endara,C.L., Williams,N.H. and Moore,M.J.</span>
+<span class="go">  TITLE     Direct Submission</span>
+<span class="go">  JOURNAL   Submitted (14-FEB-2008) Department of Botany, University of</span>
+<span class="go">            Florida, 220 Bartram Hall, Gainesville, FL 32611-8526, USA</span>
+<span class="go">FEATURES             Location/Qualifiers</span>
+<span class="go">     source          1..1302</span>
+<span class="go">                     /organism=&quot;Selenipedium aequinoctiale&quot;</span>
+<span class="go">                     /organelle=&quot;plastid:chloroplast&quot;</span>
+<span class="go">                     /mol_type=&quot;genomic DNA&quot;</span>
+<span class="go">                     /specimen_voucher=&quot;FLAS:Blanco 2475&quot;</span>
+<span class="go">                     /db_xref=&quot;taxon:256374&quot;</span>
+<span class="go">     gene            &lt;1..&gt;1302</span>
+<span class="go">                     /gene=&quot;matK&quot;</span>
+<span class="go">     CDS             &lt;1..&gt;1302</span>
+<span class="go">                     /gene=&quot;matK&quot;</span>
+<span class="go">                     /codon_start=1</span>
+<span class="go">                     /transl_table=11</span>
+<span class="go">                     /product=&quot;maturase K&quot;</span>
+<span class="go">                     /protein_id=&quot;ACC99456.1&quot;</span>
+<span class="go">                     /db_xref=&quot;GI:186972395&quot;</span>
+<span class="go">                     /translation=&quot;IFYEPVEIFGYDNKSSLVLVKRLITRMYQQNFLISSVNDSNQKG</span>
+<span class="go">                     FWGHKHFFSSHFSSQMVSEGFGVILEIPFSSQLVSSLEEKKIPKYQNLRSIHSIFPFL</span>
+<span class="go">                     EDKFLHLNYVSDLLIPHPIHLEILVQILQCRIKDVPSLHLLRLLFHEYHNLNSLITSK</span>
+<span class="go">                     KFIYAFSKRKKRFLWLLYNSYVYECEYLFQFLRKQSSYLRSTSSGVFLERTHLYVKIE</span>
+<span class="go">                     HLLVVCCNSFQRILCFLKDPFMHYVRYQGKAILASKGTLILMKKWKFHLVNFWQSYFH</span>
+<span class="go">                     FWSQPYRIHIKQLSNYSFSFLGYFSSVLENHLVVRNQMLENSFIINLLTKKFDTIAPV</span>
+<span class="go">                     ISLIGSLSKAQFCTVLGHPISKPIWTDFSDSDILDRFCRICRNLCRYHSGSSKKQVLY</span>
+<span class="go">                     RIKYILRLSCARTLARKHKSTVRTFMRRLGSGLLEEFFMEEE&quot;</span>
+<span class="go">ORIGIN</span>
+<span class="go">        1 attttttacg aacctgtgga aatttttggt tatgacaata aatctagttt agtacttgtg</span>
+<span class="go">       61 aaacgtttaa ttactcgaat gtatcaacag aattttttga tttcttcggt taatgattct</span>
+<span class="go">      121 aaccaaaaag gattttgggg gcacaagcat tttttttctt ctcatttttc ttctcaaatg</span>
+<span class="go">      181 gtatcagaag gttttggagt cattctggaa attccattct cgtcgcaatt agtatcttct</span>
+<span class="go">      241 cttgaagaaa aaaaaatacc aaaatatcag aatttacgat ctattcattc aatatttccc</span>
+<span class="go">      301 tttttagaag acaaattttt acatttgaat tatgtgtcag atctactaat accccatccc</span>
+<span class="go">      361 atccatctgg aaatcttggt tcaaatcctt caatgccgga tcaaggatgt tccttctttg</span>
+<span class="go">      421 catttattgc gattgctttt ccacgaatat cataatttga atagtctcat tacttcaaag</span>
+<span class="go">      481 aaattcattt acgccttttc aaaaagaaag aaaagattcc tttggttact atataattct</span>
+<span class="go">      541 tatgtatatg aatgcgaata tctattccag tttcttcgta aacagtcttc ttatttacga</span>
+<span class="go">      601 tcaacatctt ctggagtctt tcttgagcga acacatttat atgtaaaaat agaacatctt</span>
+<span class="go">      661 ctagtagtgt gttgtaattc ttttcagagg atcctatgct ttctcaagga tcctttcatg</span>
+<span class="go">      721 cattatgttc gatatcaagg aaaagcaatt ctggcttcaa agggaactct tattctgatg</span>
+<span class="go">      781 aagaaatgga aatttcatct tgtgaatttt tggcaatctt attttcactt ttggtctcaa</span>
+<span class="go">      841 ccgtatagga ttcatataaa gcaattatcc aactattcct tctcttttct ggggtatttt</span>
+<span class="go">      901 tcaagtgtac tagaaaatca tttggtagta agaaatcaaa tgctagagaa ttcatttata</span>
+<span class="go">      961 ataaatcttc tgactaagaa attcgatacc atagccccag ttatttctct tattggatca</span>
+<span class="go">     1021 ttgtcgaaag ctcaattttg tactgtattg ggtcatccta ttagtaaacc gatctggacc</span>
+<span class="go">     1081 gatttctcgg attctgatat tcttgatcga ttttgccgga tatgtagaaa tctttgtcgt</span>
+<span class="go">     1141 tatcacagcg gatcctcaaa aaaacaggtt ttgtatcgta taaaatatat acttcgactt</span>
+<span class="go">     1201 tcgtgtgcta gaactttggc acggaaacat aaaagtacag tacgcacttt tatgcgaaga</span>
+<span class="go">     1261 ttaggttcgg gattattaga agaattcttt atggaagaag aa</span>
+<span class="go">//</span>
+</pre></div>
+</div>
+<p>The arguments <tt class="docutils literal"><span class="pre">rettype=&quot;gb&quot;</span></tt> and <tt class="docutils literal"><span class="pre">retmode=&quot;text&quot;</span></tt> let us download
+this record in the GenBank format.</p>
+<p>Note that until Easter 2009, the Entrez EFetch API let you use “genbank”
+as the return type, however the NCBI now insist on using the official
+return types of “gb” or “gbwithparts” (or “gp” for proteins) as
+described on online. Also not that until Feb 2012, the Entrez EFetch API
+would default to returning plain text files, but now defaults to XML.</p>
+<p>Alternatively, you could for example use <tt class="docutils literal"><span class="pre">rettype=&quot;fasta&quot;</span></tt> to get the
+Fasta-format; see the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html">EFetch Sequences Help
+page</a>
+for other options. Remember – the available formats depend on which
+database you are downloading from - see the main <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">EFetch Help
+page</a>.</p>
+<p>If you fetch the record in one of the formats accepted by <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>
+(see Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>), you could directly parse it
+into a <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span><span class="p">,</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;186972394&quot;</span><span class="p">,</span><span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span>
+<span class="go">ID: EU490707.1</span>
+<span class="go">Name: EU490707</span>
+<span class="go">Description: Selenipedium aequinoctiale maturase K (matK) gene, partial cds; chloroplast.</span>
+<span class="go">Number of features: 3</span>
+<span class="gp">...</span>
+<span class="go">Seq(&#39;ATTTTTTACGAACCTGTGGAAATTTTTGGTTATGACAATAAATCTAGTTTAGTA...GAA&#39;, IUPACAmbiguousDNA())</span>
+</pre></div>
+</div>
+<p>Note that a more typical use would be to save the sequence data to a
+local file, and <em>then</em> parse it with <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>. This can save you
+having to re-download the same file repeatedly while working on your
+script, and places less load on the NCBI’s servers. For example:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;gi_186972394.gbk&quot;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="c"># Downloading...</span>
+    <span class="n">net_handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="s">&quot;186972394&quot;</span><span class="p">,</span><span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+    <span class="n">out_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">out_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">net_handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="n">out_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">net_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Saved&quot;</span>
+
+<span class="k">print</span> <span class="s">&quot;Parsing...&quot;</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">record</span>
+</pre></div>
+</div>
+<p>To get the output in XML format, which you can parse using the
+<tt class="docutils literal"><span class="pre">Bio.Entrez.read()</span></tt> function, use <tt class="docutils literal"><span class="pre">retmode=&quot;xml&quot;</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;186972394&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_definition&quot;</span><span class="p">]</span>
+<span class="go">&#39;Selenipedium aequinoctiale maturase K (matK) gene, partial cds; chloroplast&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_source&quot;</span><span class="p">]</span>
+<span class="go">&#39;chloroplast Selenipedium aequinoctiale&#39;</span>
+</pre></div>
+</div>
+<p>So, that dealt with sequences. For examples of parsing file formats
+specific to the other databases (e.g. the <tt class="docutils literal"><span class="pre">MEDLINE</span></tt> format used in
+PubMed), see Section <a class="reference external" href="#sec:entrez-specialized-parsers">9.12</a>.</p>
+<p>If you want to perform a search with <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt>, and then
+download the records with <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt>, you should use the
+WebEnv history feature – see Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+</div>
+<div class="section" id="elink-searching-for-related-items-in-ncbi-entrez">
+<h2>9.7  ELink: Searching for related items in NCBI Entrez<a class="headerlink" href="#elink-searching-for-related-items-in-ncbi-entrez" title="Permalink to this headline">¶</a></h2>
+<p>ELink, available from Biopython as <tt class="docutils literal"><span class="pre">Bio.Entrez.elink()</span></tt>, can be used
+to find related items in the NCBI Entrez databases. For example, you can
+us this to find nucleotide entries for an entry in the gene database,
+and other cool stuff.</p>
+<p>Let’s use ELink to find articles related to the Biopython application
+note published in <em>Bioinformatics</em> in 2009. The PubMed ID of this
+article is 19304878:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmid</span> <span class="o">=</span> <span class="s">&quot;19304878&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">elink</span><span class="p">(</span><span class="n">dbfrom</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">pmid</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">record</span></tt> variable consists of a Python list, one for each database
+in which we searched. Since we specified only one PubMed ID to search
+for, <tt class="docutils literal"><span class="pre">record</span></tt> contains only one item. This item is a dictionary
+containing information about our search term, as well as all the related
+items that were found:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;DbFrom&quot;</span><span class="p">]</span>
+<span class="go">&#39;pubmed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;19304878&#39;]</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">&quot;LinkSetDb&quot;</span></tt> key contains the search results, stored as a list
+consisting of one item for each target database. In our search results,
+we only find hits in the PubMed database (although sub-divided into
+categories):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">])</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">linksetdb</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">linksetdb</span><span class="p">[</span><span class="s">&quot;DbTo&quot;</span><span class="p">],</span> <span class="n">linksetdb</span><span class="p">[</span><span class="s">&quot;LinkName&quot;</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">linksetdb</span><span class="p">[</span><span class="s">&quot;Link&quot;</span><span class="p">])</span>
+<span class="gp">...</span>
+<span class="go">pubmed pubmed_pubmed 110</span>
+<span class="go">pubmed pubmed_pubmed_combined 6</span>
+<span class="go">pubmed pubmed_pubmed_five 6</span>
+<span class="go">pubmed pubmed_pubmed_reviews 5</span>
+<span class="go">pubmed pubmed_pubmed_reviews_five 5</span>
+</pre></div>
+</div>
+<p>The actual search results are stored as under the <tt class="docutils literal"><span class="pre">&quot;Link&quot;</span></tt> key. In
+total, 110 items were found under standard search. Let’s now at the
+first search result:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Link&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">{u&#39;Id&#39;: &#39;19304878&#39;}</span>
+</pre></div>
+</div>
+<p>This is the article we searched for, which doesn’t help us much, so
+let’s look at the second search result:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Link&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">{u&#39;Id&#39;: &#39;14630660&#39;}</span>
+</pre></div>
+</div>
+<p>This paper, with PubMed ID 14630660, is about the Biopython PDB parser.</p>
+<p>We can use a loop to print out all PubMed IDs:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Link&quot;</span><span class="p">]</span> <span class="p">:</span> <span class="k">print</span> <span class="n">link</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]</span>
+<span class="go">19304878</span>
+<span class="go">14630660</span>
+<span class="go">18689808</span>
+<span class="go">17121776</span>
+<span class="go">16377612</span>
+<span class="go">12368254</span>
+<span class="go">......</span>
+</pre></div>
+</div>
+<p>Now that was nice, but personally I am often more interested to find out
+if a paper has been cited. Well, ELink can do that too – at least for
+journals in Pubmed Central (see
+Section <a class="reference external" href="#sec:elink-citations">9.15.3</a>).</p>
+<p>For help on ELink, see the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html">ELink help
+page</a>.
+There is an entire sub-page just for the <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html">link
+names</a>,
+describing how different databases can be cross referenced.</p>
+</div>
+<div class="section" id="egquery-global-query-counts-for-search-terms">
+<h2>9.8  EGQuery: Global Query - counts for search terms<a class="headerlink" href="#egquery-global-query-counts-for-search-terms" title="Permalink to this headline">¶</a></h2>
+<p>EGQuery provides counts for a search term in each of the Entrez
+databases (i.e. a global query). This is particularly useful to find out
+how many items your search terms would find in each database without
+actually performing lots of separate searches with ESearch (see the
+example in <a class="reference external" href="#subsec:entrez_example_genbank">9.14.2</a> below).</p>
+<p>In this example, we use <tt class="docutils literal"><span class="pre">Bio.Entrez.egquery()</span></tt> to obtain the counts
+for “Biopython”:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">egquery</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;biopython&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;eGQueryResult&quot;</span><span class="p">]:</span> <span class="k">print</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;DbName&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="go">pubmed 6</span>
+<span class="go">pmc 62</span>
+<span class="go">journals 0</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>See the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/egquery_help.html">EGQuery help
+page</a>
+for more information.</p>
+</div>
+<div class="section" id="espell-obtaining-spelling-suggestions">
+<h2>9.9  ESpell: Obtaining spelling suggestions<a class="headerlink" href="#espell-obtaining-spelling-suggestions" title="Permalink to this headline">¶</a></h2>
+<p>ESpell retrieves spelling suggestions. In this example, we use
+<tt class="docutils literal"><span class="pre">Bio.Entrez.espell()</span></tt> to obtain the correct spelling of Biopython:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">espell</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;biopythooon&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;Query&quot;</span><span class="p">]</span>
+<span class="go">&#39;biopythooon&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;CorrectedQuery&quot;</span><span class="p">]</span>
+<span class="go">&#39;biopython&#39;</span>
+</pre></div>
+</div>
+<p>See the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/espell_help.html">ESpell help
+page</a>
+for more information. The main use of this is for GUI tools to provide
+automatic suggestions for search terms.</p>
+</div>
+<div class="section" id="parsing-huge-entrez-xml-files">
+<h2>9.10  Parsing huge Entrez XML files<a class="headerlink" href="#parsing-huge-entrez-xml-files" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">Entrez.read</span></tt> function reads the entire XML file returned by
+Entrez into a single Python object, which is kept in memory. To parse
+Entrez XML files too large to fit in memory, you can use the function
+<tt class="docutils literal"><span class="pre">Entrez.parse</span></tt>. This is a generator function that reads records in the
+XML file one by one. This function is only useful if the XML file
+reflects a Python list object (in other words, if <tt class="docutils literal"><span class="pre">Entrez.read</span></tt> on a
+computer with infinite memory resources would return a Python list).</p>
+<p>For example, you can download the entire Entrez Gene database for a
+given organism as a file from NCBI’s ftp site. These files can be very
+large. As an example, on September 4, 2009, the file
+<tt class="docutils literal"><span class="pre">Homo_sapiens.ags.gz</span></tt>, containing the Entrez Gene database for human,
+had a size of 116576 kB. This file, which is in the <tt class="docutils literal"><span class="pre">ASN</span></tt> format, can
+be converted into an XML file using NCBI’s <tt class="docutils literal"><span class="pre">gene2xml</span></tt> program (see
+NCBI’s ftp site for more information):</p>
+<div class="code python highlight-python"><pre>gene2xml -b T -i Homo_sapiens.ags -o Homo_sapiens.xml</pre>
+</div>
+<p>The resulting XML file has a size of 6.1 GB. Attempting <tt class="docutils literal"><span class="pre">Entrez.read</span></tt>
+on this file will result in a <tt class="docutils literal"><span class="pre">MemoryError</span></tt> on many computers.</p>
+<p>The XML file <tt class="docutils literal"><span class="pre">Homo_sapiens.xml</span></tt> consists of a list of Entrez gene
+records, each corresponding to one Entrez gene in human.
+<tt class="docutils literal"><span class="pre">Entrez.parse</span></tt> retrieves these gene records one by one. You can then
+print out or store the relevant information in each record by iterating
+over the records. For example, this script iterates over the Entrez gene
+records and prints out the gene numbers and names for all current genes:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;Homo_sapiens.xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">status</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;Entrezgene_track-info&#39;</span><span class="p">][</span><span class="s">&#39;Gene-track&#39;</span><span class="p">][</span><span class="s">&#39;Gene-track_status&#39;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s">&#39;value&#39;</span><span class="p">]</span><span class="o">==</span><span class="s">&#39;discontinued&#39;</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">continue</span>
+<span class="gp">... </span>    <span class="n">geneid</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;Entrezgene_track-info&#39;</span><span class="p">][</span><span class="s">&#39;Gene-track&#39;</span><span class="p">][</span><span class="s">&#39;Gene-track_geneid&#39;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">genename</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&#39;Entrezgene_gene&#39;</span><span class="p">][</span><span class="s">&#39;Gene-ref&#39;</span><span class="p">][</span><span class="s">&#39;Gene-ref_locus&#39;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">geneid</span><span class="p">,</span> <span class="n">genename</span>
+</pre></div>
+</div>
+<p>This will print:</p>
+<div class="code python highlight-python"><pre>1 A1BG
+2 A2M
+3 A2MP
+8 AA
+9 NAT1
+10 NAT2
+11 AACP
+12 SERPINA3
+13 AADAC
+14 AAMP
+15 AANAT
+16 AARS
+17 AAVS1
+...</pre>
+</div>
+</div>
+<div class="section" id="handling-errors">
+<h2>9.11  Handling errors<a class="headerlink" href="#handling-errors" title="Permalink to this headline">¶</a></h2>
+<p>Three things can go wrong when parsing an XML file:</p>
+<ul class="simple">
+<li>The file may not be an XML file to begin with;</li>
+<li>The file may end prematurely or otherwise be corrupted;</li>
+<li>The file may be correct XML, but contain items that are not
+represented in the associated DTD.</li>
+</ul>
+<p>The first case occurs if, for example, you try to parse a Fasta file as
+if it were an XML file:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;NC_005816.fna&quot;</span><span class="p">)</span> <span class="c"># a Fasta file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/__init__.py&quot;</span>, line <span class="m">257</span>, in <span class="n">read</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/Parser.py&quot;</span>, line <span class="m">164</span>, in <span class="n">read</span>
+    <span class="k">raise</span> <span class="n">NotXMLError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="gr">Bio.Entrez.Parser.NotXMLError</span>: <span class="n">Failed to parse the XML data (syntax error: line 1, column 0). Please make sure that the input data are in XML format.</span>
+</pre></div>
+</div>
+<p>Here, the parser didn’t find the <tt class="docutils literal"><span class="pre">&lt;?xml</span> <span class="pre">...</span></tt> tag with which an XML
+file is supposed to start, and therefore decides (correctly) that the
+file is not an XML file.</p>
+<p>When your file is in the XML format but is corrupted (for example, by
+ending prematurely), the parser will raise a CorruptedXMLError. Here is
+an example of an XML file that ends prematurely:</p>
+<div class="code python highlight-python"><pre>&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd"&gt;
+&lt;eInfoResult&gt;
+&lt;DbList&gt;
+        &lt;DbName&gt;pubmed&lt;/DbName&gt;
+        &lt;DbName&gt;protein&lt;/DbName&gt;
+        &lt;DbName&gt;nucleotide&lt;/DbName&gt;
+        &lt;DbName&gt;nuccore&lt;/DbName&gt;
+        &lt;DbName&gt;nucgss&lt;/DbName&gt;
+        &lt;DbName&gt;nucest&lt;/DbName&gt;
+        &lt;DbName&gt;structure&lt;/DbName&gt;
+        &lt;DbName&gt;genome&lt;/DbName&gt;
+        &lt;DbName&gt;books&lt;/DbName&gt;
+        &lt;DbName&gt;cancerchromosomes&lt;/DbName&gt;
+        &lt;DbName&gt;cdd&lt;/DbName&gt;</pre>
+</div>
+<p>which will generate the following traceback:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/__init__.py&quot;</span>, line <span class="m">257</span>, in <span class="n">read</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/Parser.py&quot;</span>, line <span class="m">160</span>, in <span class="n">read</span>
+    <span class="k">raise</span> <span class="n">CorruptedXMLError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="gr">Bio.Entrez.Parser.CorruptedXMLError</span>: <span class="n">Failed to parse the XML data (no element found: line 16, column 0). Please make sure that the input data are not corrupted.</span>
+
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Note that the error message tells you at what point in the XML file the
+error was detected.</p>
+<p>The third type of error occurs if the XML file contains tags that do not
+have a description in the corresponding DTD file. This is an example of
+such an XML file:</p>
+<div class="code python highlight-python"><pre>&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE eInfoResult PUBLIC "-//NLM//DTD eInfoResult, 11 May 2002//EN" "http://www.ncbi.nlm.nih.gov/entrez/query/DTD/eInfo_020511.dtd"&gt;
+&lt;eInfoResult&gt;
+        &lt;DbInfo&gt;
+        &lt;DbName&gt;pubmed&lt;/DbName&gt;
+        &lt;MenuName&gt;PubMed&lt;/MenuName&gt;
+        &lt;Description&gt;PubMed bibliographic record&lt;/Description&gt;
+        &lt;Count&gt;20161961&lt;/Count&gt;
+        &lt;LastUpdate&gt;2010/09/10 04:52&lt;/LastUpdate&gt;
+        &lt;FieldList&gt;
+                &lt;Field&gt;
+...
+                &lt;/Field&gt;
+        &lt;/FieldList&gt;
+        &lt;DocsumList&gt;
+                &lt;Docsum&gt;
+                        &lt;DsName&gt;PubDate&lt;/DsName&gt;
+                        &lt;DsType&gt;4&lt;/DsType&gt;
+                        &lt;DsTypeName&gt;string&lt;/DsTypeName&gt;
+                &lt;/Docsum&gt;
+                &lt;Docsum&gt;
+                        &lt;DsName&gt;EPubDate&lt;/DsName&gt;
+...
+        &lt;/DbInfo&gt;
+&lt;/eInfoResult&gt;</pre>
+</div>
+<p>In this file, for some reason the tag <tt class="docutils literal"><span class="pre">&lt;DocsumList&gt;</span></tt> (and several
+others) are not listed in the DTD file <tt class="docutils literal"><span class="pre">eInfo_020511.dtd</span></tt>, which is
+specified on the second line as the DTD for this XML file. By default,
+the parser will stop and raise a ValidationError if it cannot find some
+tag in the DTD:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;einfo3.xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/__init__.py&quot;</span>, line <span class="m">257</span>, in <span class="n">read</span>
+    <span class="n">record</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/Parser.py&quot;</span>, line <span class="m">154</span>, in <span class="n">read</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">ParseFile</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+  File <span class="nb">&quot;/usr/local/lib/python2.7/site-packages/Bio/Entrez/Parser.py&quot;</span>, line <span class="m">246</span>, in <span class="n">startElementHandler</span>
+    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="gr">Bio.Entrez.Parser.ValidationError</span>: <span class="n">Failed to find tag &#39;DocsumList&#39; in the DTD. To skip all tags that are not represented in the DTD, please call Bio.Entrez.read or Bio.Entrez.parse with validate=False.</span>
+</pre></div>
+</div>
+<p>Optionally, you can instruct the parser to skip such tags instead of
+raising a ValidationError. This is done by calling <tt class="docutils literal"><span class="pre">Entrez.read</span></tt> or
+<tt class="docutils literal"><span class="pre">Entrez.parse</span></tt> with the argument <tt class="docutils literal"><span class="pre">validate</span></tt> equal to False:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;einfo3.xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span><span class="n">validate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>Of course, the information contained in the XML tags that are not in the
+DTD are not present in the record returned by <tt class="docutils literal"><span class="pre">Entrez.read</span></tt>.</p>
+</div>
+<div class="section" id="specialized-parsers">
+<h2>9.12  Specialized parsers<a class="headerlink" href="#specialized-parsers" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">Bio.Entrez.read()</span></tt> function can parse most (if not all) XML
+output returned by Entrez. Entrez typically allows you to retrieve
+records in other formats, which may have some advantages compared to the
+XML format in terms of readability (or download size).</p>
+<p>To request a specific file format from Entrez using
+<tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> requires specifying the <tt class="docutils literal"><span class="pre">rettype</span></tt> and/or
+<tt class="docutils literal"><span class="pre">retmode</span></tt> optional arguments. The different combinations are described
+for each database type on the <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">NCBI efetch
+webpage</a>.</p>
+<p>One obvious case is you may prefer to download sequences in the FASTA or
+GenBank/GenPept plain text formats (which can then be parsed with
+<tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>, see Sections <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a>
+and <a class="reference external" href="#sec:efetch">9.6</a>). For the literature databases, Biopython
+contains a parser for the <tt class="docutils literal"><span class="pre">MEDLINE</span></tt> format used in PubMed.</p>
+<div class="section" id="parsing-medline-records">
+<h3>9.12.1  Parsing Medline records<a class="headerlink" href="#parsing-medline-records" title="Permalink to this headline">¶</a></h3>
+<p>You can find the Medline parser in <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt>. Suppose we want to
+parse the file <tt class="docutils literal"><span class="pre">pubmed_result1.txt</span></tt>, containing one Medline record.
+You can find this file in Biopython’s <tt class="docutils literal"><span class="pre">Tests\Medline</span></tt> directory. The
+file looks like this:</p>
+<div class="code python highlight-python"><pre>PMID- 12230038
+OWN - NLM
+STAT- MEDLINE
+DA  - 20020916
+DCOM- 20030606
+LR  - 20041117
+PUBM- Print
+IS  - 1467-5463 (Print)
+VI  - 3
+IP  - 3
+DP  - 2002 Sep
+TI  - The Bio* toolkits--a brief overview.
+PG  - 296-302
+AB  - Bioinformatics research is often difficult to do with commercial software. The
+      Open Source BioPerl, BioPython and Biojava projects provide toolkits with
+...</pre>
+</div>
+<p>We first open the file and then parse it:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Medline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;pubmed_result1.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Medline</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">record</span></tt> now contains the Medline record as a Python dictionary:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;PMID&quot;</span><span class="p">]</span>
+<span class="go">&#39;12230038&#39;</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;AB&quot;</span><span class="p">]</span>
+<span class="go">&#39;Bioinformatics research is often difficult to do with commercial software.</span>
+<span class="go">The Open Source BioPerl, BioPython and Biojava projects provide toolkits with</span>
+<span class="go">multiple functionality that make it easier to create customised pipelines or</span>
+<span class="go">analysis. This review briefly compares the quirks of the underlying languages</span>
+<span class="go">and the functionality, documentation, utility and relative advantages of the</span>
+<span class="go">Bio counterparts, particularly from the point of view of the beginning</span>
+<span class="go">biologist programmer.&#39;</span>
+</pre></div>
+</div>
+<p>The key names used in a Medline record can be rather obscure; use</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for a brief summary.</p>
+<p>To parse a file containing multiple Medline records, you can use the
+<tt class="docutils literal"><span class="pre">parse</span></tt> function instead:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Medline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;pubmed_result2.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Medline</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;TI&quot;</span><span class="p">]</span>
+<span class="go">A high level interface to SCOP and ASTRAL implemented in python.</span>
+<span class="go">GenomeDiagram: a python package for the visualization of large-scale genomic data.</span>
+<span class="go">Open source clustering software.</span>
+<span class="go">PDB file parser and structure class implemented in Python.</span>
+</pre></div>
+</div>
+<p>Instead of parsing Medline records stored in files, you can also parse
+Medline records downloaded by <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt>. For example, let’s
+look at all Medline records in PubMed related to Biopython:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;biopython&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;19304878&#39;, &#39;18606172&#39;, &#39;16403221&#39;, &#39;16377612&#39;, &#39;14871861&#39;, &#39;14630660&#39;, &#39;12230038&#39;]</span>
+</pre></div>
+</div>
+<p>We now use <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt> to download these Medline records:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idlist</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span><span class="n">rettype</span><span class="o">=</span><span class="s">&quot;medline&quot;</span><span class="p">,</span><span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we specify <tt class="docutils literal"><span class="pre">rettype=&quot;medline&quot;,</span> <span class="pre">retmode=&quot;text&quot;</span></tt> to obtain the
+Medline records in plain-text Medline format. Now we use <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt>
+to parse these records:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Medline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Medline</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;AU&quot;</span><span class="p">]</span>
+<span class="go">[&#39;Cock PJ&#39;, &#39;Antao T&#39;, &#39;Chang JT&#39;, &#39;Chapman BA&#39;, &#39;Cox CJ&#39;, &#39;Dalke A&#39;, ..., &#39;de Hoon MJ&#39;]</span>
+<span class="go">[&#39;Munteanu CR&#39;, &#39;Gonzalez-Diaz H&#39;, &#39;Magalhaes AL&#39;]</span>
+<span class="go">[&#39;Casbon JA&#39;, &#39;Crooks GE&#39;, &#39;Saqi MA&#39;]</span>
+<span class="go">[&#39;Pritchard L&#39;, &#39;White JA&#39;, &#39;Birch PR&#39;, &#39;Toth IK&#39;]</span>
+<span class="go">[&#39;de Hoon MJ&#39;, &#39;Imoto S&#39;, &#39;Nolan J&#39;, &#39;Miyano S&#39;]</span>
+<span class="go">[&#39;Hamelryck T&#39;, &#39;Manderick B&#39;]</span>
+<span class="go">[&#39;Mangalam H&#39;]</span>
+</pre></div>
+</div>
+<p>For comparison, here we show an example using the XML format:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idlist</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span><span class="nb">id</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span><span class="n">rettype</span><span class="o">=</span><span class="s">&quot;medline&quot;</span><span class="p">,</span><span class="n">retmode</span><span class="o">=</span><span class="s">&quot;xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;MedlineCitation&quot;</span><span class="p">][</span><span class="s">&quot;Article&quot;</span><span class="p">][</span><span class="s">&quot;ArticleTitle&quot;</span><span class="p">]</span>
+<span class="go">Biopython: freely available Python tools for computational molecular biology and</span>
+<span class="go"> bioinformatics.</span>
+<span class="go">Enzymes/non-enzymes classification model complexity based on composition, sequence,</span>
+<span class="go"> 3D and topological indices.</span>
+<span class="go">A high level interface to SCOP and ASTRAL implemented in python.</span>
+<span class="go">GenomeDiagram: a python package for the visualization of large-scale genomic data.</span>
+<span class="go">Open source clustering software.</span>
+<span class="go">PDB file parser and structure class implemented in Python.</span>
+<span class="go">The Bio* toolkits--a brief overview.</span>
+</pre></div>
+</div>
+<p>Note that in both of these examples, for simplicity we have naively
+combined ESearch and EFetch. In this situation, the NCBI would expect
+you to use their history feature, as illustrated in
+Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+</div>
+<div class="section" id="parsing-geo-records">
+<h3>9.12.2  Parsing GEO records<a class="headerlink" href="#parsing-geo-records" title="Permalink to this headline">¶</a></h3>
+<p>GEO (<a class="reference external" href="http://www.ncbi.nlm.nih.gov/geo/">Gene Expression Omnibus</a>) is
+a data repository of high-throughput gene expression and hybridization
+array data. The <tt class="docutils literal"><span class="pre">Bio.Geo</span></tt> module can be used to parse GEO-formatted
+data.</p>
+<p>The following code fragment shows how to parse the example GEO file
+<tt class="docutils literal"><span class="pre">GSE16.txt</span></tt> into a record and print the record:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Geo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;GSE16.txt&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Geo</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span>
+</pre></div>
+</div>
+<p>You can search the “gds” database (GEO datasets) with ESearch:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span> <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;gds&quot;</span><span class="p">,</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;GSE16&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;200000016&#39;, &#39;100000028&#39;]</span>
+</pre></div>
+</div>
+<p>From the Entrez website, UID “200000016” is GDS16 while the other hit
+“100000028” is for the associated platform, GPL28. Unfortunately, at the
+time of writing the NCBI don’t seem to support downloading GEO files
+using Entrez (not as XML, nor in the <em>Simple Omnibus Format in Text</em>
+(SOFT) format).</p>
+<p>However, it is actually pretty straight forward to download the GEO
+files by FTP from
+<a class="reference external" href="ftp://ftp.ncbi.nih.gov/pub/geo/">ftp://ftp.ncbi.nih.gov/pub/geo/</a>
+instead. In this case you might want
+<a class="reference external" href="ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz">ftp://ftp.ncbi.nih.gov/pub/geo/DATA/SOFT/by_series/GSE16/GSE16_family.soft.gz</a>
+(a compressed file, see the Python module gzip).</p>
+</div>
+<div class="section" id="parsing-unigene-records">
+<h3>9.12.3  Parsing UniGene records<a class="headerlink" href="#parsing-unigene-records" title="Permalink to this headline">¶</a></h3>
+<p>UniGene is an NCBI database of the transcriptome, with each UniGene
+record showing the set of transcripts that are associated with a
+particular gene in a specific organism. A typical UniGene record looks
+like this:</p>
+<div class="code python highlight-python"><pre>ID          Hs.2
+TITLE       N-acetyltransferase 2 (arylamine N-acetyltransferase)
+GENE        NAT2
+CYTOBAND    8p22
+GENE_ID     10
+LOCUSLINK   10
+HOMOL       YES
+EXPRESS      bone| connective tissue| intestine| liver| liver tumor| normal| soft tissue/muscle tissue tumor| adult
+RESTR_EXPR   adult
+CHROMOSOME  8
+STS         ACC=PMC310725P3 UNISTS=272646
+STS         ACC=WIAF-2120 UNISTS=44576
+STS         ACC=G59899 UNISTS=137181
+...
+STS         ACC=GDB:187676 UNISTS=155563
+PROTSIM     ORG=10090; PROTGI=6754794; PROTID=NP_035004.1; PCT=76.55; ALN=288
+PROTSIM     ORG=9796; PROTGI=149742490; PROTID=XP_001487907.1; PCT=79.66; ALN=288
+PROTSIM     ORG=9986; PROTGI=126722851; PROTID=NP_001075655.1; PCT=76.90; ALN=288
+...
+PROTSIM     ORG=9598; PROTGI=114619004; PROTID=XP_519631.2; PCT=98.28; ALN=288
+
+SCOUNT      38
+SEQUENCE    ACC=BC067218.1; NID=g45501306; PID=g45501307; SEQTYPE=mRNA
+SEQUENCE    ACC=NM_000015.2; NID=g116295259; PID=g116295260; SEQTYPE=mRNA
+SEQUENCE    ACC=D90042.1; NID=g219415; PID=g219416; SEQTYPE=mRNA
+SEQUENCE    ACC=D90040.1; NID=g219411; PID=g219412; SEQTYPE=mRNA
+SEQUENCE    ACC=BC015878.1; NID=g16198419; PID=g16198420; SEQTYPE=mRNA
+SEQUENCE    ACC=CR407631.1; NID=g47115198; PID=g47115199; SEQTYPE=mRNA
+SEQUENCE    ACC=BG569293.1; NID=g13576946; CLONE=IMAGE:4722596; END=5'; LID=6989; SEQTYPE=EST; TRACE=44157214
+...
+SEQUENCE    ACC=AU099534.1; NID=g13550663; CLONE=HSI08034; END=5'; LID=8800; SEQTYPE=EST
+//</pre>
+</div>
+<p>This particular record shows the set of transcripts (shown in the
+<tt class="docutils literal"><span class="pre">SEQUENCE</span></tt> lines) that originate from the human gene NAT2, encoding en
+N-acetyltransferase. The <tt class="docutils literal"><span class="pre">PROTSIM</span></tt> lines show proteins with
+significant similarity to NAT2, whereas the <tt class="docutils literal"><span class="pre">STS</span></tt> lines show the
+corresponding sequence-tagged sites in the genome.</p>
+<p>To parse UniGene files, use the <tt class="docutils literal"><span class="pre">Bio.UniGene</span></tt> module:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">UniGene</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;myunigenefile.data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">UniGene</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">record</span></tt> returned by <tt class="docutils literal"><span class="pre">UniGene.read</span></tt> is a Python object with
+attributes corresponding to the fields in the UniGene record. For
+example,</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">ID</span>
+<span class="go">&quot;Hs.2&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">title</span>
+<span class="go">&quot;N-acetyltransferase 2 (arylamine N-acetyltransferase)&quot;</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">EXPRESS</span></tt> and <tt class="docutils literal"><span class="pre">RESTR_EXPR</span></tt> lines are stored as Python lists of
+strings:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="s">&#39;bone&#39;</span><span class="p">,</span> <span class="s">&#39;connective tissue&#39;</span><span class="p">,</span> <span class="s">&#39;intestine&#39;</span><span class="p">,</span> <span class="s">&#39;liver&#39;</span><span class="p">,</span> <span class="s">&#39;liver tumor&#39;</span><span class="p">,</span> <span class="s">&#39;normal&#39;</span><span class="p">,</span> <span class="s">&#39;soft tissue/muscle tissue tumor&#39;</span><span class="p">,</span> <span class="s">&#39;adult&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Specialized objects are returned for the <tt class="docutils literal"><span class="pre">STS</span></tt>, <tt class="docutils literal"><span class="pre">PROTSIM</span></tt>, and
+<tt class="docutils literal"><span class="pre">SEQUENCE</span></tt> lines, storing the keys shown in each line as attributes:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">sts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">acc</span>
+<span class="go">&#39;PMC310725P3&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">sts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">unists</span>
+<span class="go">&#39;272646&#39;</span>
+</pre></div>
+</div>
+<p>and similarly for the <tt class="docutils literal"><span class="pre">PROTSIM</span></tt> and <tt class="docutils literal"><span class="pre">SEQUENCE</span></tt> lines.</p>
+<p>To parse a file containing more than one UniGene record, use the
+<tt class="docutils literal"><span class="pre">parse</span></tt> function in <tt class="docutils literal"><span class="pre">Bio.UniGene</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">UniGene</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">input</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;unigenerecords.data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">UniGene</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">ID</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-a-proxy">
+<h2>9.13  Using a proxy<a class="headerlink" href="#using-a-proxy" title="Permalink to this headline">¶</a></h2>
+<p>Normally you won’t have to worry about using a proxy, but if this is an
+issue on your network here is how to deal with it. Internally,
+<tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> uses the standard Python library <tt class="docutils literal"><span class="pre">urllib</span></tt> for accessing
+the NCBI servers. This will check an environment variable called
+<tt class="docutils literal"><span class="pre">http_proxy</span></tt> to configure any simple proxy automatically.
+Unfortunately this module does not support the use of proxies which
+require authentication.</p>
+<p>You may choose to set the <tt class="docutils literal"><span class="pre">http_proxy</span></tt> environment variable once (how
+you do this will depend on your operating system). Alternatively you can
+set this within Python at the start of your script, for example:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;http_proxy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;http://proxyhost.example.com:8080&quot;</span>
+</pre></div>
+</div>
+<p>See the <a class="reference external" href="http://www.python.org/doc/lib/module-urllib.html">urllib
+documentation</a> for
+more details.</p>
+</div>
+<div class="section" id="examples">
+<h2>9.14  Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pubmed-and-medline">
+<h3>9.14.1  PubMed and Medline<a class="headerlink" href="#pubmed-and-medline" title="Permalink to this headline">¶</a></h3>
+<p>If you are in the medical field or interested in human issues (and many
+times even if you are not!), PubMed
+(<a class="reference external" href="http://www.ncbi.nlm.nih.gov/PubMed/">http://www.ncbi.nlm.nih.gov/PubMed/</a>)
+is an excellent source of all kinds of goodies. So like other things,
+we’d like to be able to grab information from it and use it in Python
+scripts.</p>
+<p>In this example, we will query PubMed for all articles having to do with
+orchids (see section <a class="reference external" href="#sec:orchids">2.3</a> for our motivation). We
+first check how many of such articles there are:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">egquery</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;orchid&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;eGQueryResult&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;DbName&quot;</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;pubmed&quot;</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">463</span>
+</pre></div>
+</div>
+<p>Now we use the <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt> function to download the PubMed IDs
+of these 463 articles:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;orchid&quot;</span><span class="p">,</span> <span class="n">retmax</span><span class="o">=</span><span class="mi">463</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idlist</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">idlist</span>
+</pre></div>
+</div>
+<p>This returns a Python list containing all of the PubMed IDs of articles
+related to orchids:</p>
+<div class="code python highlight-python"><pre>['18680603', '18665331', '18661158', '18627489', '18627452', '18612381',
+'18594007', '18591784', '18589523', '18579475', '18575811', '18575690',
+...</pre>
+</div>
+<p>Now that we’ve got them, we obviously want to get the corresponding
+Medline records and extract the information from them. Here, we’ll
+download the Medline records in the Medline flat-file format, and use
+the <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt> module to parse them:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Medline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;medline&quot;</span><span class="p">,</span>
+<span class="go">                           retmode=&quot;text&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Medline</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>NOTE - We’ve just done a separate search and fetch here, the NCBI much
+prefer you to take advantage of their history support in this situation.
+See Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+<p>Keep in mind that <tt class="docutils literal"><span class="pre">records</span></tt> is an iterator, so you can iterate through
+the records only once. If you want to save the records, you can convert
+them to a list:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s now iterate over the records to print out some information about
+each record:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;title:&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;TI&quot;</span><span class="p">,</span> <span class="s">&quot;?&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;authors:&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;AU&quot;</span><span class="p">,</span> <span class="s">&quot;?&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="s">&quot;source:&quot;</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;SO&quot;</span><span class="p">,</span> <span class="s">&quot;?&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">print</span>
+</pre></div>
+</div>
+<p>The output for this looks like:</p>
+<div class="code python highlight-python"><pre>title: Sex pheromone mimicry in the early spider orchid (ophrys sphegodes):
+patterns of hydrocarbons as the key mechanism for pollination by sexual
+deception [In Process Citation]
+authors: ['Schiestl FP', 'Ayasse M', 'Paulus HF', 'Lofstedt C', 'Hansson BS',
+'Ibarra F', 'Francke W']
+source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
+</div>
+<p>Especially interesting to note is the list of authors, which is returned
+as a standard Python list. This makes it easy to manipulate and search
+using standard Python tools. For instance, we could loop through a whole
+bunch of entries searching for a particular author with code like the
+following:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">search_author</span> <span class="o">=</span> <span class="s">&quot;Waits T&quot;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="s">&quot;AU&quot;</span> <span class="ow">in</span> <span class="n">record</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">continue</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">search_author</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;AU&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="s">&quot;Author </span><span class="si">%s</span><span class="s"> found: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">search_author</span><span class="p">,</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;SO&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Hopefully this section gave you an idea of the power and flexibility of
+the Entrez and Medline interfaces and how they can be used together.</p>
+</div>
+<div class="section" id="searching-downloading-and-parsing-entrez-nucleotide-records">
+<h3>9.14.2  Searching, downloading, and parsing Entrez Nucleotide records<a class="headerlink" href="#searching-downloading-and-parsing-entrez-nucleotide-records" title="Permalink to this headline">¶</a></h3>
+<p>Here we’ll show a simple example of performing a remote Entrez query. In
+section <a class="reference external" href="#sec:orchids">2.3</a> of the parsing examples, we talked
+about using NCBI’s Entrez website to search the NCBI nucleotide
+databases for info on Cypripedioideae, our friends the lady slipper
+orchids. Now, we’ll look at how to automate that process using a Python
+script. In this example, we’ll just show how to connect, get the
+results, and parse them, with the Entrez module doing all of the work.</p>
+<p>First, we use EGQuery to find out the number of results we will get
+before actually downloading them. EGQuery will tell us how many search
+results were found in each of the databases, but for this example we are
+only interested in nucleotides:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">egquery</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;Cypripedioideae&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;eGQueryResult&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;DbName&quot;</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;nuccore&quot;</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">814</span>
+</pre></div>
+</div>
+<p>So, we expect to find 814 Entrez Nucleotide records (this is the number
+I obtained in 2008; it is likely to increase in the future). If you find
+some ridiculously high number of hits, you may want to reconsider if you
+really want to download all of them, which is our next step:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;Cypripedioideae&quot;</span><span class="p">,</span> <span class="n">retmax</span><span class="o">=</span><span class="mi">814</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, <tt class="docutils literal"><span class="pre">record</span></tt> is a Python dictionary containing the search results
+and some auxiliary information. Just for information, let’s look at what
+is stored in this dictionary:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[u&#39;Count&#39;, u&#39;RetMax&#39;, u&#39;IdList&#39;, u&#39;TranslationSet&#39;, u&#39;RetStart&#39;, u&#39;QueryTranslation&#39;]</span>
+</pre></div>
+</div>
+<p>First, let’s check how many results were found:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="go">&#39;814&#39;</span>
+</pre></div>
+</div>
+<p>which is the number we expected. The 814 results are stored in
+<tt class="docutils literal"><span class="pre">record['IdList']</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">])</span>
+<span class="go">814</span>
+</pre></div>
+</div>
+<p>Let’s look at the first five results:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">[&#39;187237168&#39;, &#39;187372713&#39;, &#39;187372690&#39;, &#39;187372688&#39;, &#39;187372686&#39;]</span>
+</pre></div>
+</div>
+<p>We can download these records using <tt class="docutils literal"><span class="pre">efetch</span></tt>. While you could download
+these records one by one, to reduce the load on NCBI’s servers, it is
+better to fetch a bunch of records at the same time, shown below.
+However, in this situation you should ideally be using the history
+feature described later in Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idlist</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">idlist</span>
+<span class="go">187237168,187372713,187372690,187372688,187372686</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idlist</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+<span class="go">5</span>
+</pre></div>
+</div>
+<p>Each of these records corresponds to one GenBank record.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[u&#39;GBSeq_moltype&#39;, u&#39;GBSeq_source&#39;, u&#39;GBSeq_sequence&#39;,</span>
+<span class="go"> u&#39;GBSeq_primary-accession&#39;, u&#39;GBSeq_definition&#39;, u&#39;GBSeq_accession-version&#39;,</span>
+<span class="go"> u&#39;GBSeq_topology&#39;, u&#39;GBSeq_length&#39;, u&#39;GBSeq_feature-table&#39;,</span>
+<span class="go"> u&#39;GBSeq_create-date&#39;, u&#39;GBSeq_other-seqids&#39;, u&#39;GBSeq_division&#39;,</span>
+<span class="go"> u&#39;GBSeq_taxonomy&#39;, u&#39;GBSeq_references&#39;, u&#39;GBSeq_update-date&#39;,</span>
+<span class="go"> u&#39;GBSeq_organism&#39;, u&#39;GBSeq_locus&#39;, u&#39;GBSeq_strandedness&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_primary-accession&quot;</span><span class="p">]</span>
+<span class="go">DQ110336</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_other-seqids&quot;</span><span class="p">]</span>
+<span class="go">[&#39;gb|DQ110336.1|&#39;, &#39;gi|187237168&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_definition&quot;</span><span class="p">]</span>
+<span class="go">Cypripedium calceolus voucher Davis 03-03 A maturase (matR) gene, partial cds;</span>
+<span class="go">mitochondrial</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;GBSeq_organism&quot;</span><span class="p">]</span>
+<span class="go">Cypripedium calceolus</span>
+</pre></div>
+</div>
+<p>You could use this to quickly set up searches – but for heavy usage, see
+Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+</div>
+<div class="section" id="searching-downloading-and-parsing-genbank-records">
+<h3>9.14.3  Searching, downloading, and parsing GenBank records<a class="headerlink" href="#searching-downloading-and-parsing-genbank-records" title="Permalink to this headline">¶</a></h3>
+<p>The GenBank record format is a very popular method of holding
+information about sequences, sequence features, and other associated
+sequence information. The format is a good way to get information from
+the NCBI databases at
+<a class="reference external" href="http://www.ncbi.nlm.nih.gov/">http://www.ncbi.nlm.nih.gov/</a>.</p>
+<p>In this example we’ll show how to query the NCBI databases,to retrieve
+the records from the query, and then parse them using <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> -
+something touched on in Section <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a>.
+For simplicity, this example <em>does not</em> take advantage of the WebEnv
+history feature – see Section <a class="reference external" href="#sec:entrez-webenv">9.15</a> for this.</p>
+<p>First, we want to make a query and find out the ids of the records to
+retrieve. Here we’ll do a quick search for one of our favorite
+organisms, <em>Opuntia</em> (prickly-pear cacti). We can do quick search and
+get back the GIs (GenBank identifiers) for all of the corresponding
+records. First we check how many records there are:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">egquery</span><span class="p">(</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;Opuntia AND rpl16&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;eGQueryResult&quot;</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;DbName&quot;</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;nuccore&quot;</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="n">row</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="go">9</span>
+</pre></div>
+</div>
+<p>Now we download the list of GenBank identifiers:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nuccore&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;Opuntia AND rpl16&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gi_list</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gi_list</span>
+<span class="go">[&#39;57240072&#39;, &#39;57240071&#39;, &#39;6273287&#39;, &#39;6273291&#39;, &#39;6273290&#39;, &#39;6273289&#39;, &#39;6273286&#39;,</span>
+<span class="go">&#39;6273285&#39;, &#39;6273284&#39;]</span>
+</pre></div>
+</div>
+<p>Now we use these GIs to download the GenBank records - note that with
+older versions of Biopython you had to supply a comma separated list of
+GI numbers to Entrez, as of Biopython 1.59 you can pass a list and this
+is converted for you:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gi_str</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gi_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nuccore&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">gi_str</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to look at the raw GenBank files, you can read from this
+handle and print out the result:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">text</span>
+<span class="go">LOCUS       AY851612                 892 bp    DNA     linear   PLN 10-APR-2007</span>
+<span class="go">DEFINITION  Opuntia subulata rpl16 gene, intron; chloroplast.</span>
+<span class="go">ACCESSION   AY851612</span>
+<span class="go">VERSION     AY851612.1  GI:57240072</span>
+<span class="go">KEYWORDS    .</span>
+<span class="go">SOURCE      chloroplast Austrocylindropuntia subulata</span>
+<span class="go">  ORGANISM  Austrocylindropuntia subulata</span>
+<span class="go">            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;</span>
+<span class="go">            Spermatophyta; Magnoliophyta; eudicotyledons; core eudicotyledons;</span>
+<span class="go">            Caryophyllales; Cactaceae; Opuntioideae; Austrocylindropuntia.</span>
+<span class="go">REFERENCE   1  (bases 1 to 892)</span>
+<span class="go">  AUTHORS   Butterworth,C.A. and Wallace,R.S.</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>In this case, we are just getting the raw records. To get the records in
+a more Python-friendly form, we can use <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> to parse the
+GenBank data into <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> objects, including <tt class="docutils literal"><span class="pre">SeqFeature</span></tt>
+objects (see Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>):</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nuccore&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">gi_str</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now step through the records and look at the information we are
+interested in:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">, length </span><span class="si">%i</span><span class="s">, with </span><span class="si">%i</span><span class="s"> features&quot;</span> \
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>           <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">features</span><span class="p">))</span>
+<span class="go">AY851612, length 892, with 3 features</span>
+<span class="go">AY851611, length 881, with 3 features</span>
+<span class="go">AF191661, length 895, with 3 features</span>
+<span class="go">AF191665, length 902, with 3 features</span>
+<span class="go">AF191664, length 899, with 3 features</span>
+<span class="go">AF191663, length 899, with 3 features</span>
+<span class="go">AF191660, length 893, with 3 features</span>
+<span class="go">AF191659, length 894, with 3 features</span>
+<span class="go">AF191658, length 896, with 3 features</span>
+</pre></div>
+</div>
+<p>Using these automated query retrieval functionality is a big plus over
+doing things by hand. Although the module should obey the NCBI’s max
+three queries per second rule, the NCBI have other recommendations like
+avoiding peak hours. See Section <a class="reference external" href="#sec:entrez-guidelines">9.1</a>. In
+particular, please note that for simplicity, this example does not use
+the WebEnv history feature. You should use this for any non-trivial
+search and download work, see Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+<p>Finally, if plan to repeat your analysis, rather than downloading the
+files from the NCBI and parsing them immediately (as shown in this
+example), you should just download the records <em>once</em> and save them to
+your hard disk, and then parse the local file.</p>
+</div>
+<div class="section" id="finding-the-lineage-of-an-organism">
+<h3>9.14.4  Finding the lineage of an organism<a class="headerlink" href="#finding-the-lineage-of-an-organism" title="Permalink to this headline">¶</a></h3>
+<p>Staying with a plant example, let’s now find the lineage of the
+Cypripedioideae orchid family. First, we search the Taxonomy database
+for Cypripedioideae, which yields exactly one NCBI taxonomy identifier:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;Taxonomy&quot;</span><span class="p">,</span> <span class="n">term</span><span class="o">=</span><span class="s">&quot;Cypripedioideae&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="go">[&#39;158330&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">&#39;158330&#39;</span>
+</pre></div>
+</div>
+<p>Now, we use <tt class="docutils literal"><span class="pre">efetch</span></tt> to download this entry in the Taxonomy database,
+and then parse it:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;Taxonomy&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;158330&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;xml&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Again, this record stores lots of information:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[u&#39;Lineage&#39;, u&#39;Division&#39;, u&#39;ParentTaxId&#39;, u&#39;PubDate&#39;, u&#39;LineageEx&#39;,</span>
+<span class="go"> u&#39;CreateDate&#39;, u&#39;TaxId&#39;, u&#39;Rank&#39;, u&#39;GeneticCode&#39;, u&#39;ScientificName&#39;,</span>
+<span class="go"> u&#39;MitoGeneticCode&#39;, u&#39;UpdateDate&#39;]</span>
+</pre></div>
+</div>
+<p>We can get the lineage directly from this record:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Lineage&quot;</span><span class="p">]</span>
+<span class="go">&#39;cellular organisms; Eukaryota; Viridiplantae; Streptophyta; Streptophytina;</span>
+<span class="go"> Embryophyta; Tracheophyta; Euphyllophyta; Spermatophyta; Magnoliophyta;</span>
+<span class="go"> Liliopsida; Asparagales; Orchidaceae&#39;</span>
+</pre></div>
+</div>
+<p>The record data contains much more than just the information shown here
+- for example look under <tt class="docutils literal"><span class="pre">&quot;LineageEx&quot;</span></tt> instead of <tt class="docutils literal"><span class="pre">&quot;Lineage&quot;</span></tt> and
+you’ll get the NCBI taxon identifiers of the lineage entries too.</p>
+</div>
+</div>
+<div class="section" id="using-the-history-and-webenv">
+<h2>9.15  Using the history and WebEnv<a class="headerlink" href="#using-the-history-and-webenv" title="Permalink to this headline">¶</a></h2>
+<p>Often you will want to make a series of linked queries. Most typically,
+running a search, perhaps refining the search, and then retrieving
+detailed search results. You <em>can</em> do this by making a series of
+separate calls to Entrez. However, the NCBI prefer you to take advantage
+of their history support - for example combining ESearch and EFetch.</p>
+<p>Another typical use of the history support would be to combine EPost and
+EFetch. You use EPost to upload a list of identifiers, which starts a
+new history session. You then download the records with EFetch by
+referring to the session (instead of the identifiers).</p>
+<div class="section" id="searching-for-and-downloading-sequences-using-the-history">
+<h3>9.15.1  Searching for and downloading sequences using the history<a class="headerlink" href="#searching-for-and-downloading-sequences-using-the-history" title="Permalink to this headline">¶</a></h3>
+<p>Suppose we want to search and download all the <em>Opuntia</em> rpl16
+nucleotide sequences, and store them in a FASTA file. As shown in
+Section <a class="reference external" href="#sec:entrez-search-fetch-genbank">9.14.3</a>, we can naively
+combine <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt> to get a list of GI numbers, and then
+call <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> to download them all.</p>
+<p>However, the approved approach is to run the search with the history
+feature. Then, we can fetch the results by reference to the search
+results - which the NCBI can anticipate and cache.</p>
+<p>To do this, call <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt> as normal, but with the
+additional argument of <tt class="docutils literal"><span class="pre">usehistory=&quot;y&quot;</span></tt>,</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;history.user@example.com&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;Opuntia[orgn] and rpl16&quot;</span><span class="p">,</span>
+<span class="go">                                   usehistory=&quot;y&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_results</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">search_handle</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">search_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When you get the XML output back, it will still include the usual search
+results:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gi_list</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">search_results</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">gi_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, you also get given two additional pieces of information, the
+<tt class="docutils literal"><span class="pre">WebEnv</span></tt> session cookie, and the <tt class="docutils literal"><span class="pre">QueryKey</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">webenv</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;WebEnv&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">query_key</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;QueryKey&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Having stored these values in variables <tt class="docutils literal"><span class="pre">session_cookie</span></tt> and
+<tt class="docutils literal"><span class="pre">query_key</span></tt> we can use them as parameters to <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt>
+instead of giving the GI numbers as identifiers.</p>
+<p>While for small searches you might be OK downloading everything at once,
+it is better to download in batches. You use the <tt class="docutils literal"><span class="pre">retstart</span></tt> and
+<tt class="docutils literal"><span class="pre">retmax</span></tt> parameters to specify which range of search results you want
+returned (starting entry using zero-based counting, and maximum number
+of results to return). For example,</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">out_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;orchid_rpl16.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">count</span><span class="p">,</span><span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">start</span><span class="o">+</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Going to download record </span><span class="si">%i</span><span class="s"> to </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">fetch_handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;fasta&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">,</span>
+                                 <span class="n">retstart</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">retmax</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                 <span class="n">webenv</span><span class="o">=</span><span class="n">webenv</span><span class="p">,</span> <span class="n">query_key</span><span class="o">=</span><span class="n">query_key</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fetch_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">out_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">out_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For illustrative purposes, this example downloaded the FASTA records in
+batches of three. Unless you are downloading genomes or chromosomes, you
+would normally pick a larger batch size.</p>
+</div>
+<div class="section" id="searching-for-and-downloading-abstracts-using-the-history">
+<h3>9.15.2  Searching for and downloading abstracts using the history<a class="headerlink" href="#searching-for-and-downloading-abstracts-using-the-history" title="Permalink to this headline">¶</a></h3>
+<p>Here is another history example, searching for papers published in the
+last year about the <em>Opuntia</em>, and then downloading them into a file in
+MedLine format:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;history.user@example.com&quot;</span>
+<span class="n">search_results</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span>
+                                            <span class="n">term</span><span class="o">=</span><span class="s">&quot;Opuntia[ORGN]&quot;</span><span class="p">,</span>
+                                            <span class="n">reldate</span><span class="o">=</span><span class="mi">365</span><span class="p">,</span> <span class="n">datetype</span><span class="o">=</span><span class="s">&quot;pdat&quot;</span><span class="p">,</span>
+                                            <span class="n">usehistory</span><span class="o">=</span><span class="s">&quot;y&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">search_results</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">])</span>
+<span class="k">print</span> <span class="s">&quot;Found </span><span class="si">%i</span><span class="s"> results&quot;</span> <span class="o">%</span> <span class="n">count</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">out_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;recent_orchid_papers.txt&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">count</span><span class="p">,</span><span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">start</span><span class="o">+</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Going to download record </span><span class="si">%i</span><span class="s"> to </span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">fetch_handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span>
+                                 <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;medline&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">,</span>
+                                 <span class="n">retstart</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">retmax</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                 <span class="n">webenv</span><span class="o">=</span><span class="n">search_results</span><span class="p">[</span><span class="s">&quot;WebEnv&quot;</span><span class="p">],</span>
+                                 <span class="n">query_key</span><span class="o">=</span><span class="n">search_results</span><span class="p">[</span><span class="s">&quot;QueryKey&quot;</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">fetch_handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fetch_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">out_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">out_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>At the time of writing, this gave 28 matches - but because this is a
+date dependent search, this will of course vary. As described in
+Section <a class="reference external" href="#subsec:entrez-and-medline">9.12.1</a> above, you can then
+use <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt> to parse the saved records.</p>
+</div>
+<div class="section" id="searching-for-citations">
+<h3>9.15.3  Searching for citations<a class="headerlink" href="#searching-for-citations" title="Permalink to this headline">¶</a></h3>
+<p>Back in Section <a class="reference external" href="#sec:elink">9.7</a> we mentioned ELink can be used to
+search for citations of a given paper. Unfortunately this only covers
+journals indexed for PubMed Central (doing it for all the journals in
+PubMed would mean a lot more work for the NIH). Let’s try this for the
+Biopython PDB parser paper, PubMed ID 14630660:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmid</span> <span class="o">=</span> <span class="s">&quot;14630660&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">elink</span><span class="p">(</span><span class="n">dbfrom</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&quot;pmc&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">LinkName</span><span class="o">=</span><span class="s">&quot;pubmed_pmc_refs&quot;</span><span class="p">,</span> <span class="n">from_uid</span><span class="o">=</span><span class="n">pmid</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Link&quot;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pmc_ids</span>
+<span class="go">[&#39;2744707&#39;, &#39;2705363&#39;, &#39;2682512&#39;, ..., &#39;1190160&#39;]</span>
+</pre></div>
+</div>
+<p>Great - eleven articles. But why hasn’t the Biopython application note
+been found (PubMed ID 19304878)? Well, as you might have guessed from
+the variable names, there are not actually PubMed IDs, but PubMed
+Central IDs. Our application note is the third citing paper in that
+list, PMCID 2682512.</p>
+<p>So, what if (like me) you’d rather get back a list of PubMed IDs? Well
+we can call ELink again to translate them. This becomes a two step
+process, so by now you should expect to use the history feature to
+accomplish it (Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>).</p>
+<p>But first, taking the more straightforward approach of making a second
+(separate) call to ELink:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">results2</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">elink</span><span class="p">(</span><span class="n">dbfrom</span><span class="o">=</span><span class="s">&quot;pmc&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="n">LinkName</span><span class="o">=</span><span class="s">&quot;pmc_pubmed&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                    <span class="n">from_uid</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pmc_ids</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pubmed_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">link</span><span class="p">[</span><span class="s">&quot;Id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">results2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;LinkSetDb&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&quot;Link&quot;</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pubmed_ids</span>
+<span class="go">[&#39;19698094&#39;, &#39;19450287&#39;, &#39;19304878&#39;, ..., &#39;15985178&#39;]</span>
+</pre></div>
+</div>
+<p>This time you can immediately spot the Biopython application note as the
+third hit (PubMed ID 19304878).</p>
+<p>Now, let’s do that all again but with the history … <em>TODO</em>.</p>
+<p>And finally, don’t forget to include your <em>own</em> email address in the
+Entrez calls.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">hapter 9  Accessing NCBI’s Entrez databases</a><ul>
+<li><a class="reference internal" href="#entrez-guidelines">9.1  Entrez Guidelines</a></li>
+<li><a class="reference internal" href="#einfo-obtaining-information-about-the-entrez-databases">9.2  EInfo: Obtaining information about the Entrez databases</a></li>
+<li><a class="reference internal" href="#esearch-searching-the-entrez-databases">9.3  ESearch: Searching the Entrez databases</a></li>
+<li><a class="reference internal" href="#epost-uploading-a-list-of-identifiers">9.4  EPost: Uploading a list of identifiers</a></li>
+<li><a class="reference internal" href="#esummary-retrieving-summaries-from-primary-ids">9.5  ESummary: Retrieving summaries from primary IDs</a></li>
+<li><a class="reference internal" href="#efetch-downloading-full-records-from-entrez">9.6  EFetch: Downloading full records from Entrez</a></li>
+<li><a class="reference internal" href="#elink-searching-for-related-items-in-ncbi-entrez">9.7  ELink: Searching for related items in NCBI Entrez</a></li>
+<li><a class="reference internal" href="#egquery-global-query-counts-for-search-terms">9.8  EGQuery: Global Query - counts for search terms</a></li>
+<li><a class="reference internal" href="#espell-obtaining-spelling-suggestions">9.9  ESpell: Obtaining spelling suggestions</a></li>
+<li><a class="reference internal" href="#parsing-huge-entrez-xml-files">9.10  Parsing huge Entrez XML files</a></li>
+<li><a class="reference internal" href="#handling-errors">9.11  Handling errors</a></li>
+<li><a class="reference internal" href="#specialized-parsers">9.12  Specialized parsers</a><ul>
+<li><a class="reference internal" href="#parsing-medline-records">9.12.1  Parsing Medline records</a></li>
+<li><a class="reference internal" href="#parsing-geo-records">9.12.2  Parsing GEO records</a></li>
+<li><a class="reference internal" href="#parsing-unigene-records">9.12.3  Parsing UniGene records</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-a-proxy">9.13  Using a proxy</a></li>
+<li><a class="reference internal" href="#examples">9.14  Examples</a><ul>
+<li><a class="reference internal" href="#pubmed-and-medline">9.14.1  PubMed and Medline</a></li>
+<li><a class="reference internal" href="#searching-downloading-and-parsing-entrez-nucleotide-records">9.14.2  Searching, downloading, and parsing Entrez Nucleotide records</a></li>
+<li><a class="reference internal" href="#searching-downloading-and-parsing-genbank-records">9.14.3  Searching, downloading, and parsing GenBank records</a></li>
+<li><a class="reference internal" href="#finding-the-lineage-of-an-organism">9.14.4  Finding the lineage of an organism</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-the-history-and-webenv">9.15  Using the history and WebEnv</a><ul>
+<li><a class="reference internal" href="#searching-for-and-downloading-sequences-using-the-history">9.15.1  Searching for and downloading sequences using the history</a></li>
+<li><a class="reference internal" href="#searching-for-and-downloading-abstracts-using-the-history">9.15.2  Searching for and downloading abstracts using the history</a></li>
+<li><a class="reference internal" href="#searching-for-citations">9.15.3  Searching for citations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr08.html"
+                        title="previous chapter">Chapter 8  BLAST and other sequence search tools (<em>experimental code</em>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr10.html"
+                        title="next chapter">Chapter 10  Swiss-Prot and ExPASy</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr09.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr10.html" title="Chapter 10 Swiss-Prot and ExPASy"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr08.html" title="Chapter 8 BLAST and other sequence search tools (experimental code)"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

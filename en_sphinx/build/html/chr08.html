@@ -1,0 +1,1147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chapter 8 BLAST and other sequence search tools (experimental code) &mdash; biopython_en 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_en 0.1 documentation" href="index.html" />
+    <link rel="next" title="hapter 9 Accessing NCBI’s Entrez databases" href="chr09.html" />
+    <link rel="prev" title="Chapter 7 BLAST" href="chr07.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr09.html" title="hapter 9 Accessing NCBI’s Entrez databases"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr07.html" title="Chapter 7 BLAST"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chapter-8-blast-and-other-sequence-search-tools-experimental-code">
+<h1>Chapter 8  BLAST and other sequence search tools (<em>experimental code</em>)<a class="headerlink" href="#chapter-8-blast-and-other-sequence-search-tools-experimental-code" title="Permalink to this headline">¶</a></h1>
+<p><em>WARNING</em>: This chapter of the Tutorial describes an <em>experimental</em>
+module in Biopython. It is being included in Biopython and documented
+here in the tutorial in a pre-final state to allow a period of feedback
+and refinement before we declare it stable. Until then the details will
+probably change, and any scripts using the current <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>
+would need to be updated. Please keep this in mind! For stable code
+working with NCBI BLAST, please continue to use Bio.Blast described in
+the preceding Chapter <a class="reference external" href="#chapter:blast">7</a>.</p>
+<p>Biological sequence identification is an integral part of
+bioinformatics. Several tools are available for this, each with their
+own algorithms and approaches, such as BLAST (arguably the most
+popular), FASTA, HMMER, and many more. In general, these tools usually
+use your sequence to search a database of potential matches. With the
+growing number of known sequences (hence the growing number of potential
+matches), interpreting the results becomes increasingly hard as there
+could be hundreds or even thousands of potential matches. Naturally,
+manual interpretation of these searches’ results is out of the question.
+Moreover, you often need to work with several sequence search tools,
+each with its own statistics, conventions, and output format. Imagine
+how daunting it would be when you need to work with multiple sequences
+using multiple search tools.</p>
+<p>We know this too well ourselves, which is why we created the
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> submodule in Biopython. <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> allows you to
+extract information from your search results in a convenient way, while
+also dealing with the different standards and conventions used by
+different search tools. The name <tt class="docutils literal"><span class="pre">SearchIO</span></tt> is a homage to BioPerl’s
+module of the same name.</p>
+<p>In this chapter, we’ll go through the main features of <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>
+to show what it can do for you. We’ll use two popular search tools along
+the way: BLAST and BLAT. They are used merely for illustrative purposes,
+and you should be able to adapt the workflow to any other search tools
+supported by <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> in a breeze. You’re very welcome to follow
+along with the search output files we’ll be using. The BLAST output file
+can be downloaded
+<a class="reference external" href="http://biopython.org/SRC/Tests/Tutorial/my_blast.xml">here</a>, and the
+BLAT output file
+<a class="reference external" href="http://biopython.org/SRC/Tests/Tutorial/my_blat.psl">here</a>. Both
+output files were generated using this sequence:</p>
+<div class="code python highlight-python"><pre>&gt;mystery_seq
+CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG</pre>
+</div>
+<p>The BLAST result is an XML file generated using <tt class="docutils literal"><span class="pre">blastn</span></tt> against the
+NCBI <tt class="docutils literal"><span class="pre">refseq_rna</span></tt> database. For BLAT, the sequence database was the
+February 2009 <tt class="docutils literal"><span class="pre">hg19</span></tt> human genome draft and the output format is PSL.</p>
+<p>We’ll start from an introduction to the <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> object model.
+The model is the representation of your search results, thus it is core
+to <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> itself. After that, we’ll check out the main
+functions in <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> that you may often use.</p>
+<p>Now that we’re all set, let’s go to the first step: introducing the core
+object model.</p>
+<div class="section" id="the-searchio-object-model">
+<h2>8.1  The SearchIO object model<a class="headerlink" href="#the-searchio-object-model" title="Permalink to this headline">¶</a></h2>
+<p>Despite the wildly differing output styles among many sequence search
+tools, it turns out that their underlying concept is similar:</p>
+<ul class="simple">
+<li>The output file may contain results from one or more search queries.</li>
+<li>In each search query, you will see one or more hits from the given
+search database.</li>
+<li>In each database hit, you will see one or more regions containing the
+actual sequence alignment between your query sequence and the
+database sequence.</li>
+<li>Some programs like BLAT or Exonerate may further split these regions
+into several alignment fragments (or blocks in BLAT and possibly
+exons in exonerate). This is not something you always see, as
+programs like BLAST and HMMER do not do this.</li>
+</ul>
+<p>Realizing this generality, we decided use it as base for creating the
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> object model. The object model consists of a nested
+hierarchy of Python objects, each one representing one concept outlined
+above. These objects are:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">QueryResult</span></tt>, to represent a single search query.</li>
+<li><tt class="docutils literal"><span class="pre">Hit</span></tt>, to represent a single database hit. <tt class="docutils literal"><span class="pre">Hit</span></tt> objects are
+contained within <tt class="docutils literal"><span class="pre">QueryResult</span></tt> and in each <tt class="docutils literal"><span class="pre">QueryResult</span></tt> there is
+zero or more <tt class="docutils literal"><span class="pre">Hit</span></tt> objects.</li>
+<li><tt class="docutils literal"><span class="pre">HSP</span></tt> (short for high-scoring pair), to represent region(s) of
+significant alignments between query and hit sequences. <tt class="docutils literal"><span class="pre">HSP</span></tt>
+objects are contained within <tt class="docutils literal"><span class="pre">Hit</span></tt> objects and each <tt class="docutils literal"><span class="pre">Hit</span></tt> has one
+or more <tt class="docutils literal"><span class="pre">HSP</span></tt> objects.</li>
+<li><tt class="docutils literal"><span class="pre">HSPFragment</span></tt>, to represent a single contiguous alignment between
+query and hit sequences. <tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects are contained within
+<tt class="docutils literal"><span class="pre">HSP</span></tt> objects. Most sequence search tools like BLAST and HMMER
+unify <tt class="docutils literal"><span class="pre">HSP</span></tt> and <tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects as each <tt class="docutils literal"><span class="pre">HSP</span></tt> will only
+have a single <tt class="docutils literal"><span class="pre">HSPFragment</span></tt>. However there are tools like BLAT and
+Exonerate that produce <tt class="docutils literal"><span class="pre">HSP</span></tt> containing multiple <tt class="docutils literal"><span class="pre">HSPFragment</span></tt>.
+Don’t worry if this seems a tad confusing now, we’ll elaborate more
+on these two objects later on.</li>
+</ul>
+<p>These four objects are the ones you will interact with when you use
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>. They are created using one of the main
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> methods: <tt class="docutils literal"><span class="pre">read</span></tt>, <tt class="docutils literal"><span class="pre">parse</span></tt>, <tt class="docutils literal"><span class="pre">index</span></tt>, or
+<tt class="docutils literal"><span class="pre">index_db</span></tt>. The details of these methods are provided in later
+sections. For this section, we’ll only be using read and parse. These
+functions behave similarly to their <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> and <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt>
+counterparts:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">read</span></tt> is used for search output files with a single query and
+returns a <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object</li>
+<li><tt class="docutils literal"><span class="pre">parse</span></tt> is used for search output files with multiple queries and
+returns a generator that yields <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects</li>
+</ul>
+<p>With that settled, let’s start probing each <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> object,
+beginning with <tt class="docutils literal"><span class="pre">QueryResult</span></tt>.</p>
+<div class="section" id="queryresult">
+<h3>8.1.1  QueryResult<a class="headerlink" href="#queryresult" title="Permalink to this headline">¶</a></h3>
+<p>The QueryResult object represents a single search query and contains
+zero or more Hit objects. Let’s see what it looks like using the BLAST
+file we have:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blast.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_qresult</span>
+<span class="go">Program: blastn (2.2.27+)</span>
+<span class="go">  Query: 42291 (61)</span>
+<span class="go">         mystery_seq</span>
+<span class="go"> Target: refseq_rna</span>
+<span class="go">   Hits: ----  -----  ----------------------------------------------------------</span>
+<span class="go">            #  # HSP  ID + description</span>
+<span class="go">         ----  -----  ----------------------------------------------------------</span>
+<span class="go">            0      1  gi|262205317|ref|NR_030195.1|  Homo sapiens microRNA 52...</span>
+<span class="go">            1      1  gi|301171311|ref|NR_035856.1|  Pan troglodytes microRNA...</span>
+<span class="go">            2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...</span>
+<span class="go">            3      2  gi|301171322|ref|NR_035857.1|  Pan troglodytes microRNA...</span>
+<span class="go">            4      1  gi|301171267|ref|NR_035851.1|  Pan troglodytes microRNA...</span>
+<span class="go">            5      2  gi|262205330|ref|NR_030198.1|  Homo sapiens microRNA 52...</span>
+<span class="go">            6      1  gi|262205302|ref|NR_030191.1|  Homo sapiens microRNA 51...</span>
+<span class="go">            7      1  gi|301171259|ref|NR_035850.1|  Pan troglodytes microRNA...</span>
+<span class="go">            8      1  gi|262205451|ref|NR_030222.1|  Homo sapiens microRNA 51...</span>
+<span class="go">            9      2  gi|301171447|ref|NR_035871.1|  Pan troglodytes microRNA...</span>
+<span class="go">           10      1  gi|301171276|ref|NR_035852.1|  Pan troglodytes microRNA...</span>
+<span class="go">           11      1  gi|262205290|ref|NR_030188.1|  Homo sapiens microRNA 51...</span>
+<span class="go">           12      1  gi|301171354|ref|NR_035860.1|  Pan troglodytes microRNA...</span>
+<span class="go">           13      1  gi|262205281|ref|NR_030186.1|  Homo sapiens microRNA 52...</span>
+<span class="go">           14      2  gi|262205298|ref|NR_030190.1|  Homo sapiens microRNA 52...</span>
+<span class="go">           15      1  gi|301171394|ref|NR_035865.1|  Pan troglodytes microRNA...</span>
+<span class="go">           16      1  gi|262205429|ref|NR_030218.1|  Homo sapiens microRNA 51...</span>
+<span class="go">           17      1  gi|262205423|ref|NR_030217.1|  Homo sapiens microRNA 52...</span>
+<span class="go">           18      1  gi|301171401|ref|NR_035866.1|  Pan troglodytes microRNA...</span>
+<span class="go">           19      1  gi|270133247|ref|NR_032574.1|  Macaca mulatta microRNA ...</span>
+<span class="go">           20      1  gi|262205309|ref|NR_030193.1|  Homo sapiens microRNA 52...</span>
+<span class="go">           21      2  gi|270132717|ref|NR_032716.1|  Macaca mulatta microRNA ...</span>
+<span class="go">           22      2  gi|301171437|ref|NR_035870.1|  Pan troglodytes microRNA...</span>
+<span class="go">           23      2  gi|270133306|ref|NR_032587.1|  Macaca mulatta microRNA ...</span>
+<span class="go">           24      2  gi|301171428|ref|NR_035869.1|  Pan troglodytes microRNA...</span>
+<span class="go">           25      1  gi|301171211|ref|NR_035845.1|  Pan troglodytes microRNA...</span>
+<span class="go">           26      2  gi|301171153|ref|NR_035838.1|  Pan troglodytes microRNA...</span>
+<span class="go">           27      2  gi|301171146|ref|NR_035837.1|  Pan troglodytes microRNA...</span>
+<span class="go">           28      2  gi|270133254|ref|NR_032575.1|  Macaca mulatta microRNA ...</span>
+<span class="go">           29      2  gi|262205445|ref|NR_030221.1|  Homo sapiens microRNA 51...</span>
+<span class="go">           ~~~</span>
+<span class="go">           97      1  gi|356517317|ref|XM_003527287.1|  PREDICTED: Glycine ma...</span>
+<span class="go">           98      1  gi|297814701|ref|XM_002875188.1|  Arabidopsis lyrata su...</span>
+<span class="go">           99      1  gi|397513516|ref|XM_003827011.1|  PREDICTED: Pan panisc...</span>
+</pre></div>
+</div>
+<p>We’ve just begun to scratch the surface of the object model, but you can
+see that there’s already some useful information. By invoking <tt class="docutils literal"><span class="pre">print</span></tt>
+on the <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object, you can see:</p>
+<ul class="simple">
+<li>The program name and version (blastn version 2.2.27+)</li>
+<li>The query ID, description, and its sequence length (ID is 42291,
+description is ‘mystery_seq’, and it is 61 nucleotides long)</li>
+<li>The target database to search against (refseq_rna)</li>
+<li>A quick overview of the resulting hits. For our query sequence, there
+are 100 potential hits (numbered 0–99 in the table). For each hit, we
+can also see how many HSPs it contains, its ID, and a snippet of its
+description. Notice here that <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> truncates the hit
+table overview, by showing only hits numbered 0–29, and then 97–99.</li>
+</ul>
+<p>Now let’s check our BLAT results using the same procedure as above:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blat.psl&#39;</span><span class="p">,</span> <span class="s">&#39;blat-psl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blat_qresult</span>
+<span class="go">Program: blat (&lt;unknown version&gt;)</span>
+<span class="go">  Query: mystery_seq (61)</span>
+<span class="go">         &lt;unknown description&gt;</span>
+<span class="go"> Target: &lt;unknown target&gt;</span>
+<span class="go">   Hits: ----  -----  ----------------------------------------------------------</span>
+<span class="go">            #  # HSP  ID + description</span>
+<span class="go">         ----  -----  ----------------------------------------------------------</span>
+<span class="go">            0     17  chr19  &lt;unknown description&gt;</span>
+</pre></div>
+</div>
+<p>You’ll immediately notice that there are some differences. Some of these
+are caused by the way PSL format stores its details, as you’ll see. The
+rest are caused by the genuine program and target database differences
+between our BLAST and BLAT searches:</p>
+<ul class="simple">
+<li>The program name and version. <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> knows that the program
+is BLAT, but in the output file there is no information regarding the
+program version so it defaults to ‘&lt;unknown version&gt;’.</li>
+<li>The query ID, description, and its sequence length. Notice here that
+these details are slightly different from the ones we saw in BLAST.
+The ID is ‘mystery_seq’ instead of 42991, there is no known
+description, but the query length is still 61. This is actually a
+difference introduced by the file formats themselves. BLAST sometimes
+creates its own query IDs and uses your original ID as the sequence
+description.</li>
+<li>The target database is not known, as it is not stated in the BLAT
+output file.</li>
+<li>And finally, the list of hits we have is completely different. Here,
+we see that our query sequence only hits the ‘chr19’ database entry,
+but in it we see 17 HSP regions. This should not be surprising
+however, given that we are using a different program, each with its
+own target database.</li>
+</ul>
+<p>All the details you saw when invoking the <tt class="docutils literal"><span class="pre">print</span></tt> method can be
+accessed individually using Python’s object attribute access notation
+(a.k.a. the dot notation). There are also other format-specific
+attributes that you can access using the same method.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">blast_qresult</span><span class="o">.</span><span class="n">program</span><span class="p">,</span> <span class="n">blast_qresult</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="go">blastn 2.2.27+</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">blat_qresult</span><span class="o">.</span><span class="n">program</span><span class="p">,</span> <span class="n">blat_qresult</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="go">blat &lt;unknown version&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="o">.</span><span class="n">param_evalue_threshold</span>    <span class="c"># blast-xml specific</span>
+<span class="go">10.0</span>
+</pre></div>
+</div>
+<p>For a complete list of accessible attributes, you can check each
+format-specific documentation. Here are the ones <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SearchIO.BlastIO-module.html">for
+BLAST</a>
+and for
+<a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SearchIO.BlatIO-module.html">BLAT</a>.</p>
+<p>Having looked at using <tt class="docutils literal"><span class="pre">print</span></tt> on <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects, let’s drill
+down deeper. What exactly is a <tt class="docutils literal"><span class="pre">QueryResult</span></tt>? In terms of Python
+objects, <tt class="docutils literal"><span class="pre">QueryResult</span></tt> is a hybrid between a list and a dictionary. In
+other words, it is a container object with all the convenient features
+of lists and dictionaries.</p>
+<p>Like Python lists and dictionaries, <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects are
+iterable. Each iteration returns a <tt class="docutils literal"><span class="pre">Hit</span></tt> object:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">blast_qresult</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">hit</span>
+<span class="go">Hit(id=&#39;gi|262205317|ref|NR_030195.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+<span class="go">Hit(id=&#39;gi|301171311|ref|NR_035856.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+<span class="go">Hit(id=&#39;gi|270133242|ref|NR_032573.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+<span class="go">Hit(id=&#39;gi|301171322|ref|NR_035857.1|&#39;, query_id=&#39;42291&#39;, 2 hsps)</span>
+<span class="go">Hit(id=&#39;gi|301171267|ref|NR_035851.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>To check how many items (hits) a <tt class="docutils literal"><span class="pre">QueryResult</span></tt> has, you can simply
+invoke Python’s <tt class="docutils literal"><span class="pre">len</span></tt> method:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">blast_qresult</span><span class="p">)</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">blat_qresult</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>Like Python lists, you can retrieve items (hits) from a <tt class="docutils literal"><span class="pre">QueryResult</span></tt>
+using the slice notation:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c"># retrieves the top hit</span>
+<span class="go">Hit(id=&#39;gi|262205317|ref|NR_030195.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>       <span class="c"># retrieves the last hit</span>
+<span class="go">Hit(id=&#39;gi|397513516|ref|XM_003827011.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+</pre></div>
+</div>
+<p>To retrieve multiple hits, you can slice <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects using
+the slice notation as well. In this case, the slice will return a new
+<tt class="docutils literal"><span class="pre">QueryResult</span></tt> object containing only the sliced hits:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_slice</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>     <span class="c"># slices the first three hits</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_slice</span>
+<span class="go">Program: blastn (2.2.27+)</span>
+<span class="go">  Query: 42291 (61)</span>
+<span class="go">         mystery_seq</span>
+<span class="go"> Target: refseq_rna</span>
+<span class="go">   Hits: ----  -----  ----------------------------------------------------------</span>
+<span class="go">            #  # HSP  ID + description</span>
+<span class="go">         ----  -----  ----------------------------------------------------------</span>
+<span class="go">            0      1  gi|262205317|ref|NR_030195.1|  Homo sapiens microRNA 52...</span>
+<span class="go">            1      1  gi|301171311|ref|NR_035856.1|  Pan troglodytes microRNA...</span>
+<span class="go">            2      1  gi|270133242|ref|NR_032573.1|  Macaca mulatta microRNA ...</span>
+</pre></div>
+</div>
+<p>Like Python dictionaries, you can also retrieve hits using the hit’s ID.
+This is particularly useful if you know a given hit ID exists within a
+search query results:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="p">[</span><span class="s">&#39;gi|262205317|ref|NR_030195.1|&#39;</span><span class="p">]</span>
+<span class="go">Hit(id=&#39;gi|262205317|ref|NR_030195.1|&#39;, query_id=&#39;42291&#39;, 1 hsps)</span>
+</pre></div>
+</div>
+<p>You can also get a full list of <tt class="docutils literal"><span class="pre">Hit</span></tt> objects using <tt class="docutils literal"><span class="pre">hits</span></tt> and a
+full list of <tt class="docutils literal"><span class="pre">Hit</span></tt> IDs using <tt class="docutils literal"><span class="pre">hit_keys</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="o">.</span><span class="n">hits</span>
+<span class="go">[...]       # list of all hits</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="o">.</span><span class="n">hit_keys</span>
+<span class="go">[...]       # list of all hit IDs</span>
+</pre></div>
+</div>
+<p>What if you just want to check whether a particular hit is present in
+the query results? You can do a simple Python membership test using the
+<tt class="docutils literal"><span class="pre">in</span></tt> keyword:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;gi|262205317|ref|NR_030195.1|&#39;</span> <span class="ow">in</span> <span class="n">blast_qresult</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;gi|262205317|ref|NR_030194.1|&#39;</span> <span class="ow">in</span> <span class="n">blast_qresult</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Sometimes, knowing whether a hit is present is not enough; you also want
+to know the rank of the hit. Here, the <tt class="docutils literal"><span class="pre">index</span></tt> method comes to the
+rescue:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;gi|301171437|ref|NR_035870.1|&#39;</span><span class="p">)</span>
+<span class="go">22</span>
+</pre></div>
+</div>
+<p>Remember that we’re using Python’s indexing style here, which is
+zero-based. This means our hit above is ranked at no. 23, not 22.</p>
+<p>Also, note that the hit rank you see here is based on the native hit
+ordering present in the original search output file. Different search
+tools may order these hits based on different criteria.</p>
+<p>If the native hit ordering doesn’t suit your taste, you can use the
+<tt class="docutils literal"><span class="pre">sort</span></tt> method of the <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object. It is very similar to
+Python’s <tt class="docutils literal"><span class="pre">list.sort</span></tt> method, with the addition of an option to create
+a new sorted <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object or not.</p>
+<p>Here is an example of using <tt class="docutils literal"><span class="pre">QueryResult.sort</span></tt> to sort the hits based
+on each hit’s full sequence length. For this particular sort, we’ll set
+the <tt class="docutils literal"><span class="pre">in_place</span></tt> flag to <tt class="docutils literal"><span class="pre">False</span></tt> so that sorting will return a new
+<tt class="docutils literal"><span class="pre">QueryResult</span></tt> object and leave our initial object unsorted. We’ll also
+set the <tt class="docutils literal"><span class="pre">reverse</span></tt> flag to <tt class="docutils literal"><span class="pre">True</span></tt> so that we sort in descending
+order.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">blast_qresult</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>   <span class="c"># id and sequence length of the first five hits</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">hit</span><span class="o">.</span><span class="n">seq_len</span>
+<span class="gp">...</span>
+<span class="go">gi|262205317|ref|NR_030195.1| 61</span>
+<span class="go">gi|301171311|ref|NR_035856.1| 60</span>
+<span class="go">gi|270133242|ref|NR_032573.1| 85</span>
+<span class="go">gi|301171322|ref|NR_035857.1| 86</span>
+<span class="go">gi|301171267|ref|NR_035851.1| 80</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sort_key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">hit</span><span class="p">:</span> <span class="n">hit</span><span class="o">.</span><span class="n">seq_len</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sorted_qresult</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">sorted_qresult</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">hit</span><span class="o">.</span><span class="n">seq_len</span>
+<span class="gp">...</span>
+<span class="go">gi|397513516|ref|XM_003827011.1| 6002</span>
+<span class="go">gi|390332045|ref|XM_776818.2| 4082</span>
+<span class="go">gi|390332043|ref|XM_003723358.1| 4079</span>
+<span class="go">gi|356517317|ref|XM_003527287.1| 3251</span>
+<span class="go">gi|356543101|ref|XM_003539954.1| 2936</span>
+</pre></div>
+</div>
+<p>The advantage of having the <tt class="docutils literal"><span class="pre">in_place</span></tt> flag here is that we’re
+preserving the native ordering, so we may use it again later. You should
+note that this is not the default behavior of <tt class="docutils literal"><span class="pre">QueryResult.sort</span></tt>,
+however, which is why we needed to set the <tt class="docutils literal"><span class="pre">in_place</span></tt> flag to <tt class="docutils literal"><span class="pre">True</span></tt>
+explicitly.</p>
+<p>At this point, you’ve known enough about <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects to make
+it work for you. But before we go on to the next object in the
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> model, let’s take a look at two more sets of methods
+that could make it even easier to work with <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects: the
+<tt class="docutils literal"><span class="pre">filter</span></tt> and <tt class="docutils literal"><span class="pre">map</span></tt> methods.</p>
+<p>If you’re familiar with Python’s list comprehensions, generator
+expressions or the built in <tt class="docutils literal"><span class="pre">filter</span></tt> and <tt class="docutils literal"><span class="pre">map</span></tt> functions, you’ll
+know how useful they are for working with list-like objects (if you’re
+not, check them out!). You can use these built in methods to manipulate
+<tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects, but you’ll end up with regular Python lists and
+lose the ability to do more interesting manipulations.</p>
+<p>That’s why, <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects provide its own flavor of <tt class="docutils literal"><span class="pre">filter</span></tt>
+and <tt class="docutils literal"><span class="pre">map</span></tt> methods. Analogous to <tt class="docutils literal"><span class="pre">filter</span></tt>, there are <tt class="docutils literal"><span class="pre">hit_filter</span></tt>
+and <tt class="docutils literal"><span class="pre">hsp_filter</span></tt> methods. As their name implies, these methods filter
+its <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object either on its <tt class="docutils literal"><span class="pre">Hit</span></tt> objects or <tt class="docutils literal"><span class="pre">HSP</span></tt>
+objects. Similarly, analogous to <tt class="docutils literal"><span class="pre">map</span></tt>, <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects also
+provide the <tt class="docutils literal"><span class="pre">hit_map</span></tt> and <tt class="docutils literal"><span class="pre">hsp_map</span></tt> methods. These methods apply a
+given function to all hits or HSPs in a <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object,
+respectively.</p>
+<p>Let’s see these methods in action, beginning with <tt class="docutils literal"><span class="pre">hit_filter</span></tt>. This
+method accepts a callback function that checks whether a given <tt class="docutils literal"><span class="pre">Hit</span></tt>
+object passes the condition you set or not. In other words, the function
+must accept as its argument a single <tt class="docutils literal"><span class="pre">Hit</span></tt> object and returns <tt class="docutils literal"><span class="pre">True</span></tt>
+or <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+<p>Here is an example of using <tt class="docutils literal"><span class="pre">hit_filter</span></tt> to filter out <tt class="docutils literal"><span class="pre">Hit</span></tt> objects
+that only have one HSP:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">hit</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">hit</span><span class="o">.</span><span class="n">hsps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>     <span class="c"># the callback function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">blast_qresult</span><span class="p">)</span>      <span class="c"># no. of hits before filtering</span>
+<span class="go">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_qresult</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="o">.</span><span class="n">hit_filter</span><span class="p">(</span><span class="n">filter_func</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">filtered_qresult</span><span class="p">)</span>   <span class="c"># no. of hits after filtering</span>
+<span class="go">37</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">filtered_qresult</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>    <span class="c"># quick check for the hit lengths</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">hit</span><span class="o">.</span><span class="n">hsps</span><span class="p">)</span>
+<span class="go">gi|301171322|ref|NR_035857.1| 2</span>
+<span class="go">gi|262205330|ref|NR_030198.1| 2</span>
+<span class="go">gi|301171447|ref|NR_035871.1| 2</span>
+<span class="go">gi|262205298|ref|NR_030190.1| 2</span>
+<span class="go">gi|270132717|ref|NR_032716.1| 2</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">hsp_filter</span></tt> works the same as <tt class="docutils literal"><span class="pre">hit_filter</span></tt>, only instead of looking
+at the <tt class="docutils literal"><span class="pre">Hit</span></tt> objects, it performs filtering on the <tt class="docutils literal"><span class="pre">HSP</span></tt> objects in
+each hits.</p>
+<p>As for the <tt class="docutils literal"><span class="pre">map</span></tt> methods, they too accept a callback function as their
+arguments. However, instead of returning <tt class="docutils literal"><span class="pre">True</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt>, the
+callback function must return the modified <tt class="docutils literal"><span class="pre">Hit</span></tt> or <tt class="docutils literal"><span class="pre">HSP</span></tt> object
+(depending on whether you’re using <tt class="docutils literal"><span class="pre">hit_map</span></tt> or <tt class="docutils literal"><span class="pre">hsp_map</span></tt>).</p>
+<p>Let’s see an example where we’re using <tt class="docutils literal"><span class="pre">hit_map</span></tt> to rename the hit
+IDs:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">map_func</span><span class="p">(</span><span class="n">hit</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">hit</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;|&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>   <span class="c"># renames &#39;gi|301171322|ref|NR_035857.1|&#39; to &#39;NR_035857.1&#39;</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">hit</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mapped_qresult</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="o">.</span><span class="n">hit_map</span><span class="p">(</span><span class="n">map_func</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">mapped_qresult</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">hit</span><span class="o">.</span><span class="n">id</span>
+<span class="go">NR_030195.1</span>
+<span class="go">NR_035856.1</span>
+<span class="go">NR_032573.1</span>
+<span class="go">NR_035857.1</span>
+<span class="go">NR_035851.1</span>
+</pre></div>
+</div>
+<p>Again, <tt class="docutils literal"><span class="pre">hsp_map</span></tt> works the same as <tt class="docutils literal"><span class="pre">hit_map</span></tt>, but on <tt class="docutils literal"><span class="pre">HSP</span></tt> objects
+instead of <tt class="docutils literal"><span class="pre">Hit</span></tt> objects.</p>
+</div>
+<div class="section" id="hit">
+<h3>8.1.2  Hit<a class="headerlink" href="#hit" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">Hit</span></tt> objects represent all query results from a single database
+entry. They are the second-level container in the <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>
+object hierarchy. You’ve seen that they are contained by <tt class="docutils literal"><span class="pre">QueryResult</span></tt>
+objects, but they themselves contain <tt class="docutils literal"><span class="pre">HSP</span></tt> objects.</p>
+<p>Let’s see what they look like, beginning with our BLAST search:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blast.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hit</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>    <span class="c"># fourth hit from the query result</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_hit</span>
+<span class="go">Query: 42291</span>
+<span class="go">       mystery_seq</span>
+<span class="go">  Hit: gi|301171322|ref|NR_035857.1| (86)</span>
+<span class="go">       Pan troglodytes microRNA mir-520c (MIR520C), microRNA</span>
+<span class="go"> HSPs: ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          #   E-value  Bit score    Span      Query range              Hit range</span>
+<span class="go">       ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          0   8.9e-20     100.47      60           [1:61]                [13:73]</span>
+<span class="go">          1   3.3e-06      55.39      60           [0:60]                [13:73]</span>
+</pre></div>
+</div>
+<p>You see that we’ve got the essentials covered here:</p>
+<ul class="simple">
+<li>The query ID and description is present. A hit is always tied to a
+query, so we want to keep track of the originating query as well.
+These values can be accessed from a hit using the <tt class="docutils literal"><span class="pre">query_id</span></tt> and
+<tt class="docutils literal"><span class="pre">query_description</span></tt> attributes.</li>
+<li>We also have the unique hit ID, description, and full sequence
+lengths. They can be accessed using <tt class="docutils literal"><span class="pre">id</span></tt>, <tt class="docutils literal"><span class="pre">description</span></tt>, and
+<tt class="docutils literal"><span class="pre">seq_len</span></tt>, respectively.</li>
+<li>Finally, there’s a table containing quick information about the HSPs
+this hit contains. In each row, we’ve got the important HSP details
+listed: the HSP index, its e-value, its bit score, its span (the
+alignment length including gaps), its query coordinates, and its hit
+coordinates.</li>
+</ul>
+<p>Now let’s contrast this with the BLAT search. Remember that in the BLAT
+search we had one hit with 17 HSPs.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blat.psl&#39;</span><span class="p">,</span> <span class="s">&#39;blat-psl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hit</span> <span class="o">=</span> <span class="n">blat_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>      <span class="c"># the only hit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blat_hit</span>
+<span class="go">Query: mystery_seq</span>
+<span class="go">       &lt;unknown description&gt;</span>
+<span class="go">  Hit: chr19 (59128983)</span>
+<span class="go">       &lt;unknown description&gt;</span>
+<span class="go"> HSPs: ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          #   E-value  Bit score    Span      Query range              Hit range</span>
+<span class="go">       ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          0         ?          ?       ?           [0:61]    [54204480:54204541]</span>
+<span class="go">          1         ?          ?       ?           [0:61]    [54233104:54264463]</span>
+<span class="go">          2         ?          ?       ?           [0:61]    [54254477:54260071]</span>
+<span class="go">          3         ?          ?       ?           [1:61]    [54210720:54210780]</span>
+<span class="go">          4         ?          ?       ?           [0:60]    [54198476:54198536]</span>
+<span class="go">          5         ?          ?       ?           [0:61]    [54265610:54265671]</span>
+<span class="go">          6         ?          ?       ?           [0:61]    [54238143:54240175]</span>
+<span class="go">          7         ?          ?       ?           [0:60]    [54189735:54189795]</span>
+<span class="go">          8         ?          ?       ?           [0:61]    [54185425:54185486]</span>
+<span class="go">          9         ?          ?       ?           [0:60]    [54197657:54197717]</span>
+<span class="go">         10         ?          ?       ?           [0:61]    [54255662:54255723]</span>
+<span class="go">         11         ?          ?       ?           [0:61]    [54201651:54201712]</span>
+<span class="go">         12         ?          ?       ?           [8:60]    [54206009:54206061]</span>
+<span class="go">         13         ?          ?       ?          [10:61]    [54178987:54179038]</span>
+<span class="go">         14         ?          ?       ?           [8:61]    [54212018:54212071]</span>
+<span class="go">         15         ?          ?       ?           [8:51]    [54234278:54234321]</span>
+<span class="go">         16         ?          ?       ?           [8:61]    [54238143:54238196]</span>
+</pre></div>
+</div>
+<p>Here, we’ve got a similar level of detail as with the BLAST hit we saw
+earlier. There are some differences worth explaining, though:</p>
+<ul class="simple">
+<li>The e-value and bit score column values. As BLAT HSPs do not have
+e-values and bit scores, the display defaults to ‘?’.</li>
+<li>What about the span column? The span values is meant to display the
+complete alignment length, which consists of all residues and any
+gaps that may be present. The PSL format do not have this information
+readily available and <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> does not attempt to try guess
+what it is, so we get a ‘?’ similar to the e-value and bit score
+columns.</li>
+</ul>
+<p>In terms of Python objects, <tt class="docutils literal"><span class="pre">Hit</span></tt> behaves almost the same as Python
+lists, but contain <tt class="docutils literal"><span class="pre">HSP</span></tt> objects exclusively. If you’re familiar with
+lists, you should encounter no difficulties working with the <tt class="docutils literal"><span class="pre">Hit</span></tt>
+object.</p>
+<p>Just like Python lists, <tt class="docutils literal"><span class="pre">Hit</span></tt> objects are iterable, and each iteration
+returns one <tt class="docutils literal"><span class="pre">HSP</span></tt> object it contains:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">hsp</span> <span class="ow">in</span> <span class="n">blast_hit</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">hsp</span>
+<span class="go">HSP(hit_id=&#39;gi|301171322|ref|NR_035857.1|&#39;, query_id=&#39;42291&#39;, 1 fragments)</span>
+<span class="go">HSP(hit_id=&#39;gi|301171322|ref|NR_035857.1|&#39;, query_id=&#39;42291&#39;, 1 fragments)</span>
+</pre></div>
+</div>
+<p>You can invoke <tt class="docutils literal"><span class="pre">len</span></tt> on a <tt class="docutils literal"><span class="pre">Hit</span></tt> to see how many <tt class="docutils literal"><span class="pre">HSP</span></tt> objects it
+has:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">blast_hit</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">blat_hit</span><span class="p">)</span>
+<span class="go">17</span>
+</pre></div>
+</div>
+<p>You can use the slice notation on <tt class="docutils literal"><span class="pre">Hit</span></tt> objects, whether to retrieve
+single <tt class="docutils literal"><span class="pre">HSP</span></tt> or multiple <tt class="docutils literal"><span class="pre">HSP</span></tt> objects. Like <tt class="docutils literal"><span class="pre">QueryResult</span></tt>, if you
+slice for multiple <tt class="docutils literal"><span class="pre">HSP</span></tt>, a new <tt class="docutils literal"><span class="pre">Hit</span></tt> object will be returned
+containing only the sliced <tt class="docutils literal"><span class="pre">HSP</span></tt> objects:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                 <span class="c"># retrieve single items</span>
+<span class="go">HSP(hit_id=&#39;chr19&#39;, query_id=&#39;mystery_seq&#39;, 1 fragments)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sliced_hit</span> <span class="o">=</span> <span class="n">blat_hit</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>  <span class="c"># retrieve multiple items</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">sliced_hit</span><span class="p">)</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">sliced_hit</span>
+<span class="go">Query: mystery_seq</span>
+<span class="go">       &lt;unknown description&gt;</span>
+<span class="go">  Hit: chr19 (59128983)</span>
+<span class="go">       &lt;unknown description&gt;</span>
+<span class="go"> HSPs: ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          #   E-value  Bit score    Span      Query range              Hit range</span>
+<span class="go">       ----  --------  ---------  ------  ---------------  ---------------------</span>
+<span class="go">          0         ?          ?       ?           [0:60]    [54198476:54198536]</span>
+<span class="go">          1         ?          ?       ?           [0:61]    [54265610:54265671]</span>
+<span class="go">          2         ?          ?       ?           [0:61]    [54238143:54240175]</span>
+<span class="go">          3         ?          ?       ?           [0:60]    [54189735:54189795]</span>
+<span class="go">          4         ?          ?       ?           [0:61]    [54185425:54185486]</span>
+</pre></div>
+</div>
+<p>You can also sort the <tt class="docutils literal"><span class="pre">HSP</span></tt> inside a <tt class="docutils literal"><span class="pre">Hit</span></tt>, using the exact same
+arguments like the sort method you saw in the <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object.</p>
+<p>Finally, there are also the <tt class="docutils literal"><span class="pre">filter</span></tt> and <tt class="docutils literal"><span class="pre">map</span></tt> methods you can use
+on <tt class="docutils literal"><span class="pre">Hit</span></tt> objects. Unlike in the <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object, <tt class="docutils literal"><span class="pre">Hit</span></tt>
+objects only have one variant of <tt class="docutils literal"><span class="pre">filter</span></tt> (<tt class="docutils literal"><span class="pre">Hit.filter</span></tt>) and one
+variant of <tt class="docutils literal"><span class="pre">map</span></tt> (<tt class="docutils literal"><span class="pre">Hit.map</span></tt>). Both of <tt class="docutils literal"><span class="pre">Hit.filter</span></tt> and <tt class="docutils literal"><span class="pre">Hit.map</span></tt>
+work on the <tt class="docutils literal"><span class="pre">HSP</span></tt> objects a <tt class="docutils literal"><span class="pre">Hit</span></tt> has.</p>
+</div>
+<div class="section" id="hsp">
+<h3>8.1.3  HSP<a class="headerlink" href="#hsp" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">HSP</span></tt> (high-scoring pair) represents region(s) in the hit sequence
+that contains significant alignment(s) to the query sequence. It
+contains the actual match between your query sequence and a database
+entry. As this match is determined by the sequence search tool’s
+algorithms, the <tt class="docutils literal"><span class="pre">HSP</span></tt> object contains the bulk of the statistics
+computed by the search tool. This also makes the distinction between
+<tt class="docutils literal"><span class="pre">HSP</span></tt> objects from different search tools more apparent compared to
+the differences you’ve seen in <tt class="docutils literal"><span class="pre">QueryResult</span></tt> or <tt class="docutils literal"><span class="pre">Hit</span></tt> objects.</p>
+<p>Let’s see some examples from our BLAST and BLAT searches. We’ll look at
+the BLAST HSP first:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blast.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>    <span class="c"># first hit, first hsp</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_hsp</span>
+<span class="go">      Query: 42291 mystery_seq</span>
+<span class="go">        Hit: gi|262205317|ref|NR_030195.1| Homo sapiens microRNA 520b (MIR520...</span>
+<span class="go">Query range: [0:61] (1)</span>
+<span class="go">  Hit range: [0:61] (1)</span>
+<span class="go">Quick stats: evalue 4.9e-23; bitscore 111.29</span>
+<span class="go">  Fragments: 1 (61 columns)</span>
+<span class="go">     Query - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG</span>
+<span class="go">             |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</span>
+<span class="go">       Hit - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG</span>
+</pre></div>
+</div>
+<p>Just like <tt class="docutils literal"><span class="pre">QueryResult</span></tt> and <tt class="docutils literal"><span class="pre">Hit</span></tt>, invoking <tt class="docutils literal"><span class="pre">print</span></tt> on an <tt class="docutils literal"><span class="pre">HSP</span></tt>
+shows its general details:</p>
+<ul class="simple">
+<li>There are the query and hit IDs and descriptions. We need these to
+identify our <tt class="docutils literal"><span class="pre">HSP</span></tt>.</li>
+<li>We’ve also got the matching range of the query and hit sequences. The
+slice notation we’re using here is an indication that the range is
+displayed using Python’s indexing style (zero-based, half open). The
+number inside the parenthesis denotes the strand. In this case, both
+sequences have the plus strand.</li>
+<li>Some quick statistics are available: the e-value and bitscore.</li>
+<li>There is information about the HSP fragments. Ignore this for now; it
+will be explained later on.</li>
+<li>And finally, we have the query and hit sequence alignment itself.</li>
+</ul>
+<p>These details can be accessed on their own using the dot notation, just
+like in <tt class="docutils literal"><span class="pre">QueryResult</span></tt> and <tt class="docutils literal"><span class="pre">Hit</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">query_range</span>
+<span class="go">(0, 61)</span>
+</pre></div>
+</div>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">evalue</span>
+<span class="go">4.91307e-23</span>
+</pre></div>
+</div>
+<p>They’re not the only attributes available, though. <tt class="docutils literal"><span class="pre">HSP</span></tt> objects come
+with a default set of properties that makes it easy to probe their
+various details. Here are some examples:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">hit_start</span>         <span class="c"># start coordinate of the hit sequence</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">query_span</span>        <span class="c"># how many residues in the query sequence</span>
+<span class="go">61</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">aln_span</span>          <span class="c"># how long the alignment is</span>
+<span class="go">61</span>
+</pre></div>
+</div>
+<p>Check out the <tt class="docutils literal"><span class="pre">HSP</span></tt>
+<a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html">documentation</a>
+for a full list of these predefined properties.</p>
+<p>Furthermore, each sequence search tool usually computes its own
+statistics / details for its <tt class="docutils literal"><span class="pre">HSP</span></tt> objects. For example, an XML BLAST
+search also outputs the number of gaps and identical residues. These
+attributes can be accessed like so:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">gap_num</span>       <span class="c"># number of gaps</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">ident_num</span>     <span class="c"># number of identical residues</span>
+<span class="go">61</span>
+</pre></div>
+</div>
+<p>These details are format-specific; they may not be present in other
+formats. To see which details are available for a given sequence search
+tool, you should check the format’s documentation in <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>.
+Alternatively, you may also use <tt class="docutils literal"><span class="pre">.__dict__.keys()</span></tt> for a quick list of
+what’s available:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;bitscore&#39;, &#39;evalue&#39;, &#39;ident_num&#39;, &#39;gap_num&#39;, &#39;bitscore_raw&#39;, &#39;pos_num&#39;, &#39;_items&#39;]</span>
+</pre></div>
+</div>
+<p>Finally, you may have noticed that the <tt class="docutils literal"><span class="pre">query</span></tt> and <tt class="docutils literal"><span class="pre">hit</span></tt> attributes
+of our HSP are not just regular strings:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">query</span>
+<span class="go">SeqRecord(seq=Seq(&#39;CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG&#39;, DNAAlphabet()), id=&#39;42291&#39;, name=&#39;aligned query sequence&#39;, description=&#39;mystery_seq&#39;, dbxrefs=[])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_hsp</span><span class="o">.</span><span class="n">hit</span>
+<span class="go">SeqRecord(seq=Seq(&#39;CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG&#39;, DNAAlphabet()), id=&#39;gi|262205317|ref|NR_030195.1|&#39;, name=&#39;aligned hit sequence&#39;, description=&#39;Homo sapiens microRNA 520b (MIR520B), microRNA&#39;, dbxrefs=[])</span>
+</pre></div>
+</div>
+<p>They are <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> objects you saw earlier in
+Section <a class="reference external" href="#chapter:SeqRecord">4</a>! This means that you can do all
+sorts of interesting things you can do with <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> objects on
+<tt class="docutils literal"><span class="pre">HSP.query</span></tt> and/or <tt class="docutils literal"><span class="pre">HSP.hit</span></tt>.</p>
+<p>It should not surprise you now that the <tt class="docutils literal"><span class="pre">HSP</span></tt> object has an
+<tt class="docutils literal"><span class="pre">alignment</span></tt> property which is a <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> object:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_hsp</span><span class="o">.</span><span class="n">aln</span>
+<span class="go">DNAAlphabet() alignment with 2 rows and 61 columns</span>
+<span class="go">CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG 42291</span>
+<span class="go">CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAG...GGG gi|262205317|ref|NR_030195.1|</span>
+</pre></div>
+</div>
+<p>Having probed the BLAST HSP, let’s now take a look at HSPs from our BLAT
+results for a different kind of HSP. As usual, we’ll begin by invoking
+<tt class="docutils literal"><span class="pre">print</span></tt> on it:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blat.psl&#39;</span><span class="p">,</span> <span class="s">&#39;blat-psl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span> <span class="o">=</span> <span class="n">blat_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>       <span class="c"># first hit, first hsp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blat_hsp</span>
+<span class="go">      Query: mystery_seq &lt;unknown description&gt;</span>
+<span class="go">        Hit: chr19 &lt;unknown description&gt;</span>
+<span class="go">Query range: [0:61] (1)</span>
+<span class="go">  Hit range: [54204480:54204541] (1)</span>
+<span class="go">Quick stats: evalue ?; bitscore ?</span>
+<span class="go">  Fragments: 1 (? columns)</span>
+</pre></div>
+</div>
+<p>Some of the outputs you may have already guessed. We have the query and
+hit IDs and descriptions and the sequence coordinates. Values for evalue
+and bitscore is ‘?’ as BLAT HSPs do not have these attributes. But The
+biggest difference here is that you don’t see any sequence alignments
+displayed. If you look closer, PSL formats themselves do not have any
+hit or query sequences, so <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> won’t create any sequence or
+alignment objects. What happens if you try to access <tt class="docutils literal"><span class="pre">HSP.query</span></tt>,
+<tt class="docutils literal"><span class="pre">HSP.hit</span></tt>, or <tt class="docutils literal"><span class="pre">HSP.aln</span></tt>? You’ll get the default values for these
+attributes, which is <tt class="docutils literal"><span class="pre">None</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">hit</span> <span class="ow">is</span> <span class="bp">None</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">query</span> <span class="ow">is</span> <span class="bp">None</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">aln</span> <span class="ow">is</span> <span class="bp">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>This does not affect other attributes, though. For example, you can
+still access the length of the query or hit alignment. Despite not
+displaying any attributes, the PSL format still have this information so
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> can extract them:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">query_span</span>     <span class="c"># length of query match</span>
+<span class="go">61</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">hit_span</span>       <span class="c"># length of hit match</span>
+<span class="go">61</span>
+</pre></div>
+</div>
+<p>Other format-specific attributes are still present as well:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">score</span>          <span class="c"># PSL score</span>
+<span class="go">61</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">mismatch_num</span>   <span class="c"># the mismatch column</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+<p>So far so good? Things get more interesting when you look at another
+‘variant’ of HSP present in our BLAT results. You might recall that in
+BLAT searches, sometimes we get our results separated into ‘blocks’.
+These blocks are essentially alignment fragments that may have some
+intervening sequence between them.</p>
+<p>Let’s take a look at a BLAT HSP that contains multiple blocks to see how
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> deals with this:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span> <span class="o">=</span> <span class="n">blat_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>      <span class="c"># first hit, second hsp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blat_hsp2</span>
+<span class="go">      Query: mystery_seq &lt;unknown description&gt;</span>
+<span class="go">        Hit: chr19 &lt;unknown description&gt;</span>
+<span class="go">Query range: [0:61] (1)</span>
+<span class="go">  Hit range: [54233104:54264463] (1)</span>
+<span class="go">Quick stats: evalue ?; bitscore ?</span>
+<span class="go">  Fragments: ---  --------------  ----------------------  ----------------------</span>
+<span class="go">               #            Span             Query range               Hit range</span>
+<span class="go">             ---  --------------  ----------------------  ----------------------</span>
+<span class="go">               0               ?                  [0:18]     [54233104:54233122]</span>
+<span class="go">               1               ?                 [18:61]     [54264420:54264463]</span>
+</pre></div>
+</div>
+<p>What’s happening here? We still some essential details covered: the IDs
+and descriptions, the coordinates, and the quick statistics are similar
+to what you’ve seen before. But the fragments detail is all different.
+Instead of showing ‘Fragments: 1’, we now have a table with two data
+rows.</p>
+<p>This is how <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> deals with HSPs having multiple fragments.
+As mentioned before, an HSP alignment may be separated by intervening
+sequences into fragments. The intervening sequences are not part of the
+query-hit match, so they should not be considered part of query nor hit
+sequence. However, they do affect how we deal with sequence coordinates,
+so we can’t ignore them.</p>
+<p>Take a look at the hit coordinate of the HSP above. In the
+<tt class="docutils literal"><span class="pre">Hit</span> <span class="pre">range:</span></tt> field, we see that the coordinate is
+<tt class="docutils literal"><span class="pre">[54233104:54264463]</span></tt>. But looking at the table rows, we see that not
+the entire region spanned by this coordinate matches our query.
+Specifically, the intervening region spans from <tt class="docutils literal"><span class="pre">54233122</span></tt> to
+<tt class="docutils literal"><span class="pre">54264420</span></tt>.</p>
+<p>Why then, is the query coordinates seem to be contiguous, you ask? This
+is perfectly fine. In this case it means that the query match is
+contiguous (no intervening regions), while the hit match is not.</p>
+<p>All these attributes are accessible from the HSP directly, by the way:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_range</span>         <span class="c"># hit start and end coordinates of the entire HSP</span>
+<span class="go">(54233104, 54264463)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_range_all</span>     <span class="c"># hit start and end coordinates of each fragment</span>
+<span class="go">[(54233104, 54233122), (54264420, 54264463)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_span</span>          <span class="c"># hit span of the entire HSP</span>
+<span class="go">31359</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_span_all</span>      <span class="c"># hit span of each fragment</span>
+<span class="go">[18, 43]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_inter_ranges</span>  <span class="c"># start and end coordinates of intervening regions in the hit sequence</span>
+<span class="go">[(54233122, 54264420)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">hit_inter_spans</span>   <span class="c"># span of intervening regions in the hit sequence</span>
+<span class="go">[31298]</span>
+</pre></div>
+</div>
+<p>Most of these attributes are not readily available from the PSL file we
+have, but <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> calculates them for you on the fly when you
+parse the PSL file. All it needs are the start and end coordinates of
+each fragment.</p>
+<p>What about the <tt class="docutils literal"><span class="pre">query</span></tt>, <tt class="docutils literal"><span class="pre">hit</span></tt>, and <tt class="docutils literal"><span class="pre">aln</span></tt> attributes? If the HSP
+has multiple fragments, you won’t be able to use these attributes as
+they only fetch single <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> or <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt>
+objects. However, you can use their <tt class="docutils literal"><span class="pre">*_all</span></tt> counterparts:
+<tt class="docutils literal"><span class="pre">query_all</span></tt>, <tt class="docutils literal"><span class="pre">hit_all</span></tt>, and <tt class="docutils literal"><span class="pre">aln_all</span></tt>. These properties will
+return a list containing <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> or <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt>
+objects from each of the HSP fragment. There are other attributes that
+behave similarly, i.e. they only work for HSPs with one fragment. Check
+out the <tt class="docutils literal"><span class="pre">HSP</span></tt>
+<a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SearchIO._model.hsp-module.html">documentation</a>
+for a full list.</p>
+<p>Finally, to check whether you have multiple fragments or not, you can
+use the <tt class="docutils literal"><span class="pre">is_fragmented</span></tt> property like so:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp2</span><span class="o">.</span><span class="n">is_fragmented</span>     <span class="c"># BLAT HSP with 2 fragments</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_hsp</span><span class="o">.</span><span class="n">is_fragmented</span>      <span class="c"># BLAT HSP from earlier, with one fragment</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Before we move on, you should also know that we can use the slice
+notation on <tt class="docutils literal"><span class="pre">HSP</span></tt> objects, just like <tt class="docutils literal"><span class="pre">QueryResult</span></tt> or <tt class="docutils literal"><span class="pre">Hit</span></tt>
+objects. When you use this notation, you’ll get an <tt class="docutils literal"><span class="pre">HSPFragment</span></tt>
+object in return, the last component of the object model.</p>
+</div>
+<div class="section" id="hspfragment">
+<h3>8.1.4  HSPFragment<a class="headerlink" href="#hspfragment" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">HSPFragment</span></tt> represents a single, contiguous match between the query
+and hit sequences. You could consider it the core of the object model
+and search result, since it is the presence of these fragments that
+determine whether your search have results or not.</p>
+<p>In most cases, you don’t have to deal with <tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects
+directly since not that many sequence search tools fragment their HSPs.
+When you do have to deal with them, what you should remember is that
+<tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects were written with to be as compact as possible.
+In most cases, they only contain attributes directly related to
+sequences: strands, reading frames, alphabets, coordinates, the
+sequences themselves, and their IDs and descriptions.</p>
+<p>These attributes are readily shown when you invoke <tt class="docutils literal"><span class="pre">print</span></tt> on an
+<tt class="docutils literal"><span class="pre">HSPFragment</span></tt>. Here’s an example, taken from our BLAST search:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blast.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_frag</span> <span class="o">=</span> <span class="n">blast_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>    <span class="c"># first hit, first hsp, first fragment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blast_frag</span>
+<span class="go">      Query: 42291 mystery_seq</span>
+<span class="go">        Hit: gi|262205317|ref|NR_030195.1| Homo sapiens microRNA 520b (MIR520...</span>
+<span class="go">Query range: [0:61] (1)</span>
+<span class="go">  Hit range: [0:61] (1)</span>
+<span class="go">  Fragments: 1 (61 columns)</span>
+<span class="go">     Query - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG</span>
+<span class="go">             |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||</span>
+<span class="go">       Hit - CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTTTAGAGGG</span>
+</pre></div>
+</div>
+<p>At this level, the BLAT fragment looks quite similar to the BLAST
+fragment, save for the query and hit sequences which are not present:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blat_qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;my_blat.psl&#39;</span><span class="p">,</span> <span class="s">&#39;blat-psl&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blat_frag</span> <span class="o">=</span> <span class="n">blat_qresult</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>    <span class="c"># first hit, first hsp, first fragment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">blat_frag</span>
+<span class="go">      Query: mystery_seq &lt;unknown description&gt;</span>
+<span class="go">        Hit: chr19 &lt;unknown description&gt;</span>
+<span class="go">Query range: [0:61] (1)</span>
+<span class="go">  Hit range: [54204480:54204541] (1)</span>
+<span class="go">  Fragments: 1 (? columns)</span>
+</pre></div>
+</div>
+<p>In all cases, these attributes are accessible using our favorite dot
+notation. Some examples:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">blast_frag</span><span class="o">.</span><span class="n">query_start</span>      <span class="c"># query start coordinate</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_frag</span><span class="o">.</span><span class="n">hit_strand</span>       <span class="c"># hit sequence strand</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blast_frag</span><span class="o">.</span><span class="n">hit</span>              <span class="c"># hit sequence, as a SeqRecord object</span>
+<span class="go">SeqRecord(seq=Seq(&#39;CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG&#39;, DNAAlphabet()), id=&#39;gi|262205317|ref|NR_030195.1|&#39;, name=&#39;aligned hit sequence&#39;, description=&#39;Homo sapiens microRNA 520b (MIR520B), microRNA&#39;, dbxrefs=[])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="a-note-about-standards-and-conventions">
+<h2>8.2  A note about standards and conventions<a class="headerlink" href="#a-note-about-standards-and-conventions" title="Permalink to this headline">¶</a></h2>
+<p>Before we move on to the main functions, there is something you ought to
+know about the standards <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> uses. If you’ve worked with
+multiple sequence search tools, you might have had to deal with the many
+different ways each program deals with things like sequence coordinates.
+It might not have been a pleasant experience as these search tools
+usually have their own standards. For example, one tools might use
+one-based coordinates, while the other uses zero-based coordinates. Or,
+one program might reverse the start and end coordinates if the strand is
+minus, while others don’t. In short, these often creates unnecessary
+mess must be dealt with.</p>
+<p>We realize this problem ourselves and we intend to address it in
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>. After all, one of the goals of <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> is to
+create a common, easy to use interface to deal with various search
+output files. This means creating standards that extend beyond the
+object model you just saw.</p>
+<p>Now, you might complain, &#8220;Not another standard!&#8221;. Well, eventually we
+have to choose one convention or the other, so this is necessary. Plus,
+we’re not creating something entirely new here; just adopting a standard
+we think is best for a Python programmer (it is Biopython, after all).</p>
+<p>There are three implicit standards that you can expect when working with
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>:</p>
+<ul class="simple">
+<li>The first one pertains to sequence coordinates. In <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>,
+all sequence coordinates follows Python’s coordinate style:
+zero-based and half open. For example, if in a BLAST XML output file
+the start and end coordinates of an HSP are 10 and 28, they would
+become 9 and 28 in <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>. The start coordinate becomes 9
+because Python indices start from zero, while the end coordinate
+remains 28 as Python slices omit the last item in an interval.</li>
+<li>The second is on sequence coordinate orders. In <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>,
+start coordinates are always less than or equal to end coordinates.
+This isn’t always the case with all sequence search tools, as some of
+them have larger start coordinates when the sequence strand is minus.</li>
+<li>The last one is on strand and reading frame values. For strands,
+there are only four valid choices: <tt class="docutils literal"><span class="pre">1</span></tt> (plus strand), <tt class="docutils literal"><span class="pre">-1</span></tt> (minus
+strand), <tt class="docutils literal"><span class="pre">0</span></tt> (protein sequences), and <tt class="docutils literal"><span class="pre">None</span></tt> (no strand). For
+reading frames, the valid choices are integers from <tt class="docutils literal"><span class="pre">-3</span></tt> to <tt class="docutils literal"><span class="pre">3</span></tt>
+and <tt class="docutils literal"><span class="pre">None</span></tt>.</li>
+</ul>
+<p>Note that these standards only exist in <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> objects. If you
+write <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> objects into an output format, <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>
+will use the format’s standard for the output. It does not force its
+standard over to your output file.</p>
+</div>
+<div class="section" id="reading-search-output-files">
+<h2>8.3  Reading search output files<a class="headerlink" href="#reading-search-output-files" title="Permalink to this headline">¶</a></h2>
+<p>There are two functions you can use for reading search output files into
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> objects: <tt class="docutils literal"><span class="pre">read</span></tt> and <tt class="docutils literal"><span class="pre">parse</span></tt>. They’re essentially
+similar to <tt class="docutils literal"><span class="pre">read</span></tt> and <tt class="docutils literal"><span class="pre">parse</span></tt> functions in other submodules like
+<tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> or <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt>. In both cases, you need to supply the
+search output file name and the file format name, both as Python
+strings. You can check the documentation for a list of format names
+<tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> recognizes.</p>
+<p><tt class="docutils literal"><span class="pre">Bio.SearchIO.read</span></tt> is used for reading search output files with only
+one query and returns a <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object. You’ve seen <tt class="docutils literal"><span class="pre">read</span></tt>
+used in our previous examples. What you haven’t seen is that <tt class="docutils literal"><span class="pre">read</span></tt>
+may also accept additional keyword arguments, depending on the file
+format.</p>
+<p>Here are some examples. In the first one, we use <tt class="docutils literal"><span class="pre">read</span></tt> just like
+previously to read a BLAST tabular output file. In the second one, we
+use a keyword argument to modify so it parses the BLAST tabular variant
+with comments in it:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresult</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_003.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresult</span>
+<span class="go">QueryResult(id=&#39;gi|16080617|ref|NP_391444.1|&#39;, 3 hits)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresult2</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_007.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresult2</span>
+<span class="go">QueryResult(id=&#39;gi|16080617|ref|NP_391444.1|&#39;, 3 hits)</span>
+</pre></div>
+</div>
+<p>These keyword arguments differs among file formats. Check the format
+documentation to see if it has keyword arguments that modifies its
+parser’s behavior.</p>
+<p>As for the <tt class="docutils literal"><span class="pre">Bio.SearchIO.parse</span></tt>, it is used for reading search output
+files with any number of queries. The function returns a generator
+object that yields a <tt class="docutils literal"><span class="pre">QueryResult</span></tt> object in each iteration. Like
+<tt class="docutils literal"><span class="pre">Bio.SearchIO.read</span></tt>, it also accepts format-specific keyword
+arguments:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresults</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_001.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">qresult</span> <span class="ow">in</span> <span class="n">qresults</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">qresult</span><span class="o">.</span><span class="n">id</span>
+<span class="go">gi|16080617|ref|NP_391444.1|</span>
+<span class="go">gi|11464971:4-101</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresults2</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_005.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">qresult</span> <span class="ow">in</span> <span class="n">qresults2</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">qresult</span><span class="o">.</span><span class="n">id</span>
+<span class="go">random_s00</span>
+<span class="go">gi|16080617|ref|NP_391444.1|</span>
+<span class="go">gi|11464971:4-101</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dealing-with-large-search-output-files-with-indexing">
+<h2>8.4  Dealing with large search output files with indexing<a class="headerlink" href="#dealing-with-large-search-output-files-with-indexing" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, you’re handed a search output file containing hundreds or
+thousands of queries that you need to parse. You can of course use
+<tt class="docutils literal"><span class="pre">Bio.SearchIO.parse</span></tt> for this file, but that would be grossly
+inefficient if you need to access only a few of the queries. This is
+because <tt class="docutils literal"><span class="pre">parse</span></tt> will parse all queries it sees before it fetches your
+query of interest.</p>
+<p>In this case, the ideal choice would be to index the file using
+<tt class="docutils literal"><span class="pre">Bio.SearchIO.index</span></tt> or <tt class="docutils literal"><span class="pre">Bio.SearchIO.index_db</span></tt>. If the names sound
+familiar, it’s because you’ve seen them before in
+Section <a class="reference external" href="#sec:SeqIO-index">5.4.2</a>. These functions also behave
+similarly to their <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> counterparts, with the addition of
+format-specific keyword arguments.</p>
+<p>Here are some examples. You can use <tt class="docutils literal"><span class="pre">index</span></tt> with just the filename and
+format name:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_001.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;gi|11464971:4-101&#39;, &#39;gi|16080617|ref|NP_391444.1|&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">[</span><span class="s">&#39;gi|16080617|ref|NP_391444.1|&#39;</span><span class="p">]</span>
+<span class="go">QueryResult(id=&#39;gi|16080617|ref|NP_391444.1|&#39;, 3 hits)</span>
+</pre></div>
+</div>
+<p>Or also with the format-specific keyword argument:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_005.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;gi|11464971:4-101&#39;, &#39;gi|16080617|ref|NP_391444.1|&#39;, &#39;random_s00&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">[</span><span class="s">&#39;gi|16080617|ref|NP_391444.1|&#39;</span><span class="p">]</span>
+<span class="go">QueryResult(id=&#39;gi|16080617|ref|NP_391444.1|&#39;, 3 hits)</span>
+</pre></div>
+</div>
+<p>Or with the <tt class="docutils literal"><span class="pre">key_function</span></tt> argument, as in <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">key_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">id</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>    <span class="c"># capitalizes the keys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;tab_2226_tblastn_001.txt&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">,</span> <span class="n">key_function</span><span class="o">=</span><span class="n">key_function</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;GI|11464971:4-101&#39;, &#39;GI|16080617|REF|NP_391444.1|&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="p">[</span><span class="s">&#39;GI|16080617|REF|NP_391444.1|&#39;</span><span class="p">]</span>
+<span class="go">QueryResult(id=&#39;gi|16080617|ref|NP_391444.1|&#39;, 3 hits)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">Bio.SearchIO.index_db</span></tt> works like as <tt class="docutils literal"><span class="pre">index</span></tt>, only it writes the
+query offsets into an SQLite database file.</p>
+</div>
+<div class="section" id="writing-and-converting-search-output-files">
+<h2>8.5  Writing and converting search output files<a class="headerlink" href="#writing-and-converting-search-output-files" title="Permalink to this headline">¶</a></h2>
+<p>It is occasionally useful to be able to manipulate search results from
+an output file and write it again to a new file. <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt>
+provides a <tt class="docutils literal"><span class="pre">write</span></tt> function that lets you do exactly this. It takes as
+its arguments an iterable returning <tt class="docutils literal"><span class="pre">QueryResult</span></tt> objects, the output
+filename to write to, the format name to write to, and optionally some
+format-specific keyword arguments. It returns a four-item tuple, which
+denotes the number or <tt class="docutils literal"><span class="pre">QueryResult</span></tt>, <tt class="docutils literal"><span class="pre">Hit</span></tt>, <tt class="docutils literal"><span class="pre">HSP</span></tt>, and
+<tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects that were written.</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qresults</span> <span class="o">=</span> <span class="n">SearchIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;mirna.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">)</span>     <span class="c"># read XML file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SearchIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">qresults</span><span class="p">,</span> <span class="s">&#39;results.tab&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">)</span>    <span class="c"># write to tabular file</span>
+<span class="go">(3, 239, 277, 277)</span>
+</pre></div>
+</div>
+<p>You should note different file formats require different attributes of
+the <tt class="docutils literal"><span class="pre">QueryResult</span></tt>, <tt class="docutils literal"><span class="pre">Hit</span></tt>, <tt class="docutils literal"><span class="pre">HSP</span></tt> and <tt class="docutils literal"><span class="pre">HSPFragment</span></tt> objects. If
+these attributes are not present, writing won’t work. In other words,
+you can’t always write to the output format that you want. For example,
+if you read a BLAST XML file, you wouldn’t be able to write the results
+to a PSL file as PSL files require attributes not calculated by BLAST
+(e.g. the number of repeat matches). You can always set these attributes
+manually, if you really want to write to PSL, though.</p>
+<p>Like <tt class="docutils literal"><span class="pre">read</span></tt>, <tt class="docutils literal"><span class="pre">parse</span></tt>, <tt class="docutils literal"><span class="pre">index</span></tt>, and <tt class="docutils literal"><span class="pre">index_db</span></tt>, <tt class="docutils literal"><span class="pre">write</span></tt> also
+accepts format-specific keyword arguments. Check out the documentation
+for a complete list of formats <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> can write to and their
+arguments.</p>
+<p>Finally, <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> also provides a <tt class="docutils literal"><span class="pre">convert</span></tt> function, which is
+simply a shortcut for <tt class="docutils literal"><span class="pre">Bio.SearchIO.parse</span></tt> and <tt class="docutils literal"><span class="pre">Bio.SearchIO.write</span></tt>.
+Using the convert function, our example above would be:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SearchIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&#39;mirna.xml&#39;</span><span class="p">,</span> <span class="s">&#39;blast-xml&#39;</span><span class="p">,</span> <span class="s">&#39;results.tab&#39;</span><span class="p">,</span> <span class="s">&#39;blast-tab&#39;</span><span class="p">)</span>
+<span class="go">(3, 239, 277, 277)</span>
+</pre></div>
+</div>
+<p>As <tt class="docutils literal"><span class="pre">convert</span></tt> uses <tt class="docutils literal"><span class="pre">write</span></tt>, it is only limited to format conversions
+that have all the required attributes. Here, the BLAST XML file provides
+all the default values a BLAST tabular file requires, so it works just
+fine. However, other format conversions are less likely to work since
+you need to manually assign the required attributes first.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Chapter 8  BLAST and other sequence search tools (<em>experimental code</em>)</a><ul>
+<li><a class="reference internal" href="#the-searchio-object-model">8.1  The SearchIO object model</a><ul>
+<li><a class="reference internal" href="#queryresult">8.1.1  QueryResult</a></li>
+<li><a class="reference internal" href="#hit">8.1.2  Hit</a></li>
+<li><a class="reference internal" href="#hsp">8.1.3  HSP</a></li>
+<li><a class="reference internal" href="#hspfragment">8.1.4  HSPFragment</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-note-about-standards-and-conventions">8.2  A note about standards and conventions</a></li>
+<li><a class="reference internal" href="#reading-search-output-files">8.3  Reading search output files</a></li>
+<li><a class="reference internal" href="#dealing-with-large-search-output-files-with-indexing">8.4  Dealing with large search output files with indexing</a></li>
+<li><a class="reference internal" href="#writing-and-converting-search-output-files">8.5  Writing and converting search output files</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr07.html"
+                        title="previous chapter">Chapter 7  BLAST</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr09.html"
+                        title="next chapter">hapter 9  Accessing NCBI’s Entrez databases</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr08.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr09.html" title="hapter 9 Accessing NCBI’s Entrez databases"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr07.html" title="Chapter 7 BLAST"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_en 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

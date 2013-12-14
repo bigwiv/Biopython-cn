@@ -1,0 +1,1067 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>第18章 Cookbook – 用它做一些很酷的事情 &mdash; biopython_cn 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="biopython_cn 0.1 documentation" href="index.html" />
+    <link rel="next" title="第19章 Biopython测试框架" href="chr19.html" />
+    <link rel="prev" title="第17章 Graphics模块中的基因组可视化包—GenomeDiagram" href="chr17.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chr19.html" title="第19章 Biopython测试框架"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chr17.html" title="第17章 Graphics模块中的基因组可视化包—GenomeDiagram"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cookbook">
+<h1>第18章  Cookbook – 用它做一些很酷的事情<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+<p>Biopython目前有两个版本的“cookbook”示例——本章（本章包含在教程中许多年，并渐渐成熟），和在Biopython维基上的由用户贡献的集合： <a class="reference external" href="http://biopython.org/wiki/Category:Cookbook">http://biopython.org/wiki/Category:Cookbook</a> 。</p>
+<p>我们在试着鼓励Biopython用户在维基上贡献他们自己的示例。除了能帮助社区之外，分享像这样的示例的一个直接的好处是，你也能从其他Biopython用户和开发者中获得一些关于代码的意见反馈——这或许能帮助你改进自己的Python代码。</p>
+<p>长期来说，我们可能最终会将这一章所有的示例都转移到维基上，或者本教程其他的地方。</p>
+<div class="section" id="id1">
+<h2>18.1  操作序列文件<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>这部分将展示更多使用第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章所描述的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块来进行序列输入/输出操作的例子。</p>
+<div class="section" id="id2">
+<h3>18.1.1  过滤文件中的序列<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>通常你会拥有一个包含许多序列的大文件（例如，FASTA基因文件，或者FASTQ或SFF读长文件），和一个包含你所感兴趣的序列的ID列表，而你希望创建一个由这一ID列表里的序列构成的文件。</p>
+<p>让我们假设这个ID列表在一个简单的文本文件中，作为每一行的第一个词。这可能是一个表格文件，其第一列是序列ID。尝试下面的代码：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="s">&quot;big_file.sff&quot;</span>
+<span class="n">id_file</span> <span class="o">=</span> <span class="s">&quot;short_list.txt&quot;</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="s">&quot;short_list.sff&quot;</span>
+<span class="n">wanted</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">id_file</span><span class="p">))</span>
+<span class="k">print</span> <span class="s">&quot;Found </span><span class="si">%i</span><span class="s"> unique identifiers in </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">),</span> <span class="n">id_file</span><span class="p">)</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">wanted</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> records from </span><span class="si">%s</span><span class="s"> to </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;Warning </span><span class="si">%i</span><span class="s"> IDs not found in </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wanted</span><span class="p">)</span><span class="o">-</span><span class="n">count</span><span class="p">,</span> <span class="n">input_file</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>注意，我们使用Python的 <tt class="docutils literal"><span class="pre">set</span></tt> 类型而不是 <tt class="docutils literal"><span class="pre">list</span></tt>，这会使得检测成员关系更快。</p>
+</div>
+<div class="section" id="id3">
+<h3>18.1.2  生成随机基因组<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>假设你在检视一个基因组序列，寻找一些序列特征——或许是极端局部GC含量偏差，或者可能的限制性酶切位点。一旦你使你的Python代码在真实的基因组上运行后，尝试在相同的随机化版本基因组上运行，并进行统计分析或许是明智的选择（毕竟，任何你发现的“特性”都可能只是偶然事件）。</p>
+<p>在这一讨论中，我们将使用来自 <em>Yersinia pestis biovar Microtus</em> 的pPCP1质粒的GenBank文件。该文件包含在Biopython单元测试的GenBank文件夹中，或者你可以从我们的网站上得到， <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb">NC_005816.gb</a>. 该文件仅有一个记录，所以我们能用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.read()</span></tt> 函数把它当做 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 读入：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original_rec</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.gb&quot;</span><span class="p">,</span><span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>那么，我们怎么生成一个原始序列重排后的版本能？我会使用Python内置的 <tt class="docutils literal"><span class="pre">random</span></tt> 模块来做这个，特别是 <tt class="docutils literal"><span class="pre">random.shuffle</span></tt> 函数——但是这个只作用于Python列表。我们的序列是一个 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象，所以为了重排它，我们需要将它转换为一个列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nuc_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">original_rec</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">)</span> <span class="c">#acts in situ!</span>
+</pre></div>
+</div>
+<p>现在，为了使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 输出重排的序列，我们需要使用重排后的列表重新创建包含一个新的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 包含随即化后的 <tt class="docutils literal"><span class="pre">Seq</span></tt> 。要实现这个，我们需要将核苷酸（单字母字符串）列表转换为长字符串——在Python中，一般使用字符串对象的join方法来实现它。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shuffled_rec</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">),</span> <span class="n">original_rec</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="p">),</span>
+<span class="gp">... </span>                         <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Shuffled&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;Based on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">original_rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>让我们将所有这些片段放到一起来组成一个完整的Python脚本，这个脚本将生成一个FASTA序列文件，其包含30个原始序列的随机重排版本。</p>
+<p>第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 <a class="reference external" href="#sec:Bio.SeqIO-and-StringIO">5.5.4</a> 描述的``SeqRecord`` 的格式化方法）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+
+<span class="n">original_rec</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.gb&quot;</span><span class="p">,</span><span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;shuffled.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+    <span class="n">nuc_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">original_rec</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">)</span>
+    <span class="n">shuffled_rec</span> <span class="o">=</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">),</span> <span class="n">original_rec</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="p">),</span> \
+                             <span class="nb">id</span><span class="o">=</span><span class="s">&quot;Shuffled</span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> \
+                             <span class="n">description</span><span class="o">=</span><span class="s">&quot;Based on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">original_rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">shuffled_rec</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>我个人更喜欢下面的版本（不使用for循环），而使用一个函数来重排记录以及一个生成表达式：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+
+<span class="k">def</span> <span class="nf">make_shuffle_record</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">new_id</span><span class="p">):</span>
+    <span class="n">nuc_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">Seq</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nuc_list</span><span class="p">),</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">alphabet</span><span class="p">),</span> \
+           <span class="nb">id</span><span class="o">=</span><span class="n">new_id</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s">&quot;Based on </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">original_rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="n">original_rec</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.gb&quot;</span><span class="p">,</span><span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">shuffled_recs</span> <span class="o">=</span> <span class="p">(</span><span class="n">make_shuffle_record</span><span class="p">(</span><span class="n">original_rec</span><span class="p">,</span> <span class="s">&quot;Shuffled</span><span class="si">%i</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> \
+                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;shuffled.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">shuffled_recs</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cdsfasta">
+<h3>18.1.3  翻译CDS条目为FASTA文件<a class="headerlink" href="#cdsfasta" title="Permalink to this headline">¶</a></h3>
+<p>假设你有一个包含某个物种的CDS条目作为输入文件，你想生成一个由它们的蛋白序列组成的FASTA文件。也就是，从原始文件中取出每一个核苷酸序列，并翻译它。回到章节 <a class="reference external" href="#sec:translation">3.9</a> 我们了解了怎么使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">translate</span></tt> 方法，和可选的 <tt class="docutils literal"><span class="pre">cds</span></tt> 参数来使得不同的起始密码子能正确翻译。</p>
+<p>就像章节 <a class="reference external" href="#sec:SeqIO-reverse-complement">5.5.3</a> 中反向互补的例子中展示的那样，我们可以用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 将与翻译步骤结合起来。对于每一个核苷酸 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> ，我们需要创建一个蛋白的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> —— 并对它命名。</p>
+<p>你能编写自己的函数来做这个事情，为你的序列选择合适的蛋白标识和恰当的密码表。在本例中，我们仅使用默认的密码表，并给序列ID加一个前缀。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
+<span class="k">def</span> <span class="nf">make_protein_record</span><span class="p">(</span><span class="n">nuc_record</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a new SeqRecord with the translated sequence (default table).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">SeqRecord</span><span class="p">(</span><span class="n">seq</span> <span class="o">=</span> <span class="n">nuc_record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">cds</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span> \
+                     <span class="nb">id</span> <span class="o">=</span> <span class="s">&quot;trans_&quot;</span> <span class="o">+</span> <span class="n">nuc_record</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> \
+                     <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;translation of CDS, using default table&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们能用这个函数将核苷酸记录转换为蛋白记录，作为输出。一个优雅且内存高效的方式是使用生成表达式（generator expression）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">proteins</span> <span class="o">=</span> <span class="p">(</span><span class="n">make_protein_record</span><span class="p">(</span><span class="n">nuc_rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">nuc_rec</span> <span class="ow">in</span> \
+            <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;coding_sequences.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">proteins</span><span class="p">,</span> <span class="s">&quot;translations.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>以上代码适用于完整编码序列的FASTA文件。如果你使用部分编码序列，你可能希望在以上的例子中使用 <tt class="docutils literal"><span class="pre">nuc_record.seq.translate(to_stop=True)</span></tt> ，这会告诉Biopython不检查起始密码的有效性，等等。</p>
+</div>
+<div class="section" id="fasta">
+<h3>18.1.4  将FASTA文件中的序列变为大写<a class="headerlink" href="#fasta" title="Permalink to this headline">¶</a></h3>
+<p>通常你会从合作者那里得到FASTA文件的数据，有时候这些序列可能是大小写混合的。在某些情况下，这些可能是有意为之的（例如，小写的作为低质量的区域），但通常大小写并不重要。你可能希望编辑这个文件以使所有的序列都变得一致（如，都为大写），你可以使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的 <tt class="docutils literal"><span class="pre">upper()</span></tt> 方法轻易的实现（Biopython 1.55中引入）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;mixed.fas&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;upper.fas&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> records to upper case&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这是怎么工作的呢？第一行只是导入 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块。第二行是最有趣的——这是一个Python生成器表达式，它提供 <tt class="docutils literal"><span class="pre">mixed.fas</span></tt> 里每个记录的大写版本。第三行中，我们把这个生成器表达式传给 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数，它会把大写的序列写出到 <tt class="docutils literal"><span class="pre">upper.fas</span></tt> 输出文件。</p>
+<p>我们使用生成器（而不是一个列表或列表解析式）的原因是，前一方式每次仅有一个记录保存在内存中。当你在处理包含成千上万的条目的文件时，这可能非常重要。</p>
+</div>
+<div class="section" id="id4">
+<h3>18.1.5  对序列文件排序<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>假设你想对一个序列文件按序列长度排序（例如，一个序列拼接的重叠群(contig)集合），而你工作的文件格式可能是像FASTA或FASTQ这样 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 能读写（和索引）的格式。</p>
+<p>如果文件足够小，你能将它都一次读入内存为一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表，对列表进行排序，并保存它：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">records</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;sorted_orchids.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>唯一巧妙的地方是指明一个比较函数来说明怎样对记录进行排序（这里我们按长度对他们排序）。如果你希望最长的记录在第一个，你可以交换比对，或者使用reverse参数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">records</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">cmp</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;sorted_orchids.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在这一实现是非常直接的——但是如果你的文件非常大，你不能像这样把它整个加载到内存中应该怎么办呢？例如，你可能有一些二代测序的读长要根据长度排序。这时你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数解决。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="c">#Get the lengths and ids, and sort on length</span>
+<span class="n">len_and_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span> <span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
+                     <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">([</span><span class="nb">id</span> <span class="k">for</span> <span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span> <span class="ow">in</span> <span class="n">len_and_ids</span><span class="p">])</span>
+<span class="k">del</span> <span class="n">len_and_ids</span> <span class="c">#free this memory</span>
+<span class="n">record_index</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">record_index</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">)</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="s">&quot;sorted.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>首先我们使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 来将整个文件扫描一遍，并将所有记录的标识和它们的长度保存在一个元组（tuple）中。接着我们对这个元组按照序列长度进行排序，并舍弃这些长度。有了这一排列后的标识列表， <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 允许我们一个一个获取这些记录，我们把它们传给 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出。</p>
+<p>这些例子都使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析记录为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，并通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出。当你想排序的文件格式 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 <a class="reference external" href="#sec:seqio-index-getraw">5.4.2.2</a>) 中 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 添加的 <tt class="docutils literal"><span class="pre">get_raw()</span></tt> 方法。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="c">#Get the lengths and ids, and sort on length</span>
+<span class="n">len_and_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span> <span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
+                     <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">([</span><span class="nb">id</span> <span class="k">for</span> <span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span> <span class="ow">in</span> <span class="n">len_and_ids</span><span class="p">])</span>
+<span class="k">del</span> <span class="n">len_and_ids</span> <span class="c">#free this memory</span>
+<span class="n">record_index</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;sorted.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">record_index</span><span class="o">.</span><span class="n">get_raw</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>作为一个奖励，由于以上例子不重复将数据解析为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，所以它会更快。</p>
+</div>
+<div class="section" id="fastq">
+<h3>18.1.6  FASTQ文件的简单质量过滤<a class="headerlink" href="#fastq" title="Permalink to this headline">¶</a></h3>
+<p>FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列（reads）和它们的测序质量。FASTQ文件（和相关的QUAL文件）是单字母注释（per-letter-annotation）的最好的例子，因为序列中每一个核苷酸都有一个相对应的质量分数。任何单字母注释都以list、tuple或string被保存在 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的 <tt class="docutils literal"><span class="pre">letter_annotations</span></tt> 字典中（单字符注释具有和序列长度相同个数的元素）。</p>
+<p>一个常见的工作是输入一个大的测序读长集合，并根据它们的质量分数过滤它们（或修剪它们）。下面的例子非常简单，然而足以展示处理 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象中质量数据的基本用法。我们所有要做的事情是读入一个FASTQ文件，过滤并取出那些PHRED质量分数在某个阈值（这里为20）以上的序列。</p>
+<p>在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> (2MB) ，解压后为19MB的文件 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 <a class="reference external" href="http://www.ebi.ac.uk/ena/data/view/SRS004476">http://www.ebi.ac.uk/ena/data/view/SRS004476</a> ）。</p>
+<p>首先，让我们来统计reads的数目：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>现在让我们做一个简单的过滤，PHRED质量不小于20：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">good_reads</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
+              <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span> \
+              <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">letter_annotations</span><span class="p">[</span><span class="s">&quot;phred_quality&quot;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">good_reads</span><span class="p">,</span> <span class="s">&quot;good_quality.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这只取出了41892条读长中的14580条。一个更有意义的做法是根据质量来裁剪reads，但是这里只是作为一个例子。</p>
+<p>FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载它们到内存。这个例子使用一个生成器表达式，这意味着每次只有内存里只有一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 被创建 —— 避免内存限制。</p>
+</div>
+<div class="section" id="id5">
+<h3>18.1.7  切除引物序列<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>在这个例子中，假设我们需要寻找一个FASTQ数据中以 <tt class="docutils literal"><span class="pre">GATGACGGTGT</span></tt> 为5’端的引物序列的reads。同上面的例子一样，我们将使用从ENA下载的 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 文件（ <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> ）。该方式同样适用于任何其他Biopython支持的格式（例如FASTA文件）。</p>
+<p>这个代码使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 和一个生成器表达式（避免一次加载所有的序列到内存中），以及 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">startswith</span></tt> 方法来检查读长是否以引物序列开始：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">primer_reads</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
+                <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span> \
+                <span class="k">if</span> <span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">primer_reads</span><span class="p">,</span> <span class="s">&quot;with_primer.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这将从 <tt class="docutils literal"><span class="pre">SRR014849.fastq</span></tt> 找到13819条读长记录，并保存为一个新的FASTQ文件——<tt class="docutils literal"><span class="pre">with_primer.fastq</span></tt>。</p>
+<p>现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 进行切片（参见章节 <a class="reference external" href="#sec:SeqRecord-slicing">4.6</a> ）以移除前11个字母（我们的引物长度）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">trimmed_primer_reads</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span><span class="p">[</span><span class="mi">11</span><span class="p">:]</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
+                        <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span> \
+                        <span class="k">if</span> <span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">trimmed_primer_reads</span><span class="p">,</span> <span class="s">&quot;with_primer_trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这也将从 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 取出13819条读长，但是移除了前十个字符，并将它们保存为另一个新的FASTQ文件， <tt class="docutils literal"><span class="pre">with_primer_trimmed.fastq</span></tt> 。</p>
+<p>最后，假设你想移除部分reads中的引物并创建一个新的FASTQ文件，而其他的reads保持不变。如果我们仍然希望使用生成器表达式，声明我们自己的修剪（trim）函数可能更加清楚：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">def</span> <span class="nf">trim_primer</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">primer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">primer</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">record</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">primer</span><span class="p">):]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">record</span>
+
+<span class="n">trimmed_reads</span> <span class="o">=</span> <span class="p">(</span><span class="n">trim_primer</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> \
+                 <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">trimmed_reads</span><span class="p">,</span> <span class="s">&quot;trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>以上代码会运行较长的时间，因为这次输出文件包含所有41892个reads。再次，我们将使用生成器表达式来避免内存问题。你也可以使用一个生成器函数来替代生成器表达式。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">def</span> <span class="nf">trim_primers</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">primer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Removes perfect primer sequences at start of reads.</span>
+
+<span class="sd">    This is a generator function, the records argument should</span>
+<span class="sd">    be a list or iterator returning SeqRecord objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">len_primer</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">primer</span><span class="p">)</span> <span class="c">#cache this for later</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">primer</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">record</span><span class="p">[</span><span class="n">len_primer</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">record</span>
+
+<span class="n">original_reads</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="n">trimmed_reads</span> <span class="o">=</span> <span class="n">trim_primers</span><span class="p">(</span><span class="n">original_reads</span><span class="p">,</span> <span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">trimmed_reads</span><span class="p">,</span> <span class="s">&quot;trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>这种形式非常灵活，如果你想做一些更复杂的事情，譬如只保留部分记录 —— 像下一个例子中展示的那样。</p>
+</div>
+<div class="section" id="id6">
+<h3>18.1.8  切除接头序列<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>这实际上是前面例子的一个简单扩展。我们将假设 <tt class="docutils literal"><span class="pre">GATGACGGTGT</span></tt> 是某个FASTQ格式数据的一个接头序列，并再次使用来自NCBI的 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 文件 （ <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> ）。</p>
+<p>然而在本例中，我们将在读长的 <em>任何位置</em> 查找序列，不仅仅是最开始：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+
+<span class="k">def</span> <span class="nf">trim_adaptors</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">adaptor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Trims perfect adaptor sequences.</span>
+
+<span class="sd">    This is a generator function, the records argument should</span>
+<span class="sd">    be a list or iterator returning SeqRecord objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">len_adaptor</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adaptor</span><span class="p">)</span> <span class="c">#cache this for later</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">adaptor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c">#adaptor not found, so won&#39;t trim</span>
+            <span class="k">yield</span> <span class="n">record</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">#trim off the adaptor</span>
+            <span class="k">yield</span> <span class="n">record</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="n">len_adaptor</span><span class="p">:]</span>
+
+<span class="n">original_reads</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="n">trimmed_reads</span> <span class="o">=</span> <span class="n">trim_adaptors</span><span class="p">(</span><span class="n">original_reads</span><span class="p">,</span> <span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">trimmed_reads</span><span class="p">,</span> <span class="s">&quot;trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>因为我们在这个例子中使用的是FASTQ文件， <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象包括reads质量分数的单字母注释（per-letter-annotation）。我们可以通过对具有一定质量分数的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象进行切片，并将返回的结果保存到一个FASTQ文件。</p>
+<p>和上面的例子（只在每个读长的开始查找引物/接头）相比，你会发现有些reads剪切后非常短（例如，如果接头序列在读长的中部发现，而不是开始附近）。所以，让我们再加入一个最低长度要求：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+
+<span class="k">def</span> <span class="nf">trim_adaptors</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">adaptor</span><span class="p">,</span> <span class="n">min_len</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Trims perfect adaptor sequences, checks read length.</span>
+
+<span class="sd">    This is a generator function, the records argument should</span>
+<span class="sd">    be a list or iterator returning SeqRecord objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">len_adaptor</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adaptor</span><span class="p">)</span> <span class="c">#cache this for later</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+        <span class="n">len_record</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="c">#cache this for later</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_len</span><span class="p">:</span>
+           <span class="c">#Too short to keep</span>
+           <span class="k">continue</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">adaptor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c">#adaptor not found, so won&#39;t trim</span>
+            <span class="k">yield</span> <span class="n">record</span>
+        <span class="k">elif</span> <span class="n">len_record</span> <span class="o">-</span> <span class="n">index</span> <span class="o">-</span> <span class="n">len_adaptor</span> <span class="o">&gt;=</span> <span class="n">min_len</span><span class="p">:</span>
+            <span class="c">#after trimming this will still be long enough</span>
+            <span class="k">yield</span> <span class="n">record</span><span class="p">[</span><span class="n">index</span><span class="o">+</span><span class="n">len_adaptor</span><span class="p">:]</span>
+
+<span class="n">original_reads</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="n">trimmed_reads</span> <span class="o">=</span> <span class="n">trim_adaptors</span><span class="p">(</span><span class="n">original_reads</span><span class="p">,</span> <span class="s">&quot;GATGACGGTGT&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">trimmed_reads</span><span class="p">,</span> <span class="s">&quot;trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Saved </span><span class="si">%i</span><span class="s"> reads&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+<p>通过改变格式名称，你也可以将这个应用于FASTA文件。该代码也可以扩展为模糊匹配，而非绝对匹配（或许用一个两两比对，或者考虑读长的质量分数），但是这会使代码变得更慢。</p>
+</div>
+<div class="section" id="id7">
+<h3>18.1.9  转换FASTQ文件<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>回到章节 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ，我们展示了怎样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来实现两个文件格式间的转换。这里，我们将更进一步探讨二代DNA测序中使用的FASTQ文件。更加详细的介绍可以参加 Cock <em>et al.</em> (2009) [<a class="reference external" href="#cock2010">7</a>] 。FASTQ文件同时存储DNA序列（以Python字符串的形式）和相应的读长质量。</p>
+<p>PHRED分数（在大多数FASTQ文件中使用，也存在于QUAL、ACE和SFF文件中）已经成为一个用来表示某个给定碱基测序错误概率（这里用 <em>P</em><sub>*e*</sub> 表示）的 <em>实际</em> 标准（使用一个以10为底的对数转换）：</p>
+<div class="math">
+\[\begin{equation}
+Q_{\textrm{PHRED}} = - 10 \times \textrm{log}_{10} ( P_e )
+\end{equation}\]</div>
+<p>这意味着一个错误的读长（ <em>P</em><sub>*e*</sub> = 1 ）得到的PHRED质量为0，而一个非常好的 <em>P</em><sub>*e*</sub> = 0.00001 的读长得到的PHRED质量为50。在实际的测序数据中，质量比这个要高的非常稀少，通过后期处理，如读长映射（mapping）和组装，PHRED质量到达90是可能的（确实，MAQ工具允许PHRED分数在0到93之间）。</p>
+<p>FASTQ格式有潜力成为以单文件纯文本方式存储测序读长的字符和质量分数的 <em>实际</em> 的标准。 唯一的美中不足是，目前至少有三个FASTQ格式版本，它们相互并不兼容，且难以区分...</p>
+<ol class="arabic simple">
+<li>原始的Sanger FASTQ格式将PHRED质量分数和33个ASCII字符偏移进行编码。NCBI目前在它们的Short Read Archive中使用这种格式。我们在 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 中称之为 <tt class="docutils literal"><span class="pre">fastq</span></tt> （或 <tt class="docutils literal"><span class="pre">fastq-sanger</span></tt> ）格式。</li>
+<li>Solexa（后来由Illumina收购）引入了他们自己的版本，使用Solexa质量分数和64个ASCII字符偏移进行编码。我们叫做 <tt class="docutils literal"><span class="pre">fastq-solexa</span></tt> 格式。</li>
+<li>Illumina工作流1.3进一步推出了PHRED质量分数（更为一致的版本）的FASTQ文件，但是却以64个ASCII字符偏移编码。我们叫做 <tt class="docutils literal"><span class="pre">fastq-illumina</span></tt> 格式。</li>
+</ol>
+<p>Solexa质量分数采用一种不同的对数转换：</p>
+<div class="math">
+\[\begin{equation}
+Q_{\textrm{Solexa}} = - 10 \times \textrm{log}_{10} \left( \frac{P_e}{1-P_e} \right)
+\end{equation}\]</div>
+<p>由于Solexa/Illumina目前在他们的1.3版本的工作流程中已迁移到使用PHRED分数，Solexa质量分数将逐渐淡出使用。如果你将错误估值取等号（ <em>P</em><sub>*e*</sub> ），这两个等式允许在两个评分系统之间进行转换 —— Biopython在 <tt class="docutils literal"><span class="pre">Bio.SeqIO.QualityIO</span></tt> 模块中有函数可以实现。这一模块在使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 进行从Solexa/Illumina老文件格式到标准Sanger FASTQ文件格式转换时被调用：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;solexa.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq-solexa&quot;</span><span class="p">,</span> <span class="s">&quot;standard.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如果你想转换新的Illumina 1.3+ FASTQ文件，改变只会导致ASCII码的整体偏移。因为尽管编码不同，所有的质量分数都是PHRED分数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;illumina.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq-illumina&quot;</span><span class="p">,</span> <span class="s">&quot;standard.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>注意，像这样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 会比 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 组合快得 <em>多</em> ，因为转换FASTQ（包括FASTQ到FASTA的转换）的代码经过优化。</p>
+<p>对于质量好的读长，PHRED和Solexa分数几乎相等，这意味着，因为 <tt class="docutils literal"><span class="pre">fasta-solexa</span></tt> 和 <tt class="docutils literal"><span class="pre">fastq-illumina</span></tt> 都使用64个ASCII字符偏移，它们的文件几乎相同。这是Illumina有意设计的，也意味着使用老版本 <tt class="docutils literal"><span class="pre">fasta-solexa</span></tt> 格式文件的应用或许也能接受新版本 <tt class="docutils literal"><span class="pre">fastq-illumina</span></tt> 格式文件（在高质量的数据上）。当然，两个版本和原始的，由Sanger、NCBI和其他地方使用的FASTQ标准有很大不同（格式名为 <tt class="docutils literal"><span class="pre">fastq</span></tt> 或 <tt class="docutils literal"><span class="pre">fastq-sanger</span></tt> ）。</p>
+<p>了解更多细节，请参见内置的帮助（或 <a class="reference external" href="http://www.biopython.org/DIST/docs/api/Bio.SeqIO.QualityIO-module.html">在线帮助</a> ）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqIO</span> <span class="kn">import</span> <span class="n">QualityIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">QualityIO</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fastaqualfastq">
+<h3>18.1.10  转换FASTA和QUAL文件为FASTQ文件<a class="headerlink" href="#fastaqualfastq" title="Permalink to this headline">¶</a></h3>
+<p>FASTQ <em>同时</em> 包含序列和他们的质量信息字符串。FASTA文件 <em>只</em> 包含序列，而QUAL文件 <em>只</em> 包含质量。因此，一个单独的FASTQ文件可以转换为 <em>成对的</em> FASTA和QUAL文件，FASTQ文件也可以由成对的FASTA和QUAL文件生成。</p>
+<p>从FASTQ到FASTA很简单：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;example.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">,</span> <span class="s">&quot;example.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>从FASTQ到QUAL也很简单：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;example.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">,</span> <span class="s">&quot;example.qual&quot;</span><span class="p">,</span> <span class="s">&quot;qual&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>然而，反向则有一点复杂。你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 迭代一个 <em>单独</em> 文件中的所有记录，但是这里我们有两个输入文件。有几个可能的策略，然而这里假设两个文件是真的完全匹配的，最内存高效的方式是同时循环两个文件。代码有些巧妙，所以在 <tt class="docutils literal"><span class="pre">Bio.SeqIO.QualityIO</span></tt> 模块中我们提供一个函数来实现，叫做 <tt class="docutils literal"><span class="pre">PairedFastaQualIterator</span></tt>。它接受两个句柄（FASTA文件和QUAL文件）并返回一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 迭代器：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.SeqIO.QualityIO</span> <span class="kn">import</span> <span class="n">PairedFastaQualIterator</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">PairedFastaQualIterator</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;example.fasta&quot;</span><span class="p">),</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;example.qual&quot;</span><span class="p">)):</span>
+   <span class="k">print</span> <span class="n">record</span>
+</pre></div>
+</div>
+<p>这个函数将检查FASTA和QUAL文件是否一致（例如，记录顺序是相同的，并且序列长度一致）。你可以和 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数结合使用，转换一对FASTA和QUAL文件为单独的FASTQ文件：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqIO.QualityIO</span> <span class="kn">import</span> <span class="n">PairedFastaQualIterator</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;temp.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span> <span class="c">#w=write</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">PairedFastaQualIterator</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&quot;example.fasta&quot;</span><span class="p">),</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;example.qual&quot;</span><span class="p">))</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;Converted </span><span class="si">%i</span><span class="s"> records&quot;</span> <span class="o">%</span> <span class="n">count</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>18.1.11  索引FASTQ文件<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因，你不能一次将所有的记录加载到内存中。这就是为什么上面的例子（过滤和剪切）以迭代的方式遍历整个文件，每次只查看一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 。</p>
+<p>然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 <a class="reference external" href="#sec:SeqIO-index">5.4.2</a> ）。</p>
+<p>我们将再次使用来自 ENA (<a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a>) 的文件 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fq_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">fq_dict</span><span class="p">)</span>
+<span class="go">41892</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fq_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()[:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">[&#39;SRR020192.38240&#39;, &#39;SRR020192.23181&#39;, &#39;SRR020192.40568&#39;, &#39;SRR020192.23186&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fq_dict</span><span class="p">[</span><span class="s">&quot;SRR020192.23186&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">seq</span>
+<span class="go">Seq(&#39;GTCCCAGTATTCGGATTTGTCTGCCAAAACAATGAAATTGACACAGTTTACAAC...CCG&#39;, SingleLetterAlphabet())</span>
+</pre></div>
+</div>
+<p>当在包含7百万读长的FASTQ文件上测试时，索引大概需要花费1分钟，然而获取记录几乎是瞬间完成的。</p>
+<p>章节 <a class="reference external" href="#sec:SeqIO-sort">18.1.5</a> 的例子展示了如何使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数来对FASTA文件进行排序 —— 这也可以用在FASTQ文件上。</p>
+</div>
+<div class="section" id="sff">
+<h3>18.1.12  转换SFF文件<a class="headerlink" href="#sff" title="Permalink to this headline">¶</a></h3>
+<p>如果你处理454(Roche)序列数据，你可能会接触Standard Flowgram Format (SFF)原始数据。这包括序列读长（called bases）、质量分数和原始流信息。</p>
+<p>一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 来轻松实现（参见 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">,</span> <span class="s">&quot;reads.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">,</span> <span class="s">&quot;reads.qual&quot;</span><span class="p">,</span> <span class="s">&quot;qual&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">,</span> <span class="s">&quot;reads.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>注意这个转换函数返回记录的条数，在这个例子中为10。这将给你 <em>未裁剪</em> 的读长，其中先导和跟随链中低质量的序列，或接头序列将以小写字母显示。如果你希望得到 <em>裁剪</em> 后的读长（使用SFF文件中的剪切信息），可以使用下面的代码：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff-trim&quot;</span><span class="p">,</span> <span class="s">&quot;trimmed.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff-trim&quot;</span><span class="p">,</span> <span class="s">&quot;trimmed.qual&quot;</span><span class="p">,</span> <span class="s">&quot;qual&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff-trim&quot;</span><span class="p">,</span> <span class="s">&quot;trimmed.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>如果你使用Linux，你可以向Roche请求一份“脱离仪器（off instrument）”的工具（通常叫做Newbler工具）。它提供了另一种的方式来在命令行实现SFF到FASTA或QUAL的转换（但并不支持FASTQ输出）。</p>
+<div class="code python highlight-python"><pre>$ sffinfo -seq -notrim E3MFGYR02_random_10_reads.sff &gt; reads.fasta
+$ sffinfo -qual -notrim E3MFGYR02_random_10_reads.sff &gt; reads.qual
+$ sffinfo -seq -trim E3MFGYR02_random_10_reads.sff &gt; trimmed.fasta
+$ sffinfo -qual -trim E3MFGYR02_random_10_reads.sff &gt; trimmed.qual</pre>
+</div>
+<p>Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Roche工具的做法。</p>
+<p>要获得Biopython对SFF支持的更多信息，请参考内部帮助：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqIO</span> <span class="kn">import</span> <span class="n">SffIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">SffIO</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h3>18.1.13  识别开放读码框<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>在识别可能的基因中一个非常简单的第一步是寻找开放读码框（Open Reading Frame，ORF）。这里我们的意思是寻找六个编码框中所有的没有终止密码子的长区域 —— 一个ORF是一个不包含任何框内终止密码子的核苷酸区域。</p>
+<p>当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要关心内含子。然而，这种方法在病毒和原核生物中仍然有效。</p>
+<p>为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna">NC_005816.fna</a> 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 <a class="reference external" href="#sec:translation">3.9</a> 关于翻译的介绍）。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.fna&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">min_pro_len</span> <span class="o">=</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>这里有一个巧妙的技巧，使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">split</span></tt> 方法获得一个包含六个读码框中所有可能的ORF翻译的列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">strand</span><span class="p">,</span> <span class="n">nuc</span> <span class="ow">in</span> <span class="p">[(</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())]:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">length</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">-</span><span class="n">frame</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)</span> <span class="c">#Multiple of three</span>
+<span class="gp">... </span>        <span class="k">for</span> <span class="n">pro</span> <span class="ow">in</span> <span class="n">nuc</span><span class="p">[</span><span class="n">frame</span><span class="p">:</span><span class="n">frame</span><span class="o">+</span><span class="n">length</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">):</span>
+<span class="gp">... </span>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pro</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_pro_len</span><span class="p">:</span>
+<span class="gp">... </span>                <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">...</span><span class="si">%s</span><span class="s"> - length </span><span class="si">%i</span><span class="s">, strand </span><span class="si">%i</span><span class="s">, frame </span><span class="si">%i</span><span class="s">&quot;</span> \
+<span class="gp">... </span>                      <span class="o">%</span> <span class="p">(</span><span class="n">pro</span><span class="p">[:</span><span class="mi">30</span><span class="p">],</span> <span class="n">pro</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:],</span> <span class="nb">len</span><span class="p">(</span><span class="n">pro</span><span class="p">),</span> <span class="n">strand</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+<span class="go">GCLMKKSSIVATIITILSGSANAASSQLIP...YRF - length 315, strand 1, frame 0</span>
+<span class="go">KSGELRQTPPASSTLHLRLILQRSGVMMEL...NPE - length 285, strand 1, frame 1</span>
+<span class="go">GLNCSFFSICNWKFIDYINRLFQIIYLCKN...YYH - length 176, strand 1, frame 1</span>
+<span class="go">VKKILYIKALFLCTVIKLRRFIFSVNNMKF...DLP - length 165, strand 1, frame 1</span>
+<span class="go">NQIQGVICSPDSGEFMVTFETVMEIKILHK...GVA - length 355, strand 1, frame 2</span>
+<span class="go">RRKEHVSKKRRPQKRPRRRRFFHRLRPPDE...PTR - length 128, strand 1, frame 2</span>
+<span class="go">TGKQNSCQMSAIWQLRQNTATKTRQNRARI...AIK - length 100, strand 1, frame 2</span>
+<span class="go">QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, frame 0</span>
+<span class="go">IYSTSEHTGEQVMRTLDEVIASRSPESQTR...FHV - length 111, strand -1, frame 0</span>
+<span class="go">WGKLQVIGLSMWMVLFSQRFDDWLNEQEDA...ESK - length 125, strand -1, frame 1</span>
+<span class="go">RGIFMSDTMVVNGSGGVPAFLFSGSTLSSY...LLK - length 361, strand -1, frame 1</span>
+<span class="go">WDVKTVTGVLHHPFHLTFSLCPEGATQSGR...VKR - length 111, strand -1, frame 1</span>
+<span class="go">LSHTVTDFTDQMAQVGLCQCVNVFLDEVTG...KAA - length 107, strand -1, frame 2</span>
+<span class="go">RALTGLSAPGIRSQTSCDRLRELRYVPVSL...PLQ - length 119, strand -1, frame 2</span>
+</pre></div>
+</div>
+<p>注意，这里我们从 <em>每条</em> 序列的5’末（起始）端开始计算读码框。对 <em>正向</em> 链一直从5’末（起始）端开始计算有时更加容易。</p>
+<p>你可以轻易编辑上面的循环代码，来创建一个待选蛋白列表，或者将它转换为一个列表解析。现在，这个代码所不能做的一个事情是记录蛋白的位置信息。</p>
+<p>你可以用几种方式来处理。例如，下面的代码以蛋白计数的方式记录位置信息，并通过乘以三倍来转换为父序列（parent sequence），并记录编码框和链的信息：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.gb&quot;</span><span class="p">,</span><span class="s">&quot;genbank&quot;</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">min_pro_len</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="k">def</span> <span class="nf">find_orfs_with_trans</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">trans_table</span><span class="p">,</span> <span class="n">min_protein_length</span><span class="p">):</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seq_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">strand</span><span class="p">,</span> <span class="n">nuc</span> <span class="ow">in</span> <span class="p">[(</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">())]:</span>
+        <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nuc</span><span class="p">[</span><span class="n">frame</span><span class="p">:]</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">trans_table</span><span class="p">))</span>
+            <span class="n">trans_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+            <span class="n">aa_start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">aa_end</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">aa_start</span> <span class="o">&lt;</span> <span class="n">trans_len</span><span class="p">:</span>
+                <span class="n">aa_end</span> <span class="o">=</span> <span class="n">trans</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="n">aa_start</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">aa_end</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">aa_end</span> <span class="o">=</span> <span class="n">trans_len</span>
+                <span class="k">if</span> <span class="n">aa_end</span><span class="o">-</span><span class="n">aa_start</span> <span class="o">&gt;=</span> <span class="n">min_protein_length</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">strand</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">frame</span><span class="o">+</span><span class="n">aa_start</span><span class="o">*</span><span class="mi">3</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span><span class="n">frame</span><span class="o">+</span><span class="n">aa_end</span><span class="o">*</span><span class="mi">3</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">start</span> <span class="o">=</span> <span class="n">seq_len</span><span class="o">-</span><span class="n">frame</span><span class="o">-</span><span class="n">aa_end</span><span class="o">*</span><span class="mi">3</span><span class="o">-</span><span class="mi">3</span>
+                        <span class="n">end</span> <span class="o">=</span> <span class="n">seq_len</span><span class="o">-</span><span class="n">frame</span><span class="o">-</span><span class="n">aa_start</span><span class="o">*</span><span class="mi">3</span>
+                    <span class="n">answer</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">,</span>
+                                   <span class="n">trans</span><span class="p">[</span><span class="n">aa_start</span><span class="p">:</span><span class="n">aa_end</span><span class="p">]))</span>
+                <span class="n">aa_start</span> <span class="o">=</span> <span class="n">aa_end</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">answer</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">answer</span>
+
+<span class="n">orf_list</span> <span class="o">=</span> <span class="n">find_orfs_with_trans</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">seq</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">min_pro_len</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">strand</span><span class="p">,</span> <span class="n">pro</span> <span class="ow">in</span> <span class="n">orf_list</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">...</span><span class="si">%s</span><span class="s"> - length </span><span class="si">%i</span><span class="s">, strand </span><span class="si">%i</span><span class="s">, </span><span class="si">%i</span><span class="s">:</span><span class="si">%i</span><span class="s">&quot;</span> \
+          <span class="o">%</span> <span class="p">(</span><span class="n">pro</span><span class="p">[:</span><span class="mi">30</span><span class="p">],</span> <span class="n">pro</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:],</span> <span class="nb">len</span><span class="p">(</span><span class="n">pro</span><span class="p">),</span> <span class="n">strand</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>输出是：</p>
+<div class="code python highlight-python"><pre>NQIQGVICSPDSGEFMVTFETVMEIKILHK...GVA - length 355, strand 1, 41:1109
+WDVKTVTGVLHHPFHLTFSLCPEGATQSGR...VKR - length 111, strand -1, 491:827
+KSGELRQTPPASSTLHLRLILQRSGVMMEL...NPE - length 285, strand 1, 1030:1888
+RALTGLSAPGIRSQTSCDRLRELRYVPVSL...PLQ - length 119, strand -1, 2830:3190
+RRKEHVSKKRRPQKRPRRRRFFHRLRPPDE...PTR - length 128, strand 1, 3470:3857
+GLNCSFFSICNWKFIDYINRLFQIIYLCKN...YYH - length 176, strand 1, 4249:4780
+RGIFMSDTMVVNGSGGVPAFLFSGSTLSSY...LLK - length 361, strand -1, 4814:5900
+VKKILYIKALFLCTVIKLRRFIFSVNNMKF...DLP - length 165, strand 1, 5923:6421
+LSHTVTDFTDQMAQVGLCQCVNVFLDEVTG...KAA - length 107, strand -1, 5974:6298
+GCLMKKSSIVATIITILSGSANAASSQLIP...YRF - length 315, strand 1, 6654:7602
+IYSTSEHTGEQVMRTLDEVIASRSPESQTR...FHV - length 111, strand -1, 7788:8124
+WGKLQVIGLSMWMVLFSQRFDDWLNEQEDA...ESK - length 125, strand -1, 8087:8465
+TGKQNSCQMSAIWQLRQNTATKTRQNRARI...AIK - length 100, strand 1, 8741:9044
+QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609</pre>
+</div>
+<p>如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对较更加容易（就像章节 <a class="reference external" href="#sec:gd_nice_example">17.1.9</a> 中显示的那样）。</p>
+<p>然而，如果你想要的只是所有开放读码框的位置，翻译每一个可能的密码子将是很浪费时间的，包括转换和查找反向互补链。那么，你所要做的所有事情是查找可能的终止密码子(和他们反向互补)。使用正则表达式是一个很直接的方式（参见Python中的 <tt class="docutils literal"><span class="pre">re</span></tt> 模块）。这是描述查找字符串的一个非常强大的模块（然而非常复杂），也被许多编程语言和命令行工具，如 <tt class="docutils literal"><span class="pre">grep</span></tt>，所支持。你能找到一本书来描述它的使用！</p>
+</div>
+</div>
+<div class="section" id="id10">
+<h2>18.2  序列解析与简单作图<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>这一部分展示更多使用第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块进行序列解析的例子，以及Python类库matplotlib中 <tt class="docutils literal"><span class="pre">pylab</span></tt> 的作图接口（参见 <a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib 主页的教程</a> ）。注意，跟随这些例子，你需要安装matplotlib - 但是即使没有它，你依然可以尝试数据的解析的内容。</p>
+<div class="section" id="id11">
+<h3>18.2.1  序列长度柱状图<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a> ，它只包含94条序列。</p>
+<p>首先，我们使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析这个FASTA文件，并创建一个序列长度的列表。你可以用一个for循环来实现，然而我觉得列表解析（list comprehension）更简洁：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
+<span class="go">(94, 572, 789)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sizes</span>
+<span class="go">[740, 753, 748, 744, 733, 718, 730, 704, 740, 709, 700, 726, ..., 592]</span>
+</pre></div>
+</div>
+<p>现在我们得到了所有基因的长度（以整数列表的形式），我们可以用matplotlib的柱状图功能来显示它。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)]</span>
+
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%i</span><span class="s"> orchid sequences</span><span class="se">\n</span><span class="s">Lengths </span><span class="si">%i</span><span class="s"> to </span><span class="si">%i</span><span class="s">&quot;</span> \
+            <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span><span class="nb">min</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">sizes</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Sequence length (bp)&quot;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Count&quot;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这将弹出一个包含如下图形的新的窗口：</p>
+<p><img alt="image26" src="_images/hist_plot.png" /></p>
+<p>注意，这些兰花序列的长度大多数大约在740bp左右，这里有可能有两个不同长度的序列分类，其中包含一个较短的序列子集。</p>
+<p><em>提示：</em> 除了使用 <tt class="docutils literal"><span class="pre">pylab.show()</span></tt> 在窗口中显示图像以外，你也可以使用 <tt class="docutils literal"><span class="pre">pylab.savefig(...)</span></tt> 来将图像保存为图像文件中（例如PNG或PDF文件）。</p>
+</div>
+<div class="section" id="gc">
+<h3>18.2.2  序列GC%含量作图<a class="headerlink" href="#gc" title="Permalink to this headline">¶</a></h3>
+<p>对于核酸序列，另一个经常计算的值是GC含量。例如，你可能想要查看一个细菌基因组中所有基因的GC%，并研究任何离群值来确定可能最近通过基因水平转移而获得的基因。同样，对于这个例子，我们再次使用兰花FASTA文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a> 。</p>
+<p>首先，我们使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 解析这个FASTA文件并创建一个GC百分含量的列表。你可以使用for循环，但我更喜欢这样：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="kn">from</span> <span class="nn">Bio.SeqUtils</span> <span class="kn">import</span> <span class="n">GC</span>
+
+<span class="n">gc_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">GC</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>读取完每个序列并计算了GC百分比，我们接着将它们按升序排列。现在，我们用matplotlib来对这个浮点数列表进行可视化：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">gc_values</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%i</span><span class="s"> orchid sequences</span><span class="se">\n</span><span class="s">GC</span><span class="si">%%</span><span class="s"> </span><span class="si">%0.1f</span><span class="s"> to </span><span class="si">%0.1f</span><span class="s">&quot;</span> \
+            <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gc_values</span><span class="p">),</span><span class="nb">min</span><span class="p">(</span><span class="n">gc_values</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">gc_values</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Genes&quot;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;GC%&quot;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>像之前的例子一样，弹出一个窗口中将包含如下图形：</p>
+<p><img alt="image27" src="_images/gc_plot.png" /></p>
+<p>如果你使用的是一个物种中的所有基因集，你可能会得到一个更加平滑的图。</p>
+</div>
+<div class="section" id="id12">
+<h3>18.2.3  核苷酸点线图<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>点线图是可视化比较两条核苷酸序列的相似性的一种方式。采用一个滑动窗来相互比较较短的子序列（比较通常根据一个不匹配阈值来实现）。为了简单起见，此处我们将只查找完全匹配（如下图黑色所示）。</p>
+<p>我们需要两条序列开始。为了论证，我们只取兰花FASTA文件中的前两条序列。<a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a>:</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&quot;ls_orchid.fasta&quot;</span><span class="p">)</span>
+<span class="n">record_iterator</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
+<span class="n">rec_one</span> <span class="o">=</span> <span class="n">record_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="n">rec_two</span> <span class="o">=</span> <span class="n">record_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+<span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>我们将展示两种方式。首先，一个简单的实现，它将所有滑动窗大小的子序列相互比较，并生产一个相似性矩阵。你可以创建一个矩阵或数组对象，而在这儿，我们只用一个用嵌套的列表解析生成的布尔值列表的列表。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">window</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">seq_one</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rec_one</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="n">seq_two</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rec_two</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[[(</span><span class="n">seq_one</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">window</span><span class="p">]</span> <span class="o">&lt;&gt;</span> <span class="n">seq_two</span><span class="p">[</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">window</span><span class="p">])</span> \
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_one</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)]</span> \
+       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_two</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>注意，我们在这里并 <em>没有</em> 检查反向的互补匹配。现在我们将使用matplotlib的 <tt class="docutils literal"><span class="pre">pylab.imshow()</span></tt> 函数来显示这个数据，首先启用灰度模式，以保证这是在黑白颜色下完成的：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> (length </span><span class="si">%i</span><span class="s"> bp)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rec_one</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_one</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> (length </span><span class="si">%i</span><span class="s"> bp)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rec_two</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_two</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Dot plot using window size </span><span class="si">%i</span><span class="se">\n</span><span class="s">(allowing no mis-matches)&quot;</span> <span class="o">%</span> <span class="n">window</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这将弹出一个新的窗口，包含类似这样的图形：</p>
+<p><img alt="image28" src="_images/dot_plot.png" /></p>
+<p>可能如您所料，这两条序列非常相似，图中部分滑动窗大小的线沿着对角线匹配。图中没有对角线外的点，这意味着序列中并没有倒位或其他有趣的偏离对角线匹配。</p>
+<p>上面的代码在小的例子中工作得很好，但是应用到大的序列时，这里有两个问题。首先，这种以穷举地方式进行所有可能的两两比对非常缓慢。作为替代，我们将创建一个词典来映射所有滑动窗大小的子序列的位置，然后取两者的交集来获得两条序列中都发现的子序列。这将占用更多的内存，然而速度 <em>更</em> 快。另外， <tt class="docutils literal"><span class="pre">pylab.imshow()</span></tt> 函数只能显示较小的矩阵。作为替代，我们将使用 <tt class="docutils literal"><span class="pre">pylab.scatter()</span></tt> 函数。</p>
+<p>我们从创建，从滑动窗大小的子序列到其位置的字典映射开始：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">window</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">dict_one</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">dict_two</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">section_dict</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">rec_one</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">dict_one</span><span class="p">),</span>
+                            <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">rec_two</span><span class="o">.</span><span class="n">seq</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">dict_two</span><span class="p">)]:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">window</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">section_dict</span><span class="p">[</span><span class="n">section</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">section_dict</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="c">#Now find any sub-sequences found in both sequences</span>
+<span class="c">#(Python 2.3 would require slightly different code here)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dict_one</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">dict_two</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%i</span><span class="s"> unique matches&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>为了使用 <tt class="docutils literal"><span class="pre">pylab.scatter()</span></tt> 函数，我们需要两个分别对应 <em>x</em> 和 <em>y</em> 轴的列表：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="c">#Create lists of x and y co-ordinates for scatter plot</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dict_one</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">dict_two</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们能以散点图的形式画出优化后的点线图：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span> <span class="c">#clear any prior graph</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_one</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_two</span><span class="p">)</span><span class="o">-</span><span class="n">window</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> (length </span><span class="si">%i</span><span class="s"> bp)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rec_one</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_one</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> (length </span><span class="si">%i</span><span class="s"> bp)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rec_two</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">rec_two</span><span class="p">)))</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">&quot;Dot plot using window size </span><span class="si">%i</span><span class="se">\n</span><span class="s">(allowing no mis-matches)&quot;</span> <span class="o">%</span> <span class="n">window</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>这将弹出一个新的窗口，包含如下图形：</p>
+<p><img alt="image29" src="_images/dot_plot_scatter.png" /></p>
+<p>我个人认为第二个图更加易读！再次注意，我们在这里 <em>没有</em> 检查反向互补匹配 —— 你可以扩展这个例子来实现它，或许可以以一种颜色显示正向匹配，另一种显示反向匹配。</p>
+</div>
+<div class="section" id="id13">
+<h3>18.2.4  绘制序列读长数据的质量图<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>如果你在处理二代测序数据，你可能希望绘制数据的质量图。这里使用两个包含双末端（paired end）读长的FASTQ文件作为例子，其中 <tt class="docutils literal"><span class="pre">SRR001666_1.fastq</span></tt> 为正向读长， <tt class="docutils literal"><span class="pre">SRR001666_2.fastq</span></tt> 为反向读长。它们可以从ENA序列读长档案的FTP站点下载（ <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_1.fastq.gz</a> 和 <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR001/SRR001666/SRR001666_2.fastq.gz</a> ）， 且来自 <em>E. coli</em> —— 参见 <a class="reference external" href="http://www.ebi.ac.uk/ena/data/view/SRR001666">http://www.ebi.ac.uk/ena/data/view/SRR001666</a> 的详细介绍。在下面的代码中， <tt class="docutils literal"><span class="pre">pylab.subplot(...)</span></tt> 函数被用来在两个子图中展示正向和反向的质量。这里也有少量的代码来保证仅仅展示前50个读长的质量。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
+<span class="k">for</span> <span class="n">subfigure</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;SRR001666_</span><span class="si">%i</span><span class="s">.fastq&quot;</span> <span class="o">%</span> <span class="n">subfigure</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">subfigure</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">record</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">50</span> <span class="p">:</span> <span class="k">break</span> <span class="c">#trick!</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">letter_annotations</span><span class="p">[</span><span class="s">&quot;phred_quality&quot;</span><span class="p">])</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;PHRED quality score&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;Position&quot;</span><span class="p">)</span>
+<span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&quot;SRR001666.png&quot;</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;Done&quot;</span>
+</pre></div>
+</div>
+<p>你应该注意到，这里我们使用了 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 的格式名称 <tt class="docutils literal"><span class="pre">fastq</span></tt> ，因为NCBI使用标准Sanger FASTQ和PHRED分数的存储这些读长。然而，你可能从读长的长度中猜到，这些数据来自Illumina Genome Analyzer，而且可能最初是以Solexa/Illumina FASTQ两种格式变种中的一种存在。</p>
+<p>这个例子使用 <tt class="docutils literal"><span class="pre">pylab.savefig(...)</span></tt> 函数，而不是``pylab.show(...)`` ，然而就像前面提到的一样，它们两者都非常有用。下面是得到的结果：</p>
+<p><img alt="image30" src="_images/SRR001666.png" /></p>
+</div>
+</div>
+<div class="section" id="id14">
+<h2>18.3  处理序列比对<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<p>这部分可以看做是第 <a class="reference external" href="#chapter:Bio.AlignIO">6</a> 章的继续。</p>
+<div class="section" id="id15">
+<h3>18.3.1  计算摘要信息<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>一旦你有一个比对，你很可能希望找出关于它的一些信息。我们尽力将这些功能分离到单独的能作用于比对对象的类中，而不是将所有的能生成比对信息的函数都放入比对对象本身。</p>
+<p>准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 <tt class="docutils literal"><span class="pre">alignment</span></tt> ，例如由在第 <a class="reference external" href="#chapter:Bio.AlignIO">6</a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read(...)</span></tt> 读入。我们获得该对象的摘要信息所要做的所有事情是：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Align</span> <span class="kn">import</span> <span class="n">AlignInfo</span>
+<span class="n">summary_align</span> <span class="o">=</span> <span class="n">AlignInfo</span><span class="o">.</span><span class="n">SummaryInfo</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">summary_align</span></tt> 对象非常有用，它将帮你做以下巧妙的事情：</p>
+<ol class="arabic simple">
+<li>计算一个快速一致序列 – 参见章节 <a class="reference external" href="#sec:consensus">18.3.2</a></li>
+<li>获取一个针对该比对的位点特异性打分矩阵 – 参见章节 <a class="reference external" href="#sec:pssm">18.3.3</a></li>
+<li>计算比对的信息量 – 参见章节 <a class="reference external" href="#sec:getting_info_content">18.3.4</a></li>
+<li>生成该比对中的替换信息 – 章节 <a class="reference external" href="#sec:sub_matrix">18.4</a> 详细描述了使用该方法生成一个替换矩阵</li>
+</ol>
+</div>
+<div class="section" id="id16">
+<h3>18.3.2  计算一个快速一致序列<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<p>在章节 <a class="reference external" href="#sec:summary_info">18.3.1</a> 中描述的 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象，叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt>，我们能通过下面的方法计算一个保守序列：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">consensus</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">dumb_consensus</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>就行名字显示的那样，这是一个非常简单的保守序列计算器，它将只是在保守序列中累加每个位点的所有残基，如果最普遍的残基数大于某个阈值时，这个最普遍的残基将被添加到保守序列中。如果它没有到达这个阈值，将添加一个“不确定字符”。最终返回的保守序列对象是一个Seq对象，它的字母表是从组成保守序列所有序列的字母表中推断出来的。所以使用 <tt class="docutils literal"><span class="pre">print</span> <span class="pre">consensus</span></tt> 将给出如下信息：</p>
+<div class="code python highlight-python"><pre>consensus Seq('TATACATNAAAGNAGGGGGATGCGGATAAATGGAAAGGCGAAAGAAAGAAAAAAATGAAT
+...', IUPACAmbiguousDNA())</pre>
+</div>
+<p>你可以通过传入可选参数来调整 <tt class="docutils literal"><span class="pre">dumb_consensus</span></tt> 的工作方式：</p>
+<dl class="docutils">
+<dt><strong>the threshold</strong></dt>
+<dd>这是用来设定某个残基在某个位点出现的频率超过一定阈值，才将其添加到保守序列。默认为0.7（即70%）。</dd>
+<dt><strong>the ambiguous character</strong></dt>
+<dd>指定保守序列中的不确定字符。默认为’N’。</dd>
+<dt><strong>the consensus alphabet</strong></dt>
+<dd>指定保守序列的字母表。如果没有提供，我们将从比对序列的字母表基础上推断该字母表。</dd>
+</dl>
+</div>
+<div class="section" id="id17">
+<h3>18.3.3  位点特异性评分矩阵<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<p>位点特异性评分矩阵（Position specific score matrices，PSSMs）以另一种总结比对信息的方式（与刚才介绍的保守序列不同），这或许在某些情况下更为有用。简单来说，PSSM是一个计数矩阵。对于比对中的每一列，将所有可能出现的字母进行计数并加和。这些加和值将和一个代表序列（默认为比对中的第一条序列）一起显示出来。这个序列可能是保守序列，但也可以是比对中的任何序列。例如，对于比对，</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">GTATC</span>
+<span class="n">AT</span><span class="o">--</span><span class="n">C</span>
+<span class="n">CTGTC</span>
+</pre></div>
+</div>
+<p>它的PSSM是：</p>
+<div class="code python highlight-python"><pre>  G A T C
+G 1 1 0 1
+T 0 0 3 0
+A 1 1 0 0
+T 0 0 2 0
+C 0 0 0 3</pre>
+</div>
+<p>假设我们有一个比对对象叫做 <tt class="docutils literal"><span class="pre">c_align</span></tt> ，为了获得PSSM和保守序列，我们首先得到一个摘要对象（summary object），并计算一致序列：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">summary_align</span> <span class="o">=</span> <span class="n">AlignInfo</span><span class="o">.</span><span class="n">SummaryInfo</span><span class="p">(</span><span class="n">c_align</span><span class="p">)</span>
+<span class="n">consensus</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">dumb_consensus</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>现在，我们想创建PSSM，但是在计算中忽略任何 <tt class="docutils literal"><span class="pre">N</span></tt> 不确定残基：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">my_pssm</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">pos_specific_score_matrix</span><span class="p">(</span><span class="n">consensus</span><span class="p">,</span>
+                                                  <span class="n">chars_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>关于此有亮点需要说明：</p>
+<ol class="arabic">
+<li><p class="first">为了维持字母表的严格性，你可以在PSSM的顶部显示比对对象字母表中规定的字符。空白字符（Gaps）并不包含在PSSM的顶轴中。</p>
+</li>
+<li><p class="first">传入并显示在左侧轴的序列可以不是保守序列。例如，你如果想要在PSSM左边显示比对中的第二条序列，你只需要：</p>
+<div class="code python highlight-python"><pre>second_seq = alignment.get_seq_by_num(1)
+my_pssm = summary_align.pos_specific_score_matrix(second_seq
+                                                  chars_to_ignore = ['N'])</pre>
+</div>
+</li>
+</ol>
+<p>以上的命令将返回一个 <tt class="docutils literal"><span class="pre">PSSM</span></tt> 对象。为了显示出PSSM，我们只需 <tt class="docutils literal"><span class="pre">print</span> <span class="pre">my_pssm</span></tt>，结果如下：</p>
+<div class="code python highlight-python"><pre>    A   C   G   T
+T  0.0 0.0 0.0 7.0
+A  7.0 0.0 0.0 0.0
+T  0.0 0.0 0.0 7.0
+A  7.0 0.0 0.0 0.0
+C  0.0 7.0 0.0 0.0
+A  7.0 0.0 0.0 0.0
+T  0.0 0.0 0.0 7.0
+T  1.0 0.0 0.0 6.0
+...</pre>
+</div>
+<p>你可以用 <tt class="docutils literal"><span class="pre">your_pssm[sequence_number][residue_count_name]</span></tt> 获得任何PSSM的元素。例如，获取上面PSSM中第二个元素的‘A’残基的计数，你可以：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">my_pssm</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s">&quot;A&quot;</span><span class="p">]</span>
+<span class="go">7.0</span>
+</pre></div>
+</div>
+<p>PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。</p>
+</div>
+<div class="section" id="id18">
+<h3>18.3.4  信息量<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<p>一个潜在而有用的衡量进化保守性的测度是序列的信息量。</p>
+<p>一个有用的针对分子生物学家的信息论的介绍可以在这里找到： <a class="reference external" href="http://www.lecb.ncifcrf.gov/~toms/paper/primer/">http://www.lecb.ncifcrf.gov/~toms/paper/primer/</a> 。对于我们的目地，我们将查看保守序列或其部分序列的信息量。我们使用下面的公式计算多序列比对中某个特定的列的信息量：</p>
+<div class="math">
+\[\begin{equation}
+IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
+\end{equation}\]</div>
+<p>其中：</p>
+<ul class="simple">
+<li><em>IC</em><sub>*j*</sub> – 比对中第 <em>j</em> 列的信息量。</li>
+<li><em>N</em><sub>*a*</sub> – 字母表中字母的个数。</li>
+<li><em>P</em><sub>*ij*</sub> – 第 <em>j</em> 列的某个特定字母 <em>i</em> 的频率（即，如果G在包含有6个序列的比对中有3次出现，则该列G的信息量为0.5）</li>
+<li><em>Q</em><sub>*i*</sub> – 字母 <em>i</em> 的期望频率。这是一个可选参数，由用户自行决定使用。默认情况下，它被自动赋值为0.05 = 1/20，若为蛋白字母表；或0.25 = 1/4 ，若为核酸字母表。这是在没有先验分布假设的情况下计算信息量。而在假设先验分布或使用非标准字母表时，你需要提供 <em>Q</em><sub>*i*</sub> 的值。</li>
+</ul>
+<p>好了，现在我们知道Biopython如何计算了序列比对的信息量，让我们看看怎么对部分比对区域进行计算。</p>
+<p>首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt> （参见章节<a class="reference external" href="#sec:summary_info">18.3.1</a> 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">info_content</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">information_content</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>
+                                                 <span class="n">chars_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>哇哦，这比上面的公式看起来要简单多了！变量 <tt class="docutils literal"><span class="pre">info_content</span></tt> 现在含有一个浮点数来表示指定区域（比对中的5到30）的信息量。我们在计算信息量时特意忽略了不确定残基’N’，因为这个值没有包括在我们的字母表中（因而我们不必要关心它！）。</p>
+<p>像上面提到的一样，我们同样能通过提供期望频率计算相对信息量：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">expect_freq</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&#39;A&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s">&#39;G&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">,</span>
+    <span class="s">&#39;T&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span>
+    <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>期望值不能以原始的字典传入，而需要作为 <tt class="docutils literal"><span class="pre">SubsMat.FreqTable</span></tt> 对象传入（参见章节<a class="reference external" href="#sec:freq_table">20.2.2</a> 以获得关于FreqTables的更多信息）。FreqTable对象提供了一个关联字典和字母表的标准，这和Biopython中Seq类的工作方式类似。</p>
+<p>要从频率字典创建一个FreqTable对象，你只需要：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+<span class="kn">from</span> <span class="nn">Bio.SubsMat</span> <span class="kn">import</span> <span class="n">FreqTable</span>
+
+<span class="n">e_freq_table</span> <span class="o">=</span> <span class="n">FreqTable</span><span class="o">.</span><span class="n">FreqTable</span><span class="p">(</span><span class="n">expect_freq</span><span class="p">,</span> <span class="n">FreqTable</span><span class="o">.</span><span class="n">FREQ</span><span class="p">,</span>
+                                   <span class="n">IUPAC</span><span class="o">.</span><span class="n">unambiguous_dna</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们得到了它，计算我们比对区域的相对信息量就像下面一样简单：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">info_content</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">information_content</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>
+                                                 <span class="n">e_freq_table</span> <span class="o">=</span> <span class="n">e_freq_table</span><span class="p">,</span>
+                                                 <span class="n">chars_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>现在，<tt class="docutils literal"><span class="pre">info_content</span></tt> 将包含与期望频率相关的该区域的相对信息量。</p>
+<p>返回值是按上面的公式以2为对底数计算的。你可以通过传入 <tt class="docutils literal"><span class="pre">log_base</span></tt> 参数来改变成你想要的底数：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="n">info_content</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">information_content</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">log_base</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                                                 <span class="n">chars_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>好了，现在你已经知道怎么计算信息量了。如果你想要在实际的生命科学问题中应用它，最好找一些关于
+信息量的文献钻研，以了解它是怎样用的。希望你的钻研不会发现任何有关这个函数的编码错误。</p>
+</div>
+</div>
+<div class="section" id="id19">
+<h2>18.4  替换矩阵<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<p>替换矩阵是每天的生物信息学工作中的极端重要的一部分。它们提供决定两个不同的残基有多少相互替换的可能性的得分规则。这在序列比较中必不可少。Durbin等的“Biological Biological Sequence Analysis” 一书中提供了对替换矩阵以及它们的用法的非常好的介绍。一些非常有名的替换矩阵是PAM和BLOSUM系列矩阵。</p>
+<p>Biopython提供了大量的常见替换矩阵，也提供了创建你自己的替换矩阵的功能。</p>
+<div class="section" id="id20">
+<h3>18.4.1  使用常见替换矩阵<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id21">
+<h3>18.4.2  从序列比对创建你自己的替换矩阵<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<p>使用替换矩阵类能轻易做出的一个非常酷的事情，是从序列比对创建出你自己的替换矩阵。实际中，通常是使用蛋白比对来做。在这个例子中，我们将首先得到一个Biopython比对对象，然后得到一个摘要对象来计算关于这个比对的相关信息。文件 <a class="reference external" href="examples/protein.aln">protein.aln</a> （也可在 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/protein.aln">这里</a> 获取）包含Clustalw格式的比对输出。</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Alphabet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">IUPAC</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align</span> <span class="kn">import</span> <span class="n">AlignInfo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;protein.aln&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">alpha</span> <span class="o">=</span> <span class="n">Alphabet</span><span class="o">.</span><span class="n">Gapped</span><span class="p">(</span><span class="n">IUPAC</span><span class="o">.</span><span class="n">protein</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c_align</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">,</span> <span class="n">alphabet</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">summary_align</span> <span class="o">=</span> <span class="n">AlignInfo</span><span class="o">.</span><span class="n">SummaryInfo</span><span class="p">(</span><span class="n">c_align</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>章节 <a class="reference external" href="#sec:align_clustal">6.4.1</a> 和 <a class="reference external" href="#sec:summary_info">18.3.1</a> 包含关于此类做法的更多信息。</p>
+<p>现在我们得到了我们的 <tt class="docutils literal"><span class="pre">summary_align</span></tt> 对象，我们想使用它来找出不同的残基相互替换的次数。为了使例子的可读性更强，我们将只关注那些有极性电荷侧链的氨基酸。幸运的是，这能在生成替代字典时轻松实现，通过传入所有需要被忽略的字符。这样我们将能创建一个只包含带电荷的极性氨基酸的替代字典：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">replace_info</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">replacement_dictionary</span><span class="p">([</span><span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;V&quot;</span><span class="p">,</span> <span class="s">&quot;L&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                                     <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;P&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;W&quot;</span><span class="p">,</span> <span class="s">&quot;S&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                                                     <span class="s">&quot;T&quot;</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="s">&quot;Q&quot;</span><span class="p">,</span> <span class="s">&quot;Y&quot;</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>这个关于氨基酸替代的信息以python字典的形式展示出来将会像如下的样子（顺序可能有所差异）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="p">{(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">):</span> <span class="mf">2079.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">):</span> <span class="mf">17.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">):</span> <span class="mf">103.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">):</span> <span class="mf">2.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">):</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">):</span> <span class="mf">3218.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">):</span> <span class="mf">24.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">):</span> <span class="mf">8.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">):</span> <span class="mf">1235.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">):</span> <span class="mf">18.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">):</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">):</span> <span class="mf">9.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">):</span> <span class="mf">48.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">):</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">):</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">):</span> <span class="mf">45.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">):</span> <span class="mf">130.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">):</span> <span class="mf">241.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">):</span> <span class="mf">3305.0</span><span class="p">,</span>
+<span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">):</span> <span class="mf">270.0</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">):</span> <span class="mf">2360.0</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>这个信息提供了我们所需要的替换次数，或者说我们期望的不同的事情相互替换有多么频繁。事实上，（你可能会感到惊奇）这就是我们继续创建替代矩阵所需要的全部信息。首先，我们使用替代字典信息创建一个“接受替换矩阵”（Accepted Replacement Matrix，ARM）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SubsMat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_arm</span> <span class="o">=</span> <span class="n">SubsMat</span><span class="o">.</span><span class="n">SeqMat</span><span class="p">(</span><span class="n">replace_info</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用这个“接受替换矩阵”，我们能继续创建我们的对数矩阵（即一个标准类型的替换举证）：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_lom</span> <span class="o">=</span> <span class="n">SubsMat</span><span class="o">.</span><span class="n">make_log_odds_matrix</span><span class="p">(</span><span class="n">my_arm</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在创建的这个对数矩阵时有以下可选参数：</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">exp_freq_table</span></tt> – 你可以传入一个每个字母的期望频率的表格。如果提供，在计算期望替换时，这将替代传入的“接收替换矩阵”。</li>
+<li><tt class="docutils literal"><span class="pre">logbase</span></tt> - 用来创建对数奇数矩阵的对数底数。默认为10。</li>
+<li><tt class="docutils literal"><span class="pre">factor</span></tt> - 用来乘以每个矩阵元素的因数。默认为10，这样通常可以使得矩阵的数据容易处理。</li>
+<li><tt class="docutils literal"><span class="pre">round_digit</span></tt> - 矩阵中四舍五入所取的小数位数，默认为0（即没有小数）。</li>
+</ul>
+<p>一旦你获得了你的对数矩阵，你可以使用函数 <tt class="docutils literal"><span class="pre">print_mat</span></tt> 很漂亮的显示出来。使用我们创建的矩阵可以得到：</p>
+<div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_lom</span><span class="o">.</span><span class="n">print_mat</span><span class="p">()</span>
+<span class="go">D   2</span>
+<span class="go">E  -1   1</span>
+<span class="go">H  -5  -4   3</span>
+<span class="go">K -10  -5  -4   1</span>
+<span class="go">R  -4  -8  -4  -2   2</span>
+<span class="go">   D   E   H   K   R</span>
+</pre></div>
+</div>
+<p>很好。我们现在得到了自己的替换矩阵！</p>
+</div>
+</div>
+<div class="section" id="biosql">
+<h2>18.5  BioSQL – 存储序列到关系数据库中<a class="headerlink" href="#biosql" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.biosql.org/">BioSQL</a> 是 <a class="reference external" href="http://open-bio.org/">OBF</a> 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章）加载GenBank文件为SeqRecord相同的东西。</p>
+<p>Biopython中BioSQL模块的文档目前放在 <a class="reference external" href="http://biopython.org/wiki/BioSQL">http://biopython.org/wiki/BioSQL</a> ，是我们维基页面的一部分。</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">第18章  Cookbook – 用它做一些很酷的事情</a><ul>
+<li><a class="reference internal" href="#id1">18.1  操作序列文件</a><ul>
+<li><a class="reference internal" href="#id2">18.1.1  过滤文件中的序列</a></li>
+<li><a class="reference internal" href="#id3">18.1.2  生成随机基因组</a></li>
+<li><a class="reference internal" href="#cdsfasta">18.1.3  翻译CDS条目为FASTA文件</a></li>
+<li><a class="reference internal" href="#fasta">18.1.4  将FASTA文件中的序列变为大写</a></li>
+<li><a class="reference internal" href="#id4">18.1.5  对序列文件排序</a></li>
+<li><a class="reference internal" href="#fastq">18.1.6  FASTQ文件的简单质量过滤</a></li>
+<li><a class="reference internal" href="#id5">18.1.7  切除引物序列</a></li>
+<li><a class="reference internal" href="#id6">18.1.8  切除接头序列</a></li>
+<li><a class="reference internal" href="#id7">18.1.9  转换FASTQ文件</a></li>
+<li><a class="reference internal" href="#fastaqualfastq">18.1.10  转换FASTA和QUAL文件为FASTQ文件</a></li>
+<li><a class="reference internal" href="#id8">18.1.11  索引FASTQ文件</a></li>
+<li><a class="reference internal" href="#sff">18.1.12  转换SFF文件</a></li>
+<li><a class="reference internal" href="#id9">18.1.13  识别开放读码框</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10">18.2  序列解析与简单作图</a><ul>
+<li><a class="reference internal" href="#id11">18.2.1  序列长度柱状图</a></li>
+<li><a class="reference internal" href="#gc">18.2.2  序列GC%含量作图</a></li>
+<li><a class="reference internal" href="#id12">18.2.3  核苷酸点线图</a></li>
+<li><a class="reference internal" href="#id13">18.2.4  绘制序列读长数据的质量图</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id14">18.3  处理序列比对</a><ul>
+<li><a class="reference internal" href="#id15">18.3.1  计算摘要信息</a></li>
+<li><a class="reference internal" href="#id16">18.3.2  计算一个快速一致序列</a></li>
+<li><a class="reference internal" href="#id17">18.3.3  位点特异性评分矩阵</a></li>
+<li><a class="reference internal" href="#id18">18.3.4  信息量</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id19">18.4  替换矩阵</a><ul>
+<li><a class="reference internal" href="#id20">18.4.1  使用常见替换矩阵</a></li>
+<li><a class="reference internal" href="#id21">18.4.2  从序列比对创建你自己的替换矩阵</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#biosql">18.5  BioSQL – 存储序列到关系数据库中</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chr17.html"
+                        title="previous chapter">第17章 Graphics模块中的基因组可视化包—GenomeDiagram</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chr19.html"
+                        title="next chapter">第19章 Biopython测试框架</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chr18.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chr19.html" title="第19章 Biopython测试框架"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chr17.html" title="第17章 Graphics模块中的基因组可视化包—GenomeDiagram"
+             >previous</a> |</li>
+        <li><a href="index.html">biopython_cn 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, biopythoners.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>
