@@ -1338,6 +1338,6 @@ by several LPCs (Large Pharmaceutical Companies :-).
 
 
 
-.. |image3| image:: ./_static/images/smcra.png
+.. |image3| image:: ./images/smcra.png
 
 

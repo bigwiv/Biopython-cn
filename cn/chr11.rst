@@ -1017,5 +1017,5 @@ Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的紊乱区域的
 
 
 
-.. |image3| image:: ./_static/images/smcra.png
+.. |image3| image:: ./images/smcra.png
 

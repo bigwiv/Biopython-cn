@@ -1,10 +1,10 @@
 ===============================
-Biopython 教程与手册
+Biopython Tutorial and Cookbook
 ===============================
 
 .. image:: ./images/biopython.jpg
 
-Biopython 教程与手册
+Biopython Tutorial and Cookbook
 ===============================
 
 Jeff Chang, Brad Chapman, Iddo Friedberg, Thomas Hamelryck,
@@ -19,31 +19,30 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   cn/chr01
-   cn/chr02
-   cn/chr03
-   cn/chr04
-   cn/chr05
-   cn/chr06
-   cn/chr07
-   cn/chr08
-   cn/chr09
-   cn/chr10
-   cn/chr11
-   cn/chr12
-   cn/chr13
-   cn/chr14
-   cn/chr15
-   cn/chr16
-   cn/chr17
-   cn/chr18
-   cn/chr19
-   cn/chr20
-   cn/chr21
-   cn/chr22
-   cn/chr23
-   index_en
-   README
+   en/chr01
+   en/chr02
+   en/chr03
+   en/chr04
+   en/chr05
+   en/chr06
+   en/chr07
+   en/chr08
+   en/chr09
+   en/chr10
+   en/chr11
+   en/chr12
+   en/chr13
+   en/chr14
+   en/chr15
+   en/chr16
+   en/chr17
+   en/chr18
+   en/chr19
+   en/chr20
+   en/chr21
+   en/chr22
+   en/chr23
+   index
 
 Indices and tables
 ==================

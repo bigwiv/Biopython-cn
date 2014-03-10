@@ -749,7 +749,7 @@ current versions of RPS-BLAST.
 
 
 
-.. |image1| image:: ./_static/images/BlastRecord.png
-.. |image2| image:: ./_static/images/PSIBlastRecord.png
+.. |image1| image:: ./images/BlastRecord.png
+.. |image2| image:: ./images/PSIBlastRecord.png
 
 
