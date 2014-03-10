@@ -1637,10 +1637,10 @@ which is part of our wiki pages.
 
 
 
-.. |image26| image:: ./images/hist_plot.png
-.. |image27| image:: ./images/gc_plot.png
-.. |image28| image:: ./images/dot_plot.png
-.. |image29| image:: ./images/dot_plot_scatter.png
-.. |image30| image:: ./images/SRR001666.png
+.. |image26| image:: ../images/hist_plot.png
+.. |image27| image:: ../images/gc_plot.png
+.. |image28| image:: ../images/dot_plot.png
+.. |image29| image:: ../images/dot_plot_scatter.png
+.. |image30| image:: ../images/SRR001666.png
 
 

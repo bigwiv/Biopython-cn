@@ -813,13 +813,13 @@ bug database.
 
 
 
-.. |image5| image:: ./images/phylo-simple-draw.png
-.. |image6| image:: ./images/phylo-color-draw.png
-.. |image7| image:: ./images/phylo-draw-example.png
-.. |image8| image:: ./images/phylo-dot.png
-.. |image9| image:: ./images/phylo-rooted.png
-.. |image10| image:: ./images/phylo-color.png
-.. |image11| image:: ./images/phylo-apaf.png
-.. |image12| image:: ./images/phylo-apaf-zoom.png
+.. |image5| image:: ../images/phylo-simple-draw.png
+.. |image6| image:: ../images/phylo-color-draw.png
+.. |image7| image:: ../images/phylo-draw-example.png
+.. |image8| image:: ../images/phylo-dot.png
+.. |image9| image:: ../images/phylo-rooted.png
+.. |image10| image:: ../images/phylo-color.png
+.. |image11| image:: ../images/phylo-apaf.png
+.. |image12| image:: ../images/phylo-apaf-zoom.png
 
 

@@ -661,6 +661,6 @@ XML格式的输出。
 
 
 
-.. |image1| image:: ./images/BlastRecord.png
-.. |image2| image:: ./images/PSIBlastRecord.png
+.. |image1| image:: ../images/BlastRecord.png
+.. |image2| image:: ../images/PSIBlastRecord.png
 

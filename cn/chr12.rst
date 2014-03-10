@@ -367,5 +367,5 @@ FDist通过对由下例公式得到的迁移率进行溯祖模拟估计期望的
 
 
 
-.. |image4| image:: ./images/bottle.png
+.. |image4| image:: ../images/bottle.png
 

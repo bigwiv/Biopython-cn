@@ -937,18 +937,18 @@ create a colorful PDF file, shown here:
 
 
 
-.. |image13| image:: ./images/plasmid_linear.png
-.. |image14| image:: ./images/plasmid_circular.png
-.. |image15| image:: ./images/GD_sigil_labels.png
-.. |image16| image:: ./images/GD_sigils.png
-.. |image17| image:: ./images/GD_sigil_arrow_shafts.png
-.. |image18| image:: ./images/GD_sigil_arrow_heads.png
-.. |image19| image:: ./images/plasmid_linear_nice.png
-.. |image20| image:: ./images/plasmid_circular_nice.png
-.. |image21| image:: ./images/three_track_simple.png
-.. |image22| image:: ./images/three_track_cl.png
-.. |image23| image:: ./images/three_track_cl2a.png
-.. |image24| image:: ./images/simple_chrom.png
-.. |image25| image:: ./images/tRNA_chrom.png
+.. |image13| image:: ../images/plasmid_linear.png
+.. |image14| image:: ../images/plasmid_circular.png
+.. |image15| image:: ../images/GD_sigil_labels.png
+.. |image16| image:: ../images/GD_sigils.png
+.. |image17| image:: ../images/GD_sigil_arrow_shafts.png
+.. |image18| image:: ../images/GD_sigil_arrow_heads.png
+.. |image19| image:: ../images/plasmid_linear_nice.png
+.. |image20| image:: ../images/plasmid_circular_nice.png
+.. |image21| image:: ../images/three_track_simple.png
+.. |image22| image:: ../images/three_track_cl.png
+.. |image23| image:: ../images/three_track_cl2a.png
+.. |image24| image:: ../images/simple_chrom.png
+.. |image25| image:: ../images/tRNA_chrom.png
 
 

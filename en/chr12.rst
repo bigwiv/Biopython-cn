@@ -603,6 +603,6 @@ simple statistics like :math:`F_{st}`, or allele counts.
 
 
 
-.. |image4| image:: ./images/bottle.png
+.. |image4| image:: ../images/bottle.png
 
 
