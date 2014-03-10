@@ -3,6 +3,8 @@
 
 注意本章介绍的所有监督学习方法都需要先安装Numerical Python （numpy）。
 
+.. _sec-LogisticRegression:
+
 16.1 Logistic 回归模型
 -----------------------------------
 
@@ -35,6 +37,10 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 在logistic回归模型中，属于某个类别的概率依赖于通过logistic函数得出的分数。对于这两类OP和NOP，相应概率可如下表述：
 
+.. _eq-OP:
+
+.. _eq-NOP:
+
 .. math:: 
 
   \begin{eqnarray}
@@ -43,12 +49,14 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
   \end{eqnarray}
 
 使用一组已知是否属于相同操纵子（OP类别）或不同操纵子（NOP类别）的基因对，通过最大化相应概率函数的对数似然值，我们可以计算权重 β\ :sub:`0`, β\ :sub:`1`, β\ :sub:`2` 。
-(`16.2 <#eq:OP>`__) 和 (`16.3 <#eq:NOP>`__).
+(:ref:`16.2 <eq-OP>`) 和 (:ref:`16.3 <eq-NOP>`) .
+
+.. _subsec-LogisticRegressionTraining:
 
 16.1.2 训练logistic回归模型
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
---------------
+.. _table-training:
 
 +-----------------------------------------------------------------------------------+
 | 表16.1： 已知类别(OP or NOP)的相邻基因对.如果两个基因相重叠，其基因间距离为负值   |
@@ -94,7 +102,7 @@ Logistic回归是一种监督学习方法，通过若干预测变量 *x*\ :sub:`
 
 --------------
 
-表`16.1 <#table:training>`__ 列出了枯草芽孢杆菌的一些基因对，这些基因的操纵子结构已知。让我们根据表中的这些数据来计算其logistic回归模型：
+表 :ref:`16.1 <table-training>` 列出了枯草芽孢杆菌的一些基因对，这些基因的操纵子结构已知。让我们根据表中的这些数据来计算其logistic回归模型：
 
 .. code:: python
 
@@ -232,7 +240,7 @@ Logistic回归模型预测 *yxcE* ， *yxcD* 属于相同操纵子（类别OP）
 （这个结果和生物学文献报道的一致）。
 
 为了确定这个预测的可信度，我们可以调用 ``calculate`` 函数来获得类别OP和NOP的概率(公式
-(`16.2 <#eq:OP>`__) 和 (`16.3 <#eq:NOP>`__))。对于 *yxcE*, *yxcD* 我们发现
+(:ref:`16.2 <eq-OP>`) 和 (:ref:`16.3 <eq-NOP>`) )。对于 *yxcE*, *yxcD* 我们发现
 
 .. code:: python
 
@@ -302,9 +310,9 @@ Leave-one-out分析显示这个logistic回归模型的预测只对两个基因�
 16.1.4 Logistic回归，线性判别分析和支持向量机
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Logistic回归模型类似于线性判别分析。在线性判别分析中，类别概率同样可由方程(`16.2 <#eq:OP>`__) and (`16.3 <#eq:NOP>`__)给出。但是，不是直接估计系数β，我们首先对预测变量 *x* 拟合一个正态分布。然后通过这个正态分布的平均值和方差计算系数β。如果 *x* 的分布确实是正态的，线性判别分析将比logistic回归模型有更好的性能。另一方面，logistic回归模型对于偏态到正态的广泛分布更加强健。
+Logistic回归模型类似于线性判别分析。在线性判别分析中，类别概率同样可由方程(:ref:`16.2 <eq-OP>`) 和 (:ref:`16.3 <eq-NOP>`) 给出。但是，不是直接估计系数β，我们首先对预测变量 *x* 拟合一个正态分布。然后通过这个正态分布的平均值和方差计算系数β。如果 *x* 的分布确实是正态的，线性判别分析将比logistic回归模型有更好的性能。另一方面，logistic回归模型对于偏态到正态的广泛分布更加强健。
 
-另一个相似的方法是应用线性核函数的支持向量机。这样的SVM也使用一个预测变量的线性组合，但是是从靠近类别之间的边界区域的预测变量 *x* 来估计系数β。如果logistic回归模型(公式 (`16.2 <#eq:OP>`__) 和 (`16.3 <#eq:NOP>`__))很好的描述了远离边界区域的 *x* ，我们可以期望logistic回归模型优于线性核函数SVM，因为它应用了更多数据。如果不是，SVM可能更好。
+另一个相似的方法是应用线性核函数的支持向量机。这样的SVM也使用一个预测变量的线性组合，但是是从靠近类别之间的边界区域的预测变量 *x* 来估计系数β。如果logistic回归模型(公式 (:ref:`16.2 <eq-OP>`) 和 (:ref:`16.3 <eq-NOP>`) )很好的描述了远离边界区域的 *x* ，我们可以期望logistic回归模型优于线性核函数SVM，因为它应用了更多数据。如果不是，SVM可能更好。
 
 Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistical Learning. Data Mining, Inference, and Prediction.(统计学习基础:数据挖掘、推理与预测) Springer Series in Statistics, 2001. 4.4章.
 
@@ -316,12 +324,12 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
 
 最近邻居法是一种不需要将数据拟合到一个模型的监督学习算法。数据点是基于训练数据集的 *k* 个最近邻居类别进行分类的。
 
-在Biopython中， *KNN* 方法可在 ``Bio.KNN`` 中获得。我们使用 `16.1 <#sec:LogisticRegression>` 同样的操纵子数据集来说明Biopython中 *KNN* 方法的用法。
+在Biopython中， *KNN* 方法可在 ``Bio.KNN`` 中获得。我们使用 :ref:`16.1 <sec-LogisticRegression>` 同样的操纵子数据集来说明Biopython中 *KNN* 方法的用法。
 
 16.2.2 初始化一个 *KNN* 模型
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-使用表`16.1 <#table:training>`__中的数据，我们创建和初始化一个*KNN*模型：
+使用表 :ref:`16.1 <table-training>` 中的数据，我们创建和初始化一个*KNN*模型：
 
 .. code:: python
 
@@ -329,7 +337,7 @@ Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistic
     >>> k = 3
     >>> model = kNN.train(xs, ys, k)
 
-这里 ``xs`` 和 ``ys`` 和 `16.1.2 <#subsec:LogisticRegressionTraining>`__ 中的相同。 ``k`` 是分类中的邻居数 *k* 。对于二分类，为 *k* 选择一个奇数可以避免tied votes。函数名 ``train`` 在这里有点不合适，因为就没有训练模型：这个函数仅仅是用来存储模型变量 ``xs`` ， ``ys`` 和 ``k`` 。
+这里 ``xs`` 和 ``ys`` 和 :ref:`16.1.2 <subsec-LogisticRegressionTraining>` 中的相同。 ``k`` 是分类中的邻居数 *k* 。对于二分类，为 *k* 选择一个奇数可以避免tied votes。函数名 ``train`` 在这里有点不合适，因为就没有训练模型：这个函数仅仅是用来存储模型变量 ``xs`` ， ``ys`` 和 ``k`` 。
 
 16.2.3 使用*KNN* 模型来分类
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

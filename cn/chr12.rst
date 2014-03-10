@@ -109,13 +109,15 @@ Biopython溯祖模拟可以创建群体场景（demographic scenarios）和基�
 **Single population, constant size**
 	单一种群固定群体大小。标准的参数即可满足它，模板名称：simple.
 **Single population, bottleneck**
-	单一群体瓶颈效应，如图 `12.2.1.1 <#fig:bottle>`__ 所示。参数有当前种群大小（图中ne3模板的pop\_size）、种群扩张时间 - 扩张发生后代数（expand\_gen），瓶颈发生时的有效群体大小（ne2），种群收缩时间（contract\_gen）以及原始种群大小（ne3）。模板名：bottle。
+	单一群体瓶颈效应，如图 :ref:`12.2.1.1 <fig-bottle>` 所示。参数有当前种群大小（图中ne3模板的pop\_size）、种群扩张时间 - 扩张发生后代数（expand\_gen），瓶颈发生时的有效群体大小（ne2），种群收缩时间（contract\_gen）以及原始种群大小（ne3）。模板名：bottle。
 **Island model**
 	典型的岛屿模型。同群种（deme）总数表示为total\_demes，迁移率表示为mig。模板名：island。
 **Stepping stone model - 1 dimension**
 	一维脚踏石模型（Stepping stone model），极端状态下种群分布不连续。同群种（deme）总数表示为total\_demes，迁移率表示为mig。模板名：ssm\_1d。
 **Stepping stone model - 2 dimensions**
 	二维脚踏石模型，极端状态下种群分布不连续。参数有表示水平维度的x和表示垂直维度的y（同群种总数即为x × y），以及表示迁移率的mig。模板名：ssm\_2d。
+
+.. _fig-bottle:
 
 |image4|
 
@@ -365,5 +367,5 @@ FDist通过对由下例公式得到的迁移率进行溯祖模拟估计期望的
 
 
 
-.. |image4| image:: ../images/bottle.png
+.. |image4| image:: ./_static/images/bottle.png
 

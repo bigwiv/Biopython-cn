@@ -84,22 +84,22 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 
 #. *在科学出版中我怎样引用Biopython？*
    
-   请引用我们的应用笔记 [`1 <#cock2009>`__, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
+   请引用我们的应用笔记 [:ref:`1 <cock2009>`, Cock *et al.* ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
    引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
    （更多信息可在我们网站上获得）：
 
-   -  对于官方项目声明: [`13 <#chapman2000>`__,
+   -  对于官方项目声明: [:ref:`13 <chapman2000>`,
       Chapman and Chang, 2000];
-   -  对于 ``Bio.PDB``: [`18 <#hamelryck2003a>`__, Hamelryck and
+   -  对于 ``Bio.PDB``: [:ref:`18 <hamelryck2003a>`, Hamelryck and
       Manderick, 2003];
-   -  对于 ``Bio.Cluster``: [`14 <#dehoon2004>`__, De Hoon *et al.*,
+   -  对于 ``Bio.Cluster``: [:ref:`14 <dehoon2004>`, De Hoon *et al.*,
       2004];
-   -  对于 ``Bio.Graphics.GenomeDiagram``: [`2 <#pritchard2006>`__,
+   -  对于 ``Bio.Graphics.GenomeDiagram``: [:ref:`2 <pritchard2006>`,
       Pritchard *et al.*, 2006];
-   -  对于 ``Bio.Phylo`` 和 ``Bio.Phylo.PAML``: [`9 <#talevich2012>`__,
+   -  对于 ``Bio.Phylo`` 和 ``Bio.Phylo.PAML``: [:ref:`9 <talevich2012>`,
       Talevich *et al.*, 2012];
    -  对于在Biopython，BioPerl，BioRuby，BioJava和EMBOSS支持的FASTQ格
-      式文件：[`7 <#cock2010>`__, Cock *et al.*, 2010].
+      式文件：[:ref:`7 <cock2010>`, Cock *et al.*, 2010].
 
 #. *我该怎样以大写字母写“Biopython”？写成“BioPython”可以吗？*
     
@@ -142,7 +142,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
    装。也可以访问： `http://numpy.scipy.org/ <http://numpy.scipy.org/>`__
 #. *为什么* ``Seq`` *对象缺少了这篇教程里的（反向）transcription和translation方法？*
     
-   你需要Biopython 1.49或更新的版本。或者，使用以下 \ `3.14 <#sec:seq-module-functions>`__ 部分中的 ``Bio.Seq`` 模块
+   你需要Biopython 1.49或更新的版本。或者，使用以下 :ref:`3.14 <sec-seq-module-functions>` 部分中的 ``Bio.Seq`` 模块
    功能。
 #. *为什么* ``Seq`` *对象缺少了这篇教程中的upper和lower方法？*
    
@@ -181,7 +181,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
 #. *为什么* ``Bio.SeqIO`` *和* ``Bio.AlignIO`` *函数* ``parse`` *，* ``read`` *和* ``write`` *不能使用文件名？它们坚持句柄！*
 
    你需要Biopython 1.54或更新的版本。或者明确使用句柄。
-   (见 Section \ `22.1 <#sec:appendix-handles>`__). 一定要记得当你写完数据后关闭输
+   (见 Section :ref:`22.1 <sec-appendix-handles>`). 一定要记得当你写完数据后关闭输
    出句柄。
 
 #. *为什么* ``Bio.SeqIO.write()`` *和* ``Bio.AlignIO.write()`` *函数不接受单个记录
@@ -237,7 +237,7 @@ Biopython的所有安装信息在此文档中分开，以便于更容易保持�
    正常但是没有convert函数！*
 
    你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合 ``parse`` 和 ``write`` 函数。
-   （见 Sections \ `5.5.2 <#sec:SeqIO-conversion>`__ 和 \ `6.2.1 <#sec:converting-alignments>`__）。
+   （见 Sections :ref:`5.5.2 <sec-SeqIO-conversion>` 和 :ref:`6.2.1 <sec-converting-alignments>`）。
 
 #. *为什么* ``Bio.SeqIO.index()`` *不能正常工作？模块导入正常但是没有index函数！*
 

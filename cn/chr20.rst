@@ -1,3 +1,5 @@
+.. _chapter-advanced:
+
 第20章 高级
 ====================
 
@@ -136,7 +138,7 @@ Consumers是用来接收Scanners所发出事件的对象。
 
           EFM = SubsMat._build_exp_freq_mat(OFM,exp_freq_table)
 
-      #. ``exp_freq_table``: 为一个FreqTable的实例。有关FreqTable更多信息请见第 \ `20.2.2 <#sec:freq_table>`__ 节。简单地说，期望频率表表示字母表中每个元素显示的频率。这个表相当于一个字典，字母是键，字母对应的频率是值。总和为1。
+      #. ``exp_freq_table``: 为一个FreqTable的实例。有关FreqTable更多信息请见第 :ref:`20.2.2 <sec-freq_table>` 节。简单地说，期望频率表表示字母表中每个元素显示的频率。这个表相当于一个字典，字母是键，字母对应的频率是值。总和为1。
     
       期望频率表可以（理论上说也应该可以）从OFM得到。所以大多数情况你可以用下面的代码产生 ``exp_freq_table``:
 
@@ -183,6 +185,8 @@ Consumers是用来接收Scanners所发出事件的对象。
    #. ``exp_freq_table``: 期望频率表。如果用户没有提供，就从 ``acc_rep_mat`` 产生。
    #. ``logbase``: LOM的对数的底。默认为10。
    #. ``round_digit``: 四舍五入的小数点位数。默认为0。
+
+.. _sec-freq_table:
 
 20.2.2  FreqTable
 ~~~~~~~~~~~~~~~~~

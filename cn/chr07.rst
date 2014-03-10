@@ -1,3 +1,5 @@
+.. _chapter-blast:
+
 第7章  BLAST
 ================
 
@@ -19,10 +21,12 @@
 电脑上运行一个本地BLAST，还是在远程服务器（另外一台电脑，通常是NCBI的服务器）上运行。
 我们将在一个Python脚本里调用NCBI在线BLAST服务来开始这章的内容。
 
-*注意*: 接下来的 \ `第8章 <#chapter:searchio>`__ 介绍的 ``Bio.SearchIO`` 是一个
+*注意*: 接下来的 第 :ref:`8 <chapter-searchio>` 章介绍的 ``Bio.SearchIO`` 是一个
 Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bio.Blast`` 模块。
 因为它提供了一个更为通用的序列搜索相关的框架。不过，在这个模块的稳定版本发布之前，在实际工作中的代码里，请继续用 ``Bio.Blast``
 模块来处理NCBI BLAST。
+
+.. _sec-running-www-blast:
 
 7.1  通过Internet运行BLAST
 ------------------------------------
@@ -46,7 +50,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 
 -  ``qblast`` 函数可以返回多种格式的BLAST结果。你可以通过可选参数 ``format_type`` 
    指定格式关键字为：``"HTML"``, ``"Text"``, ``"ASN.1"``, 或 ``"XML"`` 。默认
-   格式是 ``"XML"`` ，这是解析器期望的格式，`7.3节 <#sec:parsing-blast>`__ 对其有详细的描述。
+   格式是 ``"XML"`` ，这是解析器期望的格式， :ref:`7.3 <sec-parsing-blast>` 节对其有详细的描述。
 
 -  参数 ``expect``  指定期望值，即阀值 e-value。
 
@@ -96,12 +100,12 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
     >>> record = SeqIO.read("m_cold.fasta", format="fasta")
     >>> result_handle = NCBIWWW.qblast("blastn", "nt", record.format("fasta"))
 
-如果你的序列在一个非FASTA格式的文件中并且你用 ``Bio.SeqIO`` (看第5章`5 <#chapter:Bio.SeqIO>`__)
+如果你的序列在一个非FASTA格式的文件中并且你用 ``Bio.SeqIO`` (看第 :ref:`5 <chapter-Bio.SeqIO>` 章)
 把序列取出来了，那么这个方法更有用。
 
 不论你给 ``qblast()`` 函数提供了什么参数，都应该返回一个handle object的结果(
 默认是XML格式)。下一步就是将这个XML输出解析为代表BLAST搜索结果的Python
-对象（`7.3 <#sec:parsing-blast>`__）。
+对象（ :ref:`7.3 <sec-parsing-blast>` ）。
 不过，也许你想先把这个XML输出保存一个本地文件副本。当调试从BLAST结果提取信息的代码的时候，我发现这样做
 尤其有用。(因为重新运行在线BLAST搜索很慢并且会浪费NCBI服务器的运行时间)。
 
@@ -116,7 +120,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
     >>> result_handle.close()
 
 这些做好后，结果已经存储在 ``my_blast.xml`` 文件中了并且原先的handle中的数据
-已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 ``parse`` 函数（描述见\ `7.3 <#sec:parsing-blast>`__)
+已经被全部提取出来了(所以我们把它关闭了)。但是，BLAST解析器的 ``parse`` 函数（描述见 :ref:`7.3 <sec-parsing-blast>` )
 采用一个文件句柄类的对象，所以我们只需打开已经保存的文件作为输入。
 
 .. code:: python
@@ -124,7 +128,9 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
     >>> result_handle = open("my_blast.xml")
 
 既然现在已经把BLAST的结果又一次读回handle，我们可以分析下这些结果。所以我们正好可以去读
-关于结果解析的章节（看下面  \ `7.3 <#sec:parsing-blast>`__ ）。你现在也许想跳过去看吧 ...
+关于结果解析的章节（看下面 :ref:`7.3 <sec-parsing-blast>` ）。你现在也许想跳过去看吧 ...
+
+.. _sec-running-local-blast:
 
 7.2  本地运行BLAST
 --------------------------
@@ -132,7 +138,7 @@ Biopython实验性质的模块。我们准备最终用它来替换原来的 ``Bi
 7.2.1  介绍
 ~~~~~~~~~~~~~~~~~~~
 
-在本地运行BLAST（跟通过internet运行比，见 \ `7.1 <#sec:running-www-blast>`__ ）
+在本地运行BLAST（跟通过internet运行比，见 :ref:`7.1 <sec-running-www-blast>` ）
 至少有2个主要优点：
 
 -  本地运行BLAST可能比通过internet运行更快；
@@ -179,7 +185,7 @@ BLAST+ <http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_
 建立一个本地BLAST数据库，还有其在老版本BLAST中的等效工具 ``formatdb`` 。
 
 这节将简要地介绍怎样在Python中使用这些工具。如果你已经阅读了并试过
-\ `6.4 <#sec:alignment-tools>`__ 节的序列联配（alignment）工具，下面介绍
+:ref:`6.4 <sec-alignment-tools>` 节的序列联配（alignment）工具，下面介绍
 的方法应该是很简单直接的。首先，我们构建一个命令行字符串（就像你使用单机版
 BLAST的时候，在终端打入命令行一样）。然后，我们在Python中运行这个命令。
 
@@ -217,7 +223,7 @@ BLAST的时候，在终端打入命令行一样）。然后，我们在Python中
 
 如果你回想下这个指南的中的早先的例子，``opuntia.fasta`` 包含7条序列，
 所以BLAST XML 格式的结果输出文件应该包括多个结果。因此，我们在
-下面的`7.3 <#sec:parsing-blast>`__ 节将用 ``Bio.Blast.NCBIXML.parse()`` 来
+下面的 :ref:`7.3 <sec-parsing-blast>` 节将用 ``Bio.Blast.NCBIXML.parse()`` 来
 解析这个结果文件。
 
 7.2.4  WU-BLAST 和 AB-BLAST
@@ -231,6 +237,8 @@ BLAST的时候，在终端打入命令行一样）。然后，我们在Python中
 Biopython 目前还没有提供调用这些工具的包装程序，但是应该可以解析它们
 与NCBI兼容的输出结果。
 
+.. _sec-parsing-blast:
+
 7.3  解析BLAST 输出
 -------------------------
 
@@ -238,7 +246,7 @@ Biopython 目前还没有提供调用这些工具的包装程序，但是应该�
 以前，Biopython有针对HTML 和纯文本格式输出文件的解析器，因为当时只有这两种
 格式的输出结果文件。不幸的是，这两种方式的BLAST 输出结果一直在变动，而每次
 变动就会导致解析器失效。 所以，我们删除了针对HTML格式的解析器，不过纯文本格式
-的解析还可以用（见 \ `7.5 <#sec:parsing-blast-deprecated>`__ ）。使用这个解析器
+的解析还可以用（见 :ref:`7.5 <sec-parsing-blast-deprecated>` ）。使用这个解析器
 有一定的风险，它可能能工作也可能无效，依赖于你正在使用哪个BLAST版本。
 
 跟上BLAST输出文件格式的改变很难，特别是当用户使用不同版本的BLAST的时候。
@@ -249,10 +257,10 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 你可以通过好几个途径来获得XML格式的BLAST输出文件。对解析器来说，不管你是
 怎么生成输出的，只要是输出的格式是XML就行。
 
--  你可以通过Biopython来运行因特网上的BLAST，就像 `7.1 <#sec:running-www-blast>`__
+-  你可以通过Biopython来运行因特网上的BLAST，就像 :ref:`7.1 <sec-running-www-blast>`
    节描述的那样。
 
--  你可以通过Biopython来运行本地的BLAST，就像 `7.2 <#sec:running-local-blast>`__
+-  你可以通过Biopython来运行本地的BLAST，就像 :ref:`7.2 <sec-running-local-blast>`
    节描述的那样。
 
 -  你可以在通过浏览器在NCBI网站上进行BLAST搜索，然后保存结果文件。你需要选择输出
@@ -265,7 +273,7 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
 关键点就是你不必用Biopython脚本来获取数据才能解析它。通过以上任何一种方式
 获取了结果输出，你然后需要获得文件句柄来处理它。在Python中，一个文件句柄就是一种
 用于描述到任何信息源的输入的良好通用的方式，以便于这些信息能够使用 ``read()`` 和 ``readline()``
-函数（见章节 sec:appendix-handles）来获取。
+函数（见章节 :ref:`22.1 <sec-appendix-handles>` ）来获取。
 
 如果你一直跟着上几节用来和BLAST交互的代码的话，你已经有了个 ``result_handle``
 ，一个用来得到BLAST的结果文件句柄。 比如通过GI号来进行一个在线BLAST搜索：
@@ -297,8 +305,8 @@ XML格式的输出不仅比HTML 和纯文本格式的更稳定，而且解析起
     >>> from Bio.Blast import NCBIXML
     >>> blast_records = NCBIXML.parse(result_handle)
 
-就像 ``Bio.SeqIO`` 和 ``Bio.AlignIO`` (参见 章节 \ `5 <#chapter:Bio.SeqIO>`__
-和 \ `6 <#chapter:Bio.AlignIO>`__), 我们有一对输入函数， ``read`` 和 
+就像 ``Bio.SeqIO`` 和 ``Bio.AlignIO`` (参见第 :ref:`5 <chapter-Bio.SeqIO>` 
+和第 :ref:`6 <chapter-Bio.AlignIO>` 章), 我们有一对输入函数， ``read`` 和 
 ``parse`` 。 当你只有一个输出结果的时候用 ``read`` 。当你有许多
 输出结果的时候，可以用 ``parse`` 这个迭代器。 但是，我们调用函数获得结果
 不是 ``SeqRecord`` 或者 ``MultipleSeqAlignment`` 对象，我们得到BLAST记录对象。
@@ -411,13 +419,19 @@ or more elegantly:
 
 下面是 我尝试画的 ``Blast`` 和 ``PSIBlast`` 记录类的UML图。如果你对UML图很熟悉，不妨
 看看下面的UML图是否有错误或者可以改进的地方，如果有，请联系我。
-BLAST类图在这里 \ `7.4 <#fig:blastrecord>`__ 。
+BLAST类图在这里 :ref:`7.4 <fig-blastrecord>` 。
+
+.. _fig-blastrecord:
 
 |image1|
 
-PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里 \ `7.4 <#fig:psiblastrecord>`__ 。
+PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法。PSIBlast类图在这里 :ref:`7.4 <fig-psiblastrecord>` 。
+
+.. _fig-psiblastrecord:
 
 |image2|
+
+.. _sec-parsing-blast-deprecated:
 
 7.5  废弃的BLAST 解析器
 -----------------------------
@@ -425,7 +439,7 @@ PSIBlast 记录类是类似的，但是支持用在迭代器中的rounds方法�
 老版本的Biopython 有针对纯文本和HTML格式输出结果的解析器。但是经过几年
 我们发现维护这些解析器很困难。基本上，任何BLAST输出的任何小改变都会导致
 这些解析器失效。所以我们推荐你解析XML格式的BLAST输出结果，就像在 
-`7.3 <#sec:parsing-blast>`__ 描述的那样。
+:ref:`7.3 <sec-parsing-blast>` 描述的那样。
 
 取决于你使用Biopython的版本，纯文本格式的解析器也许有效也许失效。
 用这个解析器的所带来的风险由你自己承担。
@@ -472,7 +486,7 @@ BLAST， 并且如下处理：
     ...             print hsp.match[0:75] + '...'
     ...             print hsp.sbjct[0:75] + '...'
 
-如果你已经读过 \ `7.3 节 <#sec:parsing-blast>`__ 关于解析XML格式的部分，
+如果你已经读过 :ref:`7.3 <sec-parsing-blast>` 节关于解析XML格式的部分，
 你将会发现上面的代码和那个章节的是一样的。一旦你把输出文件解析到记录类中，
 你就能处理信息，不管你原来的BLAST输出格式是什么。很赞吧。
 
@@ -647,6 +661,6 @@ XML格式的输出。
 
 
 
-.. |image1| image:: ../images/BlastRecord.png
-.. |image2| image:: ../images/PSIBlastRecord.png
+.. |image1| image:: ./_static/images/BlastRecord.png
+.. |image2| image:: ./_static/images/PSIBlastRecord.png
 

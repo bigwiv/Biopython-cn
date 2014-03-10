@@ -1,3 +1,5 @@
+.. _chapter-Phylo:
+
 第13章  Bio.Phylo系统发育分析
 ========================================
 
@@ -6,7 +8,7 @@ Biopython1.54开始引入了Bio.Phylo模块，与SeqIO和AlignIO类似，它的�
 I/O操作。
 
 Bio.Phylo在一篇开放获取的期刊文章中有介绍
-[`9 <#talevich2012>`__, Talevich *et al.*, 2012], 这可能对您也有所帮助。
+[:ref:`9 <talevich2012>`, Talevich *et al.*, 2012], 这可能对您也有所帮助。
 
 
 13.1  示例: 树中有什么？ 
@@ -90,12 +92,14 @@ Bio.Phylo在一篇开放获取的期刊文章中有介绍
                               |________________________ G
 
 如果你安装有 **matplotlib** 或者 **pylab**, 你可以使用 ``draw`` 函数一个图像(见 Fig.
-`13.1 <#fig:phylo-simple-draw>`__):
+:ref:`13.1 <fig-phylo-simple-draw>` ):
 
 .. code:: python
 
     >>> tree.rooted = True
     >>> Phylo.draw(tree)
+
+.. _fig-phylo-simple-draw:
 
 |image5|
 
@@ -169,11 +173,13 @@ Or:
 
     >>> tree.clade[0,1].color = "blue"
 
-最后，展示一下我们的工作结果 (see Fig. `13.1.1 <#fig:phylo-color-draw>`__):
+最后，展示一下我们的工作结果 (见 Fig. :ref:`13.1.1 <fig-phylo-color-draw>` ):
 
 .. code:: python
 
     >>> Phylo.draw(tree)
+
+.. _fig-phylo-color-draw:
 
 |image6|
 
@@ -309,11 +315,13 @@ phyloXML和NeXML等树文件格式。
     >>> tree = Phylo.read("example.xml", "phyloxml")
     >>> Phylo.draw(tree, branch_labels=lambda c: c.branch_length)
 
+.. _fig-phylo-dot:
+
 |image7|
 
 ``draw_graphviz`` 则画出一个无根的进化分枝图（cladogram），但是它要求你安装有Graphviz、
 PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
-``dot`` 程序，让我们来画一个有根树（见图. `13.3 <#fig:phylo-dot>`__ ）：
+``dot`` 程序，让我们来画一个有根树（见图. :ref:`13.3 <fig-phylo-dot>` ）：
 
 .. code:: python
 
@@ -322,6 +330,8 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
     >>> import pylab
     >>> pylab.show()                    # Displays the tree in an interactive viewer
     >>> pylab.savefig('phylo-dot.png')  # Creates a PNG file of the same graphic
+
+.. _fig-phylo-rooted:
 
 |image8|
 
@@ -333,7 +343,7 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 ``networkx.draw_graphviz`` 所接受的参数。
 
 最终的显示也受所提供的树对象的 ``rooted`` 属性的影响。有根树在每个分支（branch）上显示
-一个“head”来表明它的方向（见图. `13.3 <#fig:phylo-rooted>`__ ）：
+一个“head”来表明它的方向（见图. :ref:`13.3 <fig-phylo-rooted>` ）：
 
 .. code:: python
 
@@ -341,11 +351,13 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
     >>> tree.rooted = True
     >>> Phylo.draw_graphiz(tree)
 
+.. _fig-phylo-color:
+
 |image9|
 
 “prog”参数指定Graphviz的用来布局的引擎。默认的引擎 ``twopi`` 对任何大小的树都表现很好，
 很可靠的避免交叉的分支出现。``neato`` 程序可能画出更加好看的中等大小的树，但是有时候会
-有交叉分支出现（见图. `13.3 <#fig:phylo-color>`__ ）。 ``dot`` 程序或许对小型的树有用，
+有交叉分支出现（见图. :ref:`13.3 <fig-phylo-color>` ）。 ``dot`` 程序或许对小型的树有用，
 但是对于大一点的树的布局易产生奇怪的事情。
 
 .. code:: python
@@ -554,6 +566,8 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 (`http://biopython.org/wiki/Phylo <http://biopython.org/wiki/Phylo>`__)
 以获得更多已有方法的使用示例。
 
+.. _sec-PhyloXML:
+
 13.4.4  PhyloXML树的特性
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -596,7 +610,7 @@ Biopython 1.58引入了一个PhyML的打包程序（wrapper）
 也已经被添加到Biopython 1.60中。
 
 注意，如果你系统中已经安装了EMBOSS的Phylip扩展，一些常用的Phylip程序，包括 ``dnaml`` 和 ``protml`` 
-已经通过 ``Bio.Emboss.Applications`` 中的EMBOSS打包程序被支持。参见章节 \ `6.4 <#sec:alignment-tools>`__
+已经通过 ``Bio.Emboss.Applications`` 中的EMBOSS打包程序被支持。参见章节 :ref:`6.4 <sec-alignment-tools>`
 以查看使用这些程序的例子和提示。
 
 13.6  PAML整合
@@ -661,7 +675,7 @@ Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版�
 
 **Bio.Nexus port**
     这个模块的大部分是在2009年NESCent主办的谷歌编程夏令营中写的，作为实现Python对phyloXML数据格式（见
-    `13.4.4 <#sec:PhyloXML>`__ ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
+    :ref:`13.4.4 <sec-PhyloXML>` ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
     的一部分被添加到Bio.Phylo使用的新类中。
 
     目前，Bio.Nexus包含一些还没有导入到Bio.Phylo类中的有用的特性——特别是，计算一致树（consensus tree）。
@@ -672,12 +686,12 @@ Bio.Phylo 目前还在开发中，下面是我们可能会在将来的发布版�
 
 
 
-.. |image5| image:: ../images/phylo-simple-draw.png
-.. |image6| image:: ../images/phylo-color-draw.png
-.. |image7| image:: ../images/phylo-draw-example.png
-.. |image8| image:: ../images/phylo-dot.png
-.. |image9| image:: ../images/phylo-rooted.png
-.. |image10| image:: ../images/phylo-color.png
-.. |image11| image:: ../images/phylo-apaf.png
-.. |image12| image:: ../images/phylo-apaf-zoom.png
+.. |image5| image:: ./_static/images/phylo-simple-draw.png
+.. |image6| image:: ./_static/images/phylo-color-draw.png
+.. |image7| image:: ./_static/images/phylo-draw-example.png
+.. |image8| image:: ./_static/images/phylo-dot.png
+.. |image9| image:: ./_static/images/phylo-rooted.png
+.. |image10| image:: ./_static/images/phylo-color.png
+.. |image11| image:: ./_static/images/phylo-apaf.png
+.. |image12| image:: ./_static/images/phylo-apaf-zoom.png
 

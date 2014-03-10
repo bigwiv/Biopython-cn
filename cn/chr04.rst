@@ -1,7 +1,9 @@
+.. _chapter-SeqRecord:
+
 第4章  序列注释对象
 ======================================
 
-Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接上章的 ``Seq`` 类，这章主要讲Sequence record 或称之为 ``SeqRecord`` 类, 该类在 ``Bio.SeqRecord`` 模块中有定义。 它（见 ``SeqFeature`` 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 ``Bio.SeqIO`` 过程中 （详见Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）。
+第 :ref:`3 <chapter-Bio.Seq>` 章介绍了序列对象的基本情况。紧接上章的 ``Seq`` 类，这章主要讲Sequence record 或称之为 ``SeqRecord`` 类, 该类在 ``Bio.SeqRecord`` 模块中有定义。 它（见 ``SeqFeature`` 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 ``Bio.SeqIO`` 过程中 （详见第 :ref:`5 <chapter-Bio.SeqIO>` 章）。
 
 如读者只需处理FASTA格式的序列文件等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。
 
@@ -16,7 +18,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 4.1  SeqRecord对象
 -------------------------
 
-``SeqRecord`` (Sequence Record) 类包含在 ``Bio.SeqRecord`` 模块中。该类是 ``Bio.SeqIO`` 序列输入/输出交互界面 (详见Chapter \ `5 <#chapter:Bio.SeqIO>`__)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见Chapter \ `3 <#chapter:Bio.Seq>`__)。
+``SeqRecord`` (Sequence Record) 类包含在 ``Bio.SeqRecord`` 模块中。该类是 ``Bio.SeqIO`` 序列输入/输出交互界面 (详见第 :ref:`5 <chapter-Bio.SeqIO>` 章)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见第 :ref:`3 <chapter-Bio.Seq>` 章)。
 
 ``SeqRecord`` 类非常简单,包括下列属性:
 
@@ -29,18 +31,18 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
 **.description**
     – 序列描述（-字符串类型）。
 **.letter\_annotations**
-    – 对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter\_annotations可用于质量分数(如    Section \ `18.1.6 <#sec:FASTQ-filtering-example>`__) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。
+    – 对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter\_annotations可用于质量分数(如第 :ref:`18.1.6 <sec-FASTQ-filtering-example>` 节) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。
 **.annotations**
     – 用于储存附加信息的字典。信息名为键（keys），信息内容为值（value）。用于保存序列的零散信息（如unstructured information）。
 **.features**
-    – ``SeqFeature`` 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ Section \ `4.3 <#sec:seq_features>`__）。
+    – ``SeqFeature`` 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ 第 :ref:`4.3 <sec-seq_features>` 节）。
 **.dbxrefs**
     – 储存数据库交叉引用信息（cross-references）的字符串列表。
 
 4.2  创建 SeqRecord
 -------------------------
 
-使用 ``SeqRecord`` 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用 ``Bio.SeqIO`` 从序列文件读取即可（见Chapter \ `5 <#chapter:Bio.SeqIO>`__）。 当然新建 ``SeqRecord`` 也不复杂。
+使用 ``SeqRecord`` 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用 ``Bio.SeqIO`` 从序列文件读取即可（见第 :ref:`5 <chapter-Bio.SeqIO>` 章）。 当然新建 ``SeqRecord`` 也不复杂。
 
 4.2.1  从头新建SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,7 +113,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
     ...
 
-回顾 Chapter \ `2 <#chapter:quick-start>`__ 的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历 ``SeqRecord`` 对象中的所有记录。 此处，我们介绍 ``Bio.SeqIO`` 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
+回顾第 :ref:`2 <chapter-quick-start>` 章的内容，我们已经遇到过 ``Bio.SeqIO.parse(...)`` 函数，用于遍历 ``SeqRecord`` 对象中的所有记录。 此处，我们介绍 ``Bio.SeqIO`` 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见第 :ref:`5 <chapter-Bio.SeqIO>` 章）:
 
 .. code:: python
 
@@ -130,7 +132,7 @@ Chapter \ `3 <#chapter:Bio.Seq>`__ 介绍了序列对象的基本情况。紧接
     >>> record.seq
     Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
 
-此处 ``Bio.SeqIO`` 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__ 用法)。
+此处 ``Bio.SeqIO`` 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见第 :ref:`5 <chapter-Bio.SeqIO>` 章用法)。
 
 接下来介绍 identifiers 和 description:
 
@@ -184,8 +186,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
     PROJECT     GenomeProject:10638
     ...
 
-同样使用 ``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见
-Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
+同样使用 ``Bio.SeqIO`` 读取文件，代码跟处理FASTA 文件类似 (详见第 :ref:`5 <chapter-Bio.SeqIO>` 章):
 
 .. code:: python
 
@@ -197,7 +198,7 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
 
-你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 ``Bio.SeqIO`` 可自动识别序列类型 （详见 chapter \ `5 <#chapter:Bio.SeqIO>`__ ）:
+你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 ``Bio.SeqIO`` 可自动识别序列类型 （详见第 :ref:`5 <chapter-Bio.SeqIO>` 章）:
 
 .. code:: python
 
@@ -245,7 +246,9 @@ GenBank 文件中per-letter annotations为空:
     >>> len(record.features)
     29
 
-接下来，我们将在 Section \ `4.3 <#sec:seq_features>`__ 介绍 ``SeqFeature`` 对象。
+接下来，我们将在 第 :ref:`4.3 <sec-seq_features>` 节介绍 ``SeqFeature`` 对象。
+
+.. _sec-seq_features:
 
 4.3  Feature, location 和 position对象
 -------------------------------------------
@@ -256,14 +259,14 @@ GenBank 文件中per-letter annotations为空:
 序列特征是描述一条序列不可或缺的部分。抛开序列本身，你需要一种方式去组织和获取关于这条序列的 “抽象” 信息。 尽管设计一个通用的类囊括序列的所有特征看似是不可能的，但是Biopython的 ``SeqFeature``
 类试图尽可能多的囊括序列的所有特征。Biopython主要依据 GenBank/EMBL 特征表来设计相应的对象，认识到这一点，将有助于你更快更好的理解Biopython ``SeqFeature`` 对象。
 
-``SeqFeature`` 对象的关键目的在于描述其相对于父序列（parent sequence，通常为 ``SeqRecord`` 对象）所处的位置（location）, 通常是介于两个positions间的一个区域（region），后续Section \ `4.3.2 <#sec:locations>`__ 将详细说明。
+``SeqFeature`` 对象的关键目的在于描述其相对于父序列（parent sequence，通常为 ``SeqRecord`` 对象）所处的位置（location）, 通常是介于两个positions间的一个区域（region），后续第 :ref:`4.3.2 <sec-locations>` 节将详细说明。
 
 ``SeqFeature`` 对象含大量属性，首先一一例出，然后在后续章节举例说明其用法:
 
 **.type**
     – 用文字描述的feature类型 (如 ‘CDS’ 或 ‘gene’)。
 **.location**
-    – ``SeqFeature`` 在序列中所处的位置。见Section \ `4.3.2 <#sec:locations>`__。 ``SeqFeature`` 设计了众多针对location对象的功能，包含一系列简写的属性。
+    – ``SeqFeature`` 在序列中所处的位置。见第 :ref:`4.3.2 <sec-locations>` 节。 ``SeqFeature`` 设计了众多针对location对象的功能，包含一系列简写的属性。
 
     **.ref**
         – ``.location.ref`` 简写 --location对象相关的参考序列。通常为空（None）。
@@ -276,7 +279,9 @@ GenBank 文件中per-letter annotations为空:
     – 存储feature附加信息（Python字典）。键（key）为值（value）所存信息的单字简要描述，值为实际信息。比如，键为 “evidence” ，而值为 “computational (non-experimental)”。 这只是为了提醒人们注意，该feature没有被实验所证实（湿实验）。Note：为与GenBank/EMBL文件中的feature tables对应，规定.qualifiers 中值为字符串数组（即使只有一个字符串）。
 **.sub\_features**
     – 只有在描述复杂位置时才使用，如 GenBank/EMBL文件中的 ‘joins’ 位置。 已被 ``CompoundLocation`` 对象取代，因此略过不提。
-    
+
+.. _sec-locations:
+
 4.3.2  Positions和locations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -418,7 +423,7 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 4.3.3  使用feature 或 location描述序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``SeqFeature`` 或 location object对象并没有直接包含任何序列，只是可根据储存的location (见Section \ `4.3.2 <#sec:locations>`__)，从父序列中取得。例如：某一短基因位于负链5:18位置，由于GenBank/EMBL文件以1开始计数，Biopython中表示为 ``complement(6..18)`` :
+``SeqFeature`` 或 location object对象并没有直接包含任何序列，只是可根据储存的location (见第 :ref:`4.3.2 <sec-locations>` 节)，从父序列中取得。例如：某一短基因位于负链5:18位置，由于GenBank/EMBL文件以1开始计数，Biopython中表示为 ``complement(6..18)`` :
 
 .. code:: python
 
@@ -466,9 +471,11 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息。此外还包括 ``medline_id`` 、 ``pubmed_id`` 以及 ``comment`` 。
 
-通常reference 也有 ``location`` 对象，便于文献涉及研究对象在序列中的定位。该 ``location`` 有可能是一个fuzzy location（见 section \ `4.3.2 <#sec:locations>`__）。
+通常reference 也有 ``location`` 对象，便于文献涉及研究对象在序列中的定位。该 ``location`` 有可能是一个fuzzy location（见第 :ref:`4.3.2 <sec-locations>` 节）。
 
 文献对象都以列表储存在 ``SeqRecord`` 对象的 ``annotations`` 字典中。 字典的键为 “references”。reference对象也是为了方便处理文献而设计，希望能满足各种使用需求。
+
+.. _sec-SeqRecord-format:
 
 4.5  格式化方法
 ----------------------
@@ -500,7 +507,9 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
     SSAC
 
-``format`` 方法接收单个必选参数，小写字母字符串是 ``Bio.SeqIO`` 模块支持的输出格式 (见Chapter \ `5 <#chapter:Bio.SeqIO>`__)。然而，此 ``format()`` 方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__）。
+``format`` 方法接收单个必选参数，小写字母字符串是 ``Bio.SeqIO`` 模块支持的输出格式 (见第 :ref:`5 <chapter-Bio.SeqIO>` 章)。然而，此 ``format()`` 方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见第 :ref:`5.5.4 <sec-Bio.SeqIO-and-StringIO>` 节）。
+
+.. _sec-SeqRecord-slicing:
 
 4.6  SeqRecord切片
 ------------------------
@@ -630,7 +639,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     >>> sub_record.description
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
-上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用Section \ `4.5 <#sec:SeqRecord-format>`__中所述 ``format`` 方法纠正：
+上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用第 :ref:`4.5 <sec-SeqRecord-format>` 节中所述 ``format`` 方法纠正：
 :
 
 .. code:: python
@@ -639,15 +648,17 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     >>> print sub_record.format("genbank")
     ...
 
-FASTQ例子参见 Sections \ `18.1.7 <#sec:FASTQ-slicing-off-primer>`__
-和 \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__ （此例中per-letter annotations (read质量分数) 也被取切片）。
+FASTQ例子参见第 :ref:`18.1.7 <sec-FASTQ-slicing-off-primer>` 节
+和第 :ref:`18.1.8 <sec-FASTQ-slicing-off-adaptor>` 节（此例中per-letter annotations (read质量分数) 也被取切片）。
+
+.. _sec-SeqRecord-addition:
 
 4.7  SeqRecord对象相加
 -----------------------------
 
 ``SeqRecord`` 对象可相加得到一个新的 ``SeqRecord`` 。注意：per-letter annotations也相加, features (locations 调整)；而其它annotation 保持不变(如id、name和description)。
 
-以FASTQ 文件中的第一条记录为例说明per-letter annotation （Chapter \ `5 <#chapter:Bio.SeqIO>`__ 详细介绍 ``SeqIO`` 函数）:
+以FASTQ 文件中的第一条记录为例说明per-letter annotation （第 :ref:`5 <chapter-Bio.SeqIO>` 章详细介绍 ``SeqIO`` 函数）:
 
 .. code:: python
 
@@ -774,6 +785,8 @@ Note: 上述方法并不完美（丢失了数据库交叉引用dbxrefs 和源fea
     'accessions', 'data_file_division', 'date', 'organism', 'gi']
 
 Note: 此例中序列record的identifiers也应调整（因为NCBI的reference链接的是未经修改的 *原始* 序列）。
+
+.. _sec-SeqRecord-reverse-complement:
 
 4.8  反向互补SeqRecord对象
 --------------------------------------------
