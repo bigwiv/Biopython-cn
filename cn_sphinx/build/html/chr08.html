@@ -51,12 +51,12 @@
           <div class="body">
             
   <div class="section" id="blast">
-<h1>第8章  BLAST和其他序列搜索工具(<em>实验性质的代码</em>)<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-searchio"></span><h1>第8章  BLAST和其他序列搜索工具(<em>实验性质的代码</em>)<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h1>
 <p><em>WARNING</em>: 这章教程介绍了Biopython中一个 <em>实验的</em> 模块。它正在被加入到
 Biopython中，并且以一个预尾期的状态整理到教程当中，这样在我们发布稳定版
 的之前可以收到一系列的反馈和并作改进。那时有些细节可能会改变，并且用到
 当前 <tt class="docutils literal"><span class="pre">Bio.SearchIO</span></tt> 模块的脚本也需要更新。切记！为了与NCBI BLAST有关的
-代码可以稳定工作，请继续使用第 <a class="reference external" href="#chapter:blast">7</a> 章介绍的Bio.Blast。</p>
+代码可以稳定工作，请继续使用第 <a class="reference internal" href="chr07.html#chapter-blast"><em>7</em></a> 章介绍的Bio.Blast。</p>
 <p>生物序列的鉴定是生物信息工作的主要部分。有几个工具像BLAST（可能是最流行
 的），FASTA ，HMMER还有许多其它的都有这个功能，每个工具都有独特的算法和
 途径。一般来说，这些工具都是用你的序列在数据库中搜索可能的匹配。随着序列
@@ -559,7 +559,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
 <span class="go">SeqRecord(seq=Seq(&#39;CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG&#39;, DNAAlphabet()), id=&#39;gi|262205317|ref|NR_030195.1|&#39;, name=&#39;aligned hit sequence&#39;, description=&#39;Homo sapiens microRNA 520b (MIR520B), microRNA&#39;, dbxrefs=[])</span>
 </pre></div>
 </div>
-<p>它们是你已经在第 <a class="reference external" href="#chapter:SeqRecord">4</a> 章看到过的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象！
+<p>它们是你已经在第 <a class="reference internal" href="chr04.html#chapter-seqrecord"><em>4</em></a> 章看到过的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象！
 意味着你可以对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象做的各种有趣的事同样适用于 <tt class="docutils literal"><span class="pre">HSP.query</span></tt> 和 <tt class="docutils literal"><span class="pre">HSP.hit</span></tt> 对象。</p>
 <p>现在 <tt class="docutils literal"><span class="pre">HSP</span></tt>  对象有个 <tt class="docutils literal"><span class="pre">alignment</span></tt> 属性（一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt>
 对象）应该不会让你感到惊讶：</p>
@@ -797,7 +797,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 是及其低下的。这是因为 <tt class="docutils literal"><span class="pre">parse</span></tt> 会分析所有的query，直到找到你感兴趣。</p>
 <p>在这种情况下，理想的选择是用 <tt class="docutils literal"><span class="pre">Bio.SearchIO.index</span></tt> 或 <tt class="docutils literal"><span class="pre">Bio.SearchIO.index_db</span></tt>
 来索引文件。如果名字听起来很熟悉，是因为你之前已经见过了，在
-Section <a class="reference external" href="#sec:SeqIO-index">5.4.2</a>。这些方法和 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>
+章节 <a class="reference internal" href="chr05.html#sec-seqio-index"><em>5.4.2</em></a> 。这些方法和 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt>
 中相应的方法行为很相似，只是多了些格式特异的关键字参数。</p>
 <p>这里有一些例子。你可以只用文件名和格式名来 <tt class="docutils literal"><span class="pre">index</span></tt></p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SearchIO</span>

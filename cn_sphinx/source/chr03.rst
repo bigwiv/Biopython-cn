@@ -1,10 +1,12 @@
+.. _chapter-Bio.Seq:
+
 第3章	生物序列对象
 ===========================
 
 生物学序列以绝对的优势成为生物信息学研究的重点对象。这一章我们将简要介绍
-Biopython处理这些序列的机制-- ``Seq`` 对象。第 `4 <#chapter:SeqRecord>`__ 
+Biopython处理这些序列的机制-- ``Seq`` 对象。第 :ref:`4 <chapter-SeqRecord>` 
 章将要引入与此相关的 ``SeqRecord`` 对象，此对象可以将序列信息和注释结合起来，
-用于第 \ `5 <#chapter:Bio.SeqIO>`__ 章序列的输入/输出。
+用于第 :ref:`5 <chapter-Bio.SeqIO>` 章序列的输入/输出。
 
 序列实质上就是由字母构成的字符串，比如 ``AGTACACTGGT`` ，看起来很自然，因为
 这就是序列在生物学文件中的常用代表格式。
@@ -149,7 +151,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 字母S混合的情况。
 
 然后还要注意，就像正常的Python字符串， ``Seq`` 对象在某些方式下是只读的。如果需要
-编辑序列，比如模拟点突变，请看后续的 \ `3.12 <#sec:mutable-seq>`__ 章节中讲述的
+编辑序列，比如模拟点突变，请看后续的 :ref:`3.12 <sec-mutable-seq>` 章节中讲述的
 ``MutableSeq`` 对象。
 
 3.3  切取序列
@@ -193,6 +195,8 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
     >>> my_seq[::-1]
     Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
 
+.. _sec-seq-to-string:
+
 3.4  将序列对象转换成字符串
 -------------------------------------
 
@@ -224,9 +228,9 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
     <BLANKLINE>
 
 这一行代码展示的是一个简单的FASTA格式的记录（不用关心自动换行）。
-\ `4.5 <#sec:SeqRecord-format>`__ 部分将介绍一个简洁的方式从 ``SeqRecord`` 
+:ref:`4.5 <sec-SeqRecord-format>` 部分将介绍一个简洁的方式从 ``SeqRecord`` 
 对象中获取FASTA格式的字符串，更详细的读写FASTA格式的序列文件将在第
-\ `5 <#chapter:Bio.SeqIO>`__ 章介绍。
+:ref:`5 <chapter-Bio.SeqIO>` 章介绍。
 
 *注意：*  如果你使用Biopython 1.44或者更旧的版本，使用 ``str(my_seq)`` 只会
 返回一个截短了的序列。这时候可以使用 ``my_seq.tostring()`` ，为了保持向后兼
@@ -321,6 +325,8 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
     >>> dna_seq.lower()
     Seq('acgt', DNAAlphabet())
 
+.. _sec-seq-reverse-complement:
+
 3.7  核苷酸序列和（反向）互补序列
 ---------------------------------------------------
 
@@ -359,7 +365,7 @@ Biopython 1.53起， ``Seq`` 对象也获取了类似的方法应用于字母表
     ...
     ValueError: Proteins do not have complements!
 
-  \ `5.5.3 <#sec:SeqIO-reverse-complement>`__ 部分的例子将 ``Seq`` 对象的反向互补
+  :ref:`5.5.3 <sec-SeqIO-reverse-complement>` 部分的例子将 ``Seq`` 对象的反向互补
  方法和 ``Bio.SeqIO`` 对于序列的输入/输出方法结合起来。
 
 3.8  转录
@@ -441,8 +447,9 @@ T → U的转换获得mRNA。
 
 *注意：* ``Seq`` 对象的 ``transcribe`` 和 ``back_transcribe`` 方法直到
 Biopython 1.49版本才出现，在较早的版本中你需要使用 ``Bio.Seq`` 模块的函
-数替代，详见 \ `3.14 <#sec:seq-module-functions>`__ 部分。
+数替代，详见 :ref:`3.14 <sec-seq-module-functions>` 部分。
 
+.. _sec-translation:
 
 3.9  翻译
 ----------------
@@ -554,14 +561,14 @@ K12中的基因yaaX：
 除了告诉Biopython翻译时使用另一种起始密码子编码甲硫氨酸外，使用这一选项同样能
 确保你的序列是个真实有效的CDS（如果不是将会抛出异常）。
 
-第 \ `18.1.3 <#sec:SeqIO-translate>`__ 章的例子将把 ``Seq`` 对象的翻译方法和
+第 :ref:`18.1.3 <sec-SeqIO-translate>` 章的例子将把 ``Seq`` 对象的翻译方法和
  ``Bio.SeqIO`` 对象的对于序列的输入/输出方法结合起来。 
 
 3.10  翻译表
 ------------------------
 
 在前面的章节中我们讨论了 ``Seq`` 对象的转录方法（并且提到了 ``Bio.Seq`` 模块
-中的等效函数--参见第 \ `3.14 <#sec:seq-module-functions>`__ 章节）。实质上
+中的等效函数--参见第 :ref:`3.14 <sec-seq-module-functions>` 章节）。实质上
 使用的这些密码子表对象来自与NCBI的 ```ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt`` 
 <ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt>`__ ，还有
 `http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi <http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi>`__ 
@@ -713,7 +720,9 @@ K12中的基因yaaX：
     True
 
 作为一个扩展，你可以建立一个Python字典，以 ``Seq`` 对象作为键值。一般情况下，
-将序列作为字符串赋予键值更有用。详见 \ `3.4 <#sec:seq-to-string>`__ 部分。
+将序列作为字符串赋予键值更有用。详见 :ref:`3.4 <sec-seq-to-string>` 部分。
+
+.. _sec-mutable-seq:
 
 3.12  MutableSeq对象
 ------------------------
@@ -784,7 +793,7 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
     Seq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG', IUPACUnambiguousDNA())
 
 就像你从 ``Seq`` 对象中获取字符串一样，你也可以从 ``MutableSeq`` 获得（参见
- `3.4 <#sec:seq-to-string>`__ 章节）。
+ :ref:`3.4 <sec-seq-to-string>` 章节）。
 
 3.13  UnknownSeq对象
 ------------------------
@@ -841,10 +850,12 @@ Python中可变对象和不可变对象的一个重要的技术差别就是 ``Mu
 
 你也许能够在自己的代码中找到 ``UnknownSeq`` 对象的应用，但你更可能首先在由
 ``Bio.SeqIO`` 创建的 ``SeqRecord`` 对象中遇到 ``UnknownSeq`` 对象（参见第
-\ `5 <#chapter:Bio.SeqIO>`__ 章）。一些序列格式的文件不总是由实际的序列组成，
+:ref:`5 <chapter-Bio.SeqIO>` 章）。一些序列格式的文件不总是由实际的序列组成，
 像GenBank和EMBL文件就可能包含各种特征的列表，而序列部分仅展示contig信息。
 又或者在测序工作中的QUAL文件仅包含质量分数，而 *从未* 包含序列，取而代之的
 和QUAL文件同时生成的FASTA格式文件 *确实* 是由序列构成。
+
+.. _sec-seq-module-functions:
 
 3.14  直接使用字符串
 -----------------------------------

@@ -50,12 +50,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="id1">
-<h1>第3章     生物序列对象<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-bio-seq">
+<span id="id1"></span><h1>第3章     生物序列对象<a class="headerlink" href="#chapter-bio-seq" title="Permalink to this headline">¶</a></h1>
 <p>生物学序列以绝对的优势成为生物信息学研究的重点对象。这一章我们将简要介绍
-Biopython处理这些序列的机制&#8211; <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象。第 <a class="reference external" href="#chapter:SeqRecord">4</a>
+Biopython处理这些序列的机制&#8211; <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象。第 <a class="reference internal" href="chr04.html#chapter-seqrecord"><em>4</em></a>
 章将要引入与此相关的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，此对象可以将序列信息和注释结合起来，
-用于第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章序列的输入/输出。</p>
+用于第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章序列的输入/输出。</p>
 <p>序列实质上就是由字母构成的字符串，比如 <tt class="docutils literal"><span class="pre">AGTACACTGGT</span></tt> ，看起来很自然，因为
 这就是序列在生物学文件中的常用代表格式。</p>
 <p><tt class="docutils literal"><span class="pre">Seq</span></tt> 对象和标准的Python字符串有两个明显的不同。首先，它们使用不同的方法。
@@ -176,7 +176,7 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 <p>注意在使用 <tt class="docutils literal"><span class="pre">Bio.SeqUtils.GC()</span></tt> 函数时会自动处理序列和可代表G或者C的歧意核苷酸
 字母S混合的情况。</p>
 <p>然后还要注意，就像正常的Python字符串， <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象在某些方式下是只读的。如果需要
-编辑序列，比如模拟点突变，请看后续的 <a class="reference external" href="#sec:mutable-seq">3.12</a> 章节中讲述的
+编辑序列，比如模拟点突变，请看后续的 <a class="reference internal" href="#sec-mutable-seq"><em>3.12</em></a> 章节中讲述的
 <tt class="docutils literal"><span class="pre">MutableSeq</span></tt> 对象。</p>
 </div>
 <div class="section" id="id4">
@@ -214,8 +214,8 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h2>3.4  将序列对象转换成字符串<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seq-to-string">
+<span id="id5"></span><h2>3.4  将序列对象转换成字符串<a class="headerlink" href="#sec-seq-to-string" title="Permalink to this headline">¶</a></h2>
 <p>如果你仅仅需要一个单纯的字符串，就像写入文件或者插入数据库，这事很容易就
 可以实现的：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">my_seq</span><span class="p">)</span>
@@ -237,9 +237,9 @@ ExtendedIUPACDNA类，分别提供基本字母，每种可能下的歧意字母�
 </pre></div>
 </div>
 <p>这一行代码展示的是一个简单的FASTA格式的记录（不用关心自动换行）。
-<a class="reference external" href="#sec:SeqRecord-format">4.5</a> 部分将介绍一个简洁的方式从 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
+<a class="reference internal" href="chr04.html#sec-seqrecord-format"><em>4.5</em></a> 部分将介绍一个简洁的方式从 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
 对象中获取FASTA格式的字符串，更详细的读写FASTA格式的序列文件将在第
-<a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章介绍。</p>
+<a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章介绍。</p>
 <p><em>注意：</em>  如果你使用Biopython 1.44或者更旧的版本，使用 <tt class="docutils literal"><span class="pre">str(my_seq)</span></tt> 只会
 返回一个截短了的序列。这时候可以使用 <tt class="docutils literal"><span class="pre">my_seq.tostring()</span></tt> ，为了保持向后兼
 容性，这一方法在当前的Biopython版本中还有保留。</p>
@@ -320,8 +320,8 @@ Biopython 1.53起， <tt class="docutils literal"><span class="pre">Seq</span></
 </pre></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h2>3.7  核苷酸序列和（反向）互补序列<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seq-reverse-complement">
+<span id="id8"></span><h2>3.7  核苷酸序列和（反向）互补序列<a class="headerlink" href="#sec-seq-reverse-complement" title="Permalink to this headline">¶</a></h2>
 <p>对于核苷酸序列，你可以使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象内置的方法很容易地获得 <tt class="docutils literal"><span class="pre">Seq</span></tt>
 的互补或反向互补序列。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
@@ -350,7 +350,7 @@ Biopython 1.53起， <tt class="docutils literal"><span class="pre">Seq</span></
    ...
    ValueError: Proteins do not have complements!
 
- \ `5.5.3 &lt;#sec:SeqIO-reverse-complement&gt;`__ 部分的例子将 ``Seq`` 对象的反向互补
+ :ref:`5.5.3 &lt;sec-SeqIO-reverse-complement&gt;` 部分的例子将 ``Seq`` 对象的反向互补
 方法和 ``Bio.SeqIO`` 对于序列的输入/输出方法结合起来。</pre>
 </div>
 </div>
@@ -418,10 +418,10 @@ T → U的转换获得mRNA。</p>
 </div>
 <p><em>注意：</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">transcribe</span></tt> 和 <tt class="docutils literal"><span class="pre">back_transcribe</span></tt> 方法直到
 Biopython 1.49版本才出现，在较早的版本中你需要使用 <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 模块的函
-数替代，详见 <a class="reference external" href="#sec:seq-module-functions">3.14</a> 部分。</p>
+数替代，详见 <a class="reference internal" href="#sec-seq-module-functions"><em>3.14</em></a> 部分。</p>
 </div>
-<div class="section" id="id10">
-<h2>3.9  翻译<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-translation">
+<span id="id10"></span><h2>3.9  翻译<a class="headerlink" href="#sec-translation" title="Permalink to this headline">¶</a></h2>
 <p>继续使用在转录那个小节中的例子，现在让我们将这个mRNA翻译成相对应的
 蛋白质序列，利用的是 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象众多生物学方法中的一个：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
@@ -511,14 +511,14 @@ K12中的基因yaaX：</p>
 <p>除了告诉Biopython翻译时使用另一种起始密码子编码甲硫氨酸外，使用这一选项同样能
 确保你的序列是个真实有效的CDS（如果不是将会抛出异常）。</p>
 <dl class="docutils">
-<dt>第 <a class="reference external" href="#sec:SeqIO-translate">18.1.3</a> 章的例子将把 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的翻译方法和</dt>
+<dt>第 <a class="reference internal" href="chr18.html#sec-seqio-translate"><em>18.1.3</em></a> 章的例子将把 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的翻译方法和</dt>
 <dd><tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 对象的对于序列的输入/输出方法结合起来。</dd>
 </dl>
 </div>
 <div class="section" id="id11">
 <h2>3.10  翻译表<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p>在前面的章节中我们讨论了 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的转录方法（并且提到了 <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 模块
-中的等效函数&#8211;参见第 <a class="reference external" href="#sec:seq-module-functions">3.14</a> 章节）。实质上
+中的等效函数&#8211;参见第 <a class="reference internal" href="#sec-seq-module-functions"><em>3.14</em></a> 章节）。实质上
 使用的这些密码子表对象来自与NCBI的 <tt class="docutils literal"><span class="pre">`ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt</span></tt>
 &lt;<a class="reference external" href="ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt">ftp://ftp.ncbi.nlm.nih.gov/entrez/misc/data/gc.prt</a>&gt;`__ ，还有
 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi</a>
@@ -649,10 +649,10 @@ K12中的基因yaaX：</p>
 </pre></div>
 </div>
 <p>作为一个扩展，你可以建立一个Python字典，以 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象作为键值。一般情况下，
-将序列作为字符串赋予键值更有用。详见 <a class="reference external" href="#sec:seq-to-string">3.4</a> 部分。</p>
+将序列作为字符串赋予键值更有用。详见 <a class="reference internal" href="#sec-seq-to-string"><em>3.4</em></a> 部分。</p>
 </div>
 <div class="section" id="mutableseq">
-<h2>3.12  MutableSeq对象<a class="headerlink" href="#mutableseq" title="Permalink to this headline">¶</a></h2>
+<span id="sec-mutable-seq"></span><h2>3.12  MutableSeq对象<a class="headerlink" href="#mutableseq" title="Permalink to this headline">¶</a></h2>
 <p>就像正常的Python字符串， <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象是 “只读的” ，在Python术语上就是不可变的。
 除了想要 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象表现得向一个字符串之外，这是一个很有用的默认，因为在生
 物学应用上你往往需要确保你没有改动你的序列数据：</p>
@@ -708,7 +708,7 @@ K12中的基因yaaX：</p>
 </div>
 <dl class="docutils">
 <dt>就像你从 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象中获取字符串一样，你也可以从 <tt class="docutils literal"><span class="pre">MutableSeq</span></tt> 获得（参见</dt>
-<dd><a class="reference external" href="#sec:seq-to-string">3.4</a> 章节）。</dd>
+<dd><a class="reference internal" href="#sec-seq-to-string"><em>3.4</em></a> 章节）。</dd>
 </dl>
 </div>
 <div class="section" id="unknownseq">
@@ -759,13 +759,13 @@ K12中的基因yaaX：</p>
 </div>
 <p>你也许能够在自己的代码中找到 <tt class="docutils literal"><span class="pre">UnknownSeq</span></tt> 对象的应用，但你更可能首先在由
 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 创建的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象中遇到 <tt class="docutils literal"><span class="pre">UnknownSeq</span></tt> 对象（参见第
-<a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章）。一些序列格式的文件不总是由实际的序列组成，
+<a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）。一些序列格式的文件不总是由实际的序列组成，
 像GenBank和EMBL文件就可能包含各种特征的列表，而序列部分仅展示contig信息。
 又或者在测序工作中的QUAL文件仅包含质量分数，而 <em>从未</em> 包含序列，取而代之的
 和QUAL文件同时生成的FASTA格式文件 <em>确实</em> 是由序列构成。</p>
 </div>
-<div class="section" id="id12">
-<h2>3.14  直接使用字符串<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seq-module-functions">
+<span id="id12"></span><h2>3.14  直接使用字符串<a class="headerlink" href="#sec-seq-module-functions" title="Permalink to this headline">¶</a></h2>
 <p>在这一章的结尾，对于那些 <em>真的</em> 不想使用序列对象的人（或者那些更喜欢面向
 对象的函数式编程风格的人）， <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 的模块级别的函数可以接受普通的
 Python字符串，比如 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象（包括 <tt class="docutils literal"><span class="pre">UnknownSeq</span></tt> 对象）或者 <tt class="docutils literal"><span class="pre">MutableSeq</span></tt> 对象：</p>
@@ -797,17 +797,17 @@ Python字符串，比如 <tt class="docutils literal"><span class="pre">Seq</spa
 <li><a class="reference internal" href="#id2">3.1  序列和字母表</a></li>
 <li><a class="reference internal" href="#id3">3.2  序列表现的像字符串一样</a></li>
 <li><a class="reference internal" href="#id4">3.3  切取序列</a></li>
-<li><a class="reference internal" href="#id5">3.4  将序列对象转换成字符串</a></li>
+<li><a class="reference internal" href="#sec-seq-to-string">3.4  将序列对象转换成字符串</a></li>
 <li><a class="reference internal" href="#id6">3.5  连接或添加序列</a></li>
 <li><a class="reference internal" href="#id7">3.6  改变大小写</a></li>
-<li><a class="reference internal" href="#id8">3.7  核苷酸序列和（反向）互补序列</a></li>
+<li><a class="reference internal" href="#sec-seq-reverse-complement">3.7  核苷酸序列和（反向）互补序列</a></li>
 <li><a class="reference internal" href="#id9">3.8  转录</a></li>
-<li><a class="reference internal" href="#id10">3.9  翻译</a></li>
+<li><a class="reference internal" href="#sec-translation">3.9  翻译</a></li>
 <li><a class="reference internal" href="#id11">3.10  翻译表</a></li>
 <li><a class="reference internal" href="#seq">3.11  比较Seq对象</a></li>
 <li><a class="reference internal" href="#mutableseq">3.12  MutableSeq对象</a></li>
 <li><a class="reference internal" href="#unknownseq">3.13  UnknownSeq对象</a></li>
-<li><a class="reference internal" href="#id12">3.14  直接使用字符串</a></li>
+<li><a class="reference internal" href="#sec-seq-module-functions">3.14  直接使用字符串</a></li>
 </ul>
 </li>
 </ul>

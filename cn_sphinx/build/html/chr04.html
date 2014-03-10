@@ -50,9 +50,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="id1">
-<h1>第4章  序列注释对象<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
-<p>Chapter <a class="reference external" href="#chapter:Bio.Seq">3</a> 介绍了序列对象的基本情况。紧接上章的 <tt class="docutils literal"><span class="pre">Seq</span></tt> 类，这章主要讲Sequence record 或称之为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 类, 该类在 <tt class="docutils literal"><span class="pre">Bio.SeqRecord</span></tt> 模块中有定义。 它（见 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 过程中 （详见Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> ）。</p>
+  <div class="section" id="chapter-seqrecord">
+<span id="id1"></span><h1>第4章  序列注释对象<a class="headerlink" href="#chapter-seqrecord" title="Permalink to this headline">¶</a></h1>
+<p>第 <a class="reference internal" href="chr03.html#chapter-bio-seq"><em>3</em></a> 章介绍了序列对象的基本情况。紧接上章的 <tt class="docutils literal"><span class="pre">Seq</span></tt> 类，这章主要讲Sequence record 或称之为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 类, 该类在 <tt class="docutils literal"><span class="pre">Bio.SeqRecord</span></tt> 模块中有定义。 它（见 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象）可使序列与高级属性（如identifiers 和 features）关联。其应用贯穿序列输入/输出的交互界面 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 过程中 （详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）。</p>
 <p>如读者只需处理FASTA格式的序列文件等简单数据,可略过本章。如涉及带注释内容的数据（如 GenBank或EMBL格式文件）, 本章内容则非常重要。</p>
 <p>尽管本章内容涵盖了 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 和 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象的大部分内容，但如需了解更多，读者可自行查阅 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> wiki (<a class="reference external" href="http://biopython.org/wiki/SeqRecord">http://biopython.org/wiki/SeqRecord</a> ),和内置帮助文档 (或在线文档 <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SeqRecord.SeqRecord-class.html">SeqRecord</a> 和 <a class="reference external" href="http://biopython.org/DIST/docs/api/Bio.SeqFeature.SeqFeature-class.html">SeqFeature</a> )，获取更多信息:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
@@ -62,7 +62,7 @@
 </div>
 <div class="section" id="seqrecord">
 <h2>4.1  SeqRecord对象<a class="headerlink" href="#seqrecord" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> (Sequence Record) 类包含在 <tt class="docutils literal"><span class="pre">Bio.SeqRecord</span></tt> 模块中。该类是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 序列输入/输出交互界面 (详见Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见Chapter <a class="reference external" href="#chapter:Bio.Seq">3</a>)。</p>
+<p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> (Sequence Record) 类包含在 <tt class="docutils literal"><span class="pre">Bio.SeqRecord</span></tt> 模块中。该类是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 序列输入/输出交互界面 (详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章)的基本数据类型。可以把identifiers 和features等高级属性与序列关联起来 (参见第 <a class="reference internal" href="chr03.html#chapter-bio-seq"><em>3</em></a> 章)。</p>
 <p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 类非常简单,包括下列属性:</p>
 <dl class="docutils">
 <dt><strong>.seq</strong></dt>
@@ -74,18 +74,18 @@
 <dt><strong>.description</strong></dt>
 <dd>– 序列描述（-字符串类型）。</dd>
 <dt><strong>.letter_annotations</strong></dt>
-<dd>– 对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter_annotations可用于质量分数(如    Section <a class="reference external" href="#sec:FASTQ-filtering-example">18.1.6</a>) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。</dd>
+<dd>– 对照序列的每个字母逐字注释（per-letter-annotations），以信息名为键（keys），信息内容为值（value）所构成的字典。值与序列等长，用Python列表、元组或字符串表示。.letter_annotations可用于质量分数(如第 <a class="reference internal" href="chr18.html#sec-fastq-filtering-example"><em>18.1.6</em></a> 节) 或二级结构信息 (如 Stockholm/PFAM 比对文件)等数据的存储。</dd>
 <dt><strong>.annotations</strong></dt>
 <dd>– 用于储存附加信息的字典。信息名为键（keys），信息内容为值（value）。用于保存序列的零散信息（如unstructured information）。</dd>
 <dt><strong>.features</strong></dt>
-<dd>– <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ Section <a class="reference external" href="#sec:seq_features">4.3</a>）。</dd>
+<dd>– <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象列表，储存序列的结构化信息（structured information），如：基因位置, 蛋白结构域。features 详见本章第三节（ 第 <a class="reference internal" href="#sec-seq-features"><em>4.3</em></a> 节）。</dd>
 <dt><strong>.dbxrefs</strong></dt>
 <dd>– 储存数据库交叉引用信息（cross-references）的字符串列表。</dd>
 </dl>
 </div>
 <div class="section" id="id2">
 <h2>4.2  创建 SeqRecord<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 从序列文件读取即可（见Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>）。 当然新建 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 也不复杂。</p>
+<p>使用 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象非常简单，因为所有的信息都存储在该类的属性中；通常不必手动新建，用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 从序列文件读取即可（见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）。 当然新建 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 也不复杂。</p>
 <div class="section" id="id3">
 <h3>4.2.1  从头新建SeqRecord<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 最少只需包含 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象:</p>
@@ -139,7 +139,7 @@
 TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
 ...</pre>
 </div>
-<p>回顾 Chapter <a class="reference external" href="#chapter:quick-start">2</a> 的内容，我们已经遇到过 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse(...)</span></tt> 函数，用于遍历 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象中的所有记录。 此处，我们介绍 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见 Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> ）:</p>
+<p>回顾第 <a class="reference internal" href="chr02.html#chapter-quick-start"><em>2</em></a> 章的内容，我们已经遇到过 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse(...)</span></tt> 函数，用于遍历 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象中的所有记录。 此处，我们介绍 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块中的另一个类似函数Bio.SeqIO.read()，用于读取单条序列的文件 （详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.fna&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span>
@@ -154,7 +154,7 @@ TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGGGGGTAATCTGCTCTCC
 <span class="go">Seq(&#39;TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG&#39;, SingleLetterAlphabet())</span>
 </pre></div>
 </div>
-<p>此处 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 自行设定 (见Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 用法)。</p>
+<p>此处 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 自行设定 (见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章用法)。</p>
 <p>接下来介绍 identifiers 和 description:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">id</span>
 <span class="go">&#39;gi|45478711|ref|NC_005816.1|&#39;</span>
@@ -195,8 +195,7 @@ VERSION     NC_005816.1  GI:45478711
 PROJECT     GenomeProject:10638
 ...</pre>
 </div>
-<p>同样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 读取文件，代码跟处理FASTA 文件类似 (详见
-Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> for details):</p>
+<p>同样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 读取文件，代码跟处理FASTA 文件类似 (详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.gb&quot;</span><span class="p">,</span> <span class="s">&quot;genbank&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span>
@@ -206,7 +205,7 @@ Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> for detail
 <span class="go">dbxrefs=[&#39;Project:10638&#39;])</span>
 </pre></div>
 </div>
-<p>你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 可自动识别序列类型 （详见 chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> ）:</p>
+<p>你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 可自动识别序列类型 （详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="o">.</span><span class="n">seq</span>
 <span class="go">Seq(&#39;TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG&#39;, IUPACAmbiguousDNA())</span>
 </pre></div>
@@ -242,22 +241,22 @@ Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> for detail
 <span class="go">29</span>
 </pre></div>
 </div>
-<p>接下来，我们将在 Section <a class="reference external" href="#sec:seq_features">4.3</a> 介绍 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象。</p>
+<p>接下来，我们将在 第 <a class="reference internal" href="#sec-seq-features"><em>4.3</em></a> 节介绍 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象。</p>
 </div>
 </div>
 <div class="section" id="feature-location-position">
-<h2>4.3  Feature, location 和 position对象<a class="headerlink" href="#feature-location-position" title="Permalink to this headline">¶</a></h2>
+<span id="sec-seq-features"></span><h2>4.3  Feature, location 和 position对象<a class="headerlink" href="#feature-location-position" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="seqfeature">
 <h3>4.3.1  SeqFeature对象<a class="headerlink" href="#seqfeature" title="Permalink to this headline">¶</a></h3>
 <p>序列特征是描述一条序列不可或缺的部分。抛开序列本身，你需要一种方式去组织和获取关于这条序列的 “抽象” 信息。 尽管设计一个通用的类囊括序列的所有特征看似是不可能的，但是Biopython的 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt>
 类试图尽可能多的囊括序列的所有特征。Biopython主要依据 GenBank/EMBL 特征表来设计相应的对象，认识到这一点，将有助于你更快更好的理解Biopython <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象。</p>
-<p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象的关键目的在于描述其相对于父序列（parent sequence，通常为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象）所处的位置（location）, 通常是介于两个positions间的一个区域（region），后续Section <a class="reference external" href="#sec:locations">4.3.2</a> 将详细说明。</p>
+<p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象的关键目的在于描述其相对于父序列（parent sequence，通常为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象）所处的位置（location）, 通常是介于两个positions间的一个区域（region），后续第 <a class="reference internal" href="#sec-locations"><em>4.3.2</em></a> 节将详细说明。</p>
 <p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象含大量属性，首先一一例出，然后在后续章节举例说明其用法:</p>
 <dl class="docutils">
 <dt><strong>.type</strong></dt>
 <dd>– 用文字描述的feature类型 (如 ‘CDS’ 或 ‘gene’)。</dd>
 <dt><strong>.location</strong></dt>
-<dd><p class="first">– <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 在序列中所处的位置。见Section <a class="reference external" href="#sec:locations">4.3.2</a>。 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 设计了众多针对location对象的功能，包含一系列简写的属性。</p>
+<dd><p class="first">– <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 在序列中所处的位置。见第 <a class="reference internal" href="#sec-locations"><em>4.3.2</em></a> 节。 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 设计了众多针对location对象的功能，包含一系列简写的属性。</p>
 <dl class="last docutils">
 <dt><strong>.ref</strong></dt>
 <dd>– <tt class="docutils literal"><span class="pre">.location.ref</span></tt> 简写 &#8211;location对象相关的参考序列。通常为空（None）。</dd>
@@ -274,7 +273,7 @@ Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> for detail
 </dl>
 </div>
 <div class="section" id="positionslocations">
-<h3>4.3.2  Positions和locations<a class="headerlink" href="#positionslocations" title="Permalink to this headline">¶</a></h3>
+<span id="sec-locations"></span><h3>4.3.2  Positions和locations<a class="headerlink" href="#positionslocations" title="Permalink to this headline">¶</a></h3>
 <p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象主要用于描述相对于父序列中的位置（region）信息。Region用location对象表示，通常是两个position间的范围。为了区分location和position，我们定义如下:</p>
 <dl class="docutils">
 <dt><strong>position</strong></dt>
@@ -390,7 +389,7 @@ feature/location中。</p>
 </div>
 <div class="section" id="feature-location">
 <h3>4.3.3  使用feature 或 location描述序列<a class="headerlink" href="#feature-location" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 或 location object对象并没有直接包含任何序列，只是可根据储存的location (见Section <a class="reference external" href="#sec:locations">4.3.2</a>)，从父序列中取得。例如：某一短基因位于负链5:18位置，由于GenBank/EMBL文件以1开始计数，Biopython中表示为 <tt class="docutils literal"><span class="pre">complement(6..18)</span></tt> :</p>
+<p><tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 或 location object对象并没有直接包含任何序列，只是可根据储存的location (见第 <a class="reference internal" href="#sec-locations"><em>4.3.2</em></a> 节)，从父序列中取得。例如：某一短基因位于负链5:18位置，由于GenBank/EMBL文件以1开始计数，Biopython中表示为 <tt class="docutils literal"><span class="pre">complement(6..18)</span></tt> :</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">example_parent</span> <span class="o">=</span> <span class="n">Seq</span><span class="p">(</span><span class="s">&quot;ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC&quot;</span><span class="p">)</span>
@@ -428,11 +427,11 @@ feature/location中。</p>
 <p>对一条序列的注释还包括参考文献（reference），Biopython通过
 <tt class="docutils literal"><span class="pre">Bio.SeqFeature.Reference</span></tt> 对象来储存相关的文献信息。</p>
 <p>References属性储存了 <tt class="docutils literal"><span class="pre">期刊名</span></tt> 、 <tt class="docutils literal"><span class="pre">题名</span></tt> 、 <tt class="docutils literal"><span class="pre">作者</span></tt> 等信息。此外还包括 <tt class="docutils literal"><span class="pre">medline_id</span></tt> 、 <tt class="docutils literal"><span class="pre">pubmed_id</span></tt> 以及 <tt class="docutils literal"><span class="pre">comment</span></tt> 。</p>
-<p>通常reference 也有 <tt class="docutils literal"><span class="pre">location</span></tt> 对象，便于文献涉及研究对象在序列中的定位。该 <tt class="docutils literal"><span class="pre">location</span></tt> 有可能是一个fuzzy location（见 section <a class="reference external" href="#sec:locations">4.3.2</a>）。</p>
+<p>通常reference 也有 <tt class="docutils literal"><span class="pre">location</span></tt> 对象，便于文献涉及研究对象在序列中的定位。该 <tt class="docutils literal"><span class="pre">location</span></tt> 有可能是一个fuzzy location（见第 <a class="reference internal" href="#sec-locations"><em>4.3.2</em></a> 节）。</p>
 <p>文献对象都以列表储存在 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象的 <tt class="docutils literal"><span class="pre">annotations</span></tt> 字典中。 字典的键为 “references”。reference对象也是为了方便处理文献而设计，希望能满足各种使用需求。</p>
 </div>
-<div class="section" id="id4">
-<h2>4.5  格式化方法<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seqrecord-format">
+<span id="id4"></span><h2>4.5  格式化方法<a class="headerlink" href="#sec-seqrecord-format" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 类中的 <tt class="docutils literal"><span class="pre">format()</span></tt> 能将字符串转换成被 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 支持的格式，如FASTA:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
 <span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
@@ -455,10 +454,10 @@ GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK
 NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
 SSAC</pre>
 </div>
-<p><tt class="docutils literal"><span class="pre">format</span></tt> 方法接收单个必选参数，小写字母字符串是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块支持的输出格式 (见Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>)。然而，此 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见Section <a class="reference external" href="#sec:Bio.SeqIO-and-StringIO">5.5.4</a>）。</p>
+<p><tt class="docutils literal"><span class="pre">format</span></tt> 方法接收单个必选参数，小写字母字符串是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块支持的输出格式 (见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章)。然而，此 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见第 <a class="reference internal" href="chr05.html#sec-bio-seqio-and-stringio"><em>5.5.4</em></a> 节）。</p>
 </div>
-<div class="section" id="id5">
-<h2>4.6  SeqRecord切片<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seqrecord-slicing">
+<span id="id5"></span><h2>4.6  SeqRecord切片<a class="headerlink" href="#sec-seqrecord-slicing" title="Permalink to this headline">¶</a></h2>
 <p>通过切片截取 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的部分序列可得到一条新的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 。此处需引起注意的是per-letter annotations也被取切片, 但新序列中的features保持不变 (locations相应调整)。</p>
 <p>以前述Genbank文件为例:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
@@ -562,20 +561,20 @@ SSAC</pre>
 <span class="go">&#39;Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.&#39;</span>
 </pre></div>
 </div>
-<p>上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用Section <cite>4.5 &lt;#sec:SeqRecord-format&gt;`__中所述 ``format`</cite> 方法纠正：
+<p>上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用第 <a class="reference internal" href="#sec-seqrecord-format"><em>4.5</em></a> 节中所述 <tt class="docutils literal"><span class="pre">format</span></tt> 方法纠正：
 :</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sub_record</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s">&quot;Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, partial.&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">sub_record</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;genbank&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
 </pre></div>
 </div>
-<p>FASTQ例子参见 Sections <a class="reference external" href="#sec:FASTQ-slicing-off-primer">18.1.7</a>
-和 <a class="reference external" href="#sec:FASTQ-slicing-off-adaptor">18.1.8</a> （此例中per-letter annotations (read质量分数) 也被取切片）。</p>
+<p>FASTQ例子参见第 <a class="reference internal" href="chr18.html#sec-fastq-slicing-off-primer"><em>18.1.7</em></a> 节
+和第 <a class="reference internal" href="chr18.html#sec-fastq-slicing-off-adaptor"><em>18.1.8</em></a> 节（此例中per-letter annotations (read质量分数) 也被取切片）。</p>
 </div>
-<div class="section" id="id6">
-<h2>4.7  SeqRecord对象相加<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seqrecord-addition">
+<span id="id6"></span><h2>4.7  SeqRecord对象相加<a class="headerlink" href="#sec-seqrecord-addition" title="Permalink to this headline">¶</a></h2>
 <p><tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象可相加得到一个新的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 。注意：per-letter annotations也相加, features (locations 调整)；而其它annotation 保持不变(如id、name和description)。</p>
-<p>以FASTQ 文件中的第一条记录为例说明per-letter annotation （Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 详细介绍 <tt class="docutils literal"><span class="pre">SeqIO</span></tt> 函数）:</p>
+<p>以FASTQ 文件中的第一条记录为例说明per-letter annotation （第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章详细介绍 <tt class="docutils literal"><span class="pre">SeqIO</span></tt> 函数）:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;example.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
@@ -680,8 +679,8 @@ SSAC</pre>
 </div>
 <p>Note: 此例中序列record的identifiers也应调整（因为NCBI的reference链接的是未经修改的 <em>原始</em> 序列）。</p>
 </div>
-<div class="section" id="id7">
-<h2>4.8  反向互补SeqRecord对象<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-seqrecord-reverse-complement">
+<span id="id7"></span><h2>4.8  反向互补SeqRecord对象<a class="headerlink" href="#sec-seqrecord-reverse-complement" title="Permalink to this headline">¶</a></h2>
 <p>为消除序列反向互补后annotation改变带来的困难，Biopython 1.57 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象加入了 <tt class="docutils literal"><span class="pre">reverse_complement</span></tt> 方法。这也成为Biopython 1.57的新特性之一。</p>
 <p>序列用Seq对象中的reverse_complement方法反向互补。Features随location而改变，strand也被重新计算。复制并反转per-letter-annotation（通常情况下这种做法比较合适，如对质量分数注释的反转）。然而多数annotation的转变却存有问题。</p>
 <p>比如record ID是accession号，该accession不应被用于反向互补序列。默认identifier转换可导致后续分析中的轻度数据损坏。因此 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的id、
@@ -732,10 +731,10 @@ name、description、annotations和dbxrefs默认不变。</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">4.4  References</a></li>
-<li><a class="reference internal" href="#id4">4.5  格式化方法</a></li>
-<li><a class="reference internal" href="#id5">4.6  SeqRecord切片</a></li>
-<li><a class="reference internal" href="#id6">4.7  SeqRecord对象相加</a></li>
-<li><a class="reference internal" href="#id7">4.8  反向互补SeqRecord对象</a></li>
+<li><a class="reference internal" href="#sec-seqrecord-format">4.5  格式化方法</a></li>
+<li><a class="reference internal" href="#sec-seqrecord-slicing">4.6  SeqRecord切片</a></li>
+<li><a class="reference internal" href="#sec-seqrecord-addition">4.7  SeqRecord对象相加</a></li>
+<li><a class="reference internal" href="#sec-seqrecord-reverse-complement">4.8  反向互补SeqRecord对象</a></li>
 </ul>
 </li>
 </ul>

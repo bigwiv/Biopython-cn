@@ -54,7 +54,7 @@
 <h1>第22章 附录：Python相关知识<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h1>
 <p>如果你对Python编程还不熟练，那么你在使用Biopython过程中遇到的问题通常与Python本身有关。本章节主要向读者提供一些使用Biopython文库过程中有用的建议和一些常用代码（至少对我们来说很常用）。关于这一章的内容，你要是有什么好的建议的话，请告诉我们。</p>
 <div class="section" id="handle">
-<h2>22.1  到底什么是句柄（handle）？<a class="headerlink" href="#handle" title="Permalink to this headline">¶</a></h2>
+<span id="sec-appendix-handles"></span><h2>22.1  到底什么是句柄（handle）？<a class="headerlink" href="#handle" title="Permalink to this headline">¶</a></h2>
 <p>这个文档中，句柄常被提及，而且也比较难理解（至少对我来说）。一般说来，你可以把句柄想象成一个对文本信息的“封装”。</p>
 <p>相比普通文本信息，使用句柄至少有两个好处：</p>
 <ol class="arabic simple">
@@ -91,7 +91,7 @@
 <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>在第 <a class="reference external" href="#sec:SeqIO_compressed">5.2</a> 节中有更多此类示例可供参考，其中包括bzip2压缩文件的读取。</p>
+<p>在第 <a class="reference internal" href="chr05.html#sec-seqio-compressed"><em>5.2</em></a> 节中有更多此类示例可供参考，其中包括bzip2压缩文件的读取。</p>
 <div class="section" id="id1">
 <h3>22.1.1  从字符串创建句柄<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>一个比较有用的工具是将字符串中包含的文本信息传递给一个句柄。以下示例是使用Python标准文库 <tt class="docutils literal"><span class="pre">cStringIO</span></tt> 来展示如何实现的：</p>

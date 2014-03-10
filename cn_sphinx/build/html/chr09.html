@@ -51,7 +51,7 @@
           <div class="body">
             
   <div class="section" id="ncbi-entrez">
-<h1>第9章  访问NCBI Entrez数据库<a class="headerlink" href="#ncbi-entrez" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-entrez"></span><h1>第9章  访问NCBI Entrez数据库<a class="headerlink" href="#ncbi-entrez" title="Permalink to this headline">¶</a></h1>
 <p>Entrez
 (<a class="reference external" href="http://www.ncbi.nlm.nih.gov/Entrez">http://www.ncbi.nlm.nih.gov/Entrez</a>)
 是一个给客户提供NCBI各个数据库（如PubMed, GeneBank, GEO等等）访问的检索系统。
@@ -83,9 +83,9 @@ DTD文件放到 <tt class="docutils literal"><span class="pre">~/.biopython/Bio/
 是通过源码来安装的Biopython，你可以将DTD文件放到源码的 <tt class="docutils literal"><span class="pre">Bio/Entrez/DTDs</span></tt> 文件夹下，然后重新安装Biopython。
 这样会将新的DTD文件和之前的一样地安装到正确的位置。</p>
 <p>Entrez Programming Utilities也可以生成其他格式的输出文件，比如Fasta、序列数据库里面的GenBank文件格式
-或者文献数据库里面的MedLine格式，更多内容将会在 <a class="reference external" href="#sec:entrez-specialized-parsers">9.12</a> 中讨论。</p>
+或者文献数据库里面的MedLine格式，更多内容将会在章节 <a class="reference internal" href="#sec-entrez-specialized-parsers"><em>9.12</em></a> 中讨论。</p>
 <div class="section" id="entrez">
-<h2>9.1  Entrez 简介<a class="headerlink" href="#entrez" title="Permalink to this headline">¶</a></h2>
+<span id="sec-entrez-guidelines"></span><h2>9.1  Entrez 简介<a class="headerlink" href="#entrez" title="Permalink to this headline">¶</a></h2>
 <p>在我们通过Biopython访问NCBI的线上资源（通过 <tt class="docutils literal"><span class="pre">Bio.Entrez</span></tt> 或者其他模块）的时候，请先阅读 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/books/NBK25497/#chapter2.Usage_Guidelines_and_Requiremen">NCBI的Entrez
 用户规范</a>.
 如果NCBI发现你在滥用他们的系统，他们会禁止你的访问。</p>
@@ -119,15 +119,15 @@ DTD文件放到 <tt class="docutils literal"><span class="pre">~/.biopython/Bio/
 <p>默认的tool名称是Biopython。</p>
 </li>
 <li><p class="first">对于大规模的查询请求，NCBI也推荐使用他们的会话历史特性（ WebEnv会话cookie字符串，见
-章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a> ）。 只是这个稍微有点复杂。</p>
+章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> ）。 只是这个稍微有点复杂。</p>
 </li>
 </ul>
 <p>最后，根据你的使用情况选择不同的策略。如果你打算下载大量的数据，最好使用其他的方法。比如，你想得到所有人的
 基因的数据，那么考虑通过FTP得到每个染色体的GenBank文件，然后将这些文件导入到你自己的BioSQL数据库里面去。
-(请见Section <a class="reference external" href="#sec:BioSQL">18.5</a>).</p>
+(请见章节 <a class="reference internal" href="chr18.html#sec-biosql"><em>18.5</em></a> ).</p>
 </div>
 <div class="section" id="einfo-entrez">
-<h2>9.2  EInfo: 获取Entrez数据库的信息<a class="headerlink" href="#einfo-entrez" title="Permalink to this headline">¶</a></h2>
+<span id="sec-entrez-einfo"></span><h2>9.2  EInfo: 获取Entrez数据库的信息<a class="headerlink" href="#einfo-entrez" title="Permalink to this headline">¶</a></h2>
 <p>EInfo为每个NCBI的数据库提供了条目索引，最近更新的时间以及可用的链接。此外，你可以很容易的使用EInfo通过
 Entrez获取所有数据库名字的列表：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
@@ -249,9 +249,9 @@ Entrez获取所有数据库名字的列表：</p>
 </pre></div>
 </div>
 <p>在输出的结果中，我们可以看到七个PubMed IDs（包括19304878，这个是Biopython应用笔记的PMID），你可以通过
-EFetch来获取这些文献（请见章节 <a class="reference external" href="#sec:efetch">9.6</a> ）。</p>
+EFetch来获取这些文献（请见章节 <a class="reference internal" href="#sec-efetch"><em>9.6</em></a> ）。</p>
 <p>你也可以通过ESearch来搜索GenBank。我们将以在*Cypripedioideae* orchids中搜索*matK*基因为例，快速展示
-一下（请见章节 <a class="reference external" href="#sec:entrez-einfo">9.2</a> 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。</p>
+一下（请见章节 <a class="reference internal" href="#sec-entrez-einfo"><em>9.2</em></a> 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">esearch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span><span class="n">term</span><span class="o">=</span><span class="s">&quot;Cypripedioideae[Orgn] AND matK[Gene]&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span><span class="p">[</span><span class="s">&quot;Count&quot;</span><span class="p">]</span>
@@ -260,7 +260,7 @@ EFetch来获取这些文献（请见章节 <a class="reference external" href="#
 <span class="go">[&#39;126789333&#39;, &#39;37222967&#39;, &#39;37222966&#39;, &#39;37222965&#39;, ..., &#39;61585492&#39;]</span>
 </pre></div>
 </div>
-<p>每个IDs(126789333, 37222967, 37222966, …)是GenBank的一个标识。请见Section <a class="reference external" href="#sec:efetch">9.6</a>
+<p>每个IDs(126789333, 37222967, 37222966, …)是GenBank的一个标识。请见章节 <a class="reference internal" href="#sec-efetch"><em>9.6</em></a>
 此章包含了怎样下载这些GenBank的记录的信息。</p>
 <p>注意，不是像 <tt class="docutils literal"><span class="pre">Cypripedioideae[Orgn]</span></tt> 这样在搜索的时候加上特定的物种名字，而是需要在搜索的时候使用NCBI的
 taxon ID，像 <tt class="docutils literal"><span class="pre">txid158330[Orgn]</span></tt> 这样。这个并没有记录在ESearch的帮助页面上，NCBI通过邮件回复解释了这个
@@ -315,7 +315,7 @@ taxon ID，像 <tt class="docutils literal"><span class="pre">txid158330[Orgn]</
 <span class="gp">&gt;&gt;&gt; </span><span class="n">query_key</span> <span class="o">=</span> <span class="n">search_results</span><span class="p">[</span><span class="s">&quot;QueryKey&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>第 <a class="reference external" href="#sec:entrez-webenv">9.15</a> 章节讲述了如何使用历史的特性。</p>
+<p>第 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> 章节讲述了如何使用历史的特性。</p>
 </div>
 <div class="section" id="esummary-ids">
 <h2>9.5  ESummary: 通过主要的IDs来获取摘要<a class="headerlink" href="#esummary-ids" title="Permalink to this headline">¶</a></h2>
@@ -336,7 +336,7 @@ taxon ID，像 <tt class="docutils literal"><span class="pre">txid158330[Orgn]</
 </div>
 </div>
 <div class="section" id="efetch-entrez">
-<h2>9.6  EFetch: 从Entrez下载更多的记录<a class="headerlink" href="#efetch-entrez" title="Permalink to this headline">¶</a></h2>
+<span id="sec-efetch"></span><h2>9.6  EFetch: 从Entrez下载更多的记录<a class="headerlink" href="#efetch-entrez" title="Permalink to this headline">¶</a></h2>
 <p>当你想要从Entrez中提取完整的记录的时候，你可以使用EFetch。 在 <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">EFetch的帮助页面</a>
 可以查到EFetch可以起作用的数据库。</p>
 <p>NCBI大部分的数据库都支持多种不同的文件格式。当使用 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> 从Entrez下载特定的某种格式的时候，
@@ -347,8 +347,8 @@ taxon ID，像 <tt class="docutils literal"><span class="pre">txid158330[Orgn]</
 <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchseq_help.html">sequences</a>
 and
 <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchtax_help.html">taxonomy</a>).</p>
-<p>一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式 (接着可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析, 参见 <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a>
-和 <a class="reference external" href="#sec:efetch">9.6</a> ）。从上面 <em>Cypripedioideae</em> 的例子,我们可以通过 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt>
+<p>一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式 (接着可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析, 参见 <a class="reference internal" href="chr05.html#sec-seqio-genbank-online"><em>5.3.1</em></a>
+和 <a class="reference internal" href="#sec-efetch"><em>9.6</em></a> ）。从上面 <em>Cypripedioideae</em> 的例子,我们可以通过 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch</span></tt>
 从GenBank下载记录186972394。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
@@ -432,7 +432,7 @@ and
 Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的为XML格式。</p>
 <p>作为另外的选择，你也可以使用 <tt class="docutils literal"><span class="pre">rettype=&quot;fasta&quot;</span></tt> 来获取Fasta格式的文件；参见 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html">EFetch Sequences 帮助页面</a> 。
 记住，可选的数据格式决定于你要下载的数据库——请参见 <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">EFetch 帮助页面</a>.</p>
-<p>如果你要获取记录的格式是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 所接受的一种格式(见章节 <a class="reference external" href="#chapter:Bio.SeqIO">5</a>),
+<p>如果你要获取记录的格式是 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 所接受的一种格式(见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章),
 你可以直接将其解析为一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> ：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span><span class="p">,</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nucleotide&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s">&quot;186972394&quot;</span><span class="p">,</span><span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
@@ -479,12 +479,12 @@ Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的
 <span class="go">&#39;chloroplast Selenipedium aequinoctiale&#39;</span>
 </pre></div>
 </div>
-<p>就像这样处理数据。例如解析其他数据库特异的文件格式（例如，PubMed中用到的 <tt class="docutils literal"><span class="pre">MEDLINE</span></tt> 格式），请参见章节 <a class="reference external" href="#sec:entrez-specialized-parsers">9.12</a>.</p>
+<p>就像这样处理数据。例如解析其他数据库特异的文件格式（例如，PubMed中用到的 <tt class="docutils literal"><span class="pre">MEDLINE</span></tt> 格式），请参见章节 <a class="reference internal" href="#sec-entrez-specialized-parsers"><em>9.12</em></a> .</p>
 <p>如果你想使用 <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt> 进行搜索，然后用 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> 下载数据，那么你需要用到
-WebEnv的历史特性，请参加见章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+WebEnv的历史特性，请参加见章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> .</p>
 </div>
 <div class="section" id="elink-ncbi-entrez">
-<h2>9.7  ELink: 在NCBI Entrez中搜索相关的条目<a class="headerlink" href="#elink-ncbi-entrez" title="Permalink to this headline">¶</a></h2>
+<span id="sec-elink"></span><h2>9.7  ELink: 在NCBI Entrez中搜索相关的条目<a class="headerlink" href="#elink-ncbi-entrez" title="Permalink to this headline">¶</a></h2>
 <p>ELink，在Biopython中是 <tt class="docutils literal"><span class="pre">Bio.Entrez.elink()</span></tt> ，可以用来在NCBI Entrez数据库中寻找相关的条目。例如，你
 可以使用它在gene数据库中寻找核苷酸条目，或者其他很酷的事情。</p>
 <p>让我们使用ELink来在2009年的 <em>Bioinformatics</em> 杂志中寻找与Biopython应用相关的文章。这篇文章的PubMed ID
@@ -542,7 +542,7 @@ WebEnv的历史特性，请参加见章节 <a class="reference external" href="#
 </pre></div>
 </div>
 <p>现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个——至少对PubMed
-Central的杂志来说是这样的（请见 Section <a class="reference external" href="#sec:elink-citations">9.15.3</a>）。</p>
+Central的杂志来说是这样的（请见章节 <a class="reference internal" href="#sec-elink-citations"><em>9.15.3</em></a> ）。</p>
 <p>关于ELink的帮助，请见 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html">ELink 帮助页面</a> 。
 这是一个关于 <a class="reference external" href="http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html">link names</a>
 的整个的子页面， 描述了不同的数据库可以怎样交叉的索引。</p>
@@ -550,7 +550,7 @@ Central的杂志来说是这样的（请见 Section <a class="reference external
 <div class="section" id="egquery">
 <h2>9.8  EGQuery: 全局搜索- 统计搜索的条目<a class="headerlink" href="#egquery" title="Permalink to this headline">¶</a></h2>
 <p>EGQuery提供搜索字段在每个Entrez数据库中的数目。当我们只需要知道在每个数据库中能找到的条目的个数，
-而不需要知道具体搜索结果的时候，这个非常的有用（请见例子`9.14.2 &lt;#subsec:entrez_example_genbank&gt;`__ below）。</p>
+而不需要知道具体搜索结果的时候，这个非常的有用（请见例子 <a class="reference internal" href="#sec-entrez-example-genbank"><em>9.14.2</em></a> ）。</p>
 <p>在这个例子中，我们使用 <tt class="docutils literal"><span class="pre">Bio.Entrez.egquery()</span></tt> 来获取跟 “Biopython” 相关的数目：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
@@ -737,18 +737,18 @@ Python列表）。</p>
 </div>
 <p>当然，XML文件中的tag没有出现在对应DTD文件中的信息，将不会在 <tt class="docutils literal"><span class="pre">Entrez.read</span></tt> 的返回记录中出现。</p>
 </div>
-<div class="section" id="id2">
-<h2>9.12  专用的解析器<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-entrez-specialized-parsers">
+<span id="id2"></span><h2>9.12  专用的解析器<a class="headerlink" href="#sec-entrez-specialized-parsers" title="Permalink to this headline">¶</a></h2>
 <p>函数 <tt class="docutils literal"><span class="pre">Bio.Entrez.read()</span></tt> 可以处理大部分（如果不是所有的话）Entrez返回的XML文件。Entrez也可以
 允许你通过其他格式来获取数据，有时候，这种方式在可读性上比XML文件格式更具优势（或者下载文件的大小）。</p>
 <p>为了使用 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt> 函数从Entrez中提取一种特有的文件格式，需要指明 <tt class="docutils literal"><span class="pre">rettype</span></tt> 和或者或 <tt class="docutils literal"><span class="pre">retmode</span></tt>
 等可选参数。不同的组合在 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html">NCBI efetch的页面</a> 。
 有对不同数据库的描述。</p>
-<p>一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept ( 这些可以通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来处理, 请见 Sections <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a>
-和 <a class="reference external" href="#sec:efetch">9.6</a> ） 纯文本形式下载序列。对于文献数据库，Biopython包含了一个处理PubMed中
+<p>一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept ( 这些可以通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来处理, 请见 <a class="reference internal" href="chr05.html#sec-seqio-genbank-online"><em>5.3.1</em></a>
+和 <a class="reference internal" href="#sec-efetch"><em>9.6</em></a> ） 纯文本形式下载序列。对于文献数据库，Biopython包含了一个处理PubMed中
 使用的 <tt class="docutils literal"><span class="pre">MEDLINE</span></tt> 格式的解析器。</p>
 <div class="section" id="medline">
-<h3>9.12.1  解析Medline记录<a class="headerlink" href="#medline" title="Permalink to this headline">¶</a></h3>
+<span id="sec-entrez-and-medline"></span><h3>9.12.1  解析Medline记录<a class="headerlink" href="#medline" title="Permalink to this headline">¶</a></h3>
 <p>你可以在 <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt> 中找到Medline的解析器。假设你想处理包含一个Medline记录的 <tt class="docutils literal"><span class="pre">pubmed_result1.txt</span></tt>
 文件。你可以在Biopython的 <tt class="docutils literal"><span class="pre">Tests\Medline</span></tt> 目录下找到这个文件，这个文件内容如下所示：</p>
 <div class="code python highlight-python"><pre>PMID- 12230038
@@ -854,7 +854,7 @@ AB  - Bioinformatics research is often difficult to do with commercial software.
 </pre></div>
 </div>
 <p>需要注意的是，在上面这两个例子当中，为了简便我们混合使用了 ESearch 和 EFetch。在这种情形下，NCBI 希望你
-使用他们的历史记录特性，在下面章节中会讲到Section <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+使用他们的历史记录特性，在下面章节中会讲到Section <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> .</p>
 </div>
 <div class="section" id="geo">
 <h3>9.12.2  解析GEO记录<a class="headerlink" href="#geo" title="Permalink to this headline">¶</a></h3>
@@ -978,7 +978,7 @@ SEQUENCE    ACC=AU099534.1; NID=g13550663; CLONE=HSI08034; END=5'; LID=8800; SEQ
 <h3>9.14.1  PubMed和Medline<a class="headerlink" href="#pubmedmedline" title="Permalink to this headline">¶</a></h3>
 <p>如果你是在医药领域或者对人类的问题感兴趣（或者尽管并你不感兴趣，大多数情况下也适用!），PubMed(<a class="reference external" href="http://www.ncbi.nlm.nih.gov/PubMed/">http://www.ncbi.nlm.nih.gov/PubMed/</a>)
 是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。</p>
-<p>在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(see section <a class="reference external" href="#sec:orchids">2.3</a> for our motivation)。
+<p>在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(见 <a class="reference internal" href="chr02.html#sec-orchids"><em>2.3</em></a> 我们的动机)。
 我们首先看看有多少这样的文章：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s">&quot;A.N.Other@example.com&quot;</span>     <span class="c"># Always tell NCBI who you are</span>
@@ -1010,7 +1010,7 @@ SEQUENCE    ACC=AU099534.1; NID=g13550663; CLONE=HSI08034; END=5'; LID=8800; SEQ
 <span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">Medline</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>注意 - 我们完成了一次搜索和获取，NCBI更希望你在这种情况下使用他们的历史记录支持。请见章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+<p>注意 - 我们完成了一次搜索和获取，NCBI更希望你在这种情况下使用他们的历史记录支持。请见章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> .</p>
 <p>请记住 <tt class="docutils literal"><span class="pre">records</span></tt> 是一个迭代器，所以你只能访问这些records一次。如果你想保存这些records，你需要把他们转成列表：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
 </pre></div>
@@ -1044,9 +1044,9 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 </div>
 <p>希望这个章节可以让你知道Entrez和Medline借口的能力和便利性和怎样同时使用他们。</p>
 </div>
-<div class="section" id="id5">
-<h3>9.14.2  搜索，下载，和解析Entrez核酸记录<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>这里我们将展示一个关于远程Entrez查询的简单例子。在 <a class="reference external" href="#sec:orchids">2.3</a> 章节，我们讲到了使用NCBI
+<div class="section" id="sec-entrez-example-genbank">
+<span id="id5"></span><h3>9.14.2  搜索，下载，和解析Entrez核酸记录<a class="headerlink" href="#sec-entrez-example-genbank" title="Permalink to this headline">¶</a></h3>
+<p>这里我们将展示一个关于远程Entrez查询的简单例子。在 <a class="reference internal" href="chr02.html#sec-orchids"><em>2.3</em></a> 节，我们讲到了使用NCBI
 的Entrez网站来搜索 NCBI 的核酸数据库来获得关于Cypripedioideae的信息。现在我们看看如何使用Python脚本
 自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，解析他们。</p>
 <p>首先，我们在下载这些结果之前，使用EGQuery来计算结果的数目。EGQuery 将会告诉我们在每个数据库中分别有多少
@@ -1090,7 +1090,7 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 </pre></div>
 </div>
 <p>我们可以使用 <tt class="docutils literal"><span class="pre">efetch</span></tt> 来下载这些结果. 尽管你可以一个一个的下载这些记录，但为了减少 NCBI 服务器的负载，最好呢还是
-一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a> 中会要讲到的历史记录特性。</p>
+一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> 中会要讲到的历史记录特性。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">idlist</span> <span class="o">=</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s">&quot;IdList&quot;</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">idlist</span>
 <span class="go">187237168,187372713,187372690,187372688,187372686</span>
@@ -1123,15 +1123,15 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 <span class="go">Cypripedium calceolus</span>
 </pre></div>
 </div>
-<p>你可以用这个来快速的开始搜索 —— 但是对于频繁的使用请见  <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+<p>你可以用这个来快速的开始搜索 —— 但是对于频繁的使用请见 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> .</p>
 </div>
 <div class="section" id="genbank-record">
-<h3>9.14.3  搜索、下载和解析GenBank record<a class="headerlink" href="#genbank-record" title="Permalink to this headline">¶</a></h3>
+<span id="sec-entrez-search-fetch-genbank"></span><h3>9.14.3  搜索、下载和解析GenBank record<a class="headerlink" href="#genbank-record" title="Permalink to this headline">¶</a></h3>
 <p>GenBank record 格式是保存序列信息、序列特征和其他相关信息非常普遍的一种方法。这种格式是从 NCBI 数据库
 <a class="reference external" href="http://www.ncbi.nlm.nih.gov/">http://www.ncbi.nlm.nih.gov/</a> 获取信息非常好的一种方式 .</p>
 <p>在这个例子当中，我们将展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 解析他们 ——
-在 <a class="reference external" href="#sec:SeqIO_GenBank_Online">5.3.1</a> 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
-—— 请到 Section <a class="reference external" href="#sec:entrez-webenv">9.15</a> 查看。</p>
+在 <a class="reference internal" href="chr05.html#sec-seqio-genbank-online"><em>5.3.1</em></a> 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
+—— 请到 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> 查看。</p>
 <p>首先，我们想要查询找出要获取的记录的ID。这里我们快速的检索我们最喜欢的一个物种 <em>Opuntia</em> (多刺的梨型仙人掌)。我们
 可以做一个快速的检索来获得所有满足要求的GIs（GenBank标志符）。首先我们看看有多少个记录：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
@@ -1179,7 +1179,7 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 </pre></div>
 </div>
 <p>在这个例子当中，我们只是得到了原始的记录。为了得到对Python友好的格式，我们可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 将GenBank
-数据转化成 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，包括 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象 (请见 Chapter <a class="reference external" href="#chapter:Bio.SeqIO">5</a>):</p>
+数据转化成 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，包括 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象 (请见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">efetch</span><span class="p">(</span><span class="n">db</span><span class="o">=</span><span class="s">&quot;nuccore&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">gi_str</span><span class="p">,</span> <span class="n">rettype</span><span class="o">=</span><span class="s">&quot;gb&quot;</span><span class="p">,</span> <span class="n">retmode</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">)</span>
@@ -1201,8 +1201,8 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 </pre></div>
 </div>
 <p>使用这些自动的查询提取功能相对于手动处理是一个很大的进步。尽管这些模块需要遵守NCBI每秒钟最多三次的规则，然而NCBI
-有其他像避开高峰时刻的建议。请见章节 <a class="reference external" href="#sec:entrez-guidelines">9.1</a>. 尤其需要注意的是，这个例子没有
-用到 WebEnv 历史记录特性。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a>.</p>
+有其他像避开高峰时刻的建议。请见章节 <a class="reference internal" href="#sec-entrez-guidelines"><em>9.1</em></a> 。尤其需要注意的是，这个例子没有
+用到 WebEnv 历史记录特性。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> 。</p>
 <p>最后，如果你计划重复你的分析，你应该下载这些record <em>一次</em> ，然后将他们保存在你的硬盘里，在本地进行分析；而不是
 从 NCBI 下载之后就马上进行分析（像这个例子一样）。</p>
 </div>
@@ -1244,7 +1244,7 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 </div>
 </div>
 <div class="section" id="webenv">
-<h2>9.15  使用历史记录和WebEnv<a class="headerlink" href="#webenv" title="Permalink to this headline">¶</a></h2>
+<span id="sec-entrez-webenv"></span><h2>9.15  使用历史记录和WebEnv<a class="headerlink" href="#webenv" title="Permalink to this headline">¶</a></h2>
 <p>通常，你想做一系列相关的查询。最典型的是，进行一个搜索，精炼搜索，然后提取详细的搜索结果。你 <em>可以</em> 通过一系列
 独立的调用Entrez来完成这些工作。然而，NCBI更希望你利用历史记录支持的优势来完成这个 - 例如将ESearch
 和EFetch结合起来。</p>
@@ -1253,7 +1253,7 @@ source: J Comp Physiol [A] 2000 Jun;186(6):567-74</pre>
 标识号）。</p>
 <div class="section" id="history">
 <h3>9.15.1  利用 history 来搜索和下载序列<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h3>
-<p>假设我们想搜索和下载所有的 <em>Opuntia</em> rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像章节 <a class="reference external" href="#sec:entrez-search-fetch-genbank">9.14.3</a>
+<p>假设我们想搜索和下载所有的 <em>Opuntia</em> rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像章节 <a class="reference internal" href="#sec-entrez-search-fetch-genbank"><em>9.14.3</em></a>
 里一样, 我们可以简单的用 <tt class="docutils literal"><span class="pre">Bio.Entrez.esearch()</span></tt> 得到一个GI号的列表，然后调用 <tt class="docutils literal"><span class="pre">Bio.Entrez.efetch()</span></tt>
 来下载他们。</p>
 <p>然而，被认同的方法是使用历史记录特性来进行搜索。然后，我们可以通过指向这些搜索结果的引用来获取他们 -
@@ -1328,12 +1328,12 @@ NCBI 将会提前进行缓冲。</p>
 </pre></div>
 </div>
 <p>在写这份文档的时候，这个搜索返回了28个匹配结果 - 但是因为这个是跟时间相关的搜索，因此返回结果会发生变化。
-像在上面 <a class="reference external" href="#subsec:entrez-and-medline">9.12.1</a> 讲到的一样, 你可以使用 <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt> 来解析
+像在上面 <a class="reference internal" href="#sec-entrez-and-medline"><em>9.12.1</em></a> 讲到的一样, 你可以使用 <tt class="docutils literal"><span class="pre">Bio.Medline</span></tt> 来解析
 保存下来的记录。</p>
 </div>
-<div class="section" id="id8">
-<h3>9.15.3  搜索引用文章<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>回到 Section <a class="reference external" href="#sec:elink">9.7</a> 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
+<div class="section" id="sec-elink-citations">
+<span id="id8"></span><h3>9.15.3  搜索引用文章<a class="headerlink" href="#sec-elink-citations" title="Permalink to this headline">¶</a></h3>
+<p>回到 Section <a class="reference internal" href="#sec-elink"><em>9.7</em></a> 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
 PubMed Central（为PubMed中所有文献来做这个事情，意味这NIH将要付出更多的工作）包含的那些杂志。让我们以
 Biopython PDB parser文章为例来试试看， PubMed ID 14630660：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">Entrez</span>
@@ -1350,7 +1350,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：</p>
 名称中猜到了，实际上他们不是PubMed IDs，而是PubMed Central IDs。我们的应用笔记是列表当中第三个引用的
 文章， PMCID 2682512。</p>
 <p>那么，如果（像我）你希望得到的是PubMed IDs的列表的话，该怎么做呢？好吧，你可以使用再次使用ELink来更改他们。
-这将成为两步处理，所以你应该使用历史记录特性来完成这个工作（章节 <a class="reference external" href="#sec:entrez-webenv">9.15</a>）。</p>
+这将成为两步处理，所以你应该使用历史记录特性来完成这个工作（章节 <a class="reference internal" href="#sec-entrez-webenv"><em>9.15</em></a> ）。</p>
 <p>但是首先，让我们使用更直接的方法来进行第二次调用ELink：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">results2</span> <span class="o">=</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">Entrez</span><span class="o">.</span><span class="n">elink</span><span class="p">(</span><span class="n">dbfrom</span><span class="o">=</span><span class="s">&quot;pmc&quot;</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="s">&quot;pubmed&quot;</span><span class="p">,</span> <span class="n">LinkName</span><span class="o">=</span><span class="s">&quot;pmc_pubmed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                                    <span class="n">from_uid</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pmc_ids</span><span class="p">)))</span>
@@ -1386,7 +1386,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：</p>
 <li><a class="reference internal" href="#espell">9.9  ESpell: 获得拼写建议</a></li>
 <li><a class="reference internal" href="#entrez-xml">9.10  解析大的Entrez XML文件</a></li>
 <li><a class="reference internal" href="#id1">9.11  错误处理</a></li>
-<li><a class="reference internal" href="#id2">9.12  专用的解析器</a><ul>
+<li><a class="reference internal" href="#sec-entrez-specialized-parsers">9.12  专用的解析器</a><ul>
 <li><a class="reference internal" href="#medline">9.12.1  解析Medline记录</a></li>
 <li><a class="reference internal" href="#geo">9.12.2  解析GEO记录</a></li>
 <li><a class="reference internal" href="#unigene">9.12.3  解析UniGene记录</a></li>
@@ -1395,7 +1395,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：</p>
 <li><a class="reference internal" href="#id3">9.13  使用代理</a></li>
 <li><a class="reference internal" href="#id4">9.14  实例</a><ul>
 <li><a class="reference internal" href="#pubmedmedline">9.14.1  PubMed和Medline</a></li>
-<li><a class="reference internal" href="#id5">9.14.2  搜索，下载，和解析Entrez核酸记录</a></li>
+<li><a class="reference internal" href="#sec-entrez-example-genbank">9.14.2  搜索，下载，和解析Entrez核酸记录</a></li>
 <li><a class="reference internal" href="#genbank-record">9.14.3  搜索、下载和解析GenBank record</a></li>
 <li><a class="reference internal" href="#id6">9.14.4  查看物种的谱系关系</a></li>
 </ul>
@@ -1403,7 +1403,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：</p>
 <li><a class="reference internal" href="#webenv">9.15  使用历史记录和WebEnv</a><ul>
 <li><a class="reference internal" href="#history">9.15.1  利用 history 来搜索和下载序列</a></li>
 <li><a class="reference internal" href="#id7">9.15.2  利用history来搜索和下载综述</a></li>
-<li><a class="reference internal" href="#id8">9.15.3  搜索引用文章</a></li>
+<li><a class="reference internal" href="#sec-elink-citations">9.15.3  搜索引用文章</a></li>
 </ul>
 </li>
 </ul>

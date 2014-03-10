@@ -52,7 +52,7 @@
             
   <div class="section" id="bio-motifs">
 <h1>第14章   使用Bio.motifs进行模体序列分析<a class="headerlink" href="#bio-motifs" title="Permalink to this headline">¶</a></h1>
-<p>这章主要的介绍Biopython中的 <tt class="docutils literal"><span class="pre">Bio.motifs</span></tt> 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 <a class="reference external" href="#sec:links">14.8</a> 相关章节以获得有关的信息。</p>
+<p>这章主要的介绍Biopython中的 <tt class="docutils literal"><span class="pre">Bio.motifs</span></tt> 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 <a class="reference internal" href="#sec-links"><em>14.8</em></a> 相关章节以获得有关的信息。</p>
 <p>这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 <tt class="docutils literal"><span class="pre">Bio.motifs</span></tt> 包，该包替代了Biopython 1.50版本中的 <tt class="docutils literal"><span class="pre">Bio.Motif</span></tt> 包，而 <tt class="docutils literal"><span class="pre">Bio.Motif</span></tt> 包是基于较早版本的Biopython 中的两个模块 <tt class="docutils literal"><span class="pre">Bio.AlignAce</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.MEME</span></tt> 。<tt class="docutils literal"><span class="pre">Bio.motifs</span></tt> 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。</p>
 <p>说到其他库，看到这里，你或许会对 <a class="reference external" href="http://fraenkel.mit.edu/TAMO/">TAMO</a> 感兴趣，这是另一个分析模体序列的Python库。它能提供更多关于 <em>de-novo</em> 模体的查找方式，不过它并没有纳入到Biopython中，而且在商业用途上还有一些限制。</p>
 <div class="section" id="id1">
@@ -155,7 +155,7 @@
 <span class="go">Seq(&#39;WACVC&#39;, IUPACAmbiguousDNA())</span>
 </pre></div>
 </div>
-<p>此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [<a class="reference external" href="#cornish1985">10</a>] 。这些简并一致序列是按照Cavener指定的规则[<a class="reference external" href="#cavener1987">11</a>]来建立的。</p>
+<p>此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [<a class="reference internal" href="chr23.html#cornish1985"><em>10</em></a>] 。这些简并一致序列是按照Cavener指定的规则 [<a class="reference internal" href="chr23.html#cavener1987"><em>11</em></a>] 来建立的。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">reverse_complement</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">consensus</span>
 <span class="go">Seq(&#39;GCGTA&#39;, IUPACUnambiguousDNA())</span>
@@ -267,7 +267,7 @@ aggaatCGCGTGc</pre>
 </div>
 <div class="section" id="meme">
 <h4>MEME<a class="headerlink" href="#meme" title="Permalink to this headline">¶</a></h4>
-<p>MEME [<a class="reference external" href="#bailey1994">12</a>] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。例子如下。</p>
+<p>MEME [<a class="reference internal" href="chr23.html#bailey1994"><em>12</em></a>] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。例子如下。</p>
 <p>在输出文件的开头，有一些MEME生成的关于MEME和所用MEME版本的背景信息：</p>
 <div class="code python highlight-python"><pre>********************************************************************************
 MEME - Motif discovery tool
@@ -384,7 +384,7 @@ matrix            T  aa:1::9::11:</pre>
 </div>
 <div class="section" id="transfac">
 <h4>TRANSFAC<a class="headerlink" href="#transfac" title="Permalink to this headline">¶</a></h4>
-<p>TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [<a class="reference external" href="#matys2003">27</a>]。TRANSFAC数据库中所用的文件格式至今还被其他工具所使用，我们下面将介绍TRANSFAC文件格式。</p>
+<p>TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [<a class="reference internal" href="chr23.html#matys2003"><em>27</em></a>] 。TRANSFAC数据库中所用的文件格式至今还被其他工具所使用，我们下面将介绍TRANSFAC文件格式。</p>
 <p>TRANSFAC文件格式简单概括如下：</p>
 <div class="code python highlight-python"><pre>ID  motif1
 P0      A      C      G      T
@@ -443,9 +443,9 @@ P0      A      C      G      T
 <span class="go">&#39;motif1&#39;</span>
 </pre></div>
 </div>
-<p>TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附加信息。表格 <a class="reference external" href="#table:transfaccodes">14.1.2</a> 列出了在TRANSFAC文件常见的双字母含义：</p>
+<p>TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附加信息。表格 <a class="reference internal" href="#table-transfaccodes"><em>14.1.2</em></a> 列出了在TRANSFAC文件常见的双字母含义：</p>
 <hr class="docutils" />
-<table border="1" class="docutils">
+<table border="1" class="docutils" id="table-transfaccodes">
 <colgroup>
 <col width="100%" />
 </colgroup>
@@ -1114,8 +1114,8 @@ m_reb1: GTTACCCGG</pre>
 </div>
 </div>
 </div>
-<div class="section" id="id14">
-<h2>14.8  相关链接<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-links">
+<span id="id14"></span><h2>14.8  相关链接<a class="headerlink" href="#sec-links" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="http://en.wikipedia.org/wiki/Sequence_motif">Sequence motif</a> in
 wikipedia</li>
@@ -1515,7 +1515,7 @@ programs</a></li>
 <li><a class="reference internal" href="#alignace">14.7.2  AlignAce</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id14">14.8  相关链接</a></li>
+<li><a class="reference internal" href="#sec-links">14.8  相关链接</a></li>
 <li><a class="reference internal" href="#bio-motif">14.9  旧版Bio.Motif模块</a><ul>
 <li><a class="reference internal" href="#id15">14.9.1  模体对象</a><ul>
 <li><a class="reference internal" href="#id16">14.9.1.1  模体读写</a></li>

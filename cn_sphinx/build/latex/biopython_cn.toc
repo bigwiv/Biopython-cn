@@ -1,0 +1,394 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}第1章 介绍}{3}{chapter.1}
+\contentsline {section}{1.1 什么是Biopython？}{3}{section*.3}
+\contentsline {section}{1.2 在Biopython包中我能发现什么？}{3}{section*.4}
+\contentsline {section}{1.3 安装Biopython}{4}{section*.5}
+\contentsline {section}{1.4 常见问答（FAQ）}{4}{section*.6}
+\contentsline {chapter}{\numberline {2}第2章 快速开始 —— 你能用Biopython做什么？}{9}{chapter.2}
+\contentsline {section}{2.1 Biopython功能概览}{9}{section*.7}
+\contentsline {section}{2.2 处理序列}{9}{section*.8}
+\contentsline {section}{2.3 用法示例}{10}{section*.9}
+\contentsline {section}{2.4 解析序列文件格式}{10}{section*.10}
+\contentsline {subsection}{2.4.1 简单的FASTA解析示例}{11}{subsection*.11}
+\contentsline {subsection}{2.4.2 简单的GenBank解析示例}{11}{subsection*.12}
+\contentsline {subsection}{2.4.3 我爱解析——请别停止讨论它！}{12}{subsection*.13}
+\contentsline {section}{2.5 连接生物学数据库}{12}{section*.14}
+\contentsline {section}{2.6 下一步做什么}{12}{section*.15}
+\contentsline {chapter}{\numberline {3}第3章 生物序列对象}{13}{chapter.3}
+\contentsline {section}{3.1 序列和字母表}{13}{section*.16}
+\contentsline {section}{3.2 序列表现的像字符串一样}{14}{section*.17}
+\contentsline {section}{3.3 切取序列}{15}{section*.18}
+\contentsline {section}{3.4 将序列对象转换成字符串}{16}{section*.19}
+\contentsline {section}{3.5 连接或添加序列}{16}{section*.20}
+\contentsline {section}{3.6 改变大小写}{17}{section*.21}
+\contentsline {section}{3.7 核苷酸序列和（反向）互补序列}{17}{section*.22}
+\contentsline {section}{3.8 转录}{18}{section*.23}
+\contentsline {section}{3.9 翻译}{20}{section*.24}
+\contentsline {section}{3.10 翻译表}{22}{section*.25}
+\contentsline {section}{3.11 比较Seq对象}{23}{section*.26}
+\contentsline {section}{3.12 MutableSeq对象}{24}{section*.27}
+\contentsline {section}{3.13 UnknownSeq对象}{25}{section*.28}
+\contentsline {section}{3.14 直接使用字符串}{26}{section*.29}
+\contentsline {chapter}{\numberline {4}第4章 序列注释对象}{27}{chapter.4}
+\contentsline {section}{4.1 SeqRecord对象}{27}{section*.30}
+\contentsline {section}{4.2 创建 SeqRecord}{28}{section*.31}
+\contentsline {subsection}{4.2.1 从头新建SeqRecord}{28}{subsection*.32}
+\contentsline {subsection}{4.2.2 根据FASTA文件创建SeqRecord对象}{28}{subsection*.33}
+\contentsline {subsection}{4.2.3 从 GenBank文件创建 SeqRecord}{30}{subsection*.34}
+\contentsline {section}{4.3 Feature, location 和 position对象}{31}{section*.35}
+\contentsline {subsection}{4.3.1 SeqFeature对象}{31}{subsection*.36}
+\contentsline {subsection}{4.3.2 Positions和locations}{31}{subsection*.37}
+\contentsline {subsubsection}{4.3.2.1 FeatureLocation 对象}{31}{subsubsection*.38}
+\contentsline {subsubsection}{4.3.2.2 CompoundLocation 对象}{32}{subsubsection*.39}
+\contentsline {subsubsection}{4.3.2.3 模糊Positions}{32}{subsubsection*.40}
+\contentsline {subsubsection}{4.3.2.4 Location testing}{33}{subsubsection*.41}
+\contentsline {subsection}{4.3.3 使用feature 或 location描述序列}{33}{subsection*.42}
+\contentsline {section}{4.4 References}{34}{section*.43}
+\contentsline {section}{4.5 格式化方法}{34}{section*.44}
+\contentsline {section}{4.6 SeqRecord切片}{35}{section*.45}
+\contentsline {section}{4.7 SeqRecord对象相加}{37}{section*.46}
+\contentsline {section}{4.8 反向互补SeqRecord对象}{39}{section*.47}
+\contentsline {chapter}{\numberline {5}第5章 序列输入和输出}{41}{chapter.5}
+\contentsline {section}{5.1 解析/读取序列}{41}{section*.48}
+\contentsline {subsection}{5.1.1 读取序列文件}{41}{subsection*.49}
+\contentsline {subsection}{5.1.2 遍历序列文件}{42}{subsection*.50}
+\contentsline {subsection}{5.1.3 获得序列文件中序列条目列表}{43}{subsection*.51}
+\contentsline {subsection}{5.1.4 提取数据}{43}{subsection*.52}
+\contentsline {section}{5.2 从压缩文档读取解析序列信息}{45}{section*.53}
+\contentsline {section}{5.3 解析来自网络的序列}{46}{section*.54}
+\contentsline {subsection}{5.3.1 解析来自网络的GenBank序列条目}{46}{subsection*.55}
+\contentsline {subsection}{5.3.2 解析来自网络的SwissProt序列条目}{47}{subsection*.56}
+\contentsline {section}{5.4 序列文件作为字典}{48}{section*.57}
+\contentsline {subsection}{5.4.1 序列文件作为字典-在内存中}{48}{subsection*.58}
+\contentsline {subsubsection}{5.4.1.1 指定字典键}{49}{subsubsection*.59}
+\contentsline {subsubsection}{5.4.1.2 使用SEGUID校验和对字典建立索引}{49}{subsubsection*.60}
+\contentsline {subsection}{5.4.2 序列文件作为字典 - 索引文件}{50}{subsection*.61}
+\contentsline {subsubsection}{5.4.2.1 指定字典键}{51}{subsubsection*.62}
+\contentsline {subsubsection}{5.4.2.2 获取序列条目原始数据}{51}{subsubsection*.63}
+\contentsline {subsection}{5.4.3 序列文件作为字典 - 数据库索引文件}{52}{subsection*.64}
+\contentsline {subsubsection}{5.4.3.1 获取序列条目原始数据}{52}{subsubsection*.65}
+\contentsline {subsection}{5.4.4 对压缩文件建立索引}{52}{subsection*.66}
+\contentsline {subsection}{5.4.5 讨论}{53}{subsection*.67}
+\contentsline {section}{5.5 写入序列文件}{54}{section*.68}
+\contentsline {subsection}{5.5.1 可逆读写（Round trips）}{55}{subsection*.69}
+\contentsline {subsection}{5.5.2 序列格式间的转换}{55}{subsection*.70}
+\contentsline {subsection}{5.5.3 转化序列到反向互补序列}{56}{subsection*.71}
+\contentsline {subsection}{5.5.4 获得格式化为字符串的 \texttt {SeqRecord} 对象}{57}{subsection*.72}
+\contentsline {chapter}{\numberline {6}第6章 多序列比对}{59}{chapter.6}
+\contentsline {section}{6.1 读取多序列比对数据}{59}{section*.73}
+\contentsline {subsection}{6.1.1 单一的序列比对}{60}{subsection*.74}
+\contentsline {subsection}{6.1.2 多个序列比对}{62}{subsection*.75}
+\contentsline {subsection}{6.1.3 含糊的序列比对}{63}{subsection*.76}
+\contentsline {section}{6.2 序列比对的写出}{65}{section*.77}
+\contentsline {subsection}{6.2.1 序列比对的格式间转换}{66}{subsection*.78}
+\contentsline {subsection}{6.2.2 将序列比对对象转换为格式化字符串（formatted strings）}{68}{subsection*.79}
+\contentsline {section}{6.3 序列比对的操纵}{69}{section*.80}
+\contentsline {subsection}{6.3.1 序列比对的切片（slice）操作}{69}{subsection*.81}
+\contentsline {subsection}{6.3.2 序列比对作为数组}{71}{subsection*.82}
+\contentsline {section}{6.4 构建序列比对的工具}{71}{section*.83}
+\contentsline {subsection}{6.4.1 ClustalW}{72}{subsection*.84}
+\contentsline {subsection}{6.4.2 MUSCLE}{73}{subsection*.85}
+\contentsline {subsection}{6.4.3 MUSCLE标准输出}{74}{subsection*.86}
+\contentsline {subsection}{6.4.4 以标准输入和标准输出使用MUSCLE}{75}{subsection*.87}
+\contentsline {subsection}{6.4.5 EMBOSS包的序列比对工具——needle和water}{77}{subsection*.88}
+\contentsline {chapter}{\numberline {7}第7章 BLAST}{79}{chapter.7}
+\contentsline {section}{7.1 通过Internet运行BLAST}{79}{section*.89}
+\contentsline {section}{7.2 本地运行BLAST}{81}{section*.90}
+\contentsline {subsection}{7.2.1 介绍}{81}{subsection*.91}
+\contentsline {subsection}{7.2.2 单机版的NCBI老版本BLAST}{81}{subsection*.92}
+\contentsline {subsection}{7.2.3 单机版 NCBI BLAST+}{81}{subsection*.93}
+\contentsline {subsection}{7.2.4 WU-BLAST 和 AB-BLAST}{82}{subsection*.94}
+\contentsline {section}{7.3 解析BLAST 输出}{82}{section*.95}
+\contentsline {section}{7.4 BLAST 记录类}{84}{section*.96}
+\contentsline {section}{7.5 废弃的BLAST 解析器}{87}{section*.99}
+\contentsline {subsection}{7.5.1 解析纯文本格式的BLAST输出}{88}{subsection*.100}
+\contentsline {subsection}{7.5.2 解析包含多次BLAST结果的纯文本BLAST文件}{88}{subsection*.101}
+\contentsline {subsection}{7.5.3 在巨大的BLAST纯文本文件中发现不对的记录}{89}{subsection*.102}
+\contentsline {section}{7.6 处理PSI-BLAST}{90}{section*.103}
+\contentsline {section}{7.7 处理 RPS-BLAST}{90}{section*.104}
+\contentsline {chapter}{\numberline {8}第8章 BLAST和其他序列搜索工具(\emph {实验性质的代码})}{91}{chapter.8}
+\contentsline {section}{8.1 SearchIO对象模型}{91}{section*.105}
+\contentsline {subsection}{8.1.1 QueryResult}{92}{subsection*.106}
+\contentsline {subsection}{8.1.2 Hit}{96}{subsection*.107}
+\contentsline {subsection}{8.1.3 HSP}{98}{subsection*.108}
+\contentsline {subsection}{8.1.4 HSP片段}{102}{subsection*.109}
+\contentsline {section}{8.2 一个关于标准和惯例的注意事项}{102}{section*.110}
+\contentsline {section}{8.3 读取搜索输出文件}{103}{section*.111}
+\contentsline {section}{8.4 用索引处理含有大量搜索输出的文件}{104}{section*.112}
+\contentsline {section}{8.5 写入和转换搜索输出文件}{104}{section*.113}
+\contentsline {chapter}{\numberline {9}第9章 访问NCBI Entrez数据库}{107}{chapter.9}
+\contentsline {section}{9.1 Entrez 简介}{108}{section*.114}
+\contentsline {section}{9.2 EInfo: 获取Entrez数据库的信息}{108}{section*.115}
+\contentsline {section}{9.3 ESearch: 搜索Entrez数据库}{110}{section*.116}
+\contentsline {section}{9.4 EPost: 上传identifiers的列表}{111}{section*.117}
+\contentsline {section}{9.5 ESummary: 通过主要的IDs来获取摘要}{112}{section*.118}
+\contentsline {section}{9.6 EFetch: 从Entrez下载更多的记录}{112}{section*.119}
+\contentsline {section}{9.7 ELink: 在NCBI Entrez中搜索相关的条目}{115}{section*.120}
+\contentsline {section}{9.8 EGQuery: 全局搜索- 统计搜索的条目}{116}{section*.121}
+\contentsline {section}{9.9 ESpell: 获得拼写建议}{116}{section*.122}
+\contentsline {section}{9.10 解析大的Entrez XML文件}{117}{section*.123}
+\contentsline {section}{9.11 错误处理}{117}{section*.124}
+\contentsline {section}{9.12 专用的解析器}{119}{section*.125}
+\contentsline {subsection}{9.12.1 解析Medline记录}{120}{subsection*.126}
+\contentsline {subsection}{9.12.2 解析GEO记录}{122}{subsection*.127}
+\contentsline {subsection}{9.12.3 解析UniGene记录}{122}{subsection*.128}
+\contentsline {section}{9.13 使用代理}{123}{section*.129}
+\contentsline {section}{9.14 实例}{124}{section*.130}
+\contentsline {subsection}{9.14.1 PubMed和Medline}{124}{subsection*.131}
+\contentsline {subsection}{9.14.2 搜索，下载，和解析Entrez核酸记录}{125}{subsection*.132}
+\contentsline {subsection}{9.14.3 搜索、下载和解析GenBank record}{126}{subsection*.133}
+\contentsline {subsection}{9.14.4 查看物种的谱系关系}{128}{subsection*.134}
+\contentsline {section}{9.15 使用历史记录和WebEnv}{129}{section*.135}
+\contentsline {subsection}{9.15.1 利用 history 来搜索和下载序列}{129}{subsection*.136}
+\contentsline {subsection}{9.15.2 利用history来搜索和下载综述}{130}{subsection*.137}
+\contentsline {subsection}{9.15.3 搜索引用文章}{130}{subsection*.138}
+\contentsline {chapter}{\numberline {10}第10章 Swiss-Prot和ExPASy}{133}{chapter.10}
+\contentsline {section}{10.1 解析Swiss-Prot文件}{133}{section*.139}
+\contentsline {subsection}{10.1.1 解析 Swiss-Prot 记录}{133}{subsection*.140}
+\contentsline {subsection}{10.1.2 解析Swiss-Prot关键词和分类列表}{135}{subsection*.141}
+\contentsline {section}{10.2 解析Prosite记录}{136}{section*.142}
+\contentsline {section}{10.3 解析Prosite文件记录}{137}{section*.143}
+\contentsline {section}{10.4 解析酶记录}{137}{section*.144}
+\contentsline {section}{10.5 Accessing the ExPASy server}{138}{section*.145}
+\contentsline {subsection}{10.5.1 获取一个Swiss-Prot记录}{139}{subsection*.146}
+\contentsline {subsection}{10.5.2 搜索Swiss-Prot}{139}{subsection*.147}
+\contentsline {subsection}{10.5.3 获取Prosite和Prosite文档记录}{140}{subsection*.148}
+\contentsline {section}{10.6 浏览Prosite数据库}{140}{section*.149}
+\contentsline {chapter}{\numberline {11}第11章 走向3D：PDB模块}{143}{chapter.11}
+\contentsline {section}{11.1 晶体结构文件的读与写}{143}{section*.150}
+\contentsline {subsection}{11.1.1 读取PDB文件}{143}{subsection*.151}
+\contentsline {subsection}{11.1.2 读取mmCIF文件}{144}{subsection*.152}
+\contentsline {subsection}{11.1.3 读取PDB XML格式的文件}{144}{subsection*.153}
+\contentsline {subsection}{11.1.4 写PDB文件}{144}{subsection*.154}
+\contentsline {section}{11.2 结构的表示}{145}{section*.155}
+\contentsline {subsection}{11.2.1 结构}{147}{subsection*.157}
+\contentsline {subsection}{11.2.2 模型}{147}{subsection*.158}
+\contentsline {subsection}{11.2.3 链}{148}{subsection*.159}
+\contentsline {subsection}{11.2.4 残基}{148}{subsection*.160}
+\contentsline {subsection}{11.2.5 原子}{149}{subsection*.161}
+\contentsline {subsection}{11.2.6 从结构中提取指定的 \texttt {Atom/Residue/Chain/Model}}{150}{subsection*.162}
+\contentsline {section}{11.3 紊乱}{150}{section*.163}
+\contentsline {subsection}{11.3.1 一般性方法}{150}{subsection*.164}
+\contentsline {subsection}{11.3.2 紊乱原子}{150}{subsection*.165}
+\contentsline {subsection}{11.3.3 紊乱残基}{151}{subsection*.166}
+\contentsline {subsubsection}{普通例子}{151}{subsubsection*.167}
+\contentsline {subsubsection}{点突变}{151}{subsubsection*.168}
+\contentsline {section}{11.4 异质残基}{151}{section*.169}
+\contentsline {subsection}{11.4.1 相关问题}{151}{subsection*.170}
+\contentsline {subsection}{11.4.2 水残基}{152}{subsection*.171}
+\contentsline {subsection}{11.4.3 其他异质残基}{152}{subsection*.172}
+\contentsline {section}{11.5 浏览Structure对象}{152}{section*.173}
+\contentsline {subsection}{解析PDB文件，提取一些Model、Chain、Residue和Atom对象}{152}{subsection*.174}
+\contentsline {subsection}{迭代遍历一个结构中的所有原子}{152}{subsection*.175}
+\contentsline {subsection}{遍历模型中的所有残基}{152}{subsection*.176}
+\contentsline {subsection}{从链中提取异质残基（如resseq 10的葡萄糖（GLC）部分）}{153}{subsection*.177}
+\contentsline {subsection}{打印链中所有异质残基}{153}{subsection*.178}
+\contentsline {subsection}{输出一个结构分子中所有B因子大于50的CA原子的坐标}{153}{subsection*.179}
+\contentsline {subsection}{输出所有含紊乱原子的残基}{153}{subsection*.180}
+\contentsline {subsection}{遍历所有紊乱原子，并选取所有具有altloc A的原子（如果有的话）}{154}{subsection*.181}
+\contentsline {subsection}{从 \texttt {Structure} 对象中提取多肽}{154}{subsection*.182}
+\contentsline {subsection}{获取结构的序列}{155}{subsection*.183}
+\contentsline {section}{11.6 分析结构}{155}{section*.184}
+\contentsline {subsection}{11.6.1 度量距离}{155}{subsection*.185}
+\contentsline {subsection}{11.6.2 度量角度}{155}{subsection*.186}
+\contentsline {subsection}{11.6.3 度量扭转角}{155}{subsection*.187}
+\contentsline {subsection}{11.6.4 确定原子-原子触点}{155}{subsection*.188}
+\contentsline {subsection}{11.6.5 叠加两个结构}{156}{subsection*.189}
+\contentsline {subsection}{11.6.6 双向映射两个相关结构的残基}{156}{subsection*.190}
+\contentsline {subsection}{11.6.7 计算半球暴露（HSE）}{156}{subsection*.191}
+\contentsline {subsection}{11.6.8 确定二级结构}{157}{subsection*.192}
+\contentsline {subsection}{11.6.9 计算残基深度}{157}{subsection*.194}
+\contentsline {section}{11.7 PDB文件中的常见问题}{157}{section*.195}
+\contentsline {subsection}{11.7.1 例子}{158}{subsection*.196}
+\contentsline {subsubsection}{11.7.1.1 重复残基}{158}{subsubsection*.197}
+\contentsline {subsubsection}{11.7.1.2 重复原子}{158}{subsubsection*.198}
+\contentsline {subsection}{11.7.2 自动纠正}{158}{subsection*.199}
+\contentsline {subsubsection}{11.7.2.1 紊乱原子的空altloc}{158}{subsubsection*.200}
+\contentsline {subsubsection}{11.7.2.2 断链}{159}{subsubsection*.201}
+\contentsline {subsection}{11.7.3 致命错误}{159}{subsection*.202}
+\contentsline {subsubsection}{11.7.3.1 重复残基}{159}{subsubsection*.203}
+\contentsline {subsubsection}{11.7.3.2 重复原子}{159}{subsubsection*.204}
+\contentsline {section}{11.8 访问Protein Data Bank}{159}{section*.205}
+\contentsline {subsection}{11.8.1 从Protein Data Bank下载结构}{159}{subsection*.206}
+\contentsline {subsection}{11.8.2 下载整个PDB}{160}{subsection*.207}
+\contentsline {subsection}{11.8.3 保持本地PDB拷贝的更新}{160}{subsection*.208}
+\contentsline {section}{11.9 常见问题}{160}{section*.209}
+\contentsline {subsection}{11.9.1 Bio.PDB测试得如何？}{160}{subsection*.210}
+\contentsline {subsection}{11.9.2 它有多快？}{160}{subsection*.211}
+\contentsline {subsection}{11.9.3 是否支持分子图形展示？}{160}{subsection*.212}
+\contentsline {subsection}{11.9.4 谁在用Bio.PDB？}{161}{subsection*.213}
+\contentsline {chapter}{\numberline {12}第12章 Bio.PopGen：群体遗传学}{163}{chapter.12}
+\contentsline {section}{12.1 GenePop}{163}{section*.214}
+\contentsline {section}{12.2 溯祖模拟（Coalescent simulation）}{164}{section*.215}
+\contentsline {subsection}{12.2.1 创建场景（scenario）}{165}{subsection*.216}
+\contentsline {subsubsection}{12.2.1.1 群体}{165}{subsubsection*.217}
+\contentsline {subsubsection}{12.2.1.2 染色体结构}{166}{subsubsection*.219}
+\contentsline {subsection}{12.2.2 运行SIMCOAL2}{167}{subsection*.220}
+\contentsline {section}{12.3 其它应用程序}{168}{section*.221}
+\contentsline {subsection}{12.3.1 FDist：检测选择压力和分子适应}{168}{subsection*.222}
+\contentsline {subsubsection}{12.3.1.1 估计期望的平均 $F_{st}$}{169}{subsubsection*.223}
+\contentsline {subsubsection}{12.3.1.2 说明}{170}{subsubsection*.224}
+\contentsline {section}{12.4 未来发展}{170}{section*.225}
+\contentsline {chapter}{\numberline {13}第13章 Bio.Phylo系统发育分析}{171}{chapter.13}
+\contentsline {section}{13.1 示例: 树中有什么？}{171}{section*.226}
+\contentsline {subsection}{13.1.1 给树的分支上颜色}{173}{subsection*.228}
+\contentsline {section}{13.2 I/O 函数}{176}{section*.230}
+\contentsline {section}{13.3 查看和导出树}{176}{section*.231}
+\contentsline {section}{13.4 使用Tree和Clade对象}{182}{section*.235}
+\contentsline {subsection}{13.4.1 查找和遍历类方法}{182}{subsection*.236}
+\contentsline {subsection}{13.4.2 信息类方法}{183}{subsection*.237}
+\contentsline {subsection}{13.4.3 修改类方法}{184}{subsection*.238}
+\contentsline {subsection}{13.4.4 PhyloXML树的特性}{184}{subsection*.239}
+\contentsline {section}{13.5 运行外部程序}{185}{section*.240}
+\contentsline {section}{13.6 PAML整合}{185}{section*.241}
+\contentsline {section}{13.7 未来计划}{186}{section*.242}
+\contentsline {chapter}{\numberline {14}第14章 使用Bio.motifs进行模体序列分析}{187}{chapter.14}
+\contentsline {section}{14.1 模体对象}{187}{section*.243}
+\contentsline {subsection}{14.1.1 从实例中创建一个模体}{187}{subsection*.244}
+\contentsline {subsection}{14.1.2 读取模体}{189}{subsection*.245}
+\contentsline {subsubsection}{JASPAR}{189}{subsubsection*.246}
+\contentsline {subsubsection}{MEME}{191}{subsubsection*.247}
+\contentsline {subsubsection}{MAST}{193}{subsubsection*.248}
+\contentsline {subsubsection}{TRANSFAC}{193}{subsubsection*.249}
+\contentsline {subsection}{14.1.3 模体写出}{196}{subsection*.251}
+\contentsline {subsection}{14.1.4 绘制序列标识图}{197}{subsection*.252}
+\contentsline {section}{14.2 位置权重矩阵}{197}{section*.253}
+\contentsline {section}{14.3 位置特异性得分矩阵}{198}{section*.254}
+\contentsline {section}{14.4 搜索实例}{199}{section*.255}
+\contentsline {subsection}{14.4.1 搜索准确匹配实例}{199}{subsection*.256}
+\contentsline {subsection}{14.4.2 用PSSM得分搜索匹配实例}{199}{subsection*.257}
+\contentsline {subsection}{14.4.3 选择得分阀值}{200}{subsection*.258}
+\contentsline {section}{14.5 模体对象自身相关的位置特异性得分矩阵}{201}{section*.259}
+\contentsline {section}{14.6 模体比较}{203}{section*.260}
+\contentsline {section}{14.7 查找 \emph {De novo} 模体}{204}{section*.261}
+\contentsline {subsection}{14.7.1 MEME}{204}{subsection*.262}
+\contentsline {subsection}{14.7.2 AlignAce}{205}{subsection*.263}
+\contentsline {section}{14.8 相关链接}{205}{section*.264}
+\contentsline {section}{14.9 旧版Bio.Motif模块}{206}{section*.265}
+\contentsline {subsection}{14.9.1 模体对象}{206}{subsection*.266}
+\contentsline {subsubsection}{14.9.1.1 模体读写}{207}{subsubsection*.267}
+\contentsline {subsection}{14.9.2 查找实例}{209}{subsection*.268}
+\contentsline {subsection}{14.9.3 模体比较}{210}{subsection*.269}
+\contentsline {subsection}{14.9.4 \emph {De novo} 模体查找}{211}{subsection*.270}
+\contentsline {subsubsection}{14.9.4.1 MEME}{211}{subsubsection*.271}
+\contentsline {subsubsection}{14.9.4.2 AlignAce}{212}{subsubsection*.272}
+\contentsline {chapter}{\numberline {15}第15章 聚类分析}{213}{chapter.15}
+\contentsline {section}{数据表示法}{213}{section*.273}
+\contentsline {section}{缺失值}{213}{section*.274}
+\contentsline {section}{随机数生成器}{213}{section*.275}
+\contentsline {section}{15.1 距离函数}{214}{section*.276}
+\contentsline {subsection}{Euclidean 距离}{214}{subsection*.277}
+\contentsline {subsection}{City-block distance}{214}{subsection*.278}
+\contentsline {subsection}{Pearson 相关系数}{215}{subsection*.279}
+\contentsline {subsection}{Absolute Pearson correlation}{215}{subsection*.280}
+\contentsline {subsection}{Uncentered correlation (夹角余弦)}{215}{subsection*.281}
+\contentsline {subsection}{Absolute uncentered correlation}{216}{subsection*.282}
+\contentsline {subsection}{Spearman rank correlation}{216}{subsection*.283}
+\contentsline {subsection}{Kendall’s \relax $\tau \relax \GenericError { }{LaTeX Error: Bad math environment delimiter}{See the LaTeX manual or LaTeX Companion for explanation.}{Your command was ignored.\MessageBreak Type I <command> <return> to replace it with another command,\MessageBreak or <return> to continue without it.}}{217}{subsection*.284}
+\contentsline {subsection}{Weighting}{217}{subsection*.285}
+\contentsline {subsection}{计算距离矩阵}{217}{subsection*.286}
+\contentsline {section}{15.2 计算类的相关性质}{218}{section*.287}
+\contentsline {subsection}{计算类中心}{218}{subsection*.288}
+\contentsline {subsection}{计算类间距离}{218}{subsection*.289}
+\contentsline {section}{15.3 划分算法}{219}{section*.290}
+\contentsline {subsection}{\emph {k}-means and \emph {k}-medians}{220}{subsection*.291}
+\contentsline {subsection}{\emph {k}-medoids 聚类}{220}{subsection*.292}
+\contentsline {section}{15.4 系统聚类}{221}{section*.293}
+\contentsline {subsection}{展示系统聚类的结果}{222}{subsection*.294}
+\contentsline {subsection}{运行系统聚类}{223}{subsection*.295}
+\contentsline {section}{15.5 Self-Organizing Maps}{224}{section*.296}
+\contentsline {section}{15.6 主成分分析}{226}{section*.297}
+\contentsline {section}{15.7 处理 Cluster/TreeView-type 文件}{226}{section*.298}
+\contentsline {subsection}{计算距离矩阵}{227}{subsection*.299}
+\contentsline {subsection}{计算聚类中心}{227}{subsection*.300}
+\contentsline {subsection}{计算两类间的距离}{228}{subsection*.301}
+\contentsline {subsection}{进行系统聚类}{228}{subsection*.302}
+\contentsline {subsection}{进行 \emph {k}-means or \emph {k}-medians 聚类}{229}{subsection*.303}
+\contentsline {subsection}{计算Self-Organizing Map}{229}{subsection*.304}
+\contentsline {subsection}{保存聚类结果}{230}{subsection*.305}
+\contentsline {section}{15.8 示例}{230}{section*.306}
+\contentsline {section}{15.9 附加函数}{231}{section*.307}
+\contentsline {chapter}{\numberline {16}第16章 监督学习方法}{233}{chapter.16}
+\contentsline {section}{16.1 Logistic 回归模型}{233}{section*.308}
+\contentsline {subsection}{16.1.1 背景和目的}{233}{subsection*.309}
+\contentsline {subsection}{16.1.2 训练logistic回归模型}{234}{subsection*.312}
+\contentsline {subsection}{16.1.3 使用logistic回归模型进行分类}{236}{subsection*.314}
+\contentsline {subsection}{16.1.4 Logistic回归，线性判别分析和支持向量机}{238}{subsection*.315}
+\contentsline {section}{16.2 \emph {k}-最近邻居法（ \emph {KNN} ）}{238}{section*.316}
+\contentsline {subsection}{16.2.1 背景和目的}{238}{subsection*.317}
+\contentsline {subsection}{16.2.2 初始化一个 \emph {KNN} 模型}{238}{subsection*.318}
+\contentsline {subsection}{16.2.3 使用*KNN* 模型来分类}{239}{subsection*.319}
+\contentsline {section}{16.3 Naive贝叶斯}{241}{section*.320}
+\contentsline {section}{16.4 最大熵}{241}{section*.321}
+\contentsline {section}{16.5 马尔科夫模型}{241}{section*.322}
+\contentsline {chapter}{\numberline {17}第17章 Graphics模块中的基因组可视化包—GenomeDiagram}{243}{chapter.17}
+\contentsline {section}{17.1 基因组可视化包—GenomeDiagram}{243}{section*.323}
+\contentsline {subsection}{17.1.1 GenomeDiagram简介}{243}{subsection*.324}
+\contentsline {subsection}{17.1.2 图形，轨迹, 特征集和特征}{243}{subsection*.325}
+\contentsline {subsection}{17.1.3 自上而下的实例}{243}{subsection*.326}
+\contentsline {subsection}{17.1.4 自下而上的实例}{246}{subsection*.327}
+\contentsline {subsection}{17.1.5 简单的Feature}{247}{subsection*.328}
+\contentsline {subsection}{17.1.6 Feature说明}{247}{subsection*.329}
+\contentsline {subsection}{17.1.7 表示Feature的图形符号}{249}{subsection*.330}
+\contentsline {subsection}{17.1.8 箭头形状}{251}{subsection*.331}
+\contentsline {subsection}{17.1.9 完美示例}{254}{subsection*.332}
+\contentsline {subsection}{17.1.10 多重轨迹}{256}{subsection*.333}
+\contentsline {subsection}{17.1.11 不同Track之间的Cross-Links}{258}{subsection*.334}
+\contentsline {subsection}{17.1.12 高级选项}{261}{subsection*.335}
+\contentsline {subsection}{17.1.13 转换旧代码}{261}{subsection*.336}
+\contentsline {section}{17.2 染色体}{262}{section*.337}
+\contentsline {subsection}{17.2.1 简单染色体}{262}{subsection*.338}
+\contentsline {subsection}{17.2.2 染色体注释}{264}{subsection*.339}
+\contentsline {chapter}{\numberline {18}第18章 Cookbook – 用它做一些很酷的事情}{267}{chapter.18}
+\contentsline {section}{18.1 操作序列文件}{267}{section*.340}
+\contentsline {subsection}{18.1.1 过滤文件中的序列}{267}{subsection*.341}
+\contentsline {subsection}{18.1.2 生成随机基因组}{267}{subsection*.342}
+\contentsline {subsection}{18.1.3 翻译CDS条目为FASTA文件}{269}{subsection*.343}
+\contentsline {subsection}{18.1.4 将FASTA文件中的序列变为大写}{269}{subsection*.344}
+\contentsline {subsection}{18.1.5 对序列文件排序}{270}{subsection*.345}
+\contentsline {subsection}{18.1.6 FASTQ文件的简单质量过滤}{271}{subsection*.346}
+\contentsline {subsection}{18.1.7 切除引物序列}{271}{subsection*.347}
+\contentsline {subsection}{18.1.8 切除接头序列}{272}{subsection*.348}
+\contentsline {subsection}{18.1.9 转换FASTQ文件}{274}{subsection*.349}
+\contentsline {subsection}{18.1.10 转换FASTA和QUAL文件为FASTQ文件}{275}{subsection*.350}
+\contentsline {subsection}{18.1.11 索引FASTQ文件}{276}{subsection*.351}
+\contentsline {subsection}{18.1.12 转换SFF文件}{276}{subsection*.352}
+\contentsline {subsection}{18.1.13 识别开放读码框}{277}{subsection*.353}
+\contentsline {section}{18.2 序列解析与简单作图}{279}{section*.354}
+\contentsline {subsection}{18.2.1 序列长度柱状图}{279}{subsection*.355}
+\contentsline {subsection}{18.2.2 序列GC\%含量作图}{280}{subsection*.356}
+\contentsline {subsection}{18.2.3 核苷酸点线图}{281}{subsection*.357}
+\contentsline {subsection}{18.2.4 绘制序列读长数据的质量图}{284}{subsection*.358}
+\contentsline {section}{18.3 处理序列比对}{285}{section*.359}
+\contentsline {subsection}{18.3.1 计算摘要信息}{285}{subsection*.360}
+\contentsline {subsection}{18.3.2 计算一个快速一致序列}{286}{subsection*.361}
+\contentsline {subsection}{18.3.3 位点特异性评分矩阵}{286}{subsection*.362}
+\contentsline {subsection}{18.3.4 信息量}{287}{subsection*.363}
+\contentsline {section}{18.4 替换矩阵}{289}{section*.364}
+\contentsline {subsection}{18.4.1 使用常见替换矩阵}{289}{subsection*.365}
+\contentsline {subsection}{18.4.2 从序列比对创建你自己的替换矩阵}{289}{subsection*.366}
+\contentsline {section}{18.5 BioSQL – 存储序列到关系数据库中}{290}{section*.367}
+\contentsline {chapter}{\numberline {19}第19章 Biopython测试框架}{291}{chapter.19}
+\contentsline {section}{19.1 运行测试}{291}{section*.368}
+\contentsline {section}{19.2 编写测试}{292}{section*.369}
+\contentsline {subsection}{19.2.1 编写一个 print-and-compare 测试}{292}{subsection*.370}
+\contentsline {subsection}{19.2.2 编写一个基于 unittest 的测试}{294}{subsection*.371}
+\contentsline {section}{19.3 编写 doctests}{296}{section*.372}
+\contentsline {chapter}{\numberline {20}第20章 高级}{297}{chapter.20}
+\contentsline {section}{20.1 解析器的设计}{297}{section*.373}
+\contentsline {section}{20.2 替换矩阵}{297}{section*.374}
+\contentsline {subsection}{20.2.1 SubsMat}{297}{subsection*.375}
+\contentsline {subsection}{20.2.2 FreqTable}{300}{subsection*.376}
+\contentsline {chapter}{\numberline {21}第21章 为Biopython做贡献}{301}{chapter.21}
+\contentsline {section}{21.1 错误报告与功能需求}{301}{section*.377}
+\contentsline {section}{21.2 邮件列表与帮助新手}{301}{section*.378}
+\contentsline {section}{21.3 贡献文档}{301}{section*.379}
+\contentsline {section}{21.4 贡献学习手册示例}{301}{section*.380}
+\contentsline {section}{21.5 维护跨平台发行版本}{302}{section*.381}
+\contentsline {section}{21.6 贡献单元测试（Unit Tests）}{302}{section*.382}
+\contentsline {section}{21.7 贡献源码}{302}{section*.383}
+\contentsline {chapter}{\numberline {22}第22章 附录：Python相关知识}{305}{chapter.22}
+\contentsline {section}{22.1 到底什么是句柄（handle）？}{305}{section*.384}
+\contentsline {subsection}{22.1.1 从字符串创建句柄}{306}{subsection*.385}
+\contentsline {chapter}{\numberline {23}References}{307}{chapter.23}
+\contentsline {chapter}{\numberline {24}Indices and tables}{311}{chapter.24}

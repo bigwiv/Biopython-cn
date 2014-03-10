@@ -7,7 +7,7 @@
 
 Biopython中的 ``Bio.Cluster`` 模块提供了常用的聚类算法。虽然Bio.Cluster被设计用于
 基因表达数据，它也可用于其他类型数据的聚类。 ``Bio.Cluster`` 
-和其使用的C聚类库的说明见De Hoon *et al.* [`14 <#dehoon2004>`__\ ].
+和其使用的C聚类库的说明见De Hoon *et al.* [:ref:`14 <dehoon2004>`].
 
 ``Bio.Cluster`` 包含了以下四种聚类算法：
 
@@ -35,14 +35,15 @@ Biopython中的 ``Bio.Cluster`` 模块提供了常用的聚类算法。虽然Bio
 
 *k*-means/medians/medoids 聚类和 Self-Organizing 
 Maps (SOMs) 需要调用随机数生成器。在 ``Bio.Cluster`` 中，正态分布随机数
-生成器的算法是基于L’Ecuyer [`25 <#lecuyer1988>`__\ ],二项分布的随机数
-生成器算法是基于Kachitvichyanukul and Schmeiser [`23 <#kachitvichyanukul1988>`__\ ]
+生成器的算法是基于L’Ecuyer [:ref:`25 <lecuyer1988>`] ，二项分布的随机数
+生成器算法是基于Kachitvichyanukul and Schmeiser [:ref:`23 <kachitvichyanukul1988>`] 
 开发的BTPE算法。随机数生成器在调用时会首先进行初始化。由于随机数生成器使用了
 两个乘同余发生器（multiplicative linear congruential generators），所以初始化时需要两个整型的
 种子。这两个种子可以调用系统提供的 ``rand`` （C标准库）函数生成。在 ``Bio.Cluster`` 中，
 我们首先调用 ``srand`` 使用以秒为单位的时间戳的值初始值，再用 ``rand`` 随机产生两
 个随机数作为种子来产生正态分布的随机数。
 
+.. _sec-distancefunctions:
 
 15.1 距离函数
 ------------------------
@@ -220,7 +221,7 @@ Kendall’s τ
 ~~~~~~~~~~~
 
 Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它不对数据进行排序，
-而是使用相对秩来计算  τ (see Snedecor & Cochran [`29 <#snedecor1989>`__\ ]) 。
+而是使用相对秩来计算  τ (see Snedecor & Cochran [:ref:`29 <snedecor1989>`] ) 。
 
 Kendall’s τ 对应的距离计算为：
 
@@ -237,6 +238,8 @@ Weighting
 数据集中每个元素的权重。如果元素 *i* 的权重为 *w*\ :sub:`*i*`，那么将会认为该元素
 出现了 *w*\ :sub:`*i*` 次 。权重值可以不为整数。对于 Spearman 秩相关系数
 和Kendall’s τ, 权重没有太大的意义，因此不适用于这两个函数。
+
+.. _subsec-distancematrix:
 
 计算距离矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -259,7 +262,7 @@ Weighting
 -  ``transpose`` (默认: ``0``)
     选择使用 ``data`` 中的行 (``transpose==0``), 或者列 (``transpose==1``)来计算距离.
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 :ref:`15.1 <sec-distancefunctions>` ).
 
 为了节省内存，函数返回的距离矩阵是一个一维数组的列表。每行的列数等于行号。
 因此，第一行有0个元素。例如：
@@ -286,6 +289,8 @@ Weighting
 
 15.2  计算类的相关性质
 ------------------------------------
+
+.. _subsec-clustercentroids:
 
 计算类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -357,7 +362,7 @@ Weighting
    -  ``'v'``: 使用两类中对应元素间的距离的平均值作为距离。
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 :ref:`15.1 <sec-distancefunctions>` ).
 -  ``transpose`` (默认: ``0``)
     选择使用 ``data`` 中的行 (``transpose==0``), 或者列 (``transpose==1``)来计算距离.
 
@@ -443,7 +448,7 @@ EM算法会在不能进行任何分配的时候停止。我们注意到，在某
 
    当指定 ``method`` 使用其他值时，算法会采用算数平均值。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 :ref:`15.1 <sec-distancefunctions>` ).
     尽管八种距离都可以用于 ``kcluster`` 计算,
     但从经验上来讲，Euclidean 距离适合 *k*-means 算法, city-block 距离适合 *k*-medians.
 -  ``initialid`` (默认: ``None``)
@@ -687,7 +692,7 @@ initialid=None)\|
    -  ``method=='a'``: 类平均法
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 :ref:`15.1 <sec-distancefunctions>` ).
 
 为了对距离矩阵进行系统聚类，可以在调用 ``treecluster`` 时，
 用 ``distancematrix`` 参数来代替 ``data`` 参数：
@@ -747,9 +752,9 @@ initialid=None)\|
 15.5  Self-Organizing Maps
 --------------------------
 
-Self-Organizing Maps (SOMs) 是由 Kohonen 在描述神经网络的时候发明的 (see for instance Kohonen, 1997 [`24 <#kohonen1997>`__\ ]).
+Self-Organizing Maps (SOMs) 是由 Kohonen 在描述神经网络的时候发明的 (see for instance Kohonen, 1997 [:ref:`24 <kohonen1997>`] ).
 Tamayo (1999) 第一次讲 Self-Organizing Maps 应用到基因表达数据上。
-[`30 <#tamayo1999>`__\ ].
+[:ref:`30 <tamayo1999>`].
 
 SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的拓扑结构。在SOMs生成的类别中，相邻的
 两个类的拓扑结构相似度高于他们对其他的相似度。
@@ -815,7 +820,7 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 -  ``niter`` (默认: ``1``)
     迭代运行的次数。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择距离函数 (具体见 `15.1 <#sec:distancefunctions>`__).
+    选择距离函数 (具体见 :ref:`15.1 <sec-distancefunctions>` ).
 
 这个函数返回的是一个元组 ``(clusterid, celldata)``:
 
@@ -831,7 +836,7 @@ SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的
 ----------------------------------
 
 主成分分析 (PCA) 被广泛的用于分析多维数据，一个将主成分分析应用于表达谱数据的请见
-Yeung and Ruzzo (2001) [`33 <#yeung2001>`__\ ].
+Yeung and Ruzzo (2001) [:ref:`33 <yeung2001>`].
 
 简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分的
 线性关系显示。主成分的选择是基于是残差尽可能的小的原则。例如，一个 *n* × 3 的数据矩阵可以表示为三维
@@ -846,7 +851,7 @@ Yeung and Ruzzo (2001) [`33 <#yeung2001>`__\ ].
 空间中，围绕着其中心分布，而主成分则显示着每个点对其中心的变化。
 
 函数 ``pca`` 首先使用奇异值分解（singular value decomposition）来计算矩阵的特征值和
-特征向量。奇异值分解使用的是Algol写的C语言的 ``svd`` [`16 <#golub1971>`__\ ], 利用的是
+特征向量。奇异值分解使用的是Algol写的C语言的 ``svd`` [:ref:`16 <golub1971>`] , 利用的是
 Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据在主成分上的坐标和主成分
 对应的特征值都会被计算出来，并按照特征值的降序排列。如果需要数据中心，则需要在调用 ``pca`` 
 前，对每列数据减去其平均值。
@@ -958,11 +963,9 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``transpose`` (默认: ``0``)
     选择对 ``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算距离。
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择合适的元素距离算法 (见
-    `15.1 <#sec:distancefunctions>`__).
+    选择合适的元素距离算法 (见 :ref:`15.1 <sec-distancefunctions>` ).
 
-函数会返回一个距离矩阵，每行的列数等于行数。(see section
-`15.1 <#subsec:distancematrix>`__).
+函数会返回一个距离矩阵，每行的列数等于行数。(见 :ref:`15.1 <subsec-distancematrix>` ).
 
 计算聚类中心
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -980,8 +983,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``transpose`` (默认: ``0``)
     选择计算``data`` 的行 (``transpose==0``), 或者列 (``transpose==1``)计算中心。
 
-函数返回元组 ``cdata, cmask`` ; 见 section
-`15.2 <#subsec:clustercentroids>`__ for a description.
+函数返回元组 ``cdata, cmask`` ; 见 :ref:`15.2 <subsec-clustercentroids>` .
 
 计算两类间的距离
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1010,8 +1012,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
    -  ``'v'``: 使用两类中两两元素距离的平均值作为距离。
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择使用的距离函数 (见
-    `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数 (见 :ref:`15.1 <sec-distancefunctions>` ).
 -  ``transpose`` (默认: ``0``)
     选择 使用 ``data`` 的行 ( ``transpose==0`` ), 或者列 ( ``transpose==1`` )计算距离。
 
@@ -1037,7 +1038,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
    -  ``method=='a'``: 类平均法
 
 -  ``dist`` (默认: ``'e'``, Euclidean distance)
-    选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数(见 :ref:`15.1 <sec-distancefunctions>` ).
 -  ``transpose``
     选择使用基因或者芯片进行聚类，如果是 ``transpose==0`` , 则使用基因 (行) 进行聚类，如果使用
     ``transpose==1``, 芯片 (列) 用于聚类.
@@ -1073,8 +1074,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 
    当指定 ``method`` 使用其他值时，算法会采用算数平均值。
 -  ``dist`` (默认: ``'e'`` , Euclidean distance)
-    选择使用的距离函数 (see
-    `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数 (见 :ref:`15.1 <sec-distancefunctions>` ).
 
 这个函数返回的是一个元组 ``(clusterid, error, nfound)`` , 其中 ``clusterid`` 是一个每行或则列对应的类的编号。
 ``error`` 是最优解的类内的距离和， ``nfound`` 是最优解被发现的次数。
@@ -1100,7 +1100,7 @@ website <http://bonsai.ims.u-tokyo.ac.jp/~mdehoon/software/cluster/cluster3.pdf>
 -  ``niter`` (默认: ``1`` )
     迭代运行的次数。
 -  ``dist`` (默认: ``'e'`` , Euclidean distance)
-    选择使用的距离函数(见 `15.1 <#sec:distancefunctions>`__).
+    选择使用的距离函数(见 :ref:`15.1 <sec-distancefunctions>` ).
 
 函数返回一个元组 ``(clusterid, celldata)`` :
 

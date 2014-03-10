@@ -189,7 +189,15 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': '''
+\\usepackage{xeCJK}
+\\usepackage{indentfirst}
+\\setlength{\\parindent}{2em}
+\\setCJKmainfont{WenQuanYi Zen Hei Sharp}
+\\setCJKmonofont[Scale=0.9]{WenQuanYi Zen Hei Mono}
+\\setCJKfamilyfont{song}{WenQuanYi Zen Hei}
+\\setCJKfamilyfont{sf}{WenQuanYi Zen Hei}
+''',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

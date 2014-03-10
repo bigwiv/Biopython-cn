@@ -1,7 +1,7 @@
 第14章   使用Bio.motifs进行模体序列分析
 ====================================================
 
-这章主要的介绍Biopython中的 ``Bio.motifs`` 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 \ `14.8 <#sec:links>`__ 相关章节以获得有关的信息。
+这章主要的介绍Biopython中的 ``Bio.motifs`` 包。这个包是为了方便那些需要进行模体序列分析的人们而特意提供的，所以我想你们在使用时肯定对模体序列分析的一些相关要点都很熟悉。假如在使用中遇到不清楚的地方，请您查阅 :ref:`14.8 <sec-links>` 相关章节以获得有关的信息。
 
 这章的大部分内容是介绍Biopython 1.61 之前版本中新加入的 ``Bio.motifs`` 包，该包替代了Biopython 1.50版本中的 ``Bio.Motif`` 包，而 ``Bio.Motif`` 包是基于较早版本的Biopython 中的两个模块 ``Bio.AlignAce`` 和 ``Bio.MEME`` 。``Bio.motifs`` 包较好地综合了上述的几个模块的功能，做为一个统一模块工具。
 
@@ -140,7 +140,7 @@
     >>> m.degenerate_consensus
     Seq('WACVC', IUPACAmbiguousDNA())
 
-此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [`10 <#cornish1985>`__\ ] 。这些简并一致序列是按照Cavener指定的规则[`11 <#cavener1987>`__\ ]来建立的。
+此处，W和R都是按照IUPAC不确定核苷酸表规定的：W代表A或T，V代表A，C或G [:ref:`10 <cornish1985>`] 。这些简并一致序列是按照Cavener指定的规则 [:ref:`11 <cavener1987>`] 来建立的。
 
 .. code:: python
 
@@ -280,7 +280,7 @@ JASPAR数据库也可以让模体像计数矩阵一样获得，不需要那些�
 MEME
 ^^^^
 
-MEME [`12 <#bailey1994>`__\ ] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。例子如下。
+MEME [:ref:`12 <bailey1994>`] 是一个用来在一堆相关DNA或蛋白质序列中发现模体的工具。它输入一组相关DNA或蛋白质序列，输出所要求的模体。因此和JASPAR文件相比，MEME输出文件里面一般是含有多个模体。例子如下。
 
 在输出文件的开头，有一些MEME生成的关于MEME和所用MEME版本的背景信息：
 
@@ -423,7 +423,7 @@ MAST
 TRANSFAC
 ^^^^^^^^
 
-TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [`27 <#matys2003>`__\ ]。TRANSFAC数据库中所用的文件格式至今还被其他工具所使用，我们下面将介绍TRANSFAC文件格式。
+TRANSFAC是一个为转录因子手动创建的一个专业数据库，同时还包括染色体结合位点和DNA结合的描述 [:ref:`27 <matys2003>`] 。TRANSFAC数据库中所用的文件格式至今还被其他工具所使用，我们下面将介绍TRANSFAC文件格式。
 
 TRANSFAC文件格式简单概括如下：
 
@@ -495,9 +495,11 @@ TRANSFAC文件格式简单概括如下：
     >>> motif['ID'] # Using motif as a dictionary
     'motif1'
 
-TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附加信息。表格 `14.1.2 <#table:transfaccodes>`__ 列出了在TRANSFAC文件常见的双字母含义：
+TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附加信息。表格 :ref:`14.1.2 <table-transfaccodes>` 列出了在TRANSFAC文件常见的双字母含义：
 
 --------------
+
+.. _table-transfaccodes:
 
 +-------------------------------------------------------+
 | Table 14.1: TRANSFAC文件中常见的字段                  |
@@ -1253,6 +1255,8 @@ TRANSFAC文件一般比这些例子更详细，包含了许多关于模体的附
 .. code:: python
 
     >>> motifs = motifs.parse(stdout,"alignace")
+
+.. _sec-links:
 
 14.8  相关链接
 ------------------

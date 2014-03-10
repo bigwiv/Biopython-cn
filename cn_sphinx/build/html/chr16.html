@@ -54,7 +54,7 @@
 <h1>第16章 监督学习方法<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>注意本章介绍的所有监督学习方法都需要先安装Numerical Python （numpy）。</p>
 <div class="section" id="logistic">
-<h2>16.1 Logistic 回归模型<a class="headerlink" href="#logistic" title="Permalink to this headline">¶</a></h2>
+<span id="sec-logisticregression"></span><h2>16.1 Logistic 回归模型<a class="headerlink" href="#logistic" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id2">
 <h3>16.1.1 背景和目的<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Logistic回归是一种监督学习方法，通过若干预测变量 <em>x</em><sub>*i*</sub> 的加权和来尝试将样本划分为 <em>K</em> 个不同类别。Logistic回归模型可用来计算预测变量的权重 β<sub>*i*</sub> 。在Biopython中，logistic回归模型目前只实现了二类别（ <em>K</em> = 2 ）分类，而预测变量的数量没有限制。</p>
@@ -73,18 +73,17 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 -  OP: 相邻基因，相同DNA链，属于相同操纵子；
 -  NOP: 相邻基因，相同DNA链，属于不同操纵子。</p>
 <p>在logistic回归模型中，属于某个类别的概率依赖于通过logistic函数得出的分数。对于这两类OP和NOP，相应概率可如下表述：</p>
-<div class="math">
-\[\begin{split}\begin{eqnarray}
+<div class="math" id="eq-nop">
+<span id="eq-op"></span>\[\begin{split}\begin{eqnarray}
 \Pr(\mathrm{OP}|x_1, x_2) &amp; = &amp; \frac{\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)}{1+\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} \label{eq:OP} \\
 \Pr(\mathrm{NOP}|x_1, x_2) &amp; = &amp; \frac{1}{1+\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} \label{eq:NOP}
 \end{eqnarray}\end{split}\]</div>
 <p>使用一组已知是否属于相同操纵子（OP类别）或不同操纵子（NOP类别）的基因对，通过最大化相应概率函数的对数似然值，我们可以计算权重 β<sub>0</sub>, β<sub>1</sub>, β<sub>2</sub> 。
-(<a class="reference external" href="#eq:OP">16.2</a>) 和 (<a class="reference external" href="#eq:NOP">16.3</a>).</p>
+(<a class="reference internal" href="#eq-op"><em>16.2</em></a>) 和 (<a class="reference internal" href="#eq-nop"><em>16.3</em></a>) .</p>
 </div>
-<div class="section" id="id3">
-<h3>16.1.2 训练logistic回归模型<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<hr class="docutils" />
-<table border="1" class="docutils">
+<div class="section" id="subsec-logisticregressiontraining">
+<span id="id3"></span><h3>16.1.2 训练logistic回归模型<a class="headerlink" href="#subsec-logisticregressiontraining" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils" id="table-training">
 <colgroup>
 <col width="100%" />
 </colgroup>
@@ -194,7 +193,7 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 </tbody>
 </table>
 <hr class="docutils" />
-<p>表`16.1 &lt;#table:training&gt;`__ 列出了枯草芽孢杆菌的一些基因对，这些基因的操纵子结构已知。让我们根据表中的这些数据来计算其logistic回归模型：</p>
+<p>表 <a class="reference internal" href="#table-training"><em>16.1</em></a> 列出了枯草芽孢杆菌的一些基因对，这些基因的操纵子结构已知。让我们根据表中的这些数据来计算其logistic回归模型：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">xs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">53</span><span class="p">,</span> <span class="o">-</span><span class="mf">200.78</span><span class="p">],</span>
 <span class="go">          [117, -267.14],</span>
@@ -335,7 +334,7 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 </div>
 <p>（这个结果和生物学文献报道的一致）。</p>
 <p>为了确定这个预测的可信度，我们可以调用 <tt class="docutils literal"><span class="pre">calculate</span></tt> 函数来获得类别OP和NOP的概率(公式
-(<a class="reference external" href="#eq:OP">16.2</a>) 和 (<a class="reference external" href="#eq:NOP">16.3</a>))。对于 <em>yxcE</em>, <em>yxcD</em> 我们发现</p>
+(<a class="reference internal" href="#eq-op"><em>16.2</em></a>) 和 (<a class="reference internal" href="#eq-nop"><em>16.3</em></a>) )。对于 <em>yxcE</em>, <em>yxcD</em> 我们发现</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mf">173.143442352</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&quot;class OP: probability =&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s">&quot;class NOP: probability =&quot;</span><span class="p">,</span> <span class="n">q</span>
 <span class="go">class OP: probability = 0.993242163503 class NOP: probability = 0.00675783649744</span>
@@ -396,8 +395,8 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 </div>
 <div class="section" id="id5">
 <h3>16.1.4 Logistic回归，线性判别分析和支持向量机<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<p>Logistic回归模型类似于线性判别分析。在线性判别分析中，类别概率同样可由方程(<a class="reference external" href="#eq:OP">16.2</a>) and (<a class="reference external" href="#eq:NOP">16.3</a>)给出。但是，不是直接估计系数β，我们首先对预测变量 <em>x</em> 拟合一个正态分布。然后通过这个正态分布的平均值和方差计算系数β。如果 <em>x</em> 的分布确实是正态的，线性判别分析将比logistic回归模型有更好的性能。另一方面，logistic回归模型对于偏态到正态的广泛分布更加强健。</p>
-<p>另一个相似的方法是应用线性核函数的支持向量机。这样的SVM也使用一个预测变量的线性组合，但是是从靠近类别之间的边界区域的预测变量 <em>x</em> 来估计系数β。如果logistic回归模型(公式 (<a class="reference external" href="#eq:OP">16.2</a>) 和 (<a class="reference external" href="#eq:NOP">16.3</a>))很好的描述了远离边界区域的 <em>x</em> ，我们可以期望logistic回归模型优于线性核函数SVM，因为它应用了更多数据。如果不是，SVM可能更好。</p>
+<p>Logistic回归模型类似于线性判别分析。在线性判别分析中，类别概率同样可由方程(<a class="reference internal" href="#eq-op"><em>16.2</em></a>) 和 (<a class="reference internal" href="#eq-nop"><em>16.3</em></a>) 给出。但是，不是直接估计系数β，我们首先对预测变量 <em>x</em> 拟合一个正态分布。然后通过这个正态分布的平均值和方差计算系数β。如果 <em>x</em> 的分布确实是正态的，线性判别分析将比logistic回归模型有更好的性能。另一方面，logistic回归模型对于偏态到正态的广泛分布更加强健。</p>
+<p>另一个相似的方法是应用线性核函数的支持向量机。这样的SVM也使用一个预测变量的线性组合，但是是从靠近类别之间的边界区域的预测变量 <em>x</em> 来估计系数β。如果logistic回归模型(公式 (<a class="reference internal" href="#eq-op"><em>16.2</em></a>) 和 (<a class="reference internal" href="#eq-nop"><em>16.3</em></a>) )很好的描述了远离边界区域的 <em>x</em> ，我们可以期望logistic回归模型优于线性核函数SVM，因为它应用了更多数据。如果不是，SVM可能更好。</p>
 <p>Trevor Hastie, Robert Tibshirani, and Jerome Friedman: The Elements of Statistical Learning. Data Mining, Inference, and Prediction.(统计学习基础:数据挖掘、推理与预测) Springer Series in Statistics, 2001. 4.4章.</p>
 </div>
 </div>
@@ -406,17 +405,17 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 <div class="section" id="id6">
 <h3>16.2.1 背景和目的<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>最近邻居法是一种不需要将数据拟合到一个模型的监督学习算法。数据点是基于训练数据集的 <em>k</em> 个最近邻居类别进行分类的。</p>
-<p>在Biopython中， <em>KNN</em> 方法可在 <tt class="docutils literal"><span class="pre">Bio.KNN</span></tt> 中获得。我们使用 <cite>16.1 &lt;#sec:LogisticRegression&gt;</cite> 同样的操纵子数据集来说明Biopython中 <em>KNN</em> 方法的用法。</p>
+<p>在Biopython中， <em>KNN</em> 方法可在 <tt class="docutils literal"><span class="pre">Bio.KNN</span></tt> 中获得。我们使用 <a class="reference internal" href="#sec-logisticregression"><em>16.1</em></a> 同样的操纵子数据集来说明Biopython中 <em>KNN</em> 方法的用法。</p>
 </div>
 <div class="section" id="knn">
 <h3>16.2.2 初始化一个 <em>KNN</em> 模型<a class="headerlink" href="#knn" title="Permalink to this headline">¶</a></h3>
-<p>使用表`16.1 &lt;#table:training&gt;`__中的数据，我们创建和初始化一个*KNN*模型：</p>
+<p>使用表 <a class="reference internal" href="#table-training"><em>16.1</em></a> 中的数据，我们创建和初始化一个*KNN*模型：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">kNN</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">kNN</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>这里 <tt class="docutils literal"><span class="pre">xs</span></tt> 和 <tt class="docutils literal"><span class="pre">ys</span></tt> 和 <a class="reference external" href="#subsec:LogisticRegressionTraining">16.1.2</a> 中的相同。 <tt class="docutils literal"><span class="pre">k</span></tt> 是分类中的邻居数 <em>k</em> 。对于二分类，为 <em>k</em> 选择一个奇数可以避免tied votes。函数名 <tt class="docutils literal"><span class="pre">train</span></tt> 在这里有点不合适，因为就没有训练模型：这个函数仅仅是用来存储模型变量 <tt class="docutils literal"><span class="pre">xs</span></tt> ， <tt class="docutils literal"><span class="pre">ys</span></tt> 和 <tt class="docutils literal"><span class="pre">k</span></tt> 。</p>
+<p>这里 <tt class="docutils literal"><span class="pre">xs</span></tt> 和 <tt class="docutils literal"><span class="pre">ys</span></tt> 和 <a class="reference internal" href="#subsec-logisticregressiontraining"><em>16.1.2</em></a> 中的相同。 <tt class="docutils literal"><span class="pre">k</span></tt> 是分类中的邻居数 <em>k</em> 。对于二分类，为 <em>k</em> 选择一个奇数可以避免tied votes。函数名 <tt class="docutils literal"><span class="pre">train</span></tt> 在这里有点不合适，因为就没有训练模型：这个函数仅仅是用来存储模型变量 <tt class="docutils literal"><span class="pre">xs</span></tt> ， <tt class="docutils literal"><span class="pre">ys</span></tt> 和 <tt class="docutils literal"><span class="pre">k</span></tt> 。</p>
 </div>
 <div class="section" id="id7">
 <h3>16.2.3 使用*KNN* 模型来分类<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
@@ -544,7 +543,7 @@ S = \beta_0 + \beta_1 x_1 + \beta_2 x_2.
 <li><a class="reference internal" href="#">第16章 监督学习方法</a><ul>
 <li><a class="reference internal" href="#logistic">16.1 Logistic 回归模型</a><ul>
 <li><a class="reference internal" href="#id2">16.1.1 背景和目的</a></li>
-<li><a class="reference internal" href="#id3">16.1.2 训练logistic回归模型</a></li>
+<li><a class="reference internal" href="#subsec-logisticregressiontraining">16.1.2 训练logistic回归模型</a></li>
 <li><a class="reference internal" href="#id4">16.1.3 使用logistic回归模型进行分类</a></li>
 <li><a class="reference internal" href="#id5">16.1.4 Logistic回归，线性判别分析和支持向量机</a></li>
 </ul>

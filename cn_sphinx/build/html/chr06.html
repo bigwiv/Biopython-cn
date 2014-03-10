@@ -50,8 +50,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="id1">
-<h1>第6章 多序列比对<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-bio-alignio">
+<span id="id1"></span><h1>第6章 多序列比对<a class="headerlink" href="#chapter-bio-alignio" title="Permalink to this headline">¶</a></h1>
 <p>多序列比对（Multiple Sequence Alignment, MSA）是指对多个序列进行对位排列。 这通常需要保证序列间的等同位点处在同一列上，并通过引进小横线（-）以保证最终的序列具有相同的长度。这种序列比对可以视作是由字符组成的矩阵。在Biopython中，多序列比对中每一个序列是以 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象来表示的。</p>
 <p>这里我们介绍一种新的对象 &#8211; <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 来表示这样一类数据，我们还将介绍 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块来读写不同格式的多序列比对数据（ <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 在设计上与之前介绍的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块是类似的）。Biopython中， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 都能读写各种格式的多序列比对数据。在实际处理中，使用哪一个模块取决于用户需要对数据进行何种操作。</p>
 <p>本章的最后一部分是关于各种常用多序列比对程序（ClustalW和MUSCLE）的Biopython命令行封装。</p>
@@ -62,10 +62,10 @@
 <p>然而在大多数情况下，你所遇到的文件仅仅包括一个多序列比对。这时，你应该使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read()</span></tt> ，这将返回一个 <tt class="docutils literal"><span class="pre">MultipleSeqAlignment</span></tt> 对象。</p>
 <p>这两个函数都接受两个必须参数：</p>
 <ol class="arabic simple">
-<li>第一个参数为包含有多序列比对数据的 <em>句柄（handle）</em> 。在实际操作中，这往往是一个打开的文件（详细信息请见 <a class="reference external" href="#sec:appendix-handles">22.1</a> ）或者文件名。</li>
+<li>第一个参数为包含有多序列比对数据的 <em>句柄（handle）</em> 。在实际操作中，这往往是一个打开的文件（详细信息请见 <a class="reference internal" href="chr22.html#sec-appendix-handles"><em>22.1</em></a> ）或者文件名。</li>
 <li>第二个参数为多序列比对文件格式（小写）。与 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块支持的多序列比对数据格式可以在 <a class="reference external" href="http://biopython.org/wiki/AlignIO">http://biopython.org/wiki/AlignIO</a> 中找到。</li>
 </ol>
-<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块还接受一个可选参数 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 。这一参数将在 <a class="reference external" href="#sec:AlignIO-count-argument">6.1.3</a> 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块还接受一个可选参数 <tt class="docutils literal"><span class="pre">seq_count</span></tt> 。这一参数将在 <a class="reference internal" href="#sec-alignio-count-argument"><em>6.1.3</em></a> 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。</p>
 <p>另一个可选参数 <tt class="docutils literal"><span class="pre">alphabet</span></tt> 允许用户指定序列比对文件的字符（alphabet），它可以用来说明序列比对的类型（DNA，RNA或蛋白质）。因为大多数序列比对格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 默认将使用一般字符（generic alphabet），这将不区分各种序列比对类型。</p>
 <div class="section" id="id3">
 <h3>6.1.1 单一的序列比对<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
@@ -131,7 +131,7 @@ COATB_BPIF1/22-73             FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVS
 <span class="go">FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73</span>
 </pre></div>
 </div>
-<p>你也可以使用上面alignment对象的 <tt class="docutils literal"><span class="pre">format</span></tt> 方法来以指定的格式显示它。具体信息可以参见 <a class="reference external" href="#sec:alignment-format-method">6.2.2</a> 。</p>
+<p>你也可以使用上面alignment对象的 <tt class="docutils literal"><span class="pre">format</span></tt> 方法来以指定的格式显示它。具体信息可以参见 <a class="reference internal" href="#sec-alignment-format-method"><em>6.2.2</em></a> 。</p>
 <p>你是否已经注意到以上原始数据文件中包含有蛋白数据库（PDB）交叉引用以及相关二级结构的信息？你可以尝试以下代码：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">alignment</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">dbxrefs</span><span class="p">:</span>
@@ -265,8 +265,8 @@ CAAACC Epsilon</pre>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h3>6.1.3  含糊的序列比对<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-alignio-count-argument">
+<span id="id5"></span><h3>6.1.3  含糊的序列比对<a class="headerlink" href="#sec-alignio-count-argument" title="Permalink to this headline">¶</a></h3>
 <p>许多序列比对的文件格式可以非常明确地储存多个序列比对。然而，例如FASTA一类的普通序列文件格式并没有很直接的分隔符来分开多个序列比对。读者可以见以下例子：</p>
 <div class="code python highlight-python"><pre>&gt;Alpha
 ACTACGACTAGCTCAG--G
@@ -392,9 +392,9 @@ Iota       -CTACTACAG GTG</pre>
 <p>在更多情况下，你希望读取一个已经含有序列比对的文件，经过某些操作（例如去掉一些行和列）然后将它重新储存起来。</p>
 <p>假如你希望知道有多少序列比对被 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数写入句柄中。如果你的序列比对都被放在一个列表中（如同以上的例子），你可以很容易地使用 <tt class="docutils literal"><span class="pre">len(my_alignments)</span></tt> 来获得这一信息。然而，如果你的序列比对在一个生成器/迭代器对象中，你无法轻松地完成这件事情。为此， <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 将会返回它所写出的序列比对个数。</p>
 <p><em>注意</em> - 如果你所指定给 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 的文件已经存在在当前目录下，这一文件将被直接覆盖掉而不会有任何警告。</p>
-<div class="section" id="id7">
-<h3>6.2.1  序列比对的格式间转换<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块中的序列比对格式转换功能与 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （见 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ）模块的格式转换是一样的。在通常情况下，我们建议使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 来读取序列比对数据，然后使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数来写出。或者你也可以直接使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.convert()</span></tt> 函数来实现格式的转换。</p>
+<div class="section" id="sec-converting-alignments">
+<span id="id7"></span><h3>6.2.1  序列比对的格式间转换<a class="headerlink" href="#sec-converting-alignments" title="Permalink to this headline">¶</a></h3>
+<p><tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块中的序列比对格式转换功能与 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （见 <a class="reference internal" href="chr05.html#sec-seqio-conversion"><em>5.5.2</em></a> ）模块的格式转换是一样的。在通常情况下，我们建议使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.parse()</span></tt> 来读取序列比对数据，然后使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 函数来写出。或者你也可以直接使用 <tt class="docutils literal"><span class="pre">Bio.AlignIO.convert()</span></tt> 函数来实现格式的转换。</p>
 <p>在本例中，我们将读取PFAM/Stockholm格式的序列比对，然后将其保存为Clustal格式：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
 <span class="n">count</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">,</span> <span class="s">&quot;PF05371_seed.aln&quot;</span><span class="p">,</span> <span class="s">&quot;clustal&quot;</span><span class="p">)</span>
@@ -494,14 +494,14 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 <p>由于序列ID的限制性，PHYLIP格式不是储存序列比对的理想格式。我们建议你将数据储存成PFAM/Stockholm或者其它能对序列比对进行注释的格式来保存你的数据。</p>
 </div>
 <div class="section" id="formatted-strings">
-<h3>6.2.2  将序列比对对象转换为格式化字符串（formatted strings）<a class="headerlink" href="#formatted-strings" title="Permalink to this headline">¶</a></h3>
+<span id="sec-alignment-format-method"></span><h3>6.2.2  将序列比对对象转换为格式化字符串（formatted strings）<a class="headerlink" href="#formatted-strings" title="Permalink to this headline">¶</a></h3>
 <p>因为 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 模块是基于文件句柄的，因此你如果想将序列比对读入为一个字符串对象，你需要做一些额外的工作。然而，我们提供一个 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法来帮助你实现这项任务。 <tt class="docutils literal"><span class="pre">format()</span></tt> 方法需要用户提供一个小写的格式参数（这可以是任何 <tt class="docutils literal"><span class="pre">AlignIO</span></tt> 支持的序列比对格式）。例如：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
 <span class="n">alignment</span> <span class="o">=</span> <span class="n">AlignIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;PF05371_seed.sth&quot;</span><span class="p">,</span> <span class="s">&quot;stockholm&quot;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">alignment</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;clustal&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>我们在 <a class="reference external" href="#sec:SeqRecord-format">4.5</a> 中讲到， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 也有一个对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 输出的方法。</p>
+<p>我们在 <a class="reference internal" href="chr04.html#sec-seqrecord-format"><em>4.5</em></a> 中讲到， <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 也有一个对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 输出的方法。</p>
 <p><tt class="docutils literal"><span class="pre">format()</span></tt> 方法是利用 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 以及 <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">AlignIO</span>
 <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
@@ -629,7 +629,7 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 </pre></div>
 </div>
 <p>另一个经常使用的序列比对操作是将多个基因的序列比对拼接成一个大的序列比对（meta-alignment）。
-在进行这种操作时一定要注意序列的ID需要匹配（具体请见 <a class="reference external" href="#sec:SeqRecord-addition">4.7</a> 关于 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
+在进行这种操作时一定要注意序列的ID需要匹配（具体请见 <a class="reference internal" href="chr04.html#sec-seqrecord-addition"><em>4.7</em></a> 关于 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt>
 的说明)。为了达到这种目的，用 <tt class="docutils literal"><span class="pre">sort()</span></tt> 方法将序列ID按照字母顺序进行排列可能会有所帮助：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">edited</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">edited</span>
@@ -663,11 +663,11 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 <p>注意， <tt class="docutils literal"><span class="pre">Numpy</span></tt> 的数组和Biopython默认的序列比对对象是分别储存在内存中的，编辑其中的一个不会更新另一个的值。</p>
 </div>
 </div>
-<div class="section" id="id10">
-<h2>6.4  构建序列比对的工具<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-alignment-tools">
+<span id="id10"></span><h2>6.4  构建序列比对的工具<a class="headerlink" href="#sec-alignment-tools" title="Permalink to this headline">¶</a></h2>
 <p>目前有非常多的算法来帮助你构建一个序列比对，包括两两间的比对和多序列比对。这些算法在计算上往往是非常慢的，你一定不会希望用Python来实现他们。然而，你可以使用Biopython来运行命令行程序。通常你需要：</p>
 <ol class="arabic simple">
-<li>准备一个包含未比对序列的输入文件，一般为FASTA格式的序列。你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来创建一个 (具体见第5章 &lt;#chapter:Bio.SeqIO&gt;`__).</li>
+<li>准备一个包含未比对序列的输入文件，一般为FASTA格式的序列。你可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来创建一个 (具体见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章).</li>
 <li>在Biopython中运行一个命令行程序来构建序列比对（我们将在这里详细介绍）。这需要通过Biopython的打包程序（wrapper）来实现。</li>
 <li>读取以上程序的输出，也就是排列好的序列比对。这往往可以通过 <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> 来实现（请看本章前部分内容）。</li>
 </ol>
@@ -682,7 +682,7 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 </div>
 <p>（以下划线开头的记录不是Biopython打包程序，这些变量在Python中有特殊的含义。） <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 中包含对 <a class="reference external" href="http://emboss.sourceforge.net/">EMBOSS</a> 的打包程序（包括 <tt class="docutils literal"><span class="pre">needle</span></tt> 和 <tt class="docutils literal"><span class="pre">water</span></tt> ）。EMBOSS和PHYLIP的打包程序将在 <a class="reference external" href="#seq:emboss-needle-water">6.4.5</a> 节中详细介绍。在本章中，我们并不打算将所有的序列比对程序都予以介绍，但是Biopython中各种序列比对程序都具有相同的使用方式。</p>
 <div class="section" id="clustalw">
-<h3>6.4.1  ClustalW<a class="headerlink" href="#clustalw" title="Permalink to this headline">¶</a></h3>
+<span id="sec-align-clustal"></span><h3>6.4.1  ClustalW<a class="headerlink" href="#clustalw" title="Permalink to this headline">¶</a></h3>
 <p>ClustalW是一个非常流行的进行多序列比对的命令行程序（其还有一个图形化的版本称之为ClustalX）。Biopython的 <tt class="docutils literal"><span class="pre">Bio.Align.Applications</span></tt> 模块包含这一多序列比对程序的打包程序。</p>
 <p>我们建议你在Python中使用ClustalW之前在命令行界面下手动使用ClustalW，这样能使你更清楚这一程序的参数。你会发现Biopython打包程序非常严格地遵循实际的命令行API：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Align.Applications</span> <span class="kn">import</span> <span class="n">ClustalwCommandline</span>
@@ -748,7 +748,7 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 <span class="go">     | gi|6273284|gb|AF191658.1|AF191658</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="#sec:Phylo">13</a>  章中详细介绍了如何使用Biopython对进化树数据进行处理。</p>
+<p><a class="reference internal" href="chr13.html#chapter-phylo"><em>13</em></a>  章中详细介绍了如何使用Biopython对进化树数据进行处理。</p>
 </div>
 <div class="section" id="muscle">
 <h3>6.4.2  MUSCLE<a class="headerlink" href="#muscle" title="Permalink to this headline">¶</a></h3>
@@ -878,7 +878,7 @@ seq6       FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
 </pre></div>
 </div>
 <p>现在我们在没有创造一个FASTA文件的情况下获得了一个序列比对。然而，由于你没有在Biopython外运行MUSCLE，这会使调试程序的难度增大，而且存在程序跨平台使用的问题（Windows和Linux）。</p>
-<p>如果你觉得 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 不方便使用，Biopython提供了另一种方式。如果你用 <tt class="docutils literal"><span class="pre">muscle_cline()</span></tt> 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： <tt class="docutils literal"><span class="pre">muscle_cline(stdin=...)</span></tt> 。假如你的序列文件不大，你可以将其储存为 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 对象（具体见 <a class="reference external" href="#sec:appendix-handles">22.1</a>)：</p>
+<p>如果你觉得 <tt class="docutils literal"><span class="pre">subprocess</span></tt> 不方便使用，Biopython提供了另一种方式。如果你用 <tt class="docutils literal"><span class="pre">muscle_cline()</span></tt> 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： <tt class="docutils literal"><span class="pre">muscle_cline(stdin=...)</span></tt> 。假如你的序列文件不大，你可以将其储存为 <tt class="docutils literal"><span class="pre">StringIO</span></tt> 对象（具体见 <a class="reference internal" href="chr22.html#sec-appendix-handles"><em>22.1</em></a>)：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">records</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;opuntia.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">900</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
@@ -990,11 +990,11 @@ KEFTPPVQAAYQKVVAGVANALAHKYH</pre>
 <li><a class="reference internal" href="#id2">6.1 读取多序列比对数据</a><ul>
 <li><a class="reference internal" href="#id3">6.1.1 单一的序列比对</a></li>
 <li><a class="reference internal" href="#id4">6.1.2  多个序列比对</a></li>
-<li><a class="reference internal" href="#id5">6.1.3  含糊的序列比对</a></li>
+<li><a class="reference internal" href="#sec-alignio-count-argument">6.1.3  含糊的序列比对</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id6">6.2  序列比对的写出</a><ul>
-<li><a class="reference internal" href="#id7">6.2.1  序列比对的格式间转换</a></li>
+<li><a class="reference internal" href="#sec-converting-alignments">6.2.1  序列比对的格式间转换</a></li>
 <li><a class="reference internal" href="#formatted-strings">6.2.2  将序列比对对象转换为格式化字符串（formatted strings）</a></li>
 </ul>
 </li>
@@ -1003,7 +1003,7 @@ KEFTPPVQAAYQKVVAGVANALAHKYH</pre>
 <li><a class="reference internal" href="#id9">6.3.2  序列比对作为数组</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">6.4  构建序列比对的工具</a><ul>
+<li><a class="reference internal" href="#sec-alignment-tools">6.4  构建序列比对的工具</a><ul>
 <li><a class="reference internal" href="#clustalw">6.4.1  ClustalW</a></li>
 <li><a class="reference internal" href="#muscle">6.4.2  MUSCLE</a></li>
 <li><a class="reference internal" href="#id11">6.4.3  MUSCLE标准输出</a></li>

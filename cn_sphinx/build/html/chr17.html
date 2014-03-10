@@ -57,18 +57,18 @@
 <h2>17.1  基因组可视化包—GenomeDiagram<a class="headerlink" href="#genomediagram" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
 <h3>17.1.1  GenomeDiagram简介<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">Bio.Graphics.GenomeDiagram</span></tt> 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [<a class="reference external" href="#pritchard2006">2</a>] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 <a class="reference external" href="http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf">http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf</a> 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [<a class="reference external" href="#toth2006">3</a>] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [<a class="reference external" href="#vanderauwera2009">4</a>] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.Graphics.GenomeDiagram</span></tt> 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [<a class="reference internal" href="chr23.html#pritchard2006"><em>2</em></a>] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 <a class="reference external" href="http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf">http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf</a> 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [<a class="reference internal" href="chr23.html#toth2006"><em>3</em></a>] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [<a class="reference internal" href="chr23.html#vanderauwera2009"><em>4</em></a>] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。</p>
 <p>如果存储基因组信息的是从GenBank文件中下载的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 话，它会包含许多 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> ，那么用这个模块处理就很简单（详见
-第 <a class="reference external" href="#chapter:SeqRecord">4</a> 章和第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章）。</p>
+第 <a class="reference internal" href="chr04.html#chapter-seqrecord"><em>4</em></a> 章和第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）。</p>
 </div>
 <div class="section" id="id2">
 <h3>17.1.2 图形，轨迹,  特征集和特征<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的图形对象（diagram object）表示一个序列（sequence）或序列区域（sequence region）。一个图形可以包含多个轨迹（track），呈现为横向排列或者环形放射图。这些轨迹的长度通常相等，代表相同的序列区域。可用一个轨迹表示基因的位置，另一个轨迹表示调节区域，第三个轨迹表示GC含量。可将最常用轨迹的特征打包为一个特征集（feature-sets）。CDS的特征可以用一个特征集，而tRNA的特征可以用另外一个特征集。这不是强制性的要求，你可以在diagram中用同样的特征集。如果diagram中用不同的特征集，修改一个特征会很容易，比如把所有tRNA的特征都变为红色，你只需选择tRNA的特征就行。</p>
 <p>新建图形主要有两种方式。第一种是自上而下的方法（Top-Down），首先新建diagram对象，然后用diagram的方法来添加track(s)，最后用track的方法添加特征。第二种是自下而上的方法（Bottom-Up），首先单独新建对象，然后再将其进行组合。</p>
 </div>
-<div class="section" id="id3">
-<h3>17.1.3 自上而下的实例<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>我们用一个从GenBank文件中读取出来的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 来绘制全基因组（详见第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章）。这里用鼠疫杆菌 <em>Yersinia pestis biovar Microtus</em> 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb">NC_005816.gb</a> 也可下载</p>
+<div class="section" id="sec-gd-top-down">
+<span id="id3"></span><h3>17.1.3 自上而下的实例<a class="headerlink" href="#sec-gd-top-down" title="Permalink to this headline">¶</a></h3>
+<p>我们用一个从GenBank文件中读取出来的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 来绘制全基因组（详见第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）。这里用鼠疫杆菌 <em>Yersinia pestis biovar Microtus</em> 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb">NC_005816.gb</a> 也可下载</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reportlab.lib</span> <span class="kn">import</span> <span class="n">colors</span>
 <span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">from</span> <span class="nn">Bio.Graphics</span> <span class="kn">import</span> <span class="n">GenomeDiagram</span>
@@ -152,7 +152,7 @@
 </div>
 <div class="section" id="feature">
 <h3>17.1.5  简单的Feature<a class="headerlink" href="#feature" title="Permalink to this headline">¶</a></h3>
-<p>以上示例中，创建diagram使用的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象（ 详见 <a class="reference external" href="#sec:seq_features">4.3</a> 章节）。如果你不需要 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象，只将目标feature定位在坐标轴，仅需要创建minimal
+<p>以上示例中，创建diagram使用的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象（ 详见 <a class="reference internal" href="chr04.html#sec-seq-features"><em>4.3</em></a> 章节）。如果你不需要 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象，只将目标feature定位在坐标轴，仅需要创建minimal
 <tt class="docutils literal"><span class="pre">SeqFeature</span></tt> 对象，方法很简单，代码如下：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.SeqFeature</span> <span class="kn">import</span> <span class="n">SeqFeature</span><span class="p">,</span> <span class="n">FeatureLocation</span>
 <span class="n">my_seq_feature</span> <span class="o">=</span> <span class="n">SeqFeature</span><span class="p">(</span><span class="n">FeatureLocation</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">strand</span><span class="o">=+</span><span class="mi">1</span><span class="p">)</span>
@@ -211,7 +211,7 @@
 </div>
 <p>用前面示例的代码将这三个片段组合之后应该可以得到如下的结果：</p>
 <p><img alt="image15" src="_images/GD_sigil_labels.png" /></p>
-<p>除此之外，还可以设置“label_color”来调节标签的颜色（第 <a class="reference external" href="#sec:gd_nice_example">17.1.9</a> 章节也将用到这一步），这里没有进行演示。</p>
+<p>除此之外，还可以设置“label_color”来调节标签的颜色（第 <a class="reference internal" href="#sec-gd-nice-example"><em>17.1.9</em></a> 节也将用到这一步），这里没有进行演示。</p>
 <p>示例中默认的字体很小，这是比较明智的，因为通常我们会把许多Feature同时展示，而不像这里只展示了几个比较大的feature。</p>
 </div>
 <div class="section" id="id6">
@@ -278,9 +278,9 @@
 </div>
 <p>上述 <tt class="docutils literal"><span class="pre">ARROW</span></tt> 形状中的箭杆和箭头设置选项都适用于 <tt class="docutils literal"><span class="pre">BIGARROW</span></tt> 。</p>
 </div>
-<div class="section" id="id8">
-<h3>17.1.9 完美示例<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>回到”自上而下的示例 Section <a class="reference external" href="#sec:gd_top_down">17.1.3</a> 中鼠疫杆菌 <em>Yersinia pestis biovar
+<div class="section" id="sec-gd-nice-example">
+<span id="id8"></span><h3>17.1.9 完美示例<a class="headerlink" href="#sec-gd-nice-example" title="Permalink to this headline">¶</a></h3>
+<p>回到”自上而下的示例 Section <a class="reference internal" href="#sec-gd-top-down"><em>17.1.3</em></a> 中鼠疫杆菌 <em>Yersinia pestis biovar
 Microtus</em> 的pPCP1质粒，现在使用”图形符号“的高级选项。箭头表示基因，窄框穿越箭头表示限制性内切酶的切割位点。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">reportlab.lib</span> <span class="kn">import</span> <span class="n">colors</span>
 <span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">cm</span>
@@ -347,7 +347,7 @@ Microtus</em> 的pPCP1质粒，现在使用”图形符号“的高级选项。�
 <li><tt class="docutils literal"><span class="pre">AF323668</span></tt> – Bacteriophage bIL285, 全基因组大小(35538 bp)</li>
 <li><tt class="docutils literal"><span class="pre">NC_003212</span></tt> – <em>Listeria innocua</em> Clip11262,我们将仅关注前噬菌体5的全基因组 (长度大体相同).</li>
 </ul>
-<p>这三个文件可以从Entrez下载，详情请查阅 <a class="reference external" href="#sec:efetch">9.6</a> 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 <a class="reference external" href="#sec:SeqRecord-slicing">4.6</a> ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 <a class="reference external" href="#sec:SeqRecord-reverse-complement">4.8</a>)。</p>
+<p>这三个文件可以从Entrez下载，详情请查阅 <a class="reference internal" href="chr09.html#sec-efetch"><em>9.6</em></a> 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 <a class="reference internal" href="chr04.html#sec-seqrecord-slicing"><em>4.6</em></a> ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 <a class="reference internal" href="chr04.html#sec-seqrecord-reverse-complement"><em>4.8</em></a> )。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 
 <span class="n">A_rec</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_002703.gbk&quot;</span><span class="p">,</span> <span class="s">&quot;gb&quot;</span><span class="p">)</span>
@@ -410,7 +410,7 @@ editor</a> 处理 ——才能被GenomeDiagram识别。但是，这里只需要�
 <div class="section" id="trackcross-links">
 <h3>17.1.11 不同Track之间的Cross-Links<a class="headerlink" href="#trackcross-links" title="Permalink to this headline">¶</a></h3>
 <p>Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能可用于将要展示的简单线形图中，也可用于将线形图分割为短片段（fragments）和环形图。</p>
-<p>我们接着模仿Proux等人 [<a class="reference external" href="#proux2002">5</a>] 的图像，我们需要一个包含基因之间的“cross links”、“得分”或“颜色”的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。</p>
+<p>我们接着模仿Proux等人 [<a class="reference internal" href="chr23.html#proux2002"><em>5</em></a>] 的图像，我们需要一个包含基因之间的“cross links”、“得分”或“颜色”的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。</p>
 <p>噬菌体的名称同样表示为A，B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="c">#Tuc2009 (NC_002703) vs bIL285 (AF323668)</span>
 <span class="n">A_vs_B</span> <span class="o">=</span> <span class="p">[</span>
@@ -541,7 +541,7 @@ editor</a> 处理 ——才能被GenomeDiagram识别。但是，这里只需要�
 </div>
 <div class="section" id="id12">
 <h2>17.2 染色体<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">Bio.Graphics.BasicChromosome</span></tt> 模块可以绘制染色体，Jupe等人在2012发表的文章 [<a class="reference external" href="#jupe2012">6</a>] 中利用不同的颜色来展示不同的基因家族。</p>
+<p><tt class="docutils literal"><span class="pre">Bio.Graphics.BasicChromosome</span></tt> 模块可以绘制染色体，Jupe等人在2012发表的文章 [<a class="reference internal" href="chr23.html#jupe2012"><em>6</em></a>] 中利用不同的颜色来展示不同的基因家族。</p>
 <div class="section" id="id13">
 <h3>17.2.1 简单染色体<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <p>我们用 <em>Arabidopsis
@@ -678,13 +678,13 @@ thaliana</em> 来展示一个简单示例。</p>
 <li><a class="reference internal" href="#genomediagram">17.1  基因组可视化包—GenomeDiagram</a><ul>
 <li><a class="reference internal" href="#id1">17.1.1  GenomeDiagram简介</a></li>
 <li><a class="reference internal" href="#id2">17.1.2 图形，轨迹,  特征集和特征</a></li>
-<li><a class="reference internal" href="#id3">17.1.3 自上而下的实例</a></li>
+<li><a class="reference internal" href="#sec-gd-top-down">17.1.3 自上而下的实例</a></li>
 <li><a class="reference internal" href="#id4">17.1.4  自下而上的实例</a></li>
 <li><a class="reference internal" href="#feature">17.1.5  简单的Feature</a></li>
 <li><a class="reference internal" href="#id5">17.1.6  Feature说明</a></li>
 <li><a class="reference internal" href="#id6">17.1.7  表示Feature的图形符号</a></li>
 <li><a class="reference internal" href="#id7">17.1.8 箭头形状</a></li>
-<li><a class="reference internal" href="#id8">17.1.9 完美示例</a></li>
+<li><a class="reference internal" href="#sec-gd-nice-example">17.1.9 完美示例</a></li>
 <li><a class="reference internal" href="#id9">17.1.10 多重轨迹</a></li>
 <li><a class="reference internal" href="#trackcross-links">17.1.11 不同Track之间的Cross-Links</a></li>
 <li><a class="reference internal" href="#id10">17.1.12 高级选项</a></li>

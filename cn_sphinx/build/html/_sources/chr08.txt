@@ -1,3 +1,5 @@
+.. _chapter-searchio:
+
 第8章  BLAST和其他序列搜索工具(*实验性质的代码*)
 ======================================================================
 
@@ -5,7 +7,7 @@
 Biopython中，并且以一个预尾期的状态整理到教程当中，这样在我们发布稳定版
 的之前可以收到一系列的反馈和并作改进。那时有些细节可能会改变，并且用到
 当前 ``Bio.SearchIO`` 模块的脚本也需要更新。切记！为了与NCBI BLAST有关的
-代码可以稳定工作，请继续使用第 \ `7 <#chapter:blast>`__ 章介绍的Bio.Blast。
+代码可以稳定工作，请继续使用第 :ref:`7 <chapter-blast>` 章介绍的Bio.Blast。
 
 生物序列的鉴定是生物信息工作的主要部分。有几个工具像BLAST（可能是最流行
 的），FASTA ，HMMER还有许多其它的都有这个功能，每个工具都有独特的算法和
@@ -594,7 +596,7 @@ XML BLAST搜索同样输出gap以及相同的残基数量。这些属性可以�
     >>> blast_hsp.hit
     SeqRecord(seq=Seq('CCCTCTACAGGGAAGCGCTTTCTGTTGTCTGAAAGAAAAGAAAGTGCTTCCTTT...GGG', DNAAlphabet()), id='gi|262205317|ref|NR_030195.1|', name='aligned hit sequence', description='Homo sapiens microRNA 520b (MIR520B), microRNA', dbxrefs=[])
 
-它们是你已经在第 \ `4 <#chapter:SeqRecord>`__ 章看到过的 ``SeqRecord`` 对象！
+它们是你已经在第 :ref:`4 <chapter-SeqRecord>` 章看到过的 ``SeqRecord`` 对象！
 意味着你可以对 ``SeqRecord`` 对象做的各种有趣的事同样适用于 ``HSP.query`` 和 ``HSP.hit`` 对象。
 
 现在 ``HSP``  对象有个 ``alignment`` 属性（一个 ``MultipleSeqAlignment`` 
@@ -877,7 +879,7 @@ HSP比对可能会被内含子分成多个片段。内含子不是query-hit匹�
 
 在这种情况下，理想的选择是用 ``Bio.SearchIO.index`` 或 ``Bio.SearchIO.index_db`` 
 来索引文件。如果名字听起来很熟悉，是因为你之前已经见过了，在
-Section \ `5.4.2 <#sec:SeqIO-index>`__。这些方法和 ``Bio.SeqIO`` 
+章节 :ref:`5.4.2 <sec-SeqIO-index>` 。这些方法和 ``Bio.SeqIO`` 
 中相应的方法行为很相似，只是多了些格式特异的关键字参数。
 
 这里有一些例子。你可以只用文件名和格式名来 ``index`` 

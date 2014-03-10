@@ -1,3 +1,5 @@
+.. _chapter-cookbook:
+
 第18章  Cookbook – 用它做一些很酷的事情
 ================================================
 
@@ -10,7 +12,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 18.1  操作序列文件
 ---------------------------------
 
-这部分将展示更多使用第 \ `5 <#chapter:Bio.SeqIO>`__ 章所描述的 ``Bio.SeqIO`` 模块来进行序列输入/输出操作的例子。
+这部分将展示更多使用第 :ref:`5 <chapter-Bio.SeqIO>` 章所描述的 ``Bio.SeqIO`` 模块来进行序列输入/输出操作的例子。
 
 18.1.1  过滤文件中的序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,7 +68,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 让我们将所有这些片段放到一起来组成一个完整的Python脚本，这个脚本将生成一个FASTA序列文件，其包含30个原始序列的随机重排版本。
 
-第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__ 描述的``SeqRecord`` 的格式化方法）：
+第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 :ref:`5.5.4 <sec-Bio.SeqIO-and-StringIO>` 描述的``SeqRecord`` 的格式化方法）：
 
 .. code:: python
 
@@ -109,12 +111,14 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
     SeqIO.write(shuffled_recs, handle, "fasta")
     handle.close()
 
+.. _sec-SeqIO-translate:
+
 18.1.3  翻译CDS条目为FASTA文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-假设你有一个包含某个物种的CDS条目作为输入文件，你想生成一个由它们的蛋白序列组成的FASTA文件。也就是，从原始文件中取出每一个核苷酸序列，并翻译它。回到章节 \ `3.9 <#sec:translation>`__ 我们了解了怎么使用 ``Seq`` 对象的 ``translate`` 方法，和可选的 ``cds`` 参数来使得不同的起始密码子能正确翻译。
+假设你有一个包含某个物种的CDS条目作为输入文件，你想生成一个由它们的蛋白序列组成的FASTA文件。也就是，从原始文件中取出每一个核苷酸序列，并翻译它。回到章节 :ref:`3.9 <sec-translation>` 我们了解了怎么使用 ``Seq`` 对象的 ``translate`` 方法，和可选的 ``cds`` 参数来使得不同的起始密码子能正确翻译。
 
-就像章节 \ `5.5.3 <#sec:SeqIO-reverse-complement>`__ 中反向互补的例子中展示的那样，我们可以用 ``Bio.SeqIO`` 将与翻译步骤结合起来。对于每一个核苷酸 ``SeqRecord`` ，我们需要创建一个蛋白的 ``SeqRecord`` —— 并对它命名。
+就像章节 :ref:`5.5.3 <sec-SeqIO-reverse-complement>` 中反向互补的例子中展示的那样，我们可以用 ``Bio.SeqIO`` 将与翻译步骤结合起来。对于每一个核苷酸 ``SeqRecord`` ，我们需要创建一个蛋白的 ``SeqRecord`` —— 并对它命名。
 
 你能编写自己的函数来做这个事情，为你的序列选择合适的蛋白标识和恰当的密码表。在本例中，我们仅使用默认的密码表，并给序列ID加一个前缀。
 
@@ -153,6 +157,8 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 这是怎么工作的呢？第一行只是导入 ``Bio.SeqIO`` 模块。第二行是最有趣的——这是一个Python生成器表达式，它提供 ``mixed.fas`` 里每个记录的大写版本。第三行中，我们把这个生成器表达式传给 ``Bio.SeqIO.write()`` 函数，它会把大写的序列写出到 ``upper.fas`` 输出文件。
 
 我们使用生成器（而不是一个列表或列表解析式）的原因是，前一方式每次仅有一个记录保存在内存中。当你在处理包含成千上万的条目的文件时，这可能非常重要。
+
+.. _sec-SeqIO-sort:
 
 18.1.5  对序列文件排序
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -193,7 +199,7 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
 
 首先我们使用 ``Bio.SeqIO.parse()`` 来将整个文件扫描一遍，并将所有记录的标识和它们的长度保存在一个元组（tuple）中。接着我们对这个元组按照序列长度进行排序，并舍弃这些长度。有了这一排列后的标识列表， ``Bio.SeqIO.index()`` 允许我们一个一个获取这些记录，我们把它们传给 ``Bio.SeqIO.write()`` 输出。
 
-这些例子都使用 ``Bio.SeqIO`` 来解析记录为 ``SeqRecord`` 对象，并通过 ``Bio.SeqIO.write()`` 输出。当你想排序的文件格式 ``Bio.SeqIO.write()`` 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 \ `5.4.2.2 <#sec:seqio-index-getraw>`__) 中 ``Bio.SeqIO.index()`` 添加的 ``get_raw()`` 方法。
+这些例子都使用 ``Bio.SeqIO`` 来解析记录为 ``SeqRecord`` 对象，并通过 ``Bio.SeqIO.write()`` 输出。当你想排序的文件格式 ``Bio.SeqIO.write()`` 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 :ref:`5.4.2.2 <sec-seqio-index-getraw>` )中 ``Bio.SeqIO.index()`` 添加的 ``get_raw()`` 方法。
 
 .. code:: python
 
@@ -210,6 +216,8 @@ Biopython目前有两个版本的“cookbook”示例——本章（本章包含
     handle.close()
 
 作为一个奖励，由于以上例子不重复将数据解析为 ``SeqRecord`` 对象，所以它会更快。
+
+.. _sec-FASTQ-filtering-example:
 
 18.1.6  FASTQ文件的简单质量过滤
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,6 +253,8 @@ FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列
 
 FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载它们到内存。这个例子使用一个生成器表达式，这意味着每次只有内存里只有一个 ``SeqRecord`` 被创建 —— 避免内存限制。
 
+.. _sec-FASTQ-slicing-off-primer:
+
 18.1.7  切除引物序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -263,7 +273,7 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 这将从 ``SRR014849.fastq`` 找到13819条读长记录，并保存为一个新的FASTQ文件——``with_primer.fastq``。
 
-现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 ``SeqRecord`` 进行切片（参见章节 \ `4.6 <#sec:SeqRecord-slicing>`__ ）以移除前11个字母（我们的引物长度）：
+现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 ``SeqRecord`` 进行切片（参见章节 :ref:`4.6 <sec-SeqRecord-slicing>` ）以移除前11个字母（我们的引物长度）：
 
 .. code:: python
 
@@ -316,6 +326,8 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
     print "Saved %i reads" % count
 
 这种形式非常灵活，如果你想做一些更复杂的事情，譬如只保留部分记录 —— 像下一个例子中展示的那样。
+
+.. _sec-FASTQ-slicing-off-adaptor:
 
 18.1.8  切除接头序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -384,10 +396,12 @@ FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载
 
 通过改变格式名称，你也可以将这个应用于FASTA文件。该代码也可以扩展为模糊匹配，而非绝对匹配（或许用一个两两比对，或者考虑读长的质量分数），但是这会使代码变得更慢。
 
+.. _sec-SeqIO-fastq-conversion:
+
 18.1.9  转换FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-回到章节 \ `5.5.2 <#sec:SeqIO-conversion>`__ ，我们展示了怎样使用 ``Bio.SeqIO`` 来实现两个文件格式间的转换。这里，我们将更进一步探讨二代DNA测序中使用的FASTQ文件。更加详细的介绍可以参加 Cock *et al.* (2009) [`7 <#cock2010>`__\ ] 。FASTQ文件同时存储DNA序列（以Python字符串的形式）和相应的读长质量。
+回到章节 :ref:`5.5.2 <sec-SeqIO-conversion>` ，我们展示了怎样使用 ``Bio.SeqIO`` 来实现两个文件格式间的转换。这里，我们将更进一步探讨二代DNA测序中使用的FASTQ文件。更加详细的介绍可以参加 Cock *et al.* (2009) [`7 <#cock2010>`__\ ] 。FASTQ文件同时存储DNA序列（以Python字符串的形式）和相应的读长质量。
 
 PHRED分数（在大多数FASTQ文件中使用，也存在于QUAL、ACE和SFF文件中）已经成为一个用来表示某个给定碱基测序错误概率（这里用 *P*\ :sub:`*e*` 表示）的 *实际* 标准（使用一个以10为底的对数转换）：
 
@@ -439,6 +453,8 @@ Solexa质量分数采用一种不同的对数转换：
     >>> help(QualityIO)
     ...
 
+.. _sec-SeqIO-fasta-qual-conversion:
+
 18.1.10  转换FASTA和QUAL文件为FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -478,12 +494,14 @@ FASTQ *同时* 包含序列和他们的质量信息字符串。FASTA文件 *只*
     handle.close()
     print "Converted %i records" % count
 
+.. _sec-fastq-indexing:
+
 18.1.11  索引FASTQ文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因，你不能一次将所有的记录加载到内存中。这就是为什么上面的例子（过滤和剪切）以迭代的方式遍历整个文件，每次只查看一个 ``SeqRecord`` 。
 
-然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 ``Bio.SeqIO.index()`` 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 \ `5.4.2 <#sec:SeqIO-index>`__ ）。
+然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 ``Bio.SeqIO.index()`` 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 :ref:`5.4.2 <sec-SeqIO-index>` ）。
 
 我们将再次使用来自 ENA (`ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz <ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz>`__) 的文件 ``SRR020192.fastq`` ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：
 
@@ -500,14 +518,14 @@ FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因
 
 当在包含7百万读长的FASTQ文件上测试时，索引大概需要花费1分钟，然而获取记录几乎是瞬间完成的。
 
-章节 \ `18.1.5 <#sec:SeqIO-sort>`__ 的例子展示了如何使用 ``Bio.SeqIO.index()`` 函数来对FASTA文件进行排序 —— 这也可以用在FASTQ文件上。
+章节 :ref:`18.1.5 <sec-SeqIO-sort>` 的例子展示了如何使用 ``Bio.SeqIO.index()`` 函数来对FASTA文件进行排序 —— 这也可以用在FASTQ文件上。
 
 18.1.12  转换SFF文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 如果你处理454(Roche)序列数据，你可能会接触Standard Flowgram Format (SFF)原始数据。这包括序列读长（called bases）、质量分数和原始流信息。
 
-一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 ``Bio.SeqIO.convert()`` 来轻松实现（参见 \ `5.5.2 <#sec:SeqIO-conversion>`__ ）：
+一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 ``Bio.SeqIO.convert()`` 来轻松实现（参见 :ref:`5.5.2 <sec-SeqIO-conversion>` ）：
 
 .. code:: python
 
@@ -557,7 +575,7 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要关心内含子。然而，这种方法在病毒和原核生物中仍然有效。
 
-为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： `NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 \ `3.9 <#sec:translation>`__ 关于翻译的介绍）。
+为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： `NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 :ref:`3.9 <sec-translation>` 关于翻译的介绍）。
 
 .. code:: python
 
@@ -655,14 +673,16 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
     TGKQNSCQMSAIWQLRQNTATKTRQNRARI...AIK - length 100, strand 1, 8741:9044
     QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609
 
-如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对较更加容易（就像章节 \ `17.1.9 <#sec:gd_nice_example>`__ 中显示的那样）。
+如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对较更加容易（就像章节 :ref:`17.1.9 <sec-gd_nice_example>` 中显示的那样）。
 
 然而，如果你想要的只是所有开放读码框的位置，翻译每一个可能的密码子将是很浪费时间的，包括转换和查找反向互补链。那么，你所要做的所有事情是查找可能的终止密码子(和他们反向互补)。使用正则表达式是一个很直接的方式（参见Python中的 ``re`` 模块）。这是描述查找字符串的一个非常强大的模块（然而非常复杂），也被许多编程语言和命令行工具，如 ``grep``，所支持。你能找到一本书来描述它的使用！
+
+.. _sec-sequence-parsing-plus-pylab:
 
 18.2  序列解析与简单作图
 ----------------------------------------
 
-这一部分展示更多使用第 \ `5 <#chapter:Bio.SeqIO>`__ 章介绍的 ``Bio.SeqIO`` 模块进行序列解析的例子，以及Python类库matplotlib中 ``pylab`` 的作图接口（参见 `matplotlib 主页的教程 <http://matplotlib.sourceforge.net/>`__ ）。注意，跟随这些例子，你需要安装matplotlib - 但是即使没有它，你依然可以尝试数据的解析的内容。
+这一部分展示更多使用第 :ref:`5 <chapter-Bio.SeqIO>` 章介绍的 ``Bio.SeqIO`` 模块进行序列解析的例子，以及Python类库matplotlib中 ``pylab`` 的作图接口（参见 `matplotlib 主页的教程 <http://matplotlib.sourceforge.net/>`__ ）。注意，跟随这些例子，你需要安装matplotlib - 但是即使没有它，你依然可以尝试数据的解析的内容。
 
 18.2.1  序列长度柱状图
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -866,14 +886,16 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 18.3  处理序列比对
 -----------------------------
 
-这部分可以看做是第 \ `6 <#chapter:Bio.AlignIO>`__ 章的继续。
+这部分可以看做是第 :ref:`6 <chapter-Bio.AlignIO>` 章的继续。
+
+.. _sec-summary_info:
 
 18.3.1  计算摘要信息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 一旦你有一个比对，你很可能希望找出关于它的一些信息。我们尽力将这些功能分离到单独的能作用于比对对象的类中，而不是将所有的能生成比对信息的函数都放入比对对象本身。
 
-准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 ``alignment`` ，例如由在第 \ `6 <#chapter:Bio.AlignIO>`__ 章介绍的 ``Bio.AlignIO.read(...)`` 读入。我们获得该对象的摘要信息所要做的所有事情是：
+准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 ``alignment`` ，例如由在第 :ref:`6 <chapter-Bio.AlignIO>` 章介绍的 ``Bio.AlignIO.read(...)`` 读入。我们获得该对象的摘要信息所要做的所有事情是：
 
 .. code:: python
 
@@ -882,15 +904,17 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 ``summary_align`` 对象非常有用，它将帮你做以下巧妙的事情：
 
-#. 计算一个快速一致序列 – 参见章节 \ `18.3.2 <#sec:consensus>`__
-#. 获取一个针对该比对的位点特异性打分矩阵 – 参见章节 \ `18.3.3 <#sec:pssm>`__
-#. 计算比对的信息量 – 参见章节 \ `18.3.4 <#sec:getting_info_content>`__
-#. 生成该比对中的替换信息 – 章节 \ `18.4 <#sec:sub_matrix>`__ 详细描述了使用该方法生成一个替换矩阵
+#. 计算一个快速一致序列 – 参见章节 :ref:`18.3.2 <sec-consensus>`
+#. 获取一个针对该比对的位点特异性打分矩阵 – 参见章节 :ref:`18.3.3 <sec-pssm>`
+#. 计算比对的信息量 – 参见章节 :ref:`18.3.4 <sec-getting_info_content>`
+#. 生成该比对中的替换信息 – 章节 :ref:`18.4 <sec-sub_matrix>` 详细描述了使用该方法生成一个替换矩阵
+
+.. _sec-consensus:
 
 18.3.2  计算一个快速一致序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在章节 \ `18.3.1 <#sec:summary_info>`__ 中描述的 ``SummaryInfo`` 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 ``SummaryInfo`` 对象，叫做 ``summary_align``，我们能通过下面的方法计算一个保守序列：
+在章节 :ref:`18.3.1 <sec-summary_info>` 中描述的 ``SummaryInfo`` 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 ``SummaryInfo`` 对象，叫做 ``summary_align``，我们能通过下面的方法计算一个保守序列：
 
 .. code:: python
 
@@ -911,6 +935,8 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
     指定保守序列中的不确定字符。默认为’N’。
 **the consensus alphabet**
     指定保守序列的字母表。如果没有提供，我们将从比对序列的字母表基础上推断该字母表。
+
+.. _sec-pssm:
 
 18.3.3  位点特异性评分矩阵
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -983,6 +1009,8 @@ Biopython以大小写混合的方式来表示剪切位点，这是有意模拟Ro
 
 PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
+.. _sec-getting_info_content:
+
 18.3.4  信息量
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1005,7 +1033,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 
 好了，现在我们知道Biopython如何计算了序列比对的信息量，让我们看看怎么对部分比对区域进行计算。
 
-首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 ``summary_align`` （参见章节\ `18.3.1 <#sec:summary_info>`__ 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：
+首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 ``summary_align`` （参见章节 :ref:`18.3.1 <sec-summary_info>` 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：
 
 .. code:: python
 
@@ -1024,7 +1052,7 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
         'T' : .3,
         'C' : .2}
 
-期望值不能以原始的字典传入，而需要作为 ``SubsMat.FreqTable`` 对象传入（参见章节\ `20.2.2 <#sec:freq_table>`__ 以获得关于FreqTables的更多信息）。FreqTable对象提供了一个关联字典和字母表的标准，这和Biopython中Seq类的工作方式类似。
+期望值不能以原始的字典传入，而需要作为 ``SubsMat.FreqTable`` 对象传入（参见章节 :ref:`20.2.2 <sec-freq_table>` 以获得关于FreqTables的更多信息）。FreqTable对象提供了一个关联字典和字母表的标准，这和Biopython中Seq类的工作方式类似。
 
 要从频率字典创建一个FreqTable对象，你只需要：
 
@@ -1056,6 +1084,8 @@ PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。
 好了，现在你已经知道怎么计算信息量了。如果你想要在实际的生命科学问题中应用它，最好找一些关于
 信息量的文献钻研，以了解它是怎样用的。希望你的钻研不会发现任何有关这个函数的编码错误。
 
+.. _sec-sub_matrix:
+
 18.4  替换矩阵
 ---------------------------
 
@@ -1082,7 +1112,7 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
     >>> c_align = AlignIO.read(filename, "clustal", alphabet=alpha)
     >>> summary_align = AlignInfo.SummaryInfo(c_align)
 
-章节 \ `6.4.1 <#sec:align_clustal>`__ 和 \ `18.3.1 <#sec:summary_info>`__ 包含关于此类做法的更多信息。
+章节 :ref:`6.4.1 <sec-align_clustal>` 和 :ref:`18.3.1 <sec-summary_info>` 包含关于此类做法的更多信息。
 
 现在我们得到了我们的 ``summary_align`` 对象，我们想使用它来找出不同的残基相互替换的次数。为了使例子的可读性更强，我们将只关注那些有极性电荷侧链的氨基酸。幸运的是，这能在生成替代字典时轻松实现，通过传入所有需要被忽略的字符。这样我们将能创建一个只包含带电荷的极性氨基酸的替代字典：
 
@@ -1138,10 +1168,12 @@ Biopython提供了大量的常见替换矩阵，也提供了创建你自己的�
 
 很好。我们现在得到了自己的替换矩阵！
 
+.. _sec-BioSQL:
+
 18.5  BioSQL – 存储序列到关系数据库中
 ---------------------------------------------------------
 
-`BioSQL <http://www.biosql.org/>`__ 是 `OBF <http://open-bio.org/>`__ 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 ``Bio.SeqIO`` （第 `5 <#chapter:Bio.SeqIO>`__ 章）加载GenBank文件为SeqRecord相同的东西。
+`BioSQL <http://www.biosql.org/>`__ 是 `OBF <http://open-bio.org/>`__ 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 ``Bio.SeqIO`` （第 :ref:`5 <chapter-Bio.SeqIO>` 章）加载GenBank文件为SeqRecord相同的东西。
 
 Biopython中BioSQL模块的文档目前放在 `http://biopython.org/wiki/BioSQL <http://biopython.org/wiki/BioSQL>`__ ，是我们维基页面的一部分。
 

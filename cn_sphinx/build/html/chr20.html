@@ -50,8 +50,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="id1">
-<h1>第20章 高级<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-advanced">
+<span id="id1"></span><h1>第20章 高级<a class="headerlink" href="#chapter-advanced" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id2">
 <h2>20.1  解析器的设计<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>过去很多Biopython解析器都是根据面向事件设计出来的，包括Scanner和Consumer。</p>
@@ -161,7 +161,7 @@ ARM中的数值是根据你的数据中替换的个数决定的。数据可以�
 </pre></div>
 </div>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">exp_freq_table</span></tt>: 为一个FreqTable的实例。有关FreqTable更多信息请见第 <a class="reference external" href="#sec:freq_table">20.2.2</a> 节。简单地说，期望频率表表示字母表中每个元素显示的频率。这个表相当于一个字典，字母是键，字母对应的频率是值。总和为1。</li>
+<li><tt class="docutils literal"><span class="pre">exp_freq_table</span></tt>: 为一个FreqTable的实例。有关FreqTable更多信息请见第 <a class="reference internal" href="#sec-freq-table"><em>20.2.2</em></a> 节。简单地说，期望频率表表示字母表中每个元素显示的频率。这个表相当于一个字典，字母是键，字母对应的频率是值。总和为1。</li>
 </ol>
 <p>期望频率表可以（理论上说也应该可以）从OFM得到。所以大多数情况你可以用下面的代码产生 <tt class="docutils literal"><span class="pre">exp_freq_table</span></tt>:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">exp_freq_table</span> <span class="o">=</span> <span class="n">SubsMat</span><span class="o">.</span><span class="n">_exp_freq_table_from_obs_freq</span><span class="p">(</span><span class="n">OFM</span><span class="p">)</span>
@@ -205,7 +205,7 @@ ARM中的数值是根据你的数据中替换的个数决定的。数据可以�
 </ol>
 </div>
 <div class="section" id="freqtable">
-<h3>20.2.2  FreqTable<a class="headerlink" href="#freqtable" title="Permalink to this headline">¶</a></h3>
+<span id="sec-freq-table"></span><h3>20.2.2  FreqTable<a class="headerlink" href="#freqtable" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">FreqTable</span><span class="o">.</span><span class="n">FreqTable</span><span class="p">(</span><span class="n">UserDict</span><span class="o">.</span><span class="n">UserDict</span><span class="p">)</span>
 </pre></div>
 </div>

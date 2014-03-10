@@ -1,7 +1,9 @@
-﻿第5章  序列输入和输出
+﻿.. _chapter-Bio.SeqIO:
+
+第5章  序列输入和输出
 ================================
 
-本章将详细讨论 ``Bio.SeqIO`` 模块，该模块在第 \ `2 <#chapter:quick-start>`__ 章已经做过简单的介绍并在第 \ `4 <#chapter:SeqRecord>`__ 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 ``Bio.SeqIO`` 维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `SeqIO <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）:
+本章将详细讨论 ``Bio.SeqIO`` 模块，该模块在第 :ref:`2 <chapter-quick-start>` 章已经做过简单的介绍并在第 :ref:`4 <chapter-SeqRecord>` 章使用过，它旨在提供一个简单的接口，实现对各种不同格式序列文件进行统一的处理。详细信息请查阅 ``Bio.SeqIO`` 维基页面（ `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ ）和内置文档（ `SeqIO <http://biopython.org/DIST/docs/api/Bio.SeqIO-module.html>`__ ）:
 
 .. code:: python
 
@@ -9,14 +11,14 @@
     >>> help(SeqIO)
     ...
 
-学习本章的要领是学会使用 ``SeqRecord`` 对象（请见第\ `4 <#chapter:SeqRecord>`__ 章），该对象包含一个 ``Seq`` 对象（请见第 \ `3 <#chapter:Bio.Seq>`__ 章）和注释信息（如序列ID和描述信息）。
+学习本章的要领是学会使用 ``SeqRecord`` 对象（请见第:ref:`4 <chapter-SeqRecord>` 章），该对象包含一个 ``Seq`` 对象（请见第 :ref:`3 <chapter-Bio.Seq>` 章）和注释信息（如序列ID和描述信息）。
 
 5.1 解析/读取序列
 ---------------------------------
 
 该模块的主要函数是 ``Bio.SeqIO.parse()`` ，它用于读取序列文件生成 ``SeqRecord`` 对象，包含两个参数：
 
-#. 第一个参数是一个文件名或者一个句柄（ *handle* ）。句柄可以是打开的文件，命令行程序的输出，或者来自下载的数据(请见第 \ `5.3 <#sec:SeqIO_Online>`__ 节)。更多关于句柄的信息请见第 \ `22.1 <#sec:appendix-handles>`__ 节。
+#. 第一个参数是一个文件名或者一个句柄（ *handle* ）。句柄可以是打开的文件，命令行程序的输出，或者来自下载的数据(请见第 :ref:`5.3 <sec-SeqIO_Online>` 节)。更多关于句柄的信息请见第 :ref:`22.1 <sec-appendix-handles>` 节。
 #. 第二个参数是一个小写字母字符串，用于指定序列格式（我们并不推测文件格式！），支持的文件格式请见 `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__ 。
 
 还有一个用于指定字符集的 ``alphabet`` 参数，这对FASTA这样的文件格式非常有用，在这里 ``Bio.SeqIO`` 默认参数为字母表。
@@ -38,7 +40,7 @@
         print repr(seq_record.seq)
         print len(seq_record)
 
-上面的示例来自第 \ `2.4 <#sec:sequence-parsing>`__ 节，它将读取来自FASTA格式文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 的兰花DNA序列。如果你想读取GenBank格式文件，如 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，只需要更改文件名和格式字符串：
+上面的示例来自第 :ref:`2.4 <sec-sequence-parsing>` 节，它将读取来自FASTA格式文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 的兰花DNA序列。如果你想读取GenBank格式文件，如 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，只需要更改文件名和格式字符串：
 
 .. code:: python
 
@@ -59,7 +61,7 @@
     >>> identifiers
     ['Z78533.1', 'Z78532.1', 'Z78531.1', 'Z78530.1', 'Z78529.1', 'Z78527.1', ..., 'Z78439.1']
 
-更多关于 ``SeqIO.parse()`` 在列表推导中运用的示例请见第 \ `18.2 <#seq:sequence-parsing-plus-pylab>`__ 节（e.g. 对序列长度或GC%作图）。
+更多关于 ``SeqIO.parse()`` 在列表推导中运用的示例请见第 :ref:`18.2 <sec-sequence-parsing-plus-pylab>` 节（e.g. 对序列长度或GC%作图）。
 
 5.1.2 遍历序列文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,7 +139,7 @@
 5.1.4 提取数据
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``SeqRecord`` 对象及其注释信息在第 \ `4 <#chapter:SeqRecord>`__ 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
+``SeqRecord`` 对象及其注释信息在第 :ref:`4 <chapter-SeqRecord>` 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
 
 .. code:: python
 
@@ -265,10 +267,12 @@
 
 通常，对FASTA描述行提取信息不是那么方便。如果你能获得对目标序列注释很好的文件格式如GenBank或者EMBL，那么这类注释信息就很容易处理。
 
+.. _sec-SeqIO_compressed:
+
 5.2 从压缩文档读取解析序列信息
 --------------------------------------------
 
-在上一节中，我们研究了从文件中解析序列信息。除了使用文件名，你可以让 ``Bio.SeqIO`` 使用文件句柄（请见第 \ `22.1 <#sec:appendix-handles>`__ 节）。在这一节，我们将使用文件句柄从压缩文件中解析序列信息。
+在上一节中，我们研究了从文件中解析序列信息。除了使用文件名，你可以让 ``Bio.SeqIO`` 使用文件句柄（请见第 :ref:`22.1 <sec-appendix-handles>` 节）。在这一节，我们将使用文件句柄从压缩文件中解析序列信息。
 
 正如你上面看到的，我们可以使用文件名作为 ``Bio.SeqIO.read()`` 或 ``Bio.SeqIO.parse()`` 的参数 - 例如在这个例子中，我们利用生成器表达式计算GenBank文件中多条序列条目的总长：
 
@@ -322,7 +326,9 @@
 
 如果你在使用Python2.7及以上版本， ``with`` 也可以读取gzip和bz2文件。然而在这之前的版本中使用将中断程序(`Issue 3860 <http://bugs.python.org/issue3860>`__ ), 抛出 ``__exit__`` 缺失这类 ``属性错误`` （ ``AttributeError`` ）。
 
-有一种gzip（GNU zip）变种称为BGZF（Blocked GNU Zip Format），它可以作为普通gzip文件被读取，但具有随机读取的优点，我们将在稍后的第 \ `5.4.4 <#sec:SeqIO-index-bgzf>`__ 节讨论。
+有一种gzip（GNU zip）变种称为BGZF（Blocked GNU Zip Format），它可以作为普通gzip文件被读取，但具有随机读取的优点，我们将在稍后的第 :ref:`5.4.4 <sec-SeqIO-index-bgzf>` 节讨论。
+
+.. _sec-SeqIO_Online:
 
 5.3 解析来自网络的序列
 -----------------------------------
@@ -331,10 +337,12 @@
 
 请注意，你可以一气呵成地下载序列并解析成为 ``SeqRecord`` 对象，这并不意味这是一个好主意。通常，你可能需要下载序列并存入文件以重复使用。
 
+.. _sec-SeqIO_GenBank_Online:
+
 5.3.1 解析来自网络的GenBank序列条目
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-第 \ `9.6 <#sec:efetch>`__ 节将更详细地讨论Entrez EFetch接口，但是现在我们将通过它连接到NCBI，通过GI号从GenBank获得 *Opuntia* （刺梨）序列。
+第 :ref:`9.6 <sec-efetch>` 节将更详细地讨论Entrez EFetch接口，但是现在我们将通过它连接到NCBI，通过GI号从GenBank获得 *Opuntia* （刺梨）序列。
 
 首先，我们只获取一条序列条目。如果你不关注注释和相关信息，下载FASTA文件是个不错的选择，因为他们相对紧凑。请记住，当你希望处理的对象包含有且仅有一条序列条目时，使用 ``Bio.SeqIO.read()`` 函数：
 
@@ -401,12 +409,14 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
     AF191663.1 Opuntia bradtiana rpl16 gene; chloroplast gene for...
     Sequence length 899, 3 features, from: chloroplast Opuntia bradtianaa
 
-更多关于 ``Bio.Entrez`` 模块的信息请见第 \ `9 <#chapter:entrez>`__ 章，并阅读NCBI Entrez使用指南（第 \ `9.1 <#sec:entrez-guidelines>`__ 节）。
+更多关于 ``Bio.Entrez`` 模块的信息请见第 :ref:`9 <chapter-entrez>` 章，并阅读NCBI Entrez使用指南（第 :ref:`9.1 <sec-entrez-guidelines>` 节）。
+
+.. _sec-SeqIO_ExPASy_and_SwissProt:
 
 5.3.2 解析来自网络的SwissProt序列条目
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-现在我们使用句柄下载来自ExPASy的SwissProt文件，更深入的信息请见第 \ `10 <#chapter:swiss_prot>`__ 章。如上面提到的，当你希望处理的对象包含有且仅有一条序列条目时，使用 ``Bio.SeqIO.read()`` 函数：
+现在我们使用句柄下载来自ExPASy的SwissProt文件，更深入的信息请见第 :ref:`10 <chapter-swiss_prot>` 章。如上面提到的，当你希望处理的对象包含有且仅有一条序列条目时，使用 ``Bio.SeqIO.read()`` 函数：
 
 .. code:: python
 
@@ -438,16 +448,18 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 我们将介绍 ``Bio.SeqIO`` 模块中3个相关函数，用于随机读取多序列文件。这里需要权衡灵活性和内存使用。总之：
 
--   ``Bio.SeqIO.to_dict()`` 最灵活但内存占用最大 （请见第 \ `5.4.1 <#SeqIO:to_dict>`__ 节）。这基本上是一个辅助函数，用于建立Python ``字典`` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
--   ``Bio.SeqIO.index()`` 处于中间水平，类似于只读字典，当需要时解析序列到 ``SeqRecord`` 对象（请见第 \ `5.4.2 <#sec:SeqIO-index>`__ 节）。
--   ``Bio.SeqIO.index_db()`` 也类似于只读字典，但是将文件中的ID和文件偏移值存储到硬盘（SQLite3数据库），这意味着它对内存需求很低（请见第 \ `5.4.3 <#sec:SeqIO-index-db>`__ 节），但会慢一点。
+-   ``Bio.SeqIO.to_dict()`` 最灵活但内存占用最大 （请见第 :ref:`5.4.1 <sec-SeqIO-to-dict>` 节）。这基本上是一个辅助函数，用于建立Python ``字典`` ，每个条目以 ``SeqRecord`` 对象形式存储在内存中，允许你修改这些条目。
+-   ``Bio.SeqIO.index()`` 处于中间水平，类似于只读字典，当需要时解析序列到 ``SeqRecord`` 对象（请见第 :ref:`5.4.2 <sec-SeqIO-index>` 节）。
+-   ``Bio.SeqIO.index_db()`` 也类似于只读字典，但是将文件中的ID和文件偏移值存储到硬盘（SQLite3数据库），这意味着它对内存需求很低（请见第 :ref:`5.4.3 <sec-SeqIO-index-db>` 节），但会慢一点。
 
-全面的概述请见讨论部分（第 \ `5.4.5 <#sec:SeqIO-indexing-discussion>`__ 节）。
+全面的概述请见讨论部分（第 :ref:`5.4.5 <sec-SeqIO-indexing-discussion>` 节）。
+
+.. _sec-SeqIO-to-dict:
 
 5.4.1 序列文件作为字典-在内存中
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-我们对兰花数据文件接下来的处理将用于展示如何对他们建立索引，以及使用Python的 ``dictionary``  数量类型（与Perl中hash类似）以类似于数据库的方式读取数据。这常用于从中等大小的文件中读取某些特定元素，形成一个很好的快速数据库。如果处理较大的文件，内存将是个问题，请见下面第 \ `5.4.2 <#sec:SeqIO-index>`__ 节。
+我们对兰花数据文件接下来的处理将用于展示如何对他们建立索引，以及使用Python的 ``dictionary``  数量类型（与Perl中hash类似）以类似于数据库的方式读取数据。这常用于从中等大小的文件中读取某些特定元素，形成一个很好的快速数据库。如果处理较大的文件，内存将是个问题，请见下面第 :ref:`5.4.2 <sec-SeqIO-index>` 节。
 
 你可以使用 ``Bio.SeqIO.to_dict()`` 函数创建一个 ``SeqRecord`` 字典（在内存中）。默认会使用每条序列条目的ID（i.e.  ``.id`` 属性）作为键。让我们用GenBank文件试一试：
 
@@ -491,6 +503,8 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 值得注意的是，对有Python使用经验的人来说，可以轻松地创建一个类似的字典。然而，典型的字典构建方法不能很好地处理重复键的情况。使用 ``Bio.SeqIO.to_dict()`` 函数将明确检查重复键，如果发现任何重复键将引发异常并退出。
 
+.. _seq-seqio-todict-functionkey:
+
 5.4.1.1 指定字典键
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -509,7 +523,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
     ['gi|2765596|emb|Z78471.1|PDZ78471', 'gi|2765646|emb|Z78521.1|CCZ78521', ...
      ..., 'gi|2765613|emb|Z78488.1|PTZ78488', 'gi|2765583|emb|Z78458.1|PHZ78458']
 
-这结果是之前在第 \ `2.4.1 <#sec:fasta-parsing>`__ 节中我们解析的FASTA文件结果。如果你需要别的作为键，如登录号（Accession Number），可使用 ``SeqIO.to_dict()`` 的可选参数 ``key_function`` ，它允许你根据你的序列条目特点，自定义字典键。
+这结果是之前在第 :ref:`2.4.1 <sec-fasta-parsing>` 节中我们解析的FASTA文件结果。如果你需要别的作为键，如登录号（Accession Number），可使用 ``SeqIO.to_dict()`` 的可选参数 ``key_function`` ，它允许你根据你的序列条目特点，自定义字典键。
 
 首先，你必须写一个函数，当使用 ``SeqRecord`` 对象作为参数时，可以返回你需要的键（字符串）。通常，函数的细节依赖于你要处理的序列条目的特点。但是对于我们的兰花数据，我们只需要使用“管道”符号（|）切分ID并返回第四个条目（第三个元素）：
 
@@ -580,6 +594,8 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 将会返回文件中第二个序列条目 ``Z78532.1`` 。
 
+.. _sec-SeqIO-index:
+
 5.4.2 序列文件作为字典 - 索引文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -609,7 +625,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
     >>> seq_record.seq
     Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT', IUPACAmbiguousDNA())
 
-注意： ``Bio.SeqIO.index()`` 不接受句柄参数，仅仅接受文件名。这有充分的理由，但是过于技术性。第二个参数是文件格式（与其它 ``Bio.SeqIO`` 函数一样的小写字符串）。你可以使用许多其他的简单的文件格式，包括FASTA和FASTQ文件（示例参见第 \ `18.1.11 <#sec:fastq-indexing>`__ 节），但不支持比对文件格式，如PHYLIP或Clustal。最后有个可选参数，你可以指定字符集或者键函数。
+注意： ``Bio.SeqIO.index()`` 不接受句柄参数，仅仅接受文件名。这有充分的理由，但是过于技术性。第二个参数是文件格式（与其它 ``Bio.SeqIO`` 函数一样的小写字符串）。你可以使用许多其他的简单的文件格式，包括FASTA和FASTQ文件（示例参见第 :ref:`18.1.11 <sec-fastq-indexing>` 节），但不支持比对文件格式，如PHYLIP或Clustal。最后有个可选参数，你可以指定字符集或者键函数。
 
 下面是使用FASTA文件做的相同的示例 - 仅改变了文件名和格式：
 
@@ -626,7 +642,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 5.4.2.1 指定字典键
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-如果想使用与之前一样的键，像第 \ `5.4.1.1 <#seq:seqio-todict-functionkey>`__ 节 ``Bio.SeqIO.to_dict()`` 示例，你需要写一个小函数，从FASTA ID（字符串）中匹配你想要的键：
+如果想使用与之前一样的键，像第 :ref:`5.4.1.1 <seq-seqio-todict-functionkey>` 节 ``Bio.SeqIO.to_dict()`` 示例，你需要写一个小函数，从FASTA ID（字符串）中匹配你想要的键：
 
 .. code:: python
 
@@ -650,6 +666,8 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
 当你知道怎样实现就变得很简单了。
 
+.. _sec-seqio-index-getraw:
+
 5.4.2.2 获取序列条目原始数据
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -668,7 +686,9 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
     ...     handle.write(uniprot.get_raw(acc))
     >>> handle.close()
 
-在第 \ `18.1.5 <#sec:SeqIO-sort>`__ 节有更多关于使用 ``SeqIO.index()`` 函数对大文件序列排序的示例（不需要一次加载所有信息到内存）。
+在第 :ref:`18.1.5 <sec-SeqIO-sort>` 节有更多关于使用 ``SeqIO.index()`` 函数对大文件序列排序的示例（不需要一次加载所有信息到内存）。
+
+.. _sec-SeqIO-index-db:
 
 5.4.3 序列文件作为字典 - 数据库索引文件
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -701,7 +721,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 5.4.3.1 获取序列条目原始数据
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-与第 \ `5.4.2.2 <#sec:seqio-index-getraw>`__ 节讨论的 ``Bio.SeqIO.index()`` 函数一样，该字典样对象同样允许你获取每个序列条目的原始文件：
+与第 :ref:`5.4.2.2 <sec-seqio-index-getraw>` 节讨论的 ``Bio.SeqIO.index()`` 函数一样，该字典样对象同样允许你获取每个序列条目的原始文件：
 
 .. code:: python
 
@@ -712,6 +732,8 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     ACCESSION   GQ333173
     ...
     //
+
+.. _sec-SeqIO-index-bgzf:
 
 5.4.4 对压缩文件建立索引
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -753,7 +775,9 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> len(orchid_dict)
     94
 
-`SeqIO `` 建立索引时自动检测是否为BGZF压缩格式。注意：压缩文件和未压缩文件不能使用相同的索引文件。
+``SeqIO`` 建立索引时自动检测是否为BGZF压缩格式。注意：压缩文件和未压缩文件不能使用相同的索引文件。
+
+.. _sec-SeqIO-indexing-discussion:
 
 5.4.5 讨论
 ~~~~~~~~~~~~~~~~~
@@ -867,7 +891,9 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 为了创建一个可逆读写的FASTA解析器，需要记录序列换行发生的位置，而这些额外的信息通常毫无意义。因此，Biopython在输出时使用默认的60字符换行。空白字符在许多其他文件格式中运用也存在相同的问题。另外一个问题是，在某些情况下，Biopython并不能保存每一点注释信息（e.g. GenBank和EMBL）。
 
-少数时候，重要的是保留原来的布局（这可能有点怪异），第 \ `5.4.2.2 <#sec:seqio-index-getraw>`__ 节关于 ``Bio.SeqIO.index()`` 字典样对象的 ``get_raw()`` 方法提供了可能的解决方案。
+少数时候，重要的是保留原来的布局（这可能有点怪异），第 :ref:`5.4.2.2 <sec-seqio-index-getraw>` 节关于 ``Bio.SeqIO.index()`` 字典样对象的 ``get_raw()`` 方法提供了可能的解决方案。
+
+.. _sec-SeqIO-conversion:
 
 5.5.2 序列格式间的转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -899,16 +925,18 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> help(SeqIO.convert)
     ...
 
-原理上讲，只需要改变文件名和格式字符串，该代码即可实现Biopython支持的文件格式间的转换。然而，写入某种格式时需要某些特定的信息（e.g. 质量值），而其他格式文件不包含此信息。例如，你可以将FASTQ转化为FASTA文件，却不能进行逆操作。不同FASTQ格式间的相互转变请见cookbook章第 \ `18.1.9 <#sec:SeqIO-fastq-conversion>`__ 节和第 \ `18.1.10 <#sec:SeqIO-fasta-qual-conversion>`__ 节。
+原理上讲，只需要改变文件名和格式字符串，该代码即可实现Biopython支持的文件格式间的转换。然而，写入某种格式时需要某些特定的信息（e.g. 质量值），而其他格式文件不包含此信息。例如，你可以将FASTQ转化为FASTA文件，却不能进行逆操作。不同FASTQ格式间的相互转变请见cookbook章第 :ref:`18.1.9 <sec-SeqIO-fastq-conversion>` 节和第 :ref:`18.1.10 <sec-SeqIO-fasta-qual-conversion>` 节。
 
 最后，使用 ``Bio.SeqIO.convert()`` 函数额外的好处是更快，（最大的好处是代码会更短）原因是该转换函数可以利用几个文件格式特殊的优化条件和技巧。
+
+.. _sec-SeqIO-reverse-complement:
 
 5.5.3 转化序列到反向互补序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 假设你有一个核苷酸序列文件，需要转换成一个包含其反向互补的文件。这时，需要做些工作，将从文件得到的 ``SeqRecord`` 对象转化为适合存储到输出文件的信息。
 
-首先，我们将使用 ``Bio.SeqIO.parse()`` 加载文件中的核酸序列，然后使用 ``Seq`` 对象的内置方法 ``.reverse_complement()`` 输出其反向互补序列（请见第 \ `3.7 <#sec:seq-reverse-complement>`__ 节）。
+首先，我们将使用 ``Bio.SeqIO.parse()`` 加载文件中的核酸序列，然后使用 ``Seq`` 对象的内置方法 ``.reverse_complement()`` 输出其反向互补序列（请见第 :ref:`3.7 <sec-seq-reverse-complement>` 节）。
 
 .. code:: python
 
@@ -917,7 +945,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     ...     print record.id
     ...     print record.seq.reverse_complement()
 
-现在，如果我们想保存这些反向互补序列到某个文件，需要创建 ``SeqRecord`` 对象。我们可以使用 ``SeqRecord`` 对象的内置方法 ``.reverse_complement()`` （请见第 \ `4.8 <#sec:SeqRecord-reverse-complement>`__ 节），但是我们必须决定新的序列条目怎么命名。
+现在，如果我们想保存这些反向互补序列到某个文件，需要创建 ``SeqRecord`` 对象。我们可以使用 ``SeqRecord`` 对象的内置方法 ``.reverse_complement()`` （请见第 :ref:`4.8 <sec-SeqRecord-reverse-complement>` 节），但是我们必须决定新的序列条目怎么命名。
 
 这是一个绝好的展示列表解析效率地方，列表解析通过在内存中创建一个列表实现：
 
@@ -954,7 +982,9 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     >>> SeqIO.write(records, "rev_comp.fasta", "fasta")
     18
 
-在第 \ `18.1.3 <#sec:SeqIO-translate>`__ 节有一个相关的示例，将FASTA文件中核酸序列翻译为氨基酸。
+在第 :ref:`18.1.3 <sec-SeqIO-translate>` 节有一个相关的示例，将FASTA文件中核酸序列翻译为氨基酸。
+
+.. _sec-Bio.SeqIO-and-StringIO:
 
 5.5.4 获得格式化为字符串的 ``SeqRecord`` 对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -973,7 +1003,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     fasta_data = out_handle.getvalue()
     print fasta_data
 
-当你第一次看到，会觉得这并不够简单明了。在特殊情况下，你希望得到一个只包含特定格式的单条序列条目的字符串，可以使用 ``SeqRecord`` 类的 ``format()`` （请见第 \ `4.5 <#sec:SeqRecord-format>`__ 节）。
+当你第一次看到，会觉得这并不够简单明了。在特殊情况下，你希望得到一个只包含特定格式的单条序列条目的字符串，可以使用 ``SeqRecord`` 类的 ``format()`` （请见第 :ref:`4.5 <sec-SeqRecord-format>` 节）。
 
 注意：尽管我们不鼓励这么做，你可以使用 ``format()`` 方法写入文件，示例如下：
 

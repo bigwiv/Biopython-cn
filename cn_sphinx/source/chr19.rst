@@ -1,3 +1,5 @@
+.. _sec-regr_test:
+
 第19章 Biopython测试框架
 ===========================================
 
@@ -42,7 +44,7 @@ Biopython具有一个基于Python标准单元测试框架 `unittest<http://docs.
 
     python run_tests.py test_SeqIO test_AlignIO
 
-要运行 docstring 测试（见 `19.3 <#section:doctest>`__ 节）的话，
+要运行 docstring 测试（见 :ref:`19.3 <section-doctest>` 节）的话，
 你可以用
 
 .. code:: python
@@ -338,7 +340,7 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 
        OK
 
-如果你的模块包含 docstring 测试（见`19.3 <#section:doctest>`__小节），
+如果你的模块包含 docstring 测试（见 :ref:`19.3 <section-doctest>` 小节），
 你也许想在要运行的测试中包含这些。你可以修改 ``if __name__ == "__main__":`` 
 下面的代码如下面这样：
 
@@ -354,6 +356,8 @@ Python Library Reference （就是所推荐的你的枕边书）。也有 `关�
 这只与你执行 ``python test_Biospam.py`` 时是否想要运行 docstring 测试
 有关；运行 ``python run_tests.py`` ，docstring 测试会自动运行（假设他们
 被包含在 ``run_tests.py`` 中的 docstring 测试列表中，见下面的小节）。
+
+.. _section-doctest:
 
 19.3  编写 doctests
 ----------------------

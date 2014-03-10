@@ -62,7 +62,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">PDBParser</span><span class="p">(</span><span class="n">PERMISSIVE</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><tt class="docutils literal"><span class="pre">PERMISSIV</span></tt> 标签表示一些与PDB文件相关的问题（见 <a class="reference external" href="#problem%20structures">11.7.1</a> ）会被忽略（注意某些原子和/或残基会丢失）。如果没有这个标签，则会在解析器运行期间有问题被检测到的时候生成一个 <tt class="docutils literal"><span class="pre">PDBConstructionException</span></tt> 标签。</p>
+<p><tt class="docutils literal"><span class="pre">PERMISSIV</span></tt> 标签表示一些与PDB文件相关的问题（见 <a class="reference internal" href="#sec-problem-structures"><em>11.7.1</em></a> ）会被忽略（注意某些原子和/或残基会丢失）。如果没有这个标签，则会在解析器运行期间有问题被检测到的时候生成一个 <tt class="docutils literal"><span class="pre">PDBConstructionException</span></tt> 标签。</p>
 <p>接着通过 <tt class="docutils literal"><span class="pre">PDBParser</span></tt> 解析PDB文件，就产生了Structure对象（在此例子中，PDB文件为&#8217;pdb1fat.ent&#8217;，&#8216;1fat&#8217;是用户定义的结构名称）:</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">structure_id</span> <span class="o">=</span> <span class="s">&quot;1fat&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="s">&quot;pdb1fat.ent&quot;</span>
@@ -154,9 +154,9 @@
 <li>链由残基组成</li>
 <li>多个原子构成残基</li>
 </ul>
-<p>这是很多结构生物学家/生物信息学家看待结构的方法，也是处理结构的一种简单而有效的方法。在需要的时候加上额外的材料。一个 <tt class="docutils literal"><span class="pre">Structure</span></tt> 对象的UML图（暂时忘掉 <tt class="docutils literal"><span class="pre">Disordered</span></tt> 吧）如下图所示 <a class="reference external" href="#fig:smcra">11.1</a> 。这样的数据结构不一定最适用于表示一个结构的生物大分子内容，但要很好地解释一个描述结构的文件中所呈现的数据（最典型的如PDB或MMCIF文件），这样的数据结构就是必要的了。如果这种层次结构不能表示一个结构文件的内容，那么可以相当确定是这个文件有错误或至少描述结构不够明确。一旦不能生成SMCRA数据结构，就有理由怀疑出了故障。因此，解析PDB文件可用于检测可能的故障。我们将在 <a class="reference external" href="#problem%20structures">11.7.1</a> 小节给出关于这一点的一些例子。</p>
+<p>这是很多结构生物学家/生物信息学家看待结构的方法，也是处理结构的一种简单而有效的方法。在需要的时候加上额外的材料。一个 <tt class="docutils literal"><span class="pre">Structure</span></tt> 对象的UML图（暂时忘掉 <tt class="docutils literal"><span class="pre">Disordered</span></tt> 吧）如下图所示 <a class="reference internal" href="#fig-smcra"><em>11.1</em></a> 。这样的数据结构不一定最适用于表示一个结构的生物大分子内容，但要很好地解释一个描述结构的文件中所呈现的数据（最典型的如PDB或MMCIF文件），这样的数据结构就是必要的了。如果这种层次结构不能表示一个结构文件的内容，那么可以相当确定是这个文件有错误或至少描述结构不够明确。一旦不能生成SMCRA数据结构，就有理由怀疑出了故障。因此，解析PDB文件可用于检测可能的故障。我们将在 <a class="reference internal" href="#sec-problem-structures"><em>11.7.1</em></a> 小节给出关于这一点的一些例子。</p>
 <hr class="docutils" />
-<p><img alt="image3" src="_images/smcra.png" /></p>
+<p id="fig-smcra"><img alt="image3" src="_images/smcra.png" /></p>
 <p>图11.1：用来表示大分子结构的 <tt class="docutils literal"><span class="pre">Structure</span></tt> 类的SMCRA体系的UML图。带方块的实线表示集合，带箭头的实线表示引用，带三角形的实线表示继承，带三角形的虚线表示接口实现。</p>
 <hr class="docutils" />
 <p>结构，模型，链，残基都是实体基类的子类。原子类仅仅（部分）实现了实体接口（因为原子类没有子类）。</p>
@@ -232,7 +232,7 @@
 <li><tt class="docutils literal"><span class="pre">'H_'</span></tt> 后面紧跟残基名称，代表其它异质残基（例如 <tt class="docutils literal"><span class="pre">'H_GLC'</span></tt> 表示一个葡萄糖分子）</li>
 <li>空值表示标准的氨基酸和核酸</li>
 </ul>
-<p>采用这种体制的理由在 <a class="reference external" href="#异质%20问题">11.4.1</a> 部分有叙述。</p>
+<p>采用这种体制的理由在 <a class="reference internal" href="#sec-hetero-problems"><em>11.4.1</em></a> 部分有叙述。</p>
 </li>
 <li><p class="first"><strong>序列标识符</strong> （resseq），一个描述该残基在链上的位置的整数（如100）；</p>
 </li>
@@ -254,7 +254,7 @@
 # use shortcut
 &gt;&gt;&gt; res10 = chain[10]</pre>
 </div>
-<p>一个链对象中每个残基对象都应该具有唯一的id。但是对含紊乱原子的残基，要以一种特殊的方式来处理，详见 <a class="reference external" href="#point%20mutations">11.3.3</a> 。</p>
+<p>一个链对象中每个残基对象都应该具有唯一的id。但是对含紊乱原子的残基，要以一种特殊的方式来处理，详见 <a class="reference internal" href="#sec-point-mutations"><em>11.3.3</em></a> 。</p>
 <p>一个残基对象还有大量其它方法：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">residue</span><span class="o">.</span><span class="n">get_resname</span><span class="p">()</span>       <span class="c"># returns the residue name, e.g. &quot;ASN&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">residue</span><span class="o">.</span><span class="n">is_disordered</span><span class="p">()</span>     <span class="c"># returns 1 if the residue has disordered atoms</span>
@@ -266,7 +266,7 @@
 </div>
 <div class="section" id="id8">
 <h3>11.2.5  原子<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
-<p>原子对象储存着所有与原子有关的数据，它没有子类。原子的id就是它的名称（如，“OG”代表Ser残基的侧链氧原子）。在残基中原子id必需是唯一的。此外，对于紊乱原子会产生异常，见 <a class="reference external" href="#disordered%20atoms">11.3.2</a> 小节的描述。</p>
+<p>原子对象储存着所有与原子有关的数据，它没有子类。原子的id就是它的名称（如，“OG”代表Ser残基的侧链氧原子）。在残基中原子id必需是唯一的。此外，对于紊乱原子会产生异常，见 <a class="reference internal" href="#sec-disordered-atoms"><em>11.3.2</em></a> 小节的描述。</p>
 <p>原子id就是原子名称（如 <tt class="docutils literal"><span class="pre">’CA’</span></tt> ）。在实践中，原子名称是从PDB文件中原子名称去除所有空格而创建的。</p>
 <p>但是在PDB文件中，空格可以是原子名称的一部分。通常，钙原子称为 <tt class="docutils literal"><span class="pre">’CA..’</span></tt> 是为了和Cα原子（叫做 <tt class="docutils literal"><span class="pre">’.CA.’</span></tt> ）区分开。在这种情况下，如果去掉空格就会产生问题（如统一个残基中的两个原子都叫做 <tt class="docutils literal"><span class="pre">’CA’</span></tt> ），所以保留空格。</p>
 <p>在PDB文件中，一个原子名字由4个字符组成，通常头尾皆为空格。为了方便使用，空格通常可以去掉（在PDB文件中氨基酸的Cα原子标记为“.CA.”，点表示空格）。为了生成原子名称（然后是原子id），空格删掉了，除非会在一个残基中造成名字冲突（如两个原子对象有相同的名称和id）。对于后面这种情况，会尝试让原子名称包含空格。这种情况可能会发生在，比如残基包含名称为“.CA.”和“CA..”的原子，尽管这不怎么可能。</p>
@@ -328,9 +328,9 @@
 <h3>11.3.1  一般性方法<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>紊乱可以从两个角度来解决：原子和残基的角度。一般来说，我们尝试压缩所有由紊乱引起的复杂性。如果你仅仅想遍历所有Cα原子，那么你不必在意一些具有紊乱侧链的残基。另一方面，应该考虑在数据结构中完整地表示紊乱性。因此，紊乱原子或残基存储在特定的对象中，这些对象表现得就像毫无紊乱。这可以通过表示紊乱原子或残基的子集来完成。至于挑选哪个子集（例如使用Ser残基的哪两个紊乱OG侧链原子位置），由用户来决定。</p>
 </div>
-<div class="section" id="id11">
-<h3>11.3.2  紊乱原子<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
-<p>紊乱原子可以用普通的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象来表示，但是所有表示相同物理原子的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象都存储在一个 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象中（见图. <a class="reference external" href="#fig:smcra">11.1</a> ）。 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象中每个 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象都能用它的altloc标识符来唯一地索引。 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象将所有未捕获方法的调用发送给选定的Atom对象，缺省对象是代表最高使用率的原子的那个。当然用户可以使用其altloc标识符来更改选定的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象。以这种方式，原子紊乱就正确地表示出来而没有很多额外的复杂性。换言之，如果你对原子紊乱不感兴趣，你也不会被它困扰。</p>
+<div class="section" id="sec-disordered-atoms">
+<span id="id11"></span><h3>11.3.2  紊乱原子<a class="headerlink" href="#sec-disordered-atoms" title="Permalink to this headline">¶</a></h3>
+<p>紊乱原子可以用普通的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象来表示，但是所有表示相同物理原子的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象都存储在一个 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象中（见图. <a class="reference internal" href="#fig-smcra"><em>11.1</em></a> ）。 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象中每个 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象都能用它的altloc标识符来唯一地索引。 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象将所有未捕获方法的调用发送给选定的Atom对象，缺省对象是代表最高使用率的原子的那个。当然用户可以使用其altloc标识符来更改选定的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象。以这种方式，原子紊乱就正确地表示出来而没有很多额外的复杂性。换言之，如果你对原子紊乱不感兴趣，你也不会被它困扰。</p>
 <p>每个紊乱原子都有一个特征性的altloc标识符。你可以设定：一个 <tt class="docutils literal"><span class="pre">DisorderedAtom</span></tt> 对象表现得像与一个指定的altloc标识符相关的 <tt class="docutils literal"><span class="pre">Atom</span></tt> 对象：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">atom</span><span class="o">.</span><span class="n">disordered_select</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">)</span> <span class="c"># select altloc A atom</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">atom</span><span class="o">.</span><span class="n">get_altloc</span><span class="p">()</span>
@@ -341,8 +341,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id12">
-<h3>11.3.3  紊乱残基<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-point-mutations">
+<span id="id12"></span><h3>11.3.3  紊乱残基<a class="headerlink" href="#sec-point-mutations" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id13">
 <h4>普通例子<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>最常见的例子是一个残基包含一个或多个紊乱原子。这显然可以通过用DisorderedAtom对象表示这些紊乱原子来解决，并将DisorderedAtom对象存储在一个Residue对象中，就像正常的Atom对象那样。通过将所有未捕获方法调用发送给其中一个Atom对象（被选定的Atom对象），DisorderedAtom对象表现完全像一个正常的原子对象（事实上这个原子有最高的使用率）。</p>
@@ -350,7 +350,7 @@
 <div class="section" id="id14">
 <h4>点突变<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
 <p>一个特殊的例子就是当紊乱是由点突变导致的时候，也就是说，在晶体结构中出现一条多肽的两或多个点突变。关于这一点，可以在PDB结构1EN2中找到一个例子。</p>
-<p>既然这些残基属于不同的残基类型（举例说Ser 60 和Cys 60），那么它们不应该像通常情况一样存储在一个单一 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象中。这种情况下每个残基用一个 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象来表示，两种 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象都保存在一个单一 <tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 对象中（见 图. <a class="reference external" href="#fig:smcra">11.1</a> ）。</p>
+<p>既然这些残基属于不同的残基类型（举例说Ser 60 和Cys 60），那么它们不应该像通常情况一样存储在一个单一 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象中。这种情况下每个残基用一个 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象来表示，两种 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象都保存在一个单一 <tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 对象中（见图. <a class="reference internal" href="#fig-smcra"><em>11.1</em></a> ）。</p>
 <p><tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 对象将所有未捕获方法发送给选定的 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象（默认是所添加的最后一个 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象），因此表现得像一个正常的残基。在 <tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 中每个 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象可通过残基名称来唯一标识。在上述例子中，残基Ser 60在 <tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 对象中的id为“SER”，而残基Cys 60则是“CYS”。用户可以通过这个id选择在 <tt class="docutils literal"><span class="pre">DisorderedResidue</span></tt> 中的有效 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象。</p>
 <p>例子：假设一个链在位置10有一个由Ser和Cys残基构成的点突变。确信这个链的残基10表现为Cys残基。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">residue</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
@@ -363,8 +363,8 @@
 </div>
 <div class="section" id="id15">
 <h2>11.4  异质残基<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id16">
-<h3>11.4.1  相关问题<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-hetero-problems">
+<span id="id16"></span><h3>11.4.1  相关问题<a class="headerlink" href="#sec-hetero-problems" title="Permalink to this headline">¶</a></h3>
 <p>关于异质残基的一个很普遍的问题是同一条链中的若干异质和非异质残基有同样的序列标识符（和插入码）。因此，要为每个异质残基生成唯一的id，水分子和其他异质残基应该以不同的方式来对待。</p>
 <p>记住Residue残基有一个元组（hetfield, resseq, icode）作为id。hetfield值为空(“ ”)表示为氨基酸和核酸；为一个字符串，则表示水分子和其他异质残基。hetfield的内容将在下面解释。</p>
 </div>
@@ -580,7 +580,7 @@
 <div class="section" id="id30">
 <h3>11.6.5  叠加两个结构<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <p>可以用 <tt class="docutils literal"><span class="pre">Superimposer</span></tt> 对象将两个坐标集叠加。这个对象计算出旋转和平移矩阵，该矩阵旋转两个列表上相重叠的原子使其满足RMSD最小。当然这两个列表含有相同数目的原子。 <tt class="docutils literal"><span class="pre">Superimposer</span></tt> 对象也可以将旋转/平移应用在一列原子上。旋转和平移作为一个元组储存在 <tt class="docutils literal"><span class="pre">Superimposer</span></tt> 对象的 <tt class="docutils literal"><span class="pre">rotran</span></tt> 属性中（注意，旋转是右乘），RMSD储存在属性 <tt class="docutils literal"><span class="pre">rmsd</span></tt> 中。</p>
-<p><tt class="docutils literal"><span class="pre">Superimposer</span></tt> 使用的算法来自[<a class="reference external" href="#golub1989">17</a>,
+<p><tt class="docutils literal"><span class="pre">Superimposer</span></tt> 使用的算法来自[ <a class="reference internal" href="chr23.html#golub1989"><em>17</em></a> ,
 Golub &amp; Van Loan]并使用了奇异值分解（这是通用 <tt class="docutils literal"><span class="pre">Bio.SVDSuperimposer</span></tt> 模块中实现了的）。</p>
 <p>例子：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sup</span> <span class="o">=</span> <span class="n">Superimposer</span><span class="p">()</span>
@@ -603,7 +603,7 @@ Golub &amp; Van Loan]并使用了奇异值分解（这是通用 <tt class="docut
 </div>
 <div class="section" id="hse">
 <h3>11.6.7  计算半球暴露（HSE）<a class="headerlink" href="#hse" title="Permalink to this headline">¶</a></h3>
-<p>半球暴露（Half Sphere Exposure，HSE）是对溶剂暴露 [<a class="reference external" href="#hamelryck2005">20</a>]的一种新的二维度量。根本上，它计数了围绕一个残基，在其侧链方向上及反方向（在13 Å范围内）的Cα原子。尽管简单，它表现得比溶剂暴露的其它度量都要好。</p>
+<p>半球暴露（Half Sphere Exposure，HSE）是对溶剂暴露 [ <a class="reference internal" href="chr23.html#hamelryck2005"><em>20</em></a> ]的一种新的二维度量。根本上，它计数了围绕一个残基，在其侧链方向上及反方向（在13 Å范围内）的Cα原子。尽管简单，它表现得比溶剂暴露的其它度量都要好。</p>
 <p>HSE有两种风味：HSEα和HSEβ。前者仅用到Cα原子的位置，而后者用到Cα和Cβ原子的位置。HSE度量是由 <tt class="docutils literal"><span class="pre">HSExposure</span></tt> 类来计算的，这个类也能计算触点数目。后一个类有方法能返回一个字典，该字典将一个``Residue`` 对象映射到相应的HSEα,HSEβ和触点数目值。</p>
 <p>例子：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">structure</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -621,9 +621,9 @@ Golub &amp; Van Loan]并使用了奇异值分解（这是通用 <tt class="docut
 </div>
 <div class="section" id="id32">
 <h3>11.6.8  确定二级结构<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
-<p>为了这个功能，你需要安装DSSP（并获得一个对学术性使用免费的证书，参见 <a class="reference external" href="http://www.cmbi.kun.nl/gv/dssp/">http://www.cmbi.kun.nl/gv/dssp/</a> ）。然后用 <tt class="docutils literal"><span class="pre">DSSP</span></tt> 类，可以映射 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象到其二级结构上（和溶剂可及表面区域）。DSSP代码如下表所列表 <a class="reference external" href="#cap:DSSP-codes">11.1</a> 。注意DSSP（程序及其相应的类）不能处理多个模型！</p>
+<p>为了这个功能，你需要安装DSSP（并获得一个对学术性使用免费的证书，参见 <a class="reference external" href="http://www.cmbi.kun.nl/gv/dssp/">http://www.cmbi.kun.nl/gv/dssp/</a> ）。然后用 <tt class="docutils literal"><span class="pre">DSSP</span></tt> 类，可以映射 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象到其二级结构上（和溶剂可及表面区域）。DSSP代码如下表所列表 <a class="reference internal" href="#cap-dssp-codes"><em>11.1</em></a> 。注意DSSP（程序及其相应的类）不能处理多个模型！</p>
 <hr class="docutils" />
-<table border="1" class="docutils">
+<table border="1" class="docutils" id="cap-dssp-codes">
 <colgroup>
 <col width="22%" />
 <col width="78%" />
@@ -663,10 +663,10 @@ Golub &amp; Van Loan]并使用了奇异值分解（这是通用 <tt class="docut
 </table>
 <p>Table 11.1: Bio.PDB中的DSSP代码。</p>
 <hr class="docutils" />
-<p><tt class="docutils literal"><span class="pre">DSSP</span></tt> 类也可以用来计算残基的溶剂可及表面。还请参考 <a class="reference external" href="#subsec:residue_depth">11.6.9</a> 。</p>
+<p><tt class="docutils literal"><span class="pre">DSSP</span></tt> 类也可以用来计算残基的溶剂可及表面。还请参考 <a class="reference internal" href="#sec-residue-depth"><em>11.6.9</em></a> 。</p>
 </div>
-<div class="section" id="id33">
-<h3>11.6.9  计算残基深度<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-residue-depth">
+<span id="id33"></span><h3>11.6.9  计算残基深度<a class="headerlink" href="#sec-residue-depth" title="Permalink to this headline">¶</a></h3>
 <p>残基深度是残基原子到溶剂可及表面的平均距离。它是溶剂可及性的一种相当新颖和非常强大的参数化。为了这个功能，你需要安装Michel Sanner的 MSMS程序（ <a class="reference external" href="http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html">http://www.scripps.edu/pub/olson-web/people/sanner/html/msms_home.html</a> ）。然后使用 <tt class="docutils literal"><span class="pre">ResidueDepth</span></tt> 类。这个类像字典一样将 <tt class="docutils literal"><span class="pre">Residue</span></tt> 对象映射到相应的（残基深度，Cα深度）元组。Cα深度是残基的Cα原子到溶剂可及表面的距离。</p>
 <p>例子：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">structure</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -692,11 +692,11 @@ Golub &amp; Van Loan]并使用了奇异值分解（这是通用 <tt class="docut
 <li>多个残基使用同一个标识符</li>
 <li>多个原子使用统一个标识符（考虑altloc识别符）</li>
 </ul>
-<p>这些错误暗示了PDB文件中确实存在错误（详情见 [<a class="reference external" href="#hamelryck2003a">18</a>, Hamelryck and Manderick, 2003] ）。在严格模式，带错的PDB文件会引发异常，这有助于发现PDB文件中的错误。</p>
+<p>这些错误暗示了PDB文件中确实存在错误（详情见 [<a class="reference internal" href="chr23.html#hamelryck2003a"><em>18</em></a>, Hamelryck and Manderick, 2003] ）。在严格模式，带错的PDB文件会引发异常，这有助于发现PDB文件中的错误。</p>
 <p>但是有些错误能自动修正。正常情况下，每个紊乱原子应该会有一个非空altloc标识符。可是很多结构没有遵循这个惯例，而在同一原子的两个紊乱位置存在一个空的和一个非空的标识符。这个错误会被以正确的方式自动解析。</p>
 <p>有时候一个结构会有这样的情况：一部分残基属于A链，接下来一部分残基属于B链，然后又有一部分残基属于A链，也就是说，这种链是“断的”。这也能被自动正确解析。</p>
-<div class="section" id="id35">
-<h3>11.7.1  例子<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-problem-structures">
+<span id="id35"></span><h3>11.7.1  例子<a class="headerlink" href="#sec-problem-structures" title="Permalink to this headline">¶</a></h3>
 <p>PDBParser/Structure类经过了将近800个结构（每个都属于不同的SCOP超家族）上的测试。测试总共耗时20分钟左右，或者说平均每个结构只需1.5秒。在一台1000 MHz的PC上只需10秒就可解析包含近64000个原子的大核糖体亚基（1FKK）的结构。</p>
 <p>当不能建立明确的数据结构时会发生三类异常。在这三类异常中，可能的起因是PDB文件中一个本应修正的错误。这些情况下产生异常要比冒险地错误描述一个数据结构中的结构好得多。</p>
 <div class="section" id="id36">
@@ -813,7 +813,7 @@ python PDBList.py all /data/pdb -d</pre>
 </div>
 <div class="section" id="id49">
 <h3>11.9.4  谁在用Bio.PDB？<a class="headerlink" href="#id49" title="Permalink to this headline">¶</a></h3>
-<p>Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的紊乱区域的web服务器( <a class="reference external" href="http://dis.embl.de/">http://dis.embl.de/</a> )；COLUMBA，一个提供注释过的蛋白结构的站点( <a class="reference external" href="http://www.columba-db.de/">http://www.columba-db.de/</a> )。Bio.PDB也用于进行PDB中蛋白质间有效位点的大规模相似性搜索[<a class="reference external" href="#hamelryck2003b">19</a>, Hamelryck, 2003]，用于开发新的算法来鉴别线性二级结构元件[<a class="reference external" href="#majumdar2005">26</a>, Majumdar <em>et al.</em>, 2005]。</p>
+<p>Bio.PDB曾用于构建DISEMBL，一个能预测蛋白结构中的紊乱区域的web服务器( <a class="reference external" href="http://dis.embl.de/">http://dis.embl.de/</a> )；COLUMBA，一个提供注释过的蛋白结构的站点( <a class="reference external" href="http://www.columba-db.de/">http://www.columba-db.de/</a> )。Bio.PDB也用于进行PDB中蛋白质间有效位点的大规模相似性搜索 [<a class="reference internal" href="chr23.html#hamelryck2003b"><em>19</em></a>, Hamelryck, 2003] ，用于开发新的算法来鉴别线性二级结构元件 [<a class="reference internal" href="chr23.html#majumdar2005"><em>26</em></a>, Majumdar <em>et al.</em>, 2005] 。</p>
 <p>从对特征和信息的需求判断，许多大型制药公司也使用Bio.PDB。</p>
 </div>
 </div>
@@ -846,8 +846,8 @@ python PDBList.py all /data/pdb -d</pre>
 </li>
 <li><a class="reference internal" href="#id9">11.3  紊乱</a><ul>
 <li><a class="reference internal" href="#id10">11.3.1  一般性方法</a></li>
-<li><a class="reference internal" href="#id11">11.3.2  紊乱原子</a></li>
-<li><a class="reference internal" href="#id12">11.3.3  紊乱残基</a><ul>
+<li><a class="reference internal" href="#sec-disordered-atoms">11.3.2  紊乱原子</a></li>
+<li><a class="reference internal" href="#sec-point-mutations">11.3.3  紊乱残基</a><ul>
 <li><a class="reference internal" href="#id13">普通例子</a></li>
 <li><a class="reference internal" href="#id14">点突变</a></li>
 </ul>
@@ -855,7 +855,7 @@ python PDBList.py all /data/pdb -d</pre>
 </ul>
 </li>
 <li><a class="reference internal" href="#id15">11.4  异质残基</a><ul>
-<li><a class="reference internal" href="#id16">11.4.1  相关问题</a></li>
+<li><a class="reference internal" href="#sec-hetero-problems">11.4.1  相关问题</a></li>
 <li><a class="reference internal" href="#id17">11.4.2  水残基</a></li>
 <li><a class="reference internal" href="#id18">11.4.3  其他异质残基</a></li>
 </ul>
@@ -882,11 +882,11 @@ python PDBList.py all /data/pdb -d</pre>
 <li><a class="reference internal" href="#id31">11.6.6  双向映射两个相关结构的残基</a></li>
 <li><a class="reference internal" href="#hse">11.6.7  计算半球暴露（HSE）</a></li>
 <li><a class="reference internal" href="#id32">11.6.8  确定二级结构</a></li>
-<li><a class="reference internal" href="#id33">11.6.9  计算残基深度</a></li>
+<li><a class="reference internal" href="#sec-residue-depth">11.6.9  计算残基深度</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id34">11.7  PDB文件中的常见问题</a><ul>
-<li><a class="reference internal" href="#id35">11.7.1  例子</a><ul>
+<li><a class="reference internal" href="#sec-problem-structures">11.7.1  例子</a><ul>
 <li><a class="reference internal" href="#id36">11.7.1.1  重复残基</a></li>
 <li><a class="reference internal" href="#id37">11.7.1.2  重复原子</a></li>
 </ul>

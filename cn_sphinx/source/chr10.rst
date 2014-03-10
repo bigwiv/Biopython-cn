@@ -1,3 +1,5 @@
+.. _chapter-swiss_prot:
+
 第10章 Swiss-Prot和ExPASy
 =================================
 
@@ -10,10 +12,10 @@ Swiss-Prot
 这种格式也被Swiss-Prot、TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
 不支持UniProKB的XML格式文件。
 
-10.1.1  Parsing Swiss-Prot records
+10.1.1  解析 Swiss-Prot 记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-在 \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中, 我们描述过怎样将一个
+在 :ref:`5.3.2 <sec-SeqIO_ExPASy_and_SwissProt>` 章节中, 我们描述过怎样将一个
 Swiss-Prot记录中的序列提出来作为一个 ``SeqRecord`` 对象。 此外，你可以将
 Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Swiss-Prot记录
 中所包含的的全部信息。在这部分我们将介绍怎样从一个Swiss-Prot文件中提
@@ -43,7 +45,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
        >>> handle = urllib.urlopen("http://www.somelocation.org/data/someswissprotfile.dat")
 
 -  从ExPASy数据库在线打开Swiss-Prot文件
-   (见 `10.5.1 <#subsec:expasy_swissprot>`__ 章节):
+   (见 :ref:`10.5.1 <sec-expasy_swissprot>` 章节):
 
    .. code:: python
 
@@ -52,7 +54,7 @@ Swiss-Prot记录存到  ``Bio.SwissProt.Record`` 对象, 这实际上存储了Sw
 
 对于解析来说，关键点在于Swiss-Prot格式的数据，而不是获取它的方式。
 
-我们可以用 \ `5.3.2 <#sec:SeqIO_ExPASy_and_SwissProt>`__ 章节中描述的方式，
+我们可以用 :ref:`5.3.2 <sec-SeqIO_ExPASy_and_SwissProt>` 章节中描述的方式，
 通过 ``Bio.SeqIO`` 来获取格式未知的 ``SeqRecord`` 对象。此外，我们也可以
 用 ``Bio.SwissProt`` 来获取更加匹配基本文件格式的 ``Bio.SwissProt.Record`` 对象。
 
@@ -400,11 +402,13 @@ Swiss-Prot、Prosite和Prosite文档记录可以从
 
 为了从python脚本来访问该网络服务器，我们可以使用 ``Bio.ExPASy`` 模块。
 
+.. _sec-expasy_swissprot:
+
 10.5.1  获取一个Swiss-Prot记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 现在让我们来寻找一个关于兰花的查儿酮合成酶（对于寻找和兰花相关的有趣东西的理由
-请看 \ `2.3 <#sec:orchids>`__ 章节）。查儿酮合成酶参与了植物中类黄酮的生物合成，
+请看 :ref:`2.3 <sec-orchids>` 章节）。查儿酮合成酶参与了植物中类黄酮的生物合成，
 类黄酮能够合成包含色素和UV保护分子等物质。
 
 如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合成酶的兰花蛋白，id编号

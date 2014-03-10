@@ -1,3 +1,5 @@
+.. _chapter-entrez:
+
 第9章  访问NCBI Entrez数据库
 ============================================
 
@@ -37,7 +39,9 @@ DTD文件放到 ``~/.biopython/Bio/Entrez/DTDs`` 这个目录，``~`` 表示的�
 这样会将新的DTD文件和之前的一样地安装到正确的位置。
 
 Entrez Programming Utilities也可以生成其他格式的输出文件，比如Fasta、序列数据库里面的GenBank文件格式
-或者文献数据库里面的MedLine格式，更多内容将会在 \ `9.12 <#sec:entrez-specialized-parsers>`__ 中讨论。
+或者文献数据库里面的MedLine格式，更多内容将会在章节 :ref:`9.12 <sec-entrez-specialized-parsers>` 中讨论。
+
+.. _sec-entrez-guidelines:
 
 9.1  Entrez 简介
 ----------------------
@@ -77,12 +81,14 @@ Entrez Programming Utilities也可以生成其他格式的输出文件，比如F
    默认的tool名称是Biopython。
 
 -  对于大规模的查询请求，NCBI也推荐使用他们的会话历史特性（ WebEnv会话cookie字符串，见
-   章节 \ `9.15 <#sec:entrez-webenv>`__ ）。 只是这个稍微有点复杂。
+   章节 :ref:`9.15 <sec-entrez-webenv>` ）。 只是这个稍微有点复杂。
    
 
 最后，根据你的使用情况选择不同的策略。如果你打算下载大量的数据，最好使用其他的方法。比如，你想得到所有人的
 基因的数据，那么考虑通过FTP得到每个染色体的GenBank文件，然后将这些文件导入到你自己的BioSQL数据库里面去。
-(请见Section \ `18.5 <#sec:BioSQL>`__).
+(请见章节 :ref:`18.5 <sec-BioSQL>` ).
+
+.. _sec-entrez-einfo:
 
 9.2  EInfo: 获取Entrez数据库的信息
 ------------------------------------------------------------
@@ -225,10 +231,10 @@ Entrez获取所有数据库名字的列表：
     ['19304878', '18606172', '16403221', '16377612', '14871861', '14630660', '12230038']
 
 在输出的结果中，我们可以看到七个PubMed IDs（包括19304878，这个是Biopython应用笔记的PMID），你可以通过
-EFetch来获取这些文献（请见章节 `9.6 <#sec:efetch>`__ ）。
+EFetch来获取这些文献（请见章节 :ref:`9.6 <sec-efetch>` ）。
 
 你也可以通过ESearch来搜索GenBank。我们将以在*Cypripedioideae* orchids中搜索*matK*基因为例，快速展示
-一下（请见章节 `9.2 <#sec:entrez-einfo>`__ 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。
+一下（请见章节 :ref:`9.2 <sec-entrez-einfo>` 关于EInfo：一种查明你可以在哪个Entrez数据库中搜索的方法）。
 
 .. code:: python
 
@@ -239,7 +245,7 @@ EFetch来获取这些文献（请见章节 `9.6 <#sec:efetch>`__ ）。
     >>> record["IdList"]
     ['126789333', '37222967', '37222966', '37222965', ..., '61585492']
 
-每个IDs(126789333, 37222967, 37222966, …)是GenBank的一个标识。请见Section `9.6 <#sec:efetch>`__
+每个IDs(126789333, 37222967, 37222966, …)是GenBank的一个标识。请见章节 :ref:`9.6 <sec-efetch>`
 此章包含了怎样下载这些GenBank的记录的信息。
 
 注意，不是像 ``Cypripedioideae[Orgn]`` 这样在搜索的时候加上特定的物种名字，而是需要在搜索的时候使用NCBI的
@@ -307,7 +313,7 @@ EPost上传在后续搜索中将会用到的IDs的列表，参见 `EPost 帮助�
     >>> webenv = search_results["WebEnv"]
     >>> query_key = search_results["QueryKey"] 
 
-第 \ `9.15 <#sec:entrez-webenv>`__ 章节讲述了如何使用历史的特性。
+第 :ref:`9.15 <sec-entrez-webenv>` 章节讲述了如何使用历史的特性。
 
 9.5  ESummary: 通过主要的IDs来获取摘要
 ----------------------------------------------------
@@ -329,6 +335,8 @@ ESummary可以通过一个primary IDs来获取文章的摘要（参见 `ESummary
     >>> record[0]["Publisher"]
     'Pergamon,'
 
+.. _sec-efetch:
+
 9.6  EFetch: 从Entrez下载更多的记录
 -------------------------------------------------
 
@@ -344,8 +352,8 @@ NCBI大部分的数据库都支持多种不同的文件格式。当使用 ``Bio.
 and
 `taxonomy <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/efetchtax_help.html>`__).
 
-一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式 (接着可以使用 ``Bio.SeqIO`` 来解析, 参见 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-和 \ `9.6 <#sec:efetch>`__ ）。从上面 *Cypripedioideae* 的例子,我们可以通过 ``Bio.Entrez.efetch`` 
+一种常用的用法是下载FASTA或者GenBank/GenPept的文本格式 (接着可以使用 ``Bio.SeqIO`` 来解析, 参见 :ref:`5.3.1 <sec-SeqIO_GenBank_Online>`
+和 :ref:`9.6 <sec-efetch>` ）。从上面 *Cypripedioideae* 的例子,我们可以通过 ``Bio.Entrez.efetch`` 
 从GenBank下载记录186972394。
 
 .. code:: python
@@ -434,7 +442,7 @@ Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的
 作为另外的选择，你也可以使用 ``rettype="fasta"`` 来获取Fasta格式的文件；参见 `EFetch Sequences 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetchseq_help.html>`__ 。
 记住，可选的数据格式决定于你要下载的数据库——请参见 `EFetch 帮助页面 <http://eutils.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__.
 
-如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(见章节 \ `5 <#chapter:Bio.SeqIO>`__),
+如果你要获取记录的格式是 ``Bio.SeqIO`` 所接受的一种格式(见第 :ref:`5 <chapter-Bio.SeqIO>` 章),
 你可以直接将其解析为一个 ``SeqRecord`` ：
 
 .. code:: python
@@ -487,10 +495,12 @@ Entrez EFetch API默认的返回格式为纯文本格式文件，现在默认的
     >>> record[0]["GBSeq_source"] 
     'chloroplast Selenipedium aequinoctiale'
 
-就像这样处理数据。例如解析其他数据库特异的文件格式（例如，PubMed中用到的 ``MEDLINE`` 格式），请参见章节 \ `9.12 <#sec:entrez-specialized-parsers>`__.
+就像这样处理数据。例如解析其他数据库特异的文件格式（例如，PubMed中用到的 ``MEDLINE`` 格式），请参见章节 :ref:`9.12 <sec-entrez-specialized-parsers>` .
 
 如果你想使用 ``Bio.Entrez.esearch()`` 进行搜索，然后用 ``Bio.Entrez.efetch()`` 下载数据，那么你需要用到
-WebEnv的历史特性，请参加见章节 \ `9.15 <#sec:entrez-webenv>`__.
+WebEnv的历史特性，请参加见章节 :ref:`9.15 <sec-entrez-webenv>` .
+
+.. _sec-elink:
 
 9.7  ELink: 在NCBI Entrez中搜索相关的条目
 ------------------------------------------------------
@@ -566,7 +576,7 @@ ELink，在Biopython中是 ``Bio.Entrez.elink()`` ，可以用来在NCBI Entrez�
     ......
 
 现在漂亮极了，但是对我个人而言，我对某篇文章是否被引用过更感兴趣。好吧，ELink也可以完成这个——至少对PubMed
-Central的杂志来说是这样的（请见 Section \ `9.15.3 <#sec:elink-citations>`__）。
+Central的杂志来说是这样的（请见章节 :ref:`9.15.3 <sec-elink-citations>` ）。
 
 关于ELink的帮助，请见 `ELink 帮助页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/elink_help.html>`__ 。
 这是一个关于 `link names <http://eutils.ncbi.nlm.nih.gov/corehtml/query/static/entrezlinks.html>`__
@@ -576,7 +586,7 @@ Central的杂志来说是这样的（请见 Section \ `9.15.3 <#sec:elink-citati
 ----------------------------------------------------
 
 EGQuery提供搜索字段在每个Entrez数据库中的数目。当我们只需要知道在每个数据库中能找到的条目的个数，
-而不需要知道具体搜索结果的时候，这个非常的有用（请见例子`9.14.2 <#subsec:entrez_example_genbank>`__ below）。
+而不需要知道具体搜索结果的时候，这个非常的有用（请见例子 :ref:`9.14.2 <sec-entrez_example_genbank>` ）。
 
 在这个例子中，我们使用 ``Bio.Entrez.egquery()`` 来获取跟 “Biopython” 相关的数目：
 
@@ -796,6 +806,8 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 
 当然，XML文件中的tag没有出现在对应DTD文件中的信息，将不会在 ``Entrez.read`` 的返回记录中出现。
 
+.. _sec-entrez-specialized-parsers:
+
 9.12  专用的解析器
 -------------------------
 
@@ -806,9 +818,11 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
 等可选参数。不同的组合在 `NCBI efetch的页面 <http://www.ncbi.nlm.nih.gov/entrez/query/static/efetch_help.html>`__ 。
 有对不同数据库的描述。
 
-一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept ( 这些可以通过 ``Bio.SeqIO`` 来处理, 请见 Sections \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__
-和 \ `9.6 <#sec:efetch>`__ ） 纯文本形式下载序列。对于文献数据库，Biopython包含了一个处理PubMed中
+一个显然的例子是，你可能更想以FASTA或者 GenBank/GenPept ( 这些可以通过 ``Bio.SeqIO`` 来处理, 请见 :ref:`5.3.1 <sec-SeqIO_GenBank_Online>`
+和 :ref:`9.6 <sec-efetch>` ） 纯文本形式下载序列。对于文献数据库，Biopython包含了一个处理PubMed中
 使用的 ``MEDLINE`` 格式的解析器。
+
+.. _sec-entrez-and-medline:
 
 9.12.1  解析Medline记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -940,7 +954,7 @@ XML文件 ``Homo_sapiens.xml`` 包含了一个Entrez gene记录的列表，每�
     The Bio* toolkits--a brief overview.
 
 需要注意的是，在上面这两个例子当中，为了简便我们混合使用了 ESearch 和 EFetch。在这种情形下，NCBI 希望你
-使用他们的历史记录特性，在下面章节中会讲到Section \ `9.15 <#sec:entrez-webenv>`__.
+使用他们的历史记录特性，在下面章节中会讲到Section :ref:`9.15 <sec-entrez-webenv>` .
 
 9.12.2  解析GEO记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1093,7 +1107,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 如果你是在医药领域或者对人类的问题感兴趣（或者尽管并你不感兴趣，大多数情况下也适用!），PubMed(`http://www.ncbi.nlm.nih.gov/PubMed/ <http://www.ncbi.nlm.nih.gov/PubMed/>`__)
 是一个包含了各方面的非常优秀的资源。像其他的一样，我们希望能够通过 Python 脚本从中抓取一些信息。
 
-在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(see section \ `2.3 <#sec:orchids>`__ for our motivation)。
+在这个例子当中，我们要查询PubMed当中所有跟Orchids相关的文章(见 :ref:`2.3 <sec-orchids>` 我们的动机)。
 我们首先看看有多少这样的文章：
 
 .. code:: python
@@ -1134,7 +1148,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
                                retmode="text")
     >>> records = Medline.parse(handle)
 
-注意 - 我们完成了一次搜索和获取，NCBI更希望你在这种情况下使用他们的历史记录支持。请见章节 \ `9.15 <#sec:entrez-webenv>`__.
+注意 - 我们完成了一次搜索和获取，NCBI更希望你在这种情况下使用他们的历史记录支持。请见章节 :ref:`9.15 <sec-entrez-webenv>` .
 
 请记住 ``records`` 是一个迭代器，所以你只能访问这些records一次。如果你想保存这些records，你需要把他们转成列表：
 
@@ -1178,10 +1192,12 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
 
 希望这个章节可以让你知道Entrez和Medline借口的能力和便利性和怎样同时使用他们。
 
+.. _sec-entrez_example_genbank:
+
 9.14.2  搜索，下载，和解析Entrez核酸记录
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-这里我们将展示一个关于远程Entrez查询的简单例子。在 \ `2.3 <#sec:orchids>`__ 章节，我们讲到了使用NCBI
+这里我们将展示一个关于远程Entrez查询的简单例子。在 :ref:`2.3 <sec-orchids>` 节，我们讲到了使用NCBI
 的Entrez网站来搜索 NCBI 的核酸数据库来获得关于Cypripedioideae的信息。现在我们看看如何使用Python脚本
 自动的处理。在这个例子当中，我们仅仅展示如何使用Entrez模块来连接，获取结果，解析他们。
 
@@ -1238,7 +1254,7 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     ['187237168', '187372713', '187372690', '187372688', '187372686']
 
 我们可以使用 ``efetch`` 来下载这些结果. 尽管你可以一个一个的下载这些记录，但为了减少 NCBI 服务器的负载，最好呢还是
-一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节 \ `9.15 <#sec:entrez-webenv>`__ 中会要讲到的历史记录特性。
+一次性的下载所有的结果。然而在这个情况下，你应该完美的使用在后面章节 :ref:`9.15 <sec-entrez-webenv>` 中会要讲到的历史记录特性。
 
 .. code:: python
 
@@ -1275,7 +1291,9 @@ UniGene是NCBI的转录组数据库，每个UniGene记录展示了该转录本�
     >>> print records[0]["GBSeq_organism"]
     Cypripedium calceolus
 
-你可以用这个来快速的开始搜索 —— 但是对于频繁的使用请见  \ `9.15 <#sec:entrez-webenv>`__.
+你可以用这个来快速的开始搜索 —— 但是对于频繁的使用请见 :ref:`9.15 <sec-entrez-webenv>` .
+
+.. _sec-entrez-search-fetch-genbank:
 
 9.14.3  搜索、下载和解析GenBank record
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1284,8 +1302,8 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
 `http://www.ncbi.nlm.nih.gov/ <http://www.ncbi.nlm.nih.gov/>`__ 获取信息非常好的一种方式 .
 
 在这个例子当中，我们将展示怎样去查询 NCBI 数据库，根据query提取记录，然后使用 ``Bio.SeqIO`` 解析他们 ——
-在 \ `5.3.1 <#sec:SeqIO_GenBank_Online>`__ 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
-—— 请到 Section \ `9.15 <#sec:entrez-webenv>`__ 查看。
+在 :ref:`5.3.1 <sec-SeqIO_GenBank_Online>` 中提到过这些。简单起见，这个例子*不会*使用 WebEnv 历史记录特性
+—— 请到 :ref:`9.15 <sec-entrez-webenv>` 查看。
 
 首先，我们想要查询找出要获取的记录的ID。这里我们快速的检索我们最喜欢的一个物种 *Opuntia* (多刺的梨型仙人掌)。我们
 可以做一个快速的检索来获得所有满足要求的GIs（GenBank标志符）。首先我们看看有多少个记录：
@@ -1342,7 +1360,7 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
     ...
 
 在这个例子当中，我们只是得到了原始的记录。为了得到对Python友好的格式，我们可以使用 ``Bio.SeqIO`` 将GenBank
-数据转化成 ``SeqRecord`` 对象，包括 ``SeqFeature`` 对象 (请见 Chapter \ `5 <#chapter:Bio.SeqIO>`__):
+数据转化成 ``SeqRecord`` 对象，包括 ``SeqFeature`` 对象 (请见第 :ref:`5 <chapter-Bio.SeqIO>` 章):
 
 .. code:: python
 
@@ -1368,8 +1386,8 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
     AF191658, length 896, with 3 features
 
 使用这些自动的查询提取功能相对于手动处理是一个很大的进步。尽管这些模块需要遵守NCBI每秒钟最多三次的规则，然而NCBI
-有其他像避开高峰时刻的建议。请见章节 \ `9.1 <#sec:entrez-guidelines>`__. 尤其需要注意的是，这个例子没有
-用到 WebEnv 历史记录特性。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见章节 \ `9.15 <#sec:entrez-webenv>`__.
+有其他像避开高峰时刻的建议。请见章节 :ref:`9.1 <sec-entrez-guidelines>` 。尤其需要注意的是，这个例子没有
+用到 WebEnv 历史记录特性。你应该使用这个来完成一些琐碎的搜索和下载的工作，请见章节 :ref:`9.15 <sec-entrez-webenv>` 。
 
 最后，如果你计划重复你的分析，你应该下载这些record *一次* ，然后将他们保存在你的硬盘里，在本地进行分析；而不是
 从 NCBI 下载之后就马上进行分析（像这个例子一样）。
@@ -1419,6 +1437,8 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
 这个record数据包含的信息远远超过在这里显示的 —— 例如查看 ``"LineageEx"`` 而不是 ``"Lineage"`` 相关的
 信息，你也可以得到谱系里面的 NCBI taxon 标识号信息。
 
+.. _sec-entrez-webenv:
+
 9.15  使用历史记录和WebEnv
 ----------------------------------
 
@@ -1433,7 +1453,7 @@ GenBank record 格式是保存序列信息、序列特征和其他相关信息�
 9.15.1  利用 history 来搜索和下载序列
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像章节 \ `9.14.3 <#sec:entrez-search-fetch-genbank>`__
+假设我们想搜索和下载所有的 *Opuntia* rpl16核酸序列，然后将它们保存到一个FASTA文件里。就像章节 :ref:`9.14.3 <sec-entrez-search-fetch-genbank>`
 里一样, 我们可以简单的用 ``Bio.Entrez.esearch()`` 得到一个GI号的列表，然后调用 ``Bio.Entrez.efetch()`` 
 来下载他们。
 
@@ -1522,13 +1542,15 @@ NCBI 将会提前进行缓冲。
     out_handle.close()
 
 在写这份文档的时候，这个搜索返回了28个匹配结果 - 但是因为这个是跟时间相关的搜索，因此返回结果会发生变化。
-像在上面 \ `9.12.1 <#subsec:entrez-and-medline>`__ 讲到的一样, 你可以使用 ``Bio.Medline`` 来解析
+像在上面 :ref:`9.12.1 <sec-entrez-and-medline>` 讲到的一样, 你可以使用 ``Bio.Medline`` 来解析
 保存下来的记录。
+
+.. _sec-elink-citations:
 
 9.15.3  搜索引用文章
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-回到 Section \ `9.7 <#sec:elink>`__ 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
+回到 Section :ref:`9.7 <sec-elink>` 我们提到可以使用ELink来搜索制定文章的引用。不幸的是，这个只包含
 PubMed Central（为PubMed中所有文献来做这个事情，意味这NIH将要付出更多的工作）包含的那些杂志。让我们以
 Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
 
@@ -1548,7 +1570,7 @@ Biopython PDB parser文章为例来试试看， PubMed ID 14630660：
 文章， PMCID 2682512。
 
 那么，如果（像我）你希望得到的是PubMed IDs的列表的话，该怎么做呢？好吧，你可以使用再次使用ELink来更改他们。
-这将成为两步处理，所以你应该使用历史记录特性来完成这个工作（章节 `9.15 <#sec:entrez-webenv>`__）。
+这将成为两步处理，所以你应该使用历史记录特性来完成这个工作（章节 :ref:`9.15 <sec-entrez-webenv>` ）。
 
 但是首先，让我们使用更直接的方法来进行第二次调用ELink：
 

@@ -51,13 +51,13 @@
           <div class="body">
             
   <div class="section" id="cookbook">
-<h1>第18章  Cookbook – 用它做一些很酷的事情<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-cookbook"></span><h1>第18章  Cookbook – 用它做一些很酷的事情<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h1>
 <p>Biopython目前有两个版本的“cookbook”示例——本章（本章包含在教程中许多年，并渐渐成熟），和在Biopython维基上的由用户贡献的集合： <a class="reference external" href="http://biopython.org/wiki/Category:Cookbook">http://biopython.org/wiki/Category:Cookbook</a> 。</p>
 <p>我们在试着鼓励Biopython用户在维基上贡献他们自己的示例。除了能帮助社区之外，分享像这样的示例的一个直接的好处是，你也能从其他Biopython用户和开发者中获得一些关于代码的意见反馈——这或许能帮助你改进自己的Python代码。</p>
 <p>长期来说，我们可能最终会将这一章所有的示例都转移到维基上，或者本教程其他的地方。</p>
 <div class="section" id="id1">
 <h2>18.1  操作序列文件<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>这部分将展示更多使用第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章所描述的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块来进行序列输入/输出操作的例子。</p>
+<p>这部分将展示更多使用第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章所描述的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块来进行序列输入/输出操作的例子。</p>
 <div class="section" id="id2">
 <h3>18.1.1  过滤文件中的序列<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>通常你会拥有一个包含许多序列的大文件（例如，FASTA基因文件，或者FASTQ或SFF读长文件），和一个包含你所感兴趣的序列的ID列表，而你希望创建一个由这一ID列表里的序列构成的文件。</p>
@@ -99,7 +99,7 @@
 </pre></div>
 </div>
 <p>让我们将所有这些片段放到一起来组成一个完整的Python脚本，这个脚本将生成一个FASTA序列文件，其包含30个原始序列的随机重排版本。</p>
-<p>第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 <a class="reference external" href="#sec:Bio.SeqIO-and-StringIO">5.5.4</a> 描述的``SeqRecord`` 的格式化方法）：</p>
+<p>第一个版本只是使用一个大的for循环，并一个一个的输出记录（使用章节 <a class="reference internal" href="chr05.html#sec-bio-seqio-and-stringio"><em>5.5.4</em></a> 描述的``SeqRecord`` 的格式化方法）：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">Bio.Seq</span> <span class="kn">import</span> <span class="n">Seq</span>
 <span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
@@ -140,9 +140,9 @@
 </div>
 </div>
 <div class="section" id="cdsfasta">
-<h3>18.1.3  翻译CDS条目为FASTA文件<a class="headerlink" href="#cdsfasta" title="Permalink to this headline">¶</a></h3>
-<p>假设你有一个包含某个物种的CDS条目作为输入文件，你想生成一个由它们的蛋白序列组成的FASTA文件。也就是，从原始文件中取出每一个核苷酸序列，并翻译它。回到章节 <a class="reference external" href="#sec:translation">3.9</a> 我们了解了怎么使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">translate</span></tt> 方法，和可选的 <tt class="docutils literal"><span class="pre">cds</span></tt> 参数来使得不同的起始密码子能正确翻译。</p>
-<p>就像章节 <a class="reference external" href="#sec:SeqIO-reverse-complement">5.5.3</a> 中反向互补的例子中展示的那样，我们可以用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 将与翻译步骤结合起来。对于每一个核苷酸 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> ，我们需要创建一个蛋白的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> —— 并对它命名。</p>
+<span id="sec-seqio-translate"></span><h3>18.1.3  翻译CDS条目为FASTA文件<a class="headerlink" href="#cdsfasta" title="Permalink to this headline">¶</a></h3>
+<p>假设你有一个包含某个物种的CDS条目作为输入文件，你想生成一个由它们的蛋白序列组成的FASTA文件。也就是，从原始文件中取出每一个核苷酸序列，并翻译它。回到章节 <a class="reference internal" href="chr03.html#sec-translation"><em>3.9</em></a> 我们了解了怎么使用 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">translate</span></tt> 方法，和可选的 <tt class="docutils literal"><span class="pre">cds</span></tt> 参数来使得不同的起始密码子能正确翻译。</p>
+<p>就像章节 <a class="reference internal" href="chr05.html#sec-seqio-reverse-complement"><em>5.5.3</em></a> 中反向互补的例子中展示的那样，我们可以用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 将与翻译步骤结合起来。对于每一个核苷酸 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> ，我们需要创建一个蛋白的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> —— 并对它命名。</p>
 <p>你能编写自己的函数来做这个事情，为你的序列选择合适的蛋白标识和恰当的密码表。在本例中，我们仅使用默认的密码表，并给序列ID加一个前缀。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.SeqRecord</span> <span class="kn">import</span> <span class="n">SeqRecord</span>
 <span class="k">def</span> <span class="nf">make_protein_record</span><span class="p">(</span><span class="n">nuc_record</span><span class="p">):</span>
@@ -173,8 +173,8 @@
 <p>这是怎么工作的呢？第一行只是导入 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块。第二行是最有趣的——这是一个Python生成器表达式，它提供 <tt class="docutils literal"><span class="pre">mixed.fas</span></tt> 里每个记录的大写版本。第三行中，我们把这个生成器表达式传给 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 函数，它会把大写的序列写出到 <tt class="docutils literal"><span class="pre">upper.fas</span></tt> 输出文件。</p>
 <p>我们使用生成器（而不是一个列表或列表解析式）的原因是，前一方式每次仅有一个记录保存在内存中。当你在处理包含成千上万的条目的文件时，这可能非常重要。</p>
 </div>
-<div class="section" id="id4">
-<h3>18.1.5  对序列文件排序<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-seqio-sort">
+<span id="id4"></span><h3>18.1.5  对序列文件排序<a class="headerlink" href="#sec-seqio-sort" title="Permalink to this headline">¶</a></h3>
 <p>假设你想对一个序列文件按序列长度排序（例如，一个序列拼接的重叠群(contig)集合），而你工作的文件格式可能是像FASTA或FASTQ这样 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 能读写（和索引）的格式。</p>
 <p>如果文件足够小，你能将它都一次读入内存为一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象列表，对列表进行排序，并保存它：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
@@ -203,7 +203,7 @@
 </pre></div>
 </div>
 <p>首先我们使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.parse()</span></tt> 来将整个文件扫描一遍，并将所有记录的标识和它们的长度保存在一个元组（tuple）中。接着我们对这个元组按照序列长度进行排序，并舍弃这些长度。有了这一排列后的标识列表， <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 允许我们一个一个获取这些记录，我们把它们传给 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出。</p>
-<p>这些例子都使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析记录为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，并通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出。当你想排序的文件格式 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 <a class="reference external" href="#sec:seqio-index-getraw">5.4.2.2</a>) 中 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 添加的 <tt class="docutils literal"><span class="pre">get_raw()</span></tt> 方法。</p>
+<p>这些例子都使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来解析记录为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，并通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 输出。当你想排序的文件格式 <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> 不支持应该怎么办呢？如纯文本的SwissProt格式。这里有一个额外的解决方法——使用在 Biopython 1.54 (见 <a class="reference internal" href="chr05.html#sec-seqio-index-getraw"><em>5.4.2.2</em></a> )中 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 添加的 <tt class="docutils literal"><span class="pre">get_raw()</span></tt> 方法。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="c">#Get the lengths and ids, and sort on length</span>
 <span class="n">len_and_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">rec</span><span class="p">),</span> <span class="n">rec</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
@@ -220,7 +220,7 @@
 <p>作为一个奖励，由于以上例子不重复将数据解析为 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象，所以它会更快。</p>
 </div>
 <div class="section" id="fastq">
-<h3>18.1.6  FASTQ文件的简单质量过滤<a class="headerlink" href="#fastq" title="Permalink to this headline">¶</a></h3>
+<span id="sec-fastq-filtering-example"></span><h3>18.1.6  FASTQ文件的简单质量过滤<a class="headerlink" href="#fastq" title="Permalink to this headline">¶</a></h3>
 <p>FASTQ文件格式在Sanger被引入，目前被广泛用来存储核苷酸序列（reads）和它们的测序质量。FASTQ文件（和相关的QUAL文件）是单字母注释（per-letter-annotation）的最好的例子，因为序列中每一个核苷酸都有一个相对应的质量分数。任何单字母注释都以list、tuple或string被保存在 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 的 <tt class="docutils literal"><span class="pre">letter_annotations</span></tt> 字典中（单字符注释具有和序列长度相同个数的元素）。</p>
 <p>一个常见的工作是输入一个大的测序读长集合，并根据它们的质量分数过滤它们（或修剪它们）。下面的例子非常简单，然而足以展示处理 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象中质量数据的基本用法。我们所有要做的事情是读入一个FASTQ文件，过滤并取出那些PHRED质量分数在某个阈值（这里为20）以上的序列。</p>
 <p>在这个例子中，我们将使用从ENA序列读长存档下载的真实数据， <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> (2MB) ，解压后为19MB的文件 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 。这是在Roche 454 GS FLX测序平台生成的感染加利福利亚海狮的病毒单端数据（参见 <a class="reference external" href="http://www.ebi.ac.uk/ena/data/view/SRS004476">http://www.ebi.ac.uk/ena/data/view/SRS004476</a> ）。</p>
@@ -244,8 +244,8 @@
 <p>这只取出了41892条读长中的14580条。一个更有意义的做法是根据质量来裁剪reads，但是这里只是作为一个例子。</p>
 <p>FASTQ文件可以包含上百万的记录，所以最好避免一次全部加载它们到内存。这个例子使用一个生成器表达式，这意味着每次只有内存里只有一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 被创建 —— 避免内存限制。</p>
 </div>
-<div class="section" id="id5">
-<h3>18.1.7  切除引物序列<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-fastq-slicing-off-primer">
+<span id="id5"></span><h3>18.1.7  切除引物序列<a class="headerlink" href="#sec-fastq-slicing-off-primer" title="Permalink to this headline">¶</a></h3>
 <p>在这个例子中，假设我们需要寻找一个FASTQ数据中以 <tt class="docutils literal"><span class="pre">GATGACGGTGT</span></tt> 为5’端的引物序列的reads。同上面的例子一样，我们将使用从ENA下载的 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 文件（ <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> ）。该方式同样适用于任何其他Biopython支持的格式（例如FASTA文件）。</p>
 <p>这个代码使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 和一个生成器表达式（避免一次加载所有的序列到内存中），以及 <tt class="docutils literal"><span class="pre">Seq</span></tt> 对象的 <tt class="docutils literal"><span class="pre">startswith</span></tt> 方法来检查读长是否以引物序列开始：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
@@ -257,7 +257,7 @@
 </pre></div>
 </div>
 <p>这将从 <tt class="docutils literal"><span class="pre">SRR014849.fastq</span></tt> 找到13819条读长记录，并保存为一个新的FASTQ文件——<tt class="docutils literal"><span class="pre">with_primer.fastq</span></tt>。</p>
-<p>现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 进行切片（参见章节 <a class="reference external" href="#sec:SeqRecord-slicing">4.6</a> ）以移除前11个字母（我们的引物长度）：</p>
+<p>现在，假设你希望创建一个包含这些读长，但去除了所有引物序列的FASTQ文件。只需要很小的修改，我们就能对 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 进行切片（参见章节 <a class="reference internal" href="chr04.html#sec-seqrecord-slicing"><em>4.6</em></a> ）以移除前11个字母（我们的引物长度）：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="n">trimmed_primer_reads</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec</span><span class="p">[</span><span class="mi">11</span><span class="p">:]</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> \
                         <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span> \
@@ -304,8 +304,8 @@
 </div>
 <p>这种形式非常灵活，如果你想做一些更复杂的事情，譬如只保留部分记录 —— 像下一个例子中展示的那样。</p>
 </div>
-<div class="section" id="id6">
-<h3>18.1.8  切除接头序列<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-fastq-slicing-off-adaptor">
+<span id="id6"></span><h3>18.1.8  切除接头序列<a class="headerlink" href="#sec-fastq-slicing-off-adaptor" title="Permalink to this headline">¶</a></h3>
 <p>这实际上是前面例子的一个简单扩展。我们将假设 <tt class="docutils literal"><span class="pre">GATGACGGTGT</span></tt> 是某个FASTQ格式数据的一个接头序列，并再次使用来自NCBI的 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> 文件 （ <a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a> ）。</p>
 <p>然而在本例中，我们将在读长的 <em>任何位置</em> 查找序列，不仅仅是最开始：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
@@ -364,9 +364,9 @@
 </div>
 <p>通过改变格式名称，你也可以将这个应用于FASTA文件。该代码也可以扩展为模糊匹配，而非绝对匹配（或许用一个两两比对，或者考虑读长的质量分数），但是这会使代码变得更慢。</p>
 </div>
-<div class="section" id="id7">
-<h3>18.1.9  转换FASTQ文件<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
-<p>回到章节 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ，我们展示了怎样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来实现两个文件格式间的转换。这里，我们将更进一步探讨二代DNA测序中使用的FASTQ文件。更加详细的介绍可以参加 Cock <em>et al.</em> (2009) [<a class="reference external" href="#cock2010">7</a>] 。FASTQ文件同时存储DNA序列（以Python字符串的形式）和相应的读长质量。</p>
+<div class="section" id="sec-seqio-fastq-conversion">
+<span id="id7"></span><h3>18.1.9  转换FASTQ文件<a class="headerlink" href="#sec-seqio-fastq-conversion" title="Permalink to this headline">¶</a></h3>
+<p>回到章节 <a class="reference internal" href="chr05.html#sec-seqio-conversion"><em>5.5.2</em></a> ，我们展示了怎样使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来实现两个文件格式间的转换。这里，我们将更进一步探讨二代DNA测序中使用的FASTQ文件。更加详细的介绍可以参加 Cock <em>et al.</em> (2009) [<a class="reference external" href="#cock2010">7</a>] 。FASTQ文件同时存储DNA序列（以Python字符串的形式）和相应的读长质量。</p>
 <p>PHRED分数（在大多数FASTQ文件中使用，也存在于QUAL、ACE和SFF文件中）已经成为一个用来表示某个给定碱基测序错误概率（这里用 <em>P</em><sub>*e*</sub> 表示）的 <em>实际</em> 标准（使用一个以10为底的对数转换）：</p>
 <div class="math">
 \[\begin{equation}
@@ -404,7 +404,7 @@ Q_{\textrm{Solexa}} = - 10 \times \textrm{log}_{10} \left( \frac{P_e}{1-P_e} \ri
 </div>
 </div>
 <div class="section" id="fastaqualfastq">
-<h3>18.1.10  转换FASTA和QUAL文件为FASTQ文件<a class="headerlink" href="#fastaqualfastq" title="Permalink to this headline">¶</a></h3>
+<span id="sec-seqio-fasta-qual-conversion"></span><h3>18.1.10  转换FASTA和QUAL文件为FASTQ文件<a class="headerlink" href="#fastaqualfastq" title="Permalink to this headline">¶</a></h3>
 <p>FASTQ <em>同时</em> 包含序列和他们的质量信息字符串。FASTA文件 <em>只</em> 包含序列，而QUAL文件 <em>只</em> 包含质量。因此，一个单独的FASTQ文件可以转换为 <em>成对的</em> FASTA和QUAL文件，FASTQ文件也可以由成对的FASTA和QUAL文件生成。</p>
 <p>从FASTQ到FASTA很简单：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
@@ -433,10 +433,10 @@ Q_{\textrm{Solexa}} = - 10 \times \textrm{log}_{10} \left( \frac{P_e}{1-P_e} \ri
 </pre></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h3>18.1.11  索引FASTQ文件<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-fastq-indexing">
+<span id="id8"></span><h3>18.1.11  索引FASTQ文件<a class="headerlink" href="#sec-fastq-indexing" title="Permalink to this headline">¶</a></h3>
 <p>FASTQ文件通常非常大，包含上百万的读长。由于数据量的原因，你不能一次将所有的记录加载到内存中。这就是为什么上面的例子（过滤和剪切）以迭代的方式遍历整个文件，每次只查看一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 。</p>
-<p>然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 <a class="reference external" href="#sec:SeqIO-index">5.4.2</a> ）。</p>
+<p>然而，有时候你不能使用一个大的循环或迭代器 —— 你或许需要随机获取读长。这里 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数被证明非常有用，它允许你使用名字获取FASTQ中的任何读长（参见章节 <a class="reference internal" href="chr05.html#sec-seqio-index"><em>5.4.2</em></a> ）。</p>
 <p>我们将再次使用来自 ENA (<a class="reference external" href="ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz">ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR020/SRR020192/SRR020192.fastq.gz</a>) 的文件 <tt class="docutils literal"><span class="pre">SRR020192.fastq</span></tt> ，尽管这是一个非常小的FASTQ文件，只有不到50,000读长：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fq_dict</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;SRR020192.fastq&quot;</span><span class="p">,</span> <span class="s">&quot;fastq&quot;</span><span class="p">)</span>
@@ -449,12 +449,12 @@ Q_{\textrm{Solexa}} = - 10 \times \textrm{log}_{10} \left( \frac{P_e}{1-P_e} \ri
 </pre></div>
 </div>
 <p>当在包含7百万读长的FASTQ文件上测试时，索引大概需要花费1分钟，然而获取记录几乎是瞬间完成的。</p>
-<p>章节 <a class="reference external" href="#sec:SeqIO-sort">18.1.5</a> 的例子展示了如何使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数来对FASTA文件进行排序 —— 这也可以用在FASTQ文件上。</p>
+<p>章节 <a class="reference internal" href="#sec-seqio-sort"><em>18.1.5</em></a> 的例子展示了如何使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> 函数来对FASTA文件进行排序 —— 这也可以用在FASTQ文件上。</p>
 </div>
 <div class="section" id="sff">
 <h3>18.1.12  转换SFF文件<a class="headerlink" href="#sff" title="Permalink to this headline">¶</a></h3>
 <p>如果你处理454(Roche)序列数据，你可能会接触Standard Flowgram Format (SFF)原始数据。这包括序列读长（called bases）、质量分数和原始流信息。</p>
-<p>一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 来轻松实现（参见 <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> ）：</p>
+<p>一个最常见的工作是转换SFF文件为一对FASTA和QUAL文件，或者一个单独的FASTQ文件。这可以使用 <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> 来轻松实现（参见 <a class="reference internal" href="chr05.html#sec-seqio-conversion"><em>5.5.2</em></a> ）：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">SeqIO</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s">&quot;E3MFGYR02_random_10_reads.sff&quot;</span><span class="p">,</span> <span class="s">&quot;sff&quot;</span><span class="p">,</span> <span class="s">&quot;reads.fasta&quot;</span><span class="p">,</span> <span class="s">&quot;fasta&quot;</span><span class="p">)</span>
 <span class="go">10</span>
@@ -492,7 +492,7 @@ $ sffinfo -qual -trim E3MFGYR02_random_10_reads.sff &gt; trimmed.qual</pre>
 <h3>18.1.13  识别开放读码框<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <p>在识别可能的基因中一个非常简单的第一步是寻找开放读码框（Open Reading Frame，ORF）。这里我们的意思是寻找六个编码框中所有的没有终止密码子的长区域 —— 一个ORF是一个不包含任何框内终止密码子的核苷酸区域。</p>
 <p>当然，为了发现基因，你也需要确定起始密码子、可能的启动子的位置 —— 而且在真核生物中，你也需要关心内含子。然而，这种方法在病毒和原核生物中仍然有效。</p>
-<p>为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna">NC_005816.fna</a> 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 <a class="reference external" href="#sec:translation">3.9</a> 关于翻译的介绍）。</p>
+<p>为了展示怎样用Biopython实现这个目的，我们首先需要一个序列来查找。作为例子，我们再次使用细菌的质粒 —— 尽管这次我们将以没有任何基因标记的纯文本FASTA文件开始： <a class="reference external" href="http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna">NC_005816.fna</a> 。这是一个细菌序列，所以我们需要使用NCBI密码子表11（参见章节 <a class="reference internal" href="chr03.html#sec-translation"><em>3.9</em></a> 关于翻译的介绍）。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record</span> <span class="o">=</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;NC_005816.fna&quot;</span><span class="p">,</span><span class="s">&quot;fasta&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="mi">11</span>
@@ -579,13 +579,13 @@ WGKLQVIGLSMWMVLFSQRFDDWLNEQEDA...ESK - length 125, strand -1, 8087:8465
 TGKQNSCQMSAIWQLRQNTATKTRQNRARI...AIK - length 100, strand 1, 8741:9044
 QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609</pre>
 </div>
-<p>如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对较更加容易（就像章节 <a class="reference external" href="#sec:gd_nice_example">17.1.9</a> 中显示的那样）。</p>
+<p>如果你注释掉排序语句，那么蛋白序列将和之前显示的顺序一样，所以你能确定这是在做相同的事情。这里，我们可以按位置进行排序，使得和GenBank文件中的实际注释相比对较更加容易（就像章节 <a class="reference internal" href="chr17.html#sec-gd-nice-example"><em>17.1.9</em></a> 中显示的那样）。</p>
 <p>然而，如果你想要的只是所有开放读码框的位置，翻译每一个可能的密码子将是很浪费时间的，包括转换和查找反向互补链。那么，你所要做的所有事情是查找可能的终止密码子(和他们反向互补)。使用正则表达式是一个很直接的方式（参见Python中的 <tt class="docutils literal"><span class="pre">re</span></tt> 模块）。这是描述查找字符串的一个非常强大的模块（然而非常复杂），也被许多编程语言和命令行工具，如 <tt class="docutils literal"><span class="pre">grep</span></tt>，所支持。你能找到一本书来描述它的使用！</p>
 </div>
 </div>
-<div class="section" id="id10">
-<h2>18.2  序列解析与简单作图<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
-<p>这一部分展示更多使用第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块进行序列解析的例子，以及Python类库matplotlib中 <tt class="docutils literal"><span class="pre">pylab</span></tt> 的作图接口（参见 <a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib 主页的教程</a> ）。注意，跟随这些例子，你需要安装matplotlib - 但是即使没有它，你依然可以尝试数据的解析的内容。</p>
+<div class="section" id="sec-sequence-parsing-plus-pylab">
+<span id="id10"></span><h2>18.2  序列解析与简单作图<a class="headerlink" href="#sec-sequence-parsing-plus-pylab" title="Permalink to this headline">¶</a></h2>
+<p>这一部分展示更多使用第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 模块进行序列解析的例子，以及Python类库matplotlib中 <tt class="docutils literal"><span class="pre">pylab</span></tt> 的作图接口（参见 <a class="reference external" href="http://matplotlib.sourceforge.net/">matplotlib 主页的教程</a> ）。注意，跟随这些例子，你需要安装matplotlib - 但是即使没有它，你依然可以尝试数据的解析的内容。</p>
 <div class="section" id="id11">
 <h3>18.2.1  序列长度柱状图<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <p>在很多时候，你可能想要将某个数据集中的序列长度分布进行可视化 —— 例如，基因组组装项目中的contig的大小范围。在这个例子中，我们将再次使用我们的兰花FASTA文件 <a class="reference external" href="http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta">ls_orchid.fasta</a> ，它只包含94条序列。</p>
@@ -746,26 +746,26 @@ QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609</pre>
 </div>
 <div class="section" id="id14">
 <h2>18.3  处理序列比对<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
-<p>这部分可以看做是第 <a class="reference external" href="#chapter:Bio.AlignIO">6</a> 章的继续。</p>
-<div class="section" id="id15">
-<h3>18.3.1  计算摘要信息<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>这部分可以看做是第 <a class="reference internal" href="chr06.html#chapter-bio-alignio"><em>6</em></a> 章的继续。</p>
+<div class="section" id="sec-summary-info">
+<span id="id15"></span><h3>18.3.1  计算摘要信息<a class="headerlink" href="#sec-summary-info" title="Permalink to this headline">¶</a></h3>
 <p>一旦你有一个比对，你很可能希望找出关于它的一些信息。我们尽力将这些功能分离到单独的能作用于比对对象的类中，而不是将所有的能生成比对信息的函数都放入比对对象本身。</p>
-<p>准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 <tt class="docutils literal"><span class="pre">alignment</span></tt> ，例如由在第 <a class="reference external" href="#chapter:Bio.AlignIO">6</a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read(...)</span></tt> 读入。我们获得该对象的摘要信息所要做的所有事情是：</p>
+<p>准备计算比对对象的摘要信息非常快捷。假设我们已经得到了一个比对对象 <tt class="docutils literal"><span class="pre">alignment</span></tt> ，例如由在第 <a class="reference internal" href="chr06.html#chapter-bio-alignio"><em>6</em></a> 章介绍的 <tt class="docutils literal"><span class="pre">Bio.AlignIO.read(...)</span></tt> 读入。我们获得该对象的摘要信息所要做的所有事情是：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Align</span> <span class="kn">import</span> <span class="n">AlignInfo</span>
 <span class="n">summary_align</span> <span class="o">=</span> <span class="n">AlignInfo</span><span class="o">.</span><span class="n">SummaryInfo</span><span class="p">(</span><span class="n">alignment</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">summary_align</span></tt> 对象非常有用，它将帮你做以下巧妙的事情：</p>
 <ol class="arabic simple">
-<li>计算一个快速一致序列 – 参见章节 <a class="reference external" href="#sec:consensus">18.3.2</a></li>
-<li>获取一个针对该比对的位点特异性打分矩阵 – 参见章节 <a class="reference external" href="#sec:pssm">18.3.3</a></li>
-<li>计算比对的信息量 – 参见章节 <a class="reference external" href="#sec:getting_info_content">18.3.4</a></li>
-<li>生成该比对中的替换信息 – 章节 <a class="reference external" href="#sec:sub_matrix">18.4</a> 详细描述了使用该方法生成一个替换矩阵</li>
+<li>计算一个快速一致序列 – 参见章节 <a class="reference internal" href="#sec-consensus"><em>18.3.2</em></a></li>
+<li>获取一个针对该比对的位点特异性打分矩阵 – 参见章节 <a class="reference internal" href="#sec-pssm"><em>18.3.3</em></a></li>
+<li>计算比对的信息量 – 参见章节 <a class="reference internal" href="#sec-getting-info-content"><em>18.3.4</em></a></li>
+<li>生成该比对中的替换信息 – 章节 <a class="reference internal" href="#sec-sub-matrix"><em>18.4</em></a> 详细描述了使用该方法生成一个替换矩阵</li>
 </ol>
 </div>
-<div class="section" id="id16">
-<h3>18.3.2  计算一个快速一致序列<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
-<p>在章节 <a class="reference external" href="#sec:summary_info">18.3.1</a> 中描述的 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象，叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt>，我们能通过下面的方法计算一个保守序列：</p>
+<div class="section" id="sec-consensus">
+<span id="id16"></span><h3>18.3.2  计算一个快速一致序列<a class="headerlink" href="#sec-consensus" title="Permalink to this headline">¶</a></h3>
+<p>在章节 <a class="reference internal" href="#sec-summary-info"><em>18.3.1</em></a> 中描述的 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象提供了一个可以快速计算比对的保守（consensus）序列的功能。假设我们有一个 <tt class="docutils literal"><span class="pre">SummaryInfo</span></tt> 对象，叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt>，我们能通过下面的方法计算一个保守序列：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">consensus</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">dumb_consensus</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -783,8 +783,8 @@ QGSGYAFPHASILSGIAMSHFYFLVLHAVK...CSD - length 114, strand -1, 9264:9609</pre>
 <dd>指定保守序列的字母表。如果没有提供，我们将从比对序列的字母表基础上推断该字母表。</dd>
 </dl>
 </div>
-<div class="section" id="id17">
-<h3>18.3.3  位点特异性评分矩阵<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-pssm">
+<span id="id17"></span><h3>18.3.3  位点特异性评分矩阵<a class="headerlink" href="#sec-pssm" title="Permalink to this headline">¶</a></h3>
 <p>位点特异性评分矩阵（Position specific score matrices，PSSMs）以另一种总结比对信息的方式（与刚才介绍的保守序列不同），这或许在某些情况下更为有用。简单来说，PSSM是一个计数矩阵。对于比对中的每一列，将所有可能出现的字母进行计数并加和。这些加和值将和一个代表序列（默认为比对中的第一条序列）一起显示出来。这个序列可能是保守序列，但也可以是比对中的任何序列。例如，对于比对，</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">GTATC</span>
 <span class="n">AT</span><span class="o">--</span><span class="n">C</span>
@@ -839,8 +839,8 @@ T  1.0 0.0 0.0 6.0
 </div>
 <p>PSSM类的结构有望使得获取元素和打印漂亮的矩阵都很方便。</p>
 </div>
-<div class="section" id="id18">
-<h3>18.3.4  信息量<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-getting-info-content">
+<span id="id18"></span><h3>18.3.4  信息量<a class="headerlink" href="#sec-getting-info-content" title="Permalink to this headline">¶</a></h3>
 <p>一个潜在而有用的衡量进化保守性的测度是序列的信息量。</p>
 <p>一个有用的针对分子生物学家的信息论的介绍可以在这里找到： <a class="reference external" href="http://www.lecb.ncifcrf.gov/~toms/paper/primer/">http://www.lecb.ncifcrf.gov/~toms/paper/primer/</a> 。对于我们的目地，我们将查看保守序列或其部分序列的信息量。我们使用下面的公式计算多序列比对中某个特定的列的信息量：</p>
 <div class="math">
@@ -855,7 +855,7 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 <li><em>Q</em><sub>*i*</sub> – 字母 <em>i</em> 的期望频率。这是一个可选参数，由用户自行决定使用。默认情况下，它被自动赋值为0.05 = 1/20，若为蛋白字母表；或0.25 = 1/4 ，若为核酸字母表。这是在没有先验分布假设的情况下计算信息量。而在假设先验分布或使用非标准字母表时，你需要提供 <em>Q</em><sub>*i*</sub> 的值。</li>
 </ul>
 <p>好了，现在我们知道Biopython如何计算了序列比对的信息量，让我们看看怎么对部分比对区域进行计算。</p>
-<p>首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt> （参见章节<a class="reference external" href="#sec:summary_info">18.3.1</a> 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：</p>
+<p>首先，我们需要使用我们的比对来获得一个比对摘要对象，我们假设它叫做 <tt class="docutils literal"><span class="pre">summary_align</span></tt> （参见章节 <a class="reference internal" href="#sec-summary-info"><em>18.3.1</em></a> 来了解怎样得到它）。一旦我们得到这个对象，计算某个区域的信息量就像下面一样简单：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="n">info_content</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">information_content</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>
                                                  <span class="n">chars_to_ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
 </pre></div>
@@ -869,7 +869,7 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
     <span class="s">&#39;C&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>期望值不能以原始的字典传入，而需要作为 <tt class="docutils literal"><span class="pre">SubsMat.FreqTable</span></tt> 对象传入（参见章节<a class="reference external" href="#sec:freq_table">20.2.2</a> 以获得关于FreqTables的更多信息）。FreqTable对象提供了一个关联字典和字母表的标准，这和Biopython中Seq类的工作方式类似。</p>
+<p>期望值不能以原始的字典传入，而需要作为 <tt class="docutils literal"><span class="pre">SubsMat.FreqTable</span></tt> 对象传入（参见章节 <a class="reference internal" href="chr20.html#sec-freq-table"><em>20.2.2</em></a> 以获得关于FreqTables的更多信息）。FreqTable对象提供了一个关联字典和字母表的标准，这和Biopython中Seq类的工作方式类似。</p>
 <p>要从频率字典创建一个FreqTable对象，你只需要：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.Alphabet</span> <span class="kn">import</span> <span class="n">IUPAC</span>
 <span class="kn">from</span> <span class="nn">Bio.SubsMat</span> <span class="kn">import</span> <span class="n">FreqTable</span>
@@ -894,8 +894,8 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 信息量的文献钻研，以了解它是怎样用的。希望你的钻研不会发现任何有关这个函数的编码错误。</p>
 </div>
 </div>
-<div class="section" id="id19">
-<h2>18.4  替换矩阵<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-sub-matrix">
+<span id="id19"></span><h2>18.4  替换矩阵<a class="headerlink" href="#sec-sub-matrix" title="Permalink to this headline">¶</a></h2>
 <p>替换矩阵是每天的生物信息学工作中的极端重要的一部分。它们提供决定两个不同的残基有多少相互替换的可能性的得分规则。这在序列比较中必不可少。Durbin等的“Biological Biological Sequence Analysis” 一书中提供了对替换矩阵以及它们的用法的非常好的介绍。一些非常有名的替换矩阵是PAM和BLOSUM系列矩阵。</p>
 <p>Biopython提供了大量的常见替换矩阵，也提供了创建你自己的替换矩阵的功能。</p>
 <div class="section" id="id20">
@@ -914,7 +914,7 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 <span class="gp">&gt;&gt;&gt; </span><span class="n">summary_align</span> <span class="o">=</span> <span class="n">AlignInfo</span><span class="o">.</span><span class="n">SummaryInfo</span><span class="p">(</span><span class="n">c_align</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>章节 <a class="reference external" href="#sec:align_clustal">6.4.1</a> 和 <a class="reference external" href="#sec:summary_info">18.3.1</a> 包含关于此类做法的更多信息。</p>
+<p>章节 <a class="reference internal" href="chr06.html#sec-align-clustal"><em>6.4.1</em></a> 和 <a class="reference internal" href="#sec-summary-info"><em>18.3.1</em></a> 包含关于此类做法的更多信息。</p>
 <p>现在我们得到了我们的 <tt class="docutils literal"><span class="pre">summary_align</span></tt> 对象，我们想使用它来找出不同的残基相互替换的次数。为了使例子的可读性更强，我们将只关注那些有极性电荷侧链的氨基酸。幸运的是，这能在生成替代字典时轻松实现，通过传入所有需要被忽略的字符。这样我们将能创建一个只包含带电荷的极性氨基酸的替代字典：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">replace_info</span> <span class="o">=</span> <span class="n">summary_align</span><span class="o">.</span><span class="n">replacement_dictionary</span><span class="p">([</span><span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;V&quot;</span><span class="p">,</span> <span class="s">&quot;L&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                                                     <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;P&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;W&quot;</span><span class="p">,</span> <span class="s">&quot;S&quot;</span><span class="p">,</span>
@@ -961,8 +961,8 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 </div>
 </div>
 <div class="section" id="biosql">
-<h2>18.5  BioSQL – 存储序列到关系数据库中<a class="headerlink" href="#biosql" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://www.biosql.org/">BioSQL</a> 是 <a class="reference external" href="http://open-bio.org/">OBF</a> 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （第 <a class="reference external" href="#chapter:Bio.SeqIO">5</a> 章）加载GenBank文件为SeqRecord相同的东西。</p>
+<span id="sec-biosql"></span><h2>18.5  BioSQL – 存储序列到关系数据库中<a class="headerlink" href="#biosql" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.biosql.org/">BioSQL</a> 是 <a class="reference external" href="http://open-bio.org/">OBF</a> 多个项目（BioPerl、 BioJava等）为了支持共享的存储序列数据的数据库架构而共同努力的结果。理论上，你可以用BioPerl加载GenBank文件到数据库中，然后用Biopython从数据库中提取出来为一个包含Feature的Record对象 —— 并获得或多或少和直接用 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> （第 <a class="reference internal" href="chr05.html#chapter-bio-seqio"><em>5</em></a> 章）加载GenBank文件为SeqRecord相同的东西。</p>
 <p>Biopython中BioSQL模块的文档目前放在 <a class="reference external" href="http://biopython.org/wiki/BioSQL">http://biopython.org/wiki/BioSQL</a> ，是我们维基页面的一部分。</p>
 </div>
 </div>
@@ -981,18 +981,18 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 <li><a class="reference internal" href="#id3">18.1.2  生成随机基因组</a></li>
 <li><a class="reference internal" href="#cdsfasta">18.1.3  翻译CDS条目为FASTA文件</a></li>
 <li><a class="reference internal" href="#fasta">18.1.4  将FASTA文件中的序列变为大写</a></li>
-<li><a class="reference internal" href="#id4">18.1.5  对序列文件排序</a></li>
+<li><a class="reference internal" href="#sec-seqio-sort">18.1.5  对序列文件排序</a></li>
 <li><a class="reference internal" href="#fastq">18.1.6  FASTQ文件的简单质量过滤</a></li>
-<li><a class="reference internal" href="#id5">18.1.7  切除引物序列</a></li>
-<li><a class="reference internal" href="#id6">18.1.8  切除接头序列</a></li>
-<li><a class="reference internal" href="#id7">18.1.9  转换FASTQ文件</a></li>
+<li><a class="reference internal" href="#sec-fastq-slicing-off-primer">18.1.7  切除引物序列</a></li>
+<li><a class="reference internal" href="#sec-fastq-slicing-off-adaptor">18.1.8  切除接头序列</a></li>
+<li><a class="reference internal" href="#sec-seqio-fastq-conversion">18.1.9  转换FASTQ文件</a></li>
 <li><a class="reference internal" href="#fastaqualfastq">18.1.10  转换FASTA和QUAL文件为FASTQ文件</a></li>
-<li><a class="reference internal" href="#id8">18.1.11  索引FASTQ文件</a></li>
+<li><a class="reference internal" href="#sec-fastq-indexing">18.1.11  索引FASTQ文件</a></li>
 <li><a class="reference internal" href="#sff">18.1.12  转换SFF文件</a></li>
 <li><a class="reference internal" href="#id9">18.1.13  识别开放读码框</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id10">18.2  序列解析与简单作图</a><ul>
+<li><a class="reference internal" href="#sec-sequence-parsing-plus-pylab">18.2  序列解析与简单作图</a><ul>
 <li><a class="reference internal" href="#id11">18.2.1  序列长度柱状图</a></li>
 <li><a class="reference internal" href="#gc">18.2.2  序列GC%含量作图</a></li>
 <li><a class="reference internal" href="#id12">18.2.3  核苷酸点线图</a></li>
@@ -1000,13 +1000,13 @@ IC_{j} = \sum_{i=1}^{N_{a}} P_{ij} \mathrm{log}\left(\frac{P_{ij}}{Q_{i}}\right)
 </ul>
 </li>
 <li><a class="reference internal" href="#id14">18.3  处理序列比对</a><ul>
-<li><a class="reference internal" href="#id15">18.3.1  计算摘要信息</a></li>
-<li><a class="reference internal" href="#id16">18.3.2  计算一个快速一致序列</a></li>
-<li><a class="reference internal" href="#id17">18.3.3  位点特异性评分矩阵</a></li>
-<li><a class="reference internal" href="#id18">18.3.4  信息量</a></li>
+<li><a class="reference internal" href="#sec-summary-info">18.3.1  计算摘要信息</a></li>
+<li><a class="reference internal" href="#sec-consensus">18.3.2  计算一个快速一致序列</a></li>
+<li><a class="reference internal" href="#sec-pssm">18.3.3  位点特异性评分矩阵</a></li>
+<li><a class="reference internal" href="#sec-getting-info-content">18.3.4  信息量</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id19">18.4  替换矩阵</a><ul>
+<li><a class="reference internal" href="#sec-sub-matrix">18.4  替换矩阵</a><ul>
 <li><a class="reference internal" href="#id20">18.4.1  使用常见替换矩阵</a></li>
 <li><a class="reference internal" href="#id21">18.4.2  从序列比对创建你自己的替换矩阵</a></li>
 </ul>

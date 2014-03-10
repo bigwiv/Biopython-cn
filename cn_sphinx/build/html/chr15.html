@@ -57,7 +57,7 @@
 因，或预测未知基因的功能。</p>
 <p>Biopython中的 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 模块提供了常用的聚类算法。虽然Bio.Cluster被设计用于
 基因表达数据，它也可用于其他类型数据的聚类。 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>
-和其使用的C聚类库的说明见De Hoon <em>et al.</em> [<a class="reference external" href="#dehoon2004">14</a>].</p>
+和其使用的C聚类库的说明见De Hoon <em>et al.</em> [<a class="reference internal" href="chr23.html#dehoon2004"><em>14</em></a>].</p>
 <p><tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 包含了以下四种聚类算法：</p>
 <ul class="simple">
 <li>系统聚类（成对重心法，最短距离，最大距离和平均连锁法);</li>
@@ -81,16 +81,16 @@
 <h2>随机数生成器<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p><em>k</em>-means/medians/medoids 聚类和 Self-Organizing
 Maps (SOMs) 需要调用随机数生成器。在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，正态分布随机数
-生成器的算法是基于L’Ecuyer [<a class="reference external" href="#lecuyer1988">25</a>],二项分布的随机数
-生成器算法是基于Kachitvichyanukul and Schmeiser [<a class="reference external" href="#kachitvichyanukul1988">23</a>]
+生成器的算法是基于L’Ecuyer [<a class="reference internal" href="chr23.html#lecuyer1988"><em>25</em></a>] ，二项分布的随机数
+生成器算法是基于Kachitvichyanukul and Schmeiser [<a class="reference internal" href="chr23.html#kachitvichyanukul1988"><em>23</em></a>]
 开发的BTPE算法。随机数生成器在调用时会首先进行初始化。由于随机数生成器使用了
 两个乘同余发生器（multiplicative linear congruential generators），所以初始化时需要两个整型的
 种子。这两个种子可以调用系统提供的 <tt class="docutils literal"><span class="pre">rand</span></tt> （C标准库）函数生成。在 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中，
 我们首先调用 <tt class="docutils literal"><span class="pre">srand</span></tt> 使用以秒为单位的时间戳的值初始值，再用 <tt class="docutils literal"><span class="pre">rand</span></tt> 随机产生两
 个随机数作为种子来产生正态分布的随机数。</p>
 </div>
-<div class="section" id="id5">
-<h2>15.1 距离函数<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sec-distancefunctions">
+<span id="id5"></span><h2>15.1 距离函数<a class="headerlink" href="#sec-distancefunctions" title="Permalink to this headline">¶</a></h2>
 <p>为了对元素根据相似度进行聚类，第一步需要定义相似度。<tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 提供了八种不同
 的距离函数来衡量相似度或者距离，分别用不同的字母代表：</p>
 <ul class="simple">
@@ -206,7 +206,7 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 <div class="section" id="kendalls">
 <h3>Kendall’s τ<a class="headerlink" href="#kendalls" title="Permalink to this headline">¶</a></h3>
 <p>Kendall’s τ 是另一个非参的计算相关性的方法。它同Spearman秩相关系数类似，但它不对数据进行排序，
-而是使用相对秩来计算  τ (see Snedecor &amp; Cochran [<a class="reference external" href="#snedecor1989">29</a>]) 。</p>
+而是使用相对秩来计算  τ (see Snedecor &amp; Cochran [<a class="reference internal" href="chr23.html#snedecor1989"><em>29</em></a>] ) 。</p>
 <p>Kendall’s τ 对应的距离计算为：</p>
 <div class="math">
 \[d_{\mbox{K}} \equiv 1 - \tau.\]</div>
@@ -219,8 +219,8 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 出现了 <em>w</em><sub>*i*</sub> 次 。权重值可以不为整数。对于 Spearman 秩相关系数
 和Kendall’s τ, 权重没有太大的意义，因此不适用于这两个函数。</p>
 </div>
-<div class="section" id="id6">
-<h3>计算距离矩阵<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="subsec-distancematrix">
+<span id="id6"></span><h3>计算距离矩阵<a class="headerlink" href="#subsec-distancematrix" title="Permalink to this headline">¶</a></h3>
 <p>距离矩阵是 <tt class="docutils literal"><span class="pre">data</span></tt> 中，所有元素的两两间的距离的平方矩阵，可以用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 模块中 <tt class="docutils literal"><span class="pre">distancematrix</span></tt> 函数计算：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">distancematrix</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">distancematrix</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -254,7 +254,7 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -281,8 +281,8 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 </div>
 <div class="section" id="id7">
 <h2>15.2  计算类的相关性质<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id8">
-<h3>计算类中心<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="subsec-clustercentroids">
+<span id="id8"></span><h3>计算类中心<a class="headerlink" href="#subsec-clustercentroids" title="Permalink to this headline">¶</a></h3>
 <p>类中心可以定义为该类中在每个维度上所有元素的平均值或者中值，可以用 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt> 中的 <tt class="docutils literal"><span class="pre">clustercentroids</span></tt>
 函数计算：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio.Cluster</span> <span class="kn">import</span> <span class="n">clustercentroids</span>
@@ -389,7 +389,7 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -499,7 +499,7 @@ uncentered correlation 适用于表达量基准为0的情况。例如，在对�
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).
 尽管八种距离都可以用于 <tt class="docutils literal"><span class="pre">kcluster</span></tt> 计算,
 但从经验上来讲，Euclidean 距离适合 <em>k</em>-means 算法, city-block 距离适合 <em>k</em>-medians.</p>
 </dd>
@@ -753,7 +753,7 @@ initialid=None)|</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -817,9 +817,9 @@ initialid=None)|</p>
 </div>
 <div class="section" id="self-organizing-maps">
 <h2>15.5  Self-Organizing Maps<a class="headerlink" href="#self-organizing-maps" title="Permalink to this headline">¶</a></h2>
-<p>Self-Organizing Maps (SOMs) 是由 Kohonen 在描述神经网络的时候发明的 (see for instance Kohonen, 1997 [<a class="reference external" href="#kohonen1997">24</a>]).
+<p>Self-Organizing Maps (SOMs) 是由 Kohonen 在描述神经网络的时候发明的 (see for instance Kohonen, 1997 [<a class="reference internal" href="chr23.html#kohonen1997"><em>24</em></a>] ).
 Tamayo (1999) 第一次讲 Self-Organizing Maps 应用到基因表达数据上。
-[<a class="reference external" href="#tamayo1999">30</a>].</p>
+[<a class="reference internal" href="chr23.html#tamayo1999"><em>30</em></a>].</p>
 <p>SOMs 根据某种拓扑结果将元素进行分类。通常选用的是矩形的拓扑结构。在SOMs生成的类别中，相邻的
 两个类的拓扑结构相似度高于他们对其他的相似度。</p>
 <p>计算SOM的第一步是随机分配数据向量到每个类别中，如果使用行进行聚类，那么每个数据向量中的元素
@@ -894,7 +894,7 @@ Tamayo (1999) 第一次讲 Self-Organizing Maps 应用到基因表达数据上�
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择距离函数 (具体见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择距离函数 (具体见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -921,7 +921,7 @@ Tamayo (1999) 第一次讲 Self-Organizing Maps 应用到基因表达数据上�
 <div class="section" id="id14">
 <h2>15.6  主成分分析<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>主成分分析 (PCA) 被广泛的用于分析多维数据，一个将主成分分析应用于表达谱数据的请见
-Yeung and Ruzzo (2001) [<a class="reference external" href="#yeung2001">33</a>].</p>
+Yeung and Ruzzo (2001) [<a class="reference internal" href="chr23.html#yeung2001"><em>33</em></a>].</p>
 <p>简而言之，PCA是一种坐标转换的方法，转换后的基础向量成为主成分，变换前的每行可以用主成分的
 线性关系显示。主成分的选择是基于是残差尽可能的小的原则。例如，一个 <em>n</em> × 3 的数据矩阵可以表示为三维
 空间内的一个椭圆球形的点的云。第一主成分是这个椭圆球形的最长轴，第二主成分是次长轴，第三主成分
@@ -932,7 +932,7 @@ Yeung and Ruzzo (2001) [<a class="reference external" href="#yeung2001">33</a>].
 <p>在进行主成分分析前，矩阵的数据每一列都要减去其平均值。在上面椭圆球形云的例子中，数据在3D
 空间中，围绕着其中心分布，而主成分则显示着每个点对其中心的变化。</p>
 <p>函数 <tt class="docutils literal"><span class="pre">pca</span></tt> 首先使用奇异值分解（singular value decomposition）来计算矩阵的特征值和
-特征向量。奇异值分解使用的是Algol写的C语言的 <tt class="docutils literal"><span class="pre">svd</span></tt> [<a class="reference external" href="#golub1971">16</a>], 利用的是
+特征向量。奇异值分解使用的是Algol写的C语言的 <tt class="docutils literal"><span class="pre">svd</span></tt> [<a class="reference internal" href="chr23.html#golub1971"><em>16</em></a>] , 利用的是
 Householder bidiagonalization 和 QR 算法的变异。主成分，每个数据在主成分上的坐标和主成分
 对应的特征值都会被计算出来，并按照特征值的降序排列。如果需要数据中心，则需要在调用 <tt class="docutils literal"><span class="pre">pca</span></tt>
 前，对每列数据减去其平均值。</p>
@@ -1088,14 +1088,12 @@ website</a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择合适的元素距离算法 (见
-<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择合适的元素距离算法 (见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
 </ul>
-<p>函数会返回一个距离矩阵，每行的列数等于行数。(see section
-<a class="reference external" href="#subsec:distancematrix">15.1</a>).</p>
+<p>函数会返回一个距离矩阵，每行的列数等于行数。(见 <a class="reference internal" href="#subsec-distancematrix"><em>15.1</em></a> ).</p>
 </div>
 <div class="section" id="id16">
 <h3>计算聚类中心<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
@@ -1123,8 +1121,7 @@ website</a>.</p>
 </dl>
 </li>
 </ul>
-<p>函数返回元组 <tt class="docutils literal"><span class="pre">cdata,</span> <span class="pre">cmask</span></tt> ; 见 section
-<a class="reference external" href="#subsec:clustercentroids">15.2</a> for a description.</p>
+<p>函数返回元组 <tt class="docutils literal"><span class="pre">cdata,</span> <span class="pre">cmask</span></tt> ; 见 <a class="reference internal" href="#subsec-clustercentroids"><em>15.2</em></a> .</p>
 </div>
 <div class="section" id="id17">
 <h3>计算两类间的距离<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
@@ -1163,8 +1160,7 @@ website</a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择使用的距离函数 (见
-<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择使用的距离函数 (见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -1204,7 +1200,7 @@ website</a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt>, Euclidean distance)</dt>
-<dd><p class="first last">选择使用的距离函数(见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择使用的距离函数(见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -1261,8 +1257,7 @@ website</a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt> , Euclidean distance)</dt>
-<dd><p class="first last">选择使用的距离函数 (see
-<a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择使用的距离函数 (见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -1305,7 +1300,7 @@ website</a>.</p>
 </li>
 <li><dl class="first docutils">
 <dt><tt class="docutils literal"><span class="pre">dist</span></tt> (默认: <tt class="docutils literal"><span class="pre">'e'</span></tt> , Euclidean distance)</dt>
-<dd><p class="first last">选择使用的距离函数(见 <a class="reference external" href="#sec:distancefunctions">15.1</a>).</p>
+<dd><p class="first last">选择使用的距离函数(见 <a class="reference internal" href="#sec-distancefunctions"><em>15.1</em></a> ).</p>
 </dd>
 </dl>
 </li>
@@ -1412,7 +1407,7 @@ website</a>.</p>
 <li><a class="reference internal" href="#id2">数据表示法</a></li>
 <li><a class="reference internal" href="#id3">缺失值</a></li>
 <li><a class="reference internal" href="#id4">随机数生成器</a></li>
-<li><a class="reference internal" href="#id5">15.1 距离函数</a><ul>
+<li><a class="reference internal" href="#sec-distancefunctions">15.1 距离函数</a><ul>
 <li><a class="reference internal" href="#euclidean">Euclidean 距离</a></li>
 <li><a class="reference internal" href="#city-block-distance">City-block distance</a></li>
 <li><a class="reference internal" href="#pearson">Pearson 相关系数</a></li>
@@ -1422,11 +1417,11 @@ website</a>.</p>
 <li><a class="reference internal" href="#spearman-rank-correlation">Spearman rank correlation</a></li>
 <li><a class="reference internal" href="#kendalls">Kendall’s τ</a></li>
 <li><a class="reference internal" href="#weighting">Weighting</a></li>
-<li><a class="reference internal" href="#id6">计算距离矩阵</a></li>
+<li><a class="reference internal" href="#subsec-distancematrix">计算距离矩阵</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#id7">15.2  计算类的相关性质</a><ul>
-<li><a class="reference internal" href="#id8">计算类中心</a></li>
+<li><a class="reference internal" href="#subsec-clustercentroids">计算类中心</a></li>
 <li><a class="reference internal" href="#id9">计算类间距离</a></li>
 </ul>
 </li>

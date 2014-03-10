@@ -136,7 +136,7 @@
 <dt><strong>Single population, constant size</strong></dt>
 <dd>单一种群固定群体大小。标准的参数即可满足它，模板名称：simple.</dd>
 <dt><strong>Single population, bottleneck</strong></dt>
-<dd>单一群体瓶颈效应，如图 <a class="reference external" href="#fig:bottle">12.2.1.1</a> 所示。参数有当前种群大小（图中ne3模板的pop_size）、种群扩张时间 - 扩张发生后代数（expand_gen），瓶颈发生时的有效群体大小（ne2），种群收缩时间（contract_gen）以及原始种群大小（ne3）。模板名：bottle。</dd>
+<dd>单一群体瓶颈效应，如图 <a class="reference internal" href="#fig-bottle"><em>12.2.1.1</em></a> 所示。参数有当前种群大小（图中ne3模板的pop_size）、种群扩张时间 - 扩张发生后代数（expand_gen），瓶颈发生时的有效群体大小（ne2），种群收缩时间（contract_gen）以及原始种群大小（ne3）。模板名：bottle。</dd>
 <dt><strong>Island model</strong></dt>
 <dd>典型的岛屿模型。同群种（deme）总数表示为total_demes，迁移率表示为mig。模板名：island。</dd>
 <dt><strong>Stepping stone model - 1 dimension</strong></dt>
@@ -144,7 +144,7 @@
 <dt><strong>Stepping stone model - 2 dimensions</strong></dt>
 <dd>二维脚踏石模型，极端状态下种群分布不连续。参数有表示水平维度的x和表示垂直维度的y（同群种总数即为x × y），以及表示迁移率的mig。模板名：ssm_2d。</dd>
 </dl>
-<p><img alt="image4" src="_images/bottle.png" /></p>
+<p id="fig-bottle"><img alt="image4" src="_images/bottle.png" /></p>
 <p>在我们的第一个示例中，将生成一个单一种群固定群体大小（Single population, constant size）模板，样本大小（sample size）为30，同群种大小（deme size）为500。代码如下：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">Bio.PopGen.SimCoal.Template</span> <span class="kn">import</span> <span class="n">generate_simcoal_from_template</span>
 

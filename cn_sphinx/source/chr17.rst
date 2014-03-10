@@ -9,10 +9,10 @@
 17.1.1  GenomeDiagram简介
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [`2 <#pritchard2006>`__\ ] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 `http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [`3 <#toth2006>`__\ ] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [`4 <#vanderauwera2009>`__\ ] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
+``Bio.Graphics.GenomeDiagram`` 包被整合到Biopython 1.50版之前，就已经是Biopython的独立模块。GenomeDiagram包首次出现在2006年Pritchard等人在Bioinformatics杂志的一篇文章 [:ref:`2 <pritchard2006>`] ，文中展示了一些图像示例，更多图像示例请查看GenomeDiagram手册 `http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf <http://biopython.org/DIST/docs/GenomeDiagram/userguide.pdf>`__ 。正如“GenomeDiagram”名称所指，它主要用于可视化全基因组(特别是原核生物基因组)，即可绘制线型图也可绘制环形图，Toth等人在2006年发表的文章 [:ref:`3 <toth2006>`] 中图2就是一个示例。Van der Auwera 等人在2009年发表的文章 [:ref:`4 <vanderauwera2009>`] 中图1和图2也进一步说明，GenomeDiagram适用于噬菌体、质粒和线粒体等微小基因组的可视化。
 
 如果存储基因组信息的是从GenBank文件中下载的 ``SeqRecord`` 话，它会包含许多 ``SeqFeature`` ，那么用这个模块处理就很简单（详见
-第 \ `4 <#chapter:SeqRecord>`__ 章和第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。
+第 :ref:`4 <chapter-SeqRecord>` 章和第 :ref:`5 <chapter-Bio.SeqIO>` 章）。
 
 17.1.2 图形，轨迹,  特征集和特征
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,11 +20,13 @@
 GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的图形对象（diagram object）表示一个序列（sequence）或序列区域（sequence region）。一个图形可以包含多个轨迹（track），呈现为横向排列或者环形放射图。这些轨迹的长度通常相等，代表相同的序列区域。可用一个轨迹表示基因的位置，另一个轨迹表示调节区域，第三个轨迹表示GC含量。可将最常用轨迹的特征打包为一个特征集（feature-sets）。CDS的特征可以用一个特征集，而tRNA的特征可以用另外一个特征集。这不是强制性的要求，你可以在diagram中用同样的特征集。如果diagram中用不同的特征集，修改一个特征会很容易，比如把所有tRNA的特征都变为红色，你只需选择tRNA的特征就行。
  
 新建图形主要有两种方式。第一种是自上而下的方法（Top-Down），首先新建diagram对象，然后用diagram的方法来添加track(s)，最后用track的方法添加特征。第二种是自下而上的方法（Bottom-Up），首先单独新建对象，然后再将其进行组合。
- 
+
+.. _sec-gd_top_down:
+
 17.1.3 自上而下的实例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
  
-我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 \ `5 <#chapter:Bio.SeqIO>`__ 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
+我们用一个从GenBank文件中读取出来的 ``SeqRecord`` 来绘制全基因组（详见第 :ref:`5 <chapter-Bio.SeqIO>` 章）。这里用鼠疫杆菌 *Yersinia pestis biovar Microtus* 的pPCP1质粒，元数据文件NC_005816.gb在Biopython中GenBank的tests目录下， `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__ 也可下载
 
 .. code:: python
 
@@ -127,7 +129,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 17.1.5  简单的Feature
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象（ 详见 \ `4.3 <#sec:seq_features>`__ 章节）。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
+以上示例中，创建diagram使用的 ``SeqRecord`` 的 ``SeqFeature`` 对象（ 详见 :ref:`4.3 <sec-seq_features>` 章节）。如果你不需要 ``SeqFeature`` 对象，只将目标feature定位在坐标轴，仅需要创建minimal
 ``SeqFeature`` 对象，方法很简单，代码如下：
 
 .. code:: python
@@ -200,7 +202,7 @@ GenomeDiagram使用一组嵌套的对象，图层中沿着水平轴或圆圈的�
 
 |image15|
 
-除此之外，还可以设置“label_color”来调节标签的颜色（第 \ `17.1.9 <#sec:gd_nice_example>`__ 章节也将用到这一步），这里没有进行演示。
+除此之外，还可以设置“label_color”来调节标签的颜色（第 :ref:`17.1.9 <sec-gd_nice_example>` 节也将用到这一步），这里没有进行演示。
 
 示例中默认的字体很小，这是比较明智的，因为通常我们会把许多Feature同时展示，而不像这里只展示了几个比较大的feature。
 
@@ -285,10 +287,12 @@ Biopython1.61新增 ``BIGARROW`` 箭头形状，它经常跨越坐标轴，箭�
 
 上述 ``ARROW`` 形状中的箭杆和箭头设置选项都适用于 ``BIGARROW`` 。
 
+.. _sec-gd_nice_example:
+
 17.1.9 完美示例
 ~~~~~~~~~~~~~~~~~~~~~~
 
-回到”自上而下的示例 Section \ `17.1.3 <#sec:gd_top_down>`__ 中鼠疫杆菌 *Yersinia pestis biovar
+回到”自上而下的示例 Section :ref:`17.1.3 <sec-gd_top_down>` 中鼠疫杆菌 *Yersinia pestis biovar
 Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭头表示基因，窄框穿越箭头表示限制性内切酶的切割位点。
 
 .. code:: python
@@ -360,7 +364,7 @@ Microtus* 的pPCP1质粒，现在使用”图形符号“的高级选项。箭�
 -  ``AF323668`` – Bacteriophage bIL285, 全基因组大小(35538 bp)
 -  ``NC_003212`` – *Listeria innocua* Clip11262,我们将仅关注前噬菌体5的全基因组 (长度大体相同).
 
-这三个文件可以从Entrez下载，详情请查阅 \ `9.6 <#sec:efetch>`__ 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 \ `4.6 <#sec:SeqRecord-slicing>`__ ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 \ `4.8 <#sec:SeqRecord-reverse-complement>`__)。
+这三个文件可以从Entrez下载，详情请查阅 :ref:`9.6 <sec-efetch>` 。从三个噬菌体基因组文件中分离（slice）提取相关Features信息（请查阅 :ref:`4.6 <sec-SeqRecord-slicing>` ），保证前两个噬菌体的反向互补链与其起始点对齐，再次保存Feature(详情请查阅 :ref:`4.8 <sec-SeqRecord-reverse-complement>` )。
 
 .. code:: python
 
@@ -435,7 +439,7 @@ editor <http://www.sanger.ac.uk/resources/software/artemis/>`__ 处理 ——才
 
 Biopython 1.59新增绘制不同track之间Cross-Links的功能，这个功能可用于将要展示的简单线形图中，也可用于将线形图分割为短片段（fragments）和环形图。
 
-我们接着模仿Proux等人 [`5 <#proux2002>`__\ ] 的图像，我们需要一个包含基因之间的“cross links”、“得分”或“颜色”的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。
+我们接着模仿Proux等人 [:ref:`5 <proux2002>`] 的图像，我们需要一个包含基因之间的“cross links”、“得分”或“颜色”的列表。 实际应用中，可以从BLAST文件自动提取这些信息，这里是手动输入的。
 
 噬菌体的名称同样表示为A，B和C。这里将要展示的是A与B之间的links，噬菌体A和B基因的相似百分比存储在元组中。
 
@@ -594,7 +598,7 @@ or:
 17.2 染色体
 -----------------
 
-``Bio.Graphics.BasicChromosome`` 模块可以绘制染色体，Jupe等人在2012发表的文章 [`6 <#jupe2012>`__\ ] 中利用不同的颜色来展示不同的基因家族。
+``Bio.Graphics.BasicChromosome`` 模块可以绘制染色体，Jupe等人在2012发表的文章 [:ref:`6 <jupe2012>`] 中利用不同的颜色来展示不同的基因家族。
 
 17.2.1 简单染色体
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

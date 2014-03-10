@@ -51,12 +51,12 @@
           <div class="body">
             
   <div class="section" id="bio-phylo">
-<h1>第13章  Bio.Phylo系统发育分析<a class="headerlink" href="#bio-phylo" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-phylo"></span><h1>第13章  Bio.Phylo系统发育分析<a class="headerlink" href="#bio-phylo" title="Permalink to this headline">¶</a></h1>
 <p>Biopython1.54开始引入了Bio.Phylo模块，与SeqIO和AlignIO类似，它的目的是提供
 一个通用的独立于源数据格式的方法来使用系统进化树，同时提供一致的API来进行
 I/O操作。</p>
 <p>Bio.Phylo在一篇开放获取的期刊文章中有介绍
-[<a class="reference external" href="#talevich2012">9</a>, Talevich <em>et al.</em>, 2012], 这可能对您也有所帮助。</p>
+[<a class="reference internal" href="chr23.html#talevich2012"><em>9</em></a>, Talevich <em>et al.</em>, 2012], 这可能对您也有所帮助。</p>
 <div class="section" id="id1">
 <h2>13.1  示例: 树中有什么？<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>为了熟悉这个模块，让我们首先从一个已经创建好的树开始，从几个不同的角度来审视
@@ -120,12 +120,12 @@ I/O操作。</p>
 </pre></div>
 </div>
 <p>如果你安装有 <strong>matplotlib</strong> 或者 <strong>pylab</strong>, 你可以使用 <tt class="docutils literal"><span class="pre">draw</span></tt> 函数一个图像(见 Fig.
-<a class="reference external" href="#fig:phylo-simple-draw">13.1</a>):</p>
+<a class="reference internal" href="#fig-phylo-simple-draw"><em>13.1</em></a> ):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">rooted</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="image5" src="_images/phylo-simple-draw.png" /></p>
+<p id="fig-phylo-simple-draw"><img alt="image5" src="_images/phylo-simple-draw.png" /></p>
 <div class="section" id="id2">
 <h3>13.1.1  给树的分支上颜色<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>函数 <tt class="docutils literal"><span class="pre">draw</span></tt> 和 <tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 支持在树中显示不同的颜色和分支宽度。
@@ -178,11 +178,11 @@ I/O操作。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">clade</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span>
 </pre></div>
 </div>
-<p>最后，展示一下我们的工作结果 (see Fig. <a class="reference external" href="#fig:phylo-color-draw">13.1.1</a>):</p>
+<p>最后，展示一下我们的工作结果 (见 Fig. <a class="reference internal" href="#fig-phylo-color-draw"><em>13.1.1</em></a> ):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="image6" src="_images/phylo-color-draw.png" /></p>
+<p id="fig-phylo-color-draw"><img alt="image6" src="_images/phylo-color-draw.png" /></p>
 <p>注意进化枝的颜色包括导向它的分支和它的子代的分支。E和F的共同祖先结果刚好
 在根分支下面，而通过这样上色，我们能清楚的看出这个树的根在哪里。</p>
 <p>我们已经完成了很多！现在让我们休息一下，保存一下我们的工作。使用一个文件
@@ -292,10 +292,10 @@ phyloXML和NeXML等树文件格式。</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">branch_labels</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">branch_length</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="image7" src="_images/phylo-draw-example.png" /></p>
+<p id="fig-phylo-dot"><img alt="image7" src="_images/phylo-draw-example.png" /></p>
 <p><tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 则画出一个无根的进化分枝图（cladogram），但是它要求你安装有Graphviz、
 PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的例子，和Graphviz中的
-<tt class="docutils literal"><span class="pre">dot</span></tt> 程序，让我们来画一个有根树（见图. <a class="reference external" href="#fig:phylo-dot">13.3</a> ）：</p>
+<tt class="docutils literal"><span class="pre">dot</span></tt> 程序，让我们来画一个有根树（见图. <a class="reference internal" href="#fig-phylo-dot"><em>13.3</em></a> ）：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;example.xml&quot;</span><span class="p">,</span> <span class="s">&quot;phyloxml&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s">&#39;dot&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pylab</span>
@@ -303,23 +303,23 @@ PyDot或PyGraphviz、Network和matplotlib（或pylab）。使用上面相同的�
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pylab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;phylo-dot.png&#39;</span><span class="p">)</span>  <span class="c"># Creates a PNG file of the same graphic</span>
 </pre></div>
 </div>
-<p><img alt="image8" src="_images/phylo-dot.png" /></p>
+<p id="fig-phylo-rooted"><img alt="image8" src="_images/phylo-dot.png" /></p>
 <p>（提示：如果你使用 <tt class="docutils literal"><span class="pre">-pylab</span></tt> 选项执行IPython，调用 <tt class="docutils literal"><span class="pre">draw_graphviz</span></tt> 将导致matplotlib
 查看器自动运行，而不需要手动的调用 <tt class="docutils literal"><span class="pre">show()</span></tt> 方法。）</p>
 <p>这将输出树对象到一个NetworkX图中，使用Graphviz来布局节点的位置，并使用matplotlib来显示
 它。这里有几个关键词参数来修改结果图像，包括大多数被NetworkX函数 <tt class="docutils literal"><span class="pre">networkx.draw</span></tt> 和
 <tt class="docutils literal"><span class="pre">networkx.draw_graphviz</span></tt> 所接受的参数。</p>
 <p>最终的显示也受所提供的树对象的 <tt class="docutils literal"><span class="pre">rooted</span></tt> 属性的影响。有根树在每个分支（branch）上显示
-一个“head”来表明它的方向（见图. <a class="reference external" href="#fig:phylo-rooted">13.3</a> ）：</p>
+一个“head”来表明它的方向（见图. <a class="reference internal" href="#fig-phylo-rooted"><em>13.3</em></a> ）：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span> <span class="o">=</span> <span class="n">Phylo</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s">&quot;simple.dnd&quot;</span><span class="p">,</span> <span class="s">&quot;newick&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tree</span><span class="o">.</span><span class="n">rooted</span> <span class="o">=</span> <span class="bp">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphiz</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="image9" src="_images/phylo-rooted.png" /></p>
+<p id="fig-phylo-color"><img alt="image9" src="_images/phylo-rooted.png" /></p>
 <p>“prog”参数指定Graphviz的用来布局的引擎。默认的引擎 <tt class="docutils literal"><span class="pre">twopi</span></tt> 对任何大小的树都表现很好，
 很可靠的避免交叉的分支出现。<tt class="docutils literal"><span class="pre">neato</span></tt> 程序可能画出更加好看的中等大小的树，但是有时候会
-有交叉分支出现（见图. <a class="reference external" href="#fig:phylo-color">13.3</a> ）。 <tt class="docutils literal"><span class="pre">dot</span></tt> 程序或许对小型的树有用，
+有交叉分支出现（见图. <a class="reference internal" href="#fig-phylo-color"><em>13.3</em></a> ）。 <tt class="docutils literal"><span class="pre">dot</span></tt> 程序或许对小型的树有用，
 但是对于大一点的树的布局易产生奇怪的事情。</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Phylo</span><span class="o">.</span><span class="n">draw_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s">&quot;neato&quot;</span><span class="p">)</span>
 </pre></div>
@@ -518,7 +518,7 @@ LookupError、AttributeError和ValueError被沉默，这样就提供了另外一
 以获得更多已有方法的使用示例。</p>
 </div>
 <div class="section" id="phyloxml">
-<h3>13.4.4  PhyloXML树的特性<a class="headerlink" href="#phyloxml" title="Permalink to this headline">¶</a></h3>
+<span id="sec-phyloxml"></span><h3>13.4.4  PhyloXML树的特性<a class="headerlink" href="#phyloxml" title="Permalink to this headline">¶</a></h3>
 <p>phyloXML文件格式包含用来注释树的，采用额外数据格式和图像提示的字段。</p>
 <p>参加Biopython维基上的PhyloXML页面
 (<a class="reference external" href="http://biopython.org/wiki/PhyloXML">http://biopython.org/wiki/PhyloXML</a>)
@@ -551,7 +551,7 @@ LookupError、AttributeError和ValueError被沉默，这样就提供了另外一
 (<a class="reference external" href="http://sco.h-its.org/exelixis/software.html">http://sco.h-its.org/exelixis/software.html</a>)
 也已经被添加到Biopython 1.60中。</p>
 <p>注意，如果你系统中已经安装了EMBOSS的Phylip扩展，一些常用的Phylip程序，包括 <tt class="docutils literal"><span class="pre">dnaml</span></tt> 和 <tt class="docutils literal"><span class="pre">protml</span></tt>
-已经通过 <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 中的EMBOSS打包程序被支持。参见章节 <a class="reference external" href="#sec:alignment-tools">6.4</a>
+已经通过 <tt class="docutils literal"><span class="pre">Bio.Emboss.Applications</span></tt> 中的EMBOSS打包程序被支持。参见章节 <a class="reference internal" href="chr06.html#sec-alignment-tools"><em>6.4</em></a>
 以查看使用这些程序的例子和提示。</p>
 </div>
 <div class="section" id="paml">
@@ -606,7 +606,7 @@ LookupError、AttributeError和ValueError被沉默，这样就提供了另外一
 <a class="reference external" href="http://biopython.org/wiki/Phylo_cookbook">http://biopython.org/wiki/Phylo_cookbook</a></dd>
 <dt><strong>Bio.Nexus port</strong></dt>
 <dd><p class="first">这个模块的大部分是在2009年NESCent主办的谷歌编程夏令营中写的，作为实现Python对phyloXML数据格式（见
-<a class="reference external" href="#sec:PhyloXML">13.4.4</a> ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
+<a class="reference internal" href="#sec-phyloxml"><em>13.4.4</em></a> ）支持的一个项目。对Newick和Nexus格式的支持，已经通过导入Bio.Nexus模块
 的一部分被添加到Bio.Phylo使用的新类中。</p>
 <p class="last">目前，Bio.Nexus包含一些还没有导入到Bio.Phylo类中的有用的特性——特别是，计算一致树（consensus tree）。
 如果你发现某些功能Bio.Phylo中没有，试试在Bio.Nexus中能不能找到。</p>

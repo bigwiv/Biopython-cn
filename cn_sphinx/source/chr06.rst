@@ -1,4 +1,6 @@
-﻿第6章 多序列比对
+﻿.. _chapter-Bio.AlignIO:
+
+第6章 多序列比对
 ==============================================
 
 多序列比对（Multiple Sequence Alignment, MSA）是指对多个序列进行对位排列。 这通常需要保证序列间的等同位点处在同一列上，并通过引进小横线（-）以保证最终的序列具有相同的长度。这种序列比对可以视作是由字符组成的矩阵。在Biopython中，多序列比对中每一个序列是以 ``SeqRecord`` 对象来表示的。
@@ -18,11 +20,11 @@
 
 这两个函数都接受两个必须参数：
 
-#. 第一个参数为包含有多序列比对数据的 *句柄（handle）* 。在实际操作中，这往往是一个打开的文件（详细信息请见 `22.1 <#sec:appendix-handles>`__ ）或者文件名。
+#. 第一个参数为包含有多序列比对数据的 *句柄（handle）* 。在实际操作中，这往往是一个打开的文件（详细信息请见 :ref:`22.1 <sec-appendix-handles>` ）或者文件名。
 
 #. 第二个参数为多序列比对文件格式（小写）。与 ``Bio.SeqIO`` 模块一样，Biopython不会对将读取的文件格式进行猜测。所有 ``Bio.AlignIO`` 模块支持的多序列比对数据格式可以在 `http://biopython.org/wiki/AlignIO <http://biopython.org/wiki/AlignIO>`__ 中找到。
 
-``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 `6.1.3 <#sec:AlignIO-count-argument>`__ 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。
+``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 :ref:`6.1.3 <sec-AlignIO-count-argument>` 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。
 
 另一个可选参数 ``alphabet`` 允许用户指定序列比对文件的字符（alphabet），它可以用来说明序列比对的类型（DNA，RNA或蛋白质）。因为大多数序列比对格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 ``Bio.AlignIO`` 默认将使用一般字符（generic alphabet），这将不区分各种序列比对类型。
 
@@ -100,7 +102,7 @@
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTSKA - Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA - COATB_BPIF1/22-73
 
-你也可以使用上面alignment对象的 ``format`` 方法来以指定的格式显示它。具体信息可以参见 `6.2.2 <#sec:alignment-format-method>`__ 。
+你也可以使用上面alignment对象的 ``format`` 方法来以指定的格式显示它。具体信息可以参见 :ref:`6.2.2 <sec-alignment-format-method>` 。
 
 你是否已经注意到以上原始数据文件中包含有蛋白数据库（PDB）交叉引用以及相关二级结构的信息？你可以尝试以下代码：
 
@@ -260,6 +262,8 @@ Sanger网站
     alignments = list(AlignIO.parse("resampled.phy", "phylip"))
     last_align = alignments[-1]
     first_align = alignments[0]
+
+.. _sec-AlignIO-count-argument:
 
 6.1.3  含糊的序列比对
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -421,10 +425,12 @@ Sanger网站
 
 *注意* - 如果你所指定给 ``Bio.AlignIO.write()`` 的文件已经存在在当前目录下，这一文件将被直接覆盖掉而不会有任何警告。
 
+.. _sec-converting-alignments:
+
 6.2.1  序列比对的格式间转换
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``Bio.AlignIO`` 模块中的序列比对格式转换功能与 ``Bio.SeqIO`` （见 `5.5.2 <#sec:SeqIO-conversion>`__ ）模块的格式转换是一样的。在通常情况下，我们建议使用 ``Bio.AlignIO.parse()`` 来读取序列比对数据，然后使用 ``Bio.AlignIO.write()`` 函数来写出。或者你也可以直接使用 ``Bio.AlignIO.convert()`` 函数来实现格式的转换。
+``Bio.AlignIO`` 模块中的序列比对格式转换功能与 ``Bio.SeqIO`` （见 :ref:`5.5.2 <sec-SeqIO-conversion>` ）模块的格式转换是一样的。在通常情况下，我们建议使用 ``Bio.AlignIO.parse()`` 来读取序列比对数据，然后使用 ``Bio.AlignIO.write()`` 函数来写出。或者你也可以直接使用 ``Bio.AlignIO.convert()`` 函数来实现格式的转换。
 
 在本例中，我们将读取PFAM/Stockholm格式的序列比对，然后将其保存为Clustal格式：
 
@@ -547,6 +553,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 由于序列ID的限制性，PHYLIP格式不是储存序列比对的理想格式。我们建议你将数据储存成PFAM/Stockholm或者其它能对序列比对进行注释的格式来保存你的数据。
 
+.. _sec-alignment-format-method:
+
 6.2.2  将序列比对对象转换为格式化字符串（formatted strings）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -558,7 +566,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
     print alignment.format("clustal")
 
-我们在 `4.5 <#sec:SeqRecord-format>`__ 中讲到， ``Bio.SeqIO`` 也有一个对 ``SeqRecord`` 输出的方法。
+我们在 :ref:`4.5 <sec-SeqRecord-format>` 中讲到， ``Bio.SeqIO`` 也有一个对 ``SeqRecord`` 输出的方法。
 
 ``format()`` 方法是利用 ``StringIO`` 以及 ``Bio.AlignIO.write()`` 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作：
 
@@ -710,7 +718,7 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
 
 另一个经常使用的序列比对操作是将多个基因的序列比对拼接成一个大的序列比对（meta-alignment）。
-在进行这种操作时一定要注意序列的ID需要匹配（具体请见 `4.7 <#sec:SeqRecord-addition>`__ 关于 ``SeqRecord``
+在进行这种操作时一定要注意序列的ID需要匹配（具体请见 :ref:`4.7 <sec-SeqRecord-addition>` 关于 ``SeqRecord``
 的说明)。为了达到这种目的，用 ``sort()`` 方法将序列ID按照字母顺序进行排列可能会有所帮助：
 
 .. code:: python
@@ -750,12 +758,14 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 注意， ``Numpy`` 的数组和Biopython默认的序列比对对象是分别储存在内存中的，编辑其中的一个不会更新另一个的值。
 
+.. _sec-alignment-tools:
+
 6.4  构建序列比对的工具
 ---------------------------
 
 目前有非常多的算法来帮助你构建一个序列比对，包括两两间的比对和多序列比对。这些算法在计算上往往是非常慢的，你一定不会希望用Python来实现他们。然而，你可以使用Biopython来运行命令行程序。通常你需要：
 
-#. 准备一个包含未比对序列的输入文件，一般为FASTA格式的序列。你可以使用 ``Bio.SeqIO`` 来创建一个 (具体见第5章 <#chapter:Bio.SeqIO>`__).
+#. 准备一个包含未比对序列的输入文件，一般为FASTA格式的序列。你可以使用 ``Bio.SeqIO`` 来创建一个 (具体见第 :ref:`5 <chapter-Bio.SeqIO>` 章).
 #. 在Biopython中运行一个命令行程序来构建序列比对（我们将在这里详细介绍）。这需要通过Biopython的打包程序（wrapper）来实现。
 #. 读取以上程序的输出，也就是排列好的序列比对。这往往可以通过 ``Bio.AlignIO`` 来实现（请看本章前部分内容）。
 
@@ -772,6 +782,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     'PrankCommandline', 'ProbconsCommandline', 'TCoffeeCommandline' ...]
 
 （以下划线开头的记录不是Biopython打包程序，这些变量在Python中有特殊的含义。） ``Bio.Emboss.Applications`` 中包含对 `EMBOSS  <http://emboss.sourceforge.net/>`__ 的打包程序（包括 ``needle`` 和 ``water`` ）。EMBOSS和PHYLIP的打包程序将在 `6.4.5 <#seq:emboss-needle-water>`__ 节中详细介绍。在本章中，我们并不打算将所有的序列比对程序都予以介绍，但是Biopython中各种序列比对程序都具有相同的使用方式。
+
+.. _sec-align_clustal:
 
 6.4.1  ClustalW
 ~~~~~~~~~~~~~~~
@@ -860,7 +872,7 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
      |___|
          | gi|6273284|gb|AF191658.1|AF191658
 
-`13 <#sec:Phylo>`__  章中详细介绍了如何使用Biopython对进化树数据进行处理。
+:ref:`13 <chapter-Phylo>`  章中详细介绍了如何使用Biopython对进化树数据进行处理。
 
 6.4.2  MUSCLE
 ~~~~~~~~~~~~~
@@ -1021,7 +1033,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 现在我们在没有创造一个FASTA文件的情况下获得了一个序列比对。然而，由于你没有在Biopython外运行MUSCLE，这会使调试程序的难度增大，而且存在程序跨平台使用的问题（Windows和Linux）。
 
-如果你觉得 ``subprocess`` 不方便使用，Biopython提供了另一种方式。如果你用 ``muscle_cline()`` 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： ``muscle_cline(stdin=...)`` 。假如你的序列文件不大，你可以将其储存为 ``StringIO`` 对象（具体见 `22.1 <#sec:appendix-handles>`__)：
+如果你觉得 ``subprocess`` 不方便使用，Biopython提供了另一种方式。如果你用 ``muscle_cline()`` 来运行外部程序（如MUSCLE），你可以用一个字符串对象作为输入。例如，你可以以这种方式使用： ``muscle_cline(stdin=...)`` 。假如你的序列文件不大，你可以将其储存为 ``StringIO`` 对象（具体见 :ref:`22.1 <sec-appendix-handles>`)：
 
 .. code:: python
 

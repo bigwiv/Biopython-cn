@@ -51,7 +51,7 @@
           <div class="body">
             
   <div class="section" id="swiss-protexpasy">
-<h1>第10章 Swiss-Prot和ExPASy<a class="headerlink" href="#swiss-protexpasy" title="Permalink to this headline">¶</a></h1>
+<span id="chapter-swiss-prot"></span><h1>第10章 Swiss-Prot和ExPASy<a class="headerlink" href="#swiss-protexpasy" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="swiss-prot">
 <h2>10.1  解析Swiss-Prot文件<a class="headerlink" href="#swiss-prot" title="Permalink to this headline">¶</a></h2>
 <p>Swiss-Prot
@@ -59,9 +59,9 @@
 蛋白质序列数据库。 Biopython能够解析纯文本的Swiss-Prot文件,
 这种格式也被Swiss-Prot、TrEMBL和PIRPSD的UniProt数据库使用。然而我们并
 不支持UniProKB的XML格式文件。</p>
-<div class="section" id="parsing-swiss-prot-records">
-<h3>10.1.1  Parsing Swiss-Prot records<a class="headerlink" href="#parsing-swiss-prot-records" title="Permalink to this headline">¶</a></h3>
-<p>在 <a class="reference external" href="#sec:SeqIO_ExPASy_and_SwissProt">5.3.2</a> 章节中, 我们描述过怎样将一个
+<div class="section" id="id1">
+<h3>10.1.1  解析 Swiss-Prot 记录<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>在 <a class="reference internal" href="chr05.html#sec-seqio-expasy-and-swissprot"><em>5.3.2</em></a> 章节中, 我们描述过怎样将一个
 Swiss-Prot记录中的序列提出来作为一个 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象。 此外，你可以将
 Swiss-Prot记录存到  <tt class="docutils literal"><span class="pre">Bio.SwissProt.Record</span></tt> 对象, 这实际上存储了Swiss-Prot记录
 中所包含的的全部信息。在这部分我们将介绍怎样从一个Swiss-Prot文件中提
@@ -87,7 +87,7 @@ Swiss-Prot记录存到  <tt class="docutils literal"><span class="pre">Bio.Swiss
 </div>
 </li>
 <li><p class="first">从ExPASy数据库在线打开Swiss-Prot文件
-(见 <a class="reference external" href="#subsec:expasy_swissprot">10.5.1</a> 章节):</p>
+(见 <a class="reference internal" href="#sec-expasy-swissprot"><em>10.5.1</em></a> 章节):</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">ExPASy</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">handle</span> <span class="o">=</span> <span class="n">ExPASy</span><span class="o">.</span><span class="n">get_sprot_raw</span><span class="p">(</span><span class="n">myaccessionnumber</span><span class="p">)</span>
 </pre></div>
@@ -95,7 +95,7 @@ Swiss-Prot记录存到  <tt class="docutils literal"><span class="pre">Bio.Swiss
 </li>
 </ul>
 <p>对于解析来说，关键点在于Swiss-Prot格式的数据，而不是获取它的方式。</p>
-<p>我们可以用 <a class="reference external" href="#sec:SeqIO_ExPASy_and_SwissProt">5.3.2</a> 章节中描述的方式，
+<p>我们可以用 <a class="reference internal" href="chr05.html#sec-seqio-expasy-and-swissprot"><em>5.3.2</em></a> 章节中描述的方式，
 通过 <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> 来获取格式未知的 <tt class="docutils literal"><span class="pre">SeqRecord</span></tt> 对象。此外，我们也可以
 用 <tt class="docutils literal"><span class="pre">Bio.SwissProt</span></tt> 来获取更加匹配基本文件格式的 <tt class="docutils literal"><span class="pre">Bio.SwissProt.Record</span></tt> 对象。</p>
 <p>我们使用 <tt class="docutils literal"><span class="pre">read()</span></tt> 函数来从文件中读取一个Swiss-Prot记录：</p>
@@ -178,8 +178,8 @@ Swiss-Prot记录中的成员，就输入：</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id1">
-<h3>10.1.2  解析Swiss-Prot关键词和分类列表<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>10.1.2  解析Swiss-Prot关键词和分类列表<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Swiss-Prot也会提供一个 <tt class="docutils literal"><span class="pre">keywlist.txt</span></tt> 文件，该文件列出了Swiss-Prot中所用到
 的关键词和分类。其中所包含的词条形式如下：</p>
 <div class="code python highlight-python"><pre>ID   2Fe-2S.
@@ -288,8 +288,8 @@ site</a> 网站下载
 </div>
 <p>如果并不存在或存在多个你想要找的Prosite记录时，这个函数将会输出一个“ValueError”提示。</p>
 </div>
-<div class="section" id="id2">
-<h2>10.3  解析Prosite文件记录<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>10.3  解析Prosite文件记录<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>在上述的Prosite示例中，像 <tt class="docutils literal"><span class="pre">'PDOC00001'</span></tt> 、 <tt class="docutils literal"><span class="pre">'PDOC00004'</span></tt> 、 <tt class="docutils literal"><span class="pre">'PDOC00005'</span></tt> 等这样的编号指的就
 是Prosite文件。Prosite文件记录可以以单个文件（ <tt class="docutils literal"><span class="pre">prosite.doc</span></tt> ）的形式从ExPASy获取，并
 且该文件包含了所有Prosite文档记录。</p>
@@ -303,8 +303,8 @@ Prosite文档记录的编号列表，你可以使用：</p>
 </div>
 <p>进一步可以使用 <tt class="docutils literal"><span class="pre">read()</span></tt> 函数来对这些数据中具体某一条文档记录来进行查询。</p>
 </div>
-<div class="section" id="id3">
-<h2>10.4  解析酶记录<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>10.4  解析酶记录<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>ExPASy的酶数据库是一个关于酶的系统命名信息的数据库。如下所示是一个比较典型的酶的记录</p>
 <div class="code python highlight-python"><pre>ID   3.1.1.34
 DE   Lipoprotein lipase.
@@ -389,10 +389,10 @@ DR   Q06000, LIPL_RAT   ;  Q29524, LIPL_SHEEP ;
 <dd>搜索一个Swiss-Prot记录</dd>
 </dl>
 <p>为了从python脚本来访问该网络服务器，我们可以使用 <tt class="docutils literal"><span class="pre">Bio.ExPASy</span></tt> 模块。</p>
-<div class="section" id="id4">
-<h3>10.5.1  获取一个Swiss-Prot记录<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="sec-expasy-swissprot">
+<span id="id5"></span><h3>10.5.1  获取一个Swiss-Prot记录<a class="headerlink" href="#sec-expasy-swissprot" title="Permalink to this headline">¶</a></h3>
 <p>现在让我们来寻找一个关于兰花的查儿酮合成酶（对于寻找和兰花相关的有趣东西的理由
-请看 <a class="reference external" href="#sec:orchids">2.3</a> 章节）。查儿酮合成酶参与了植物中类黄酮的生物合成，
+请看 <a class="reference internal" href="chr02.html#sec-orchids"><em>2.3</em></a> 章节）。查儿酮合成酶参与了植物中类黄酮的生物合成，
 类黄酮能够合成包含色素和UV保护分子等物质。</p>
 <p>如果你要对Swiss-Prot进行搜索，你可以找到三个关于查儿酮合成酶的兰花蛋白，id编号
 为O23729, O23730, O23731。现在我们要写一个能够获取这些蛋白并能够找到一些有趣
@@ -425,8 +425,8 @@ DR   Q06000, LIPL_RAT   ;  Q29524, LIPL_SHEEP ;
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h3>10.5.2  搜索Swiss-Prot<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>10.5.2  搜索Swiss-Prot<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>现在，你可以察觉到我已经提前知道了这个记录的编号。的确， <tt class="docutils literal"><span class="pre">get_sprot_raw()</span></tt> 需要一个词条或者编号。
 当你并没有编号或者词条的时候，你可使用 <tt class="docutils literal"><span class="pre">sprot_search_de()</span></tt> 或者 <tt class="docutils literal"><span class="pre">sprot_search_ful()</span></tt> 函数来解决问题。</p>
 <p><tt class="docutils literal"><span class="pre">sprot_search_de()</span></tt> 在ID, DE, GN, OS和OG行进行搜索；
@@ -500,8 +500,8 @@ DR   Q06000, LIPL_RAT   ;  Q29524, LIPL_SHEEP ;
 <p>对于这些函数，无效的编号会返回一个HTML格式的错误信息。</p>
 </div>
 </div>
-<div class="section" id="id6">
-<h2>10.6  浏览Prosite数据库<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>10.6  浏览Prosite数据库<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="http://www.expasy.org/tools/scanprosite/">ScanProsite</a>  允许你通过向Prosite数据库提供一个
 Uniprot或者PDB序列编号或序列来在线浏览蛋白序列。关于ScanProsite更多的信息，请阅
 读 <a class="reference external" href="http://www.expasy.org/tools/scanprosite/scanprosite-doc.html">ScanProsite文档</a> 以及
@@ -570,20 +570,20 @@ ScanProsite说明文档</a> 。
   <ul>
 <li><a class="reference internal" href="#">第10章 Swiss-Prot和ExPASy</a><ul>
 <li><a class="reference internal" href="#swiss-prot">10.1  解析Swiss-Prot文件</a><ul>
-<li><a class="reference internal" href="#parsing-swiss-prot-records">10.1.1  Parsing Swiss-Prot records</a></li>
-<li><a class="reference internal" href="#id1">10.1.2  解析Swiss-Prot关键词和分类列表</a></li>
+<li><a class="reference internal" href="#id1">10.1.1  解析 Swiss-Prot 记录</a></li>
+<li><a class="reference internal" href="#id2">10.1.2  解析Swiss-Prot关键词和分类列表</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#prosite">10.2  解析Prosite记录</a></li>
-<li><a class="reference internal" href="#id2">10.3  解析Prosite文件记录</a></li>
-<li><a class="reference internal" href="#id3">10.4  解析酶记录</a></li>
+<li><a class="reference internal" href="#id3">10.3  解析Prosite文件记录</a></li>
+<li><a class="reference internal" href="#id4">10.4  解析酶记录</a></li>
 <li><a class="reference internal" href="#accessing-the-expasy-server">10.5  Accessing the ExPASy server</a><ul>
-<li><a class="reference internal" href="#id4">10.5.1  获取一个Swiss-Prot记录</a></li>
-<li><a class="reference internal" href="#id5">10.5.2  搜索Swiss-Prot</a></li>
+<li><a class="reference internal" href="#sec-expasy-swissprot">10.5.1  获取一个Swiss-Prot记录</a></li>
+<li><a class="reference internal" href="#id6">10.5.2  搜索Swiss-Prot</a></li>
 <li><a class="reference internal" href="#prositeprosite">10.5.3  获取Prosite和Prosite文档记录</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id6">10.6  浏览Prosite数据库</a></li>
+<li><a class="reference internal" href="#id7">10.6  浏览Prosite数据库</a></li>
 </ul>
 </li>
 </ul>

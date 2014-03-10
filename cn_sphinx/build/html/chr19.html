@@ -51,7 +51,7 @@
           <div class="body">
             
   <div class="section" id="biopython">
-<h1>第19章 Biopython测试框架<a class="headerlink" href="#biopython" title="Permalink to this headline">¶</a></h1>
+<span id="sec-regr-test"></span><h1>第19章 Biopython测试框架<a class="headerlink" href="#biopython" title="Permalink to this headline">¶</a></h1>
 <p>Biopython具有一个基于Python标准单元测试框架 <cite>unittest&lt;http://docs.python.org/library/unittest.html&gt;</cite>
 的回归测试框架（文件 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt>）。而为模块提供全面测试，
 是确保Biopython代码在使用期内尽可能无bug的一个最重要的方面。
@@ -78,7 +78,7 @@
 <p>当给出测试列表时， <tt class="docutils literal"><span class="pre">.py</span></tt> 扩展名是可选的，所以你可以只需打字：</p>
 <div class="code python highlight-python"><pre>python run_tests.py test_SeqIO test_AlignIO</pre>
 </div>
-<p>要运行 docstring 测试（见 <a class="reference external" href="#section:doctest">19.3</a> 节）的话，
+<p>要运行 docstring 测试（见 <a class="reference internal" href="#section-doctest"><em>19.3</em></a> 节）的话，
 你可以用</p>
 <div class="code python highlight-python"><pre>python run_tests.py doctest</pre>
 </div>
@@ -344,7 +344,7 @@ OK</pre>
 </div>
 </li>
 </ul>
-<p>如果你的模块包含 docstring 测试（见`19.3 &lt;#section:doctest&gt;`__小节），
+<p>如果你的模块包含 docstring 测试（见 <a class="reference internal" href="#section-doctest"><em>19.3</em></a> 小节），
 你也许想在要运行的测试中包含这些。你可以修改 <tt class="docutils literal"><span class="pre">if</span> <span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">&quot;__main__&quot;:</span></tt>
 下面的代码如下面这样：</p>
 <div class="code python highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
@@ -361,7 +361,7 @@ OK</pre>
 </div>
 </div>
 <div class="section" id="doctests">
-<h2>19.3  编写 doctests<a class="headerlink" href="#doctests" title="Permalink to this headline">¶</a></h2>
+<span id="section-doctest"></span><h2>19.3  编写 doctests<a class="headerlink" href="#doctests" title="Permalink to this headline">¶</a></h2>
 <p>Python 模块、类和函数支持使用 docstrings 创建文档。 <a class="reference external" href="http://docs.python.org/library/doctest.html">doctest 框架</a> （包含在Python中）
 允许开发者将工作例子嵌入在 docstrings 中，并自动测试这些例子。</p>
 <p>目前只有一小部分 Biopython 包含 doctests 。 <tt class="docutils literal"><span class="pre">run_tests.py</span></tt> 脚本

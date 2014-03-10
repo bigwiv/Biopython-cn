@@ -124,22 +124,22 @@ sudo python setup.py install</pre>
 <h2>1.4  常见问答（FAQ）<a class="headerlink" href="#faq" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first"><em>在科学出版中我怎样引用Biopython？</em></p>
-<p>请引用我们的应用笔记 [<a class="reference external" href="#cock2009">1</a>, Cock <em>et al.</em> ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
+<p>请引用我们的应用笔记 [<a class="reference internal" href="chr23.html#cock2009"><em>1</em></a>, Cock <em>et al.</em> ,  2009] 作为主要的Biopython参考文献。另外，如果可以，请
 引用以下任意出版物，特别是作为Biopython特定模块的参考文献的话。
 （更多信息可在我们网站上获得）：</p>
 <ul class="simple">
-<li>对于官方项目声明: [<a class="reference external" href="#chapman2000">13</a>,
+<li>对于官方项目声明: [<a class="reference internal" href="chr23.html#chapman2000"><em>13</em></a>,
 Chapman and Chang, 2000];</li>
-<li>对于 <tt class="docutils literal"><span class="pre">Bio.PDB</span></tt>: [<a class="reference external" href="#hamelryck2003a">18</a>, Hamelryck and
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.PDB</span></tt>: [<a class="reference internal" href="chr23.html#hamelryck2003a"><em>18</em></a>, Hamelryck and
 Manderick, 2003];</li>
-<li>对于 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>: [<a class="reference external" href="#dehoon2004">14</a>, De Hoon <em>et al.</em>,
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Cluster</span></tt>: [<a class="reference internal" href="chr23.html#dehoon2004"><em>14</em></a>, De Hoon <em>et al.</em>,
 2004];</li>
-<li>对于 <tt class="docutils literal"><span class="pre">Bio.Graphics.GenomeDiagram</span></tt>: [<a class="reference external" href="#pritchard2006">2</a>,
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Graphics.GenomeDiagram</span></tt>: [<a class="reference internal" href="chr23.html#pritchard2006"><em>2</em></a>,
 Pritchard <em>et al.</em>, 2006];</li>
-<li>对于 <tt class="docutils literal"><span class="pre">Bio.Phylo</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.Phylo.PAML</span></tt>: [<a class="reference external" href="#talevich2012">9</a>,
+<li>对于 <tt class="docutils literal"><span class="pre">Bio.Phylo</span></tt> 和 <tt class="docutils literal"><span class="pre">Bio.Phylo.PAML</span></tt>: [<a class="reference internal" href="chr23.html#talevich2012"><em>9</em></a>,
 Talevich <em>et al.</em>, 2012];</li>
 <li>对于在Biopython，BioPerl，BioRuby，BioJava和EMBOSS支持的FASTQ格
-式文件：[<a class="reference external" href="#cock2010">7</a>, Cock <em>et al.</em>, 2010].</li>
+式文件：[<a class="reference internal" href="chr23.html#cock2010"><em>7</em></a>, Cock <em>et al.</em>, 2010].</li>
 </ul>
 </li>
 <li><p class="first"><em>我该怎样以大写字母写“Biopython”？写成“BioPython”可以吗？</em></p>
@@ -177,7 +177,7 @@ Talevich <em>et al.</em>, 2012];</li>
 装。也可以访问： <a class="reference external" href="http://numpy.scipy.org/">http://numpy.scipy.org/</a></p>
 </li>
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象缺少了这篇教程里的（反向）transcription和translation方法？</em></p>
-<p>你需要Biopython 1.49或更新的版本。或者，使用以下 <a class="reference external" href="#sec:seq-module-functions">3.14</a> 部分中的 <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 模块
+<p>你需要Biopython 1.49或更新的版本。或者，使用以下 <a class="reference internal" href="chr03.html#sec-seq-module-functions"><em>3.14</em></a> 部分中的 <tt class="docutils literal"><span class="pre">Bio.Seq</span></tt> 模块
 功能。</p>
 </li>
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Seq</span></tt> <em>对象缺少了这篇教程中的upper和lower方法？</em></p>
@@ -209,7 +209,7 @@ Talevich <em>et al.</em>, 2012];</li>
 </li>
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO</span></tt> <em>函数</em> <tt class="docutils literal"><span class="pre">parse</span></tt> <em>，</em> <tt class="docutils literal"><span class="pre">read</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">write</span></tt> <em>不能使用文件名？它们坚持句柄！</em></p>
 <p>你需要Biopython 1.54或更新的版本。或者明确使用句柄。
-(见 Section <a class="reference external" href="#sec:appendix-handles">22.1</a>). 一定要记得当你写完数据后关闭输
+(见 Section <a class="reference internal" href="chr22.html#sec-appendix-handles"><em>22.1</em></a>). 一定要记得当你写完数据后关闭输
 出句柄。</p>
 </li>
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.write()</span></tt> <em>和</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO.write()</span></tt> <em>函数不接受单个记录
@@ -254,7 +254,7 @@ Biopython 1.59及之后版本或自动将一个列表转换成逗号分隔的字
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.convert()</span></tt> <em>或</em> <tt class="docutils literal"><span class="pre">Bio.AlignIO.convert()</span></tt> <em>不能正常工作？模块导入
 正常但是没有convert函数！</em></p>
 <p>你需要Biopython 1.52或更新版本。或者，按以下教程中描述的结合 <tt class="docutils literal"><span class="pre">parse</span></tt> 和 <tt class="docutils literal"><span class="pre">write</span></tt> 函数。
-（见 Sections <a class="reference external" href="#sec:SeqIO-conversion">5.5.2</a> 和 <a class="reference external" href="#sec:converting-alignments">6.2.1</a>）。</p>
+（见 Sections <a class="reference internal" href="chr05.html#sec-seqio-conversion"><em>5.5.2</em></a> 和 <a class="reference internal" href="chr06.html#sec-converting-alignments"><em>6.2.1</em></a>）。</p>
 </li>
 <li><p class="first"><em>为什么</em> <tt class="docutils literal"><span class="pre">Bio.SeqIO.index()</span></tt> <em>不能正常工作？模块导入正常但是没有index函数！</em></p>
 <p>你需要Biopython 1.52或更新版本。</p>
