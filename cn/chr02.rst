@@ -41,26 +41,20 @@
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
     >>> my_seq
-    Seq('AGTACACTGGT', Alphabet())
-    >>> print my_seq
+    Seq('AGTACACTGGT')
+    >>> print(my_seq)
     AGTACACTGGT
-    >>> my_seq.alphabet
-    Alphabet()
 
-这里是一个由 *通用* 字母表组成的序列对象——说明我们还 *没有* 指定它是一条DNA还是蛋白质
-序列（好吧，一个有很多的Ala，Gly，Cys和Thr蛋白质序列！（幽默））。在第 :ref:`3 <chapter-Bio.Seq>` 章我们将讨论更
-多关于字母表。
-
-除了有一个字母表， ``Seq`` 对象支持不同于Python的字符串方法。你不能对一个纯字符串做以下处理：
+``Seq`` 对象支持不同于Python的字符串方法。你不能对一个纯字符串做以下处理：
 
 .. code:: python
 
     >>> my_seq
-    Seq('AGTACACTGGT', Alphabet())
+    Seq('AGTACACTGGT')
     >>> my_seq.complement()
-    Seq('TCATGTGACCA', Alphabet())
+    Seq('TCATGTGACCA')
     >>> my_seq.reverse_complement()
-    Seq('ACCAGTGTACT', Alphabet())
+    Seq('ACCAGTGTACT')
 
 另一个最重要的类是 ``SeqRecord`` 或Sequence Record。它保留了一条序列（作为 ``Seq`` 对象）
 额外的注释信息，包括ID，name和description。用于读写序列文件格式的 ``Bio.SeqIO`` 模块
@@ -112,7 +106,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 2.4.1  简单的FASTA解析示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-如果你用你喜好的文本编辑器打开了lady slipper orchids的FASTA文件 `ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__，
+如果你用你喜好的文本编辑器打开了lady slipper orchids的FASTA文件 `ls_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.fasta>`__，
 你会看到文件开头像这样：
 
 .. code:: python
@@ -128,48 +122,47 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
-        print seq_record.id
-        print repr(seq_record.seq)
-        print len(seq_record)
+        print(seq_record.id)
+        print(repr(seq_record.seq))
+        print(len(seq_record))
 
 你应该会得到类似这样的一些东西出现在屏幕上：
 
 .. code:: python
 
     gi|2765658|emb|Z78533.1|CIZ78533
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', SingleLetterAlphabet())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
     740
     ...
     gi|2765564|emb|Z78439.1|PBZ78439
-    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', SingleLetterAlphabet())
+    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
 
-注意FASTA文件并没有指定字母表，因此 ``Bio.SeqIO`` 默认使用相当通用的 ``SingleLetterAlphabet()`` 而不是DNA序列特有的。
 
 2.4.2  简单的GenBank解析示例
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-现在我们来加载一个GenBank文件 `ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+现在我们来加载一个GenBank文件 `ls_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__
 ——注意这里的代码与上面处理FASTA文件的代码几乎完全相同——仅有的不同之处是我们改变了文件名和格式的字符串：
 
 .. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-        print seq_record.id
-        print repr(seq_record.seq)
-        print len(seq_record)
+        print(eq_record.id)
+        print(repr(seq_record.seq))
+        print(len(seq_record))
 
 这段代码应该会给出：
 
 .. code:: python
 
     Z78533.1
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
     740
     ...
     Z78439.1
-    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', IUPACAmbiguousDNA())
+    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
 
 这一次 ``Bio.SeqIO`` 能够选择一个合理的字母表，IUPAC Ambiguous DNA。你应该注意到了这个例子中有一个较短的字符串被作为 ``seq_record.id`` 。
