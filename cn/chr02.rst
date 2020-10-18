@@ -165,7 +165,7 @@ GenBank格式文本文件（文件 `ls_orchid.fasta <http://biopython.org/DIST/d
     Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
 
-这一次 ``Bio.SeqIO`` 能够选择一个合理的字母表，IUPAC Ambiguous DNA。你应该注意到了这个例子中有一个较短的字符串被作为 ``seq_record.id`` 。
+你应该注意到了这个例子中有一个较短的字符串被作为 ``seq_record.id`` 。
 
 2.4.3  我爱解析——请别停止讨论它！
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
