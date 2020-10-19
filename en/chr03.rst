@@ -12,88 +12,13 @@ Sequences are essentially strings of letters like ``AGTACACTGGT``, which
 seems very natural since this is the most common way that sequences are
 seen in biological file formats.
 
-There are two important differences between ``Seq`` objects and standard
-Python strings. First of all, they have different methods. Although the
-``Seq`` object supports many of the same methods as a plain string, its
-``translate()`` method differs by doing biological translation, and
-there are also additional biologically relevant methods like
-``reverse_complement()``. Secondly, the ``Seq`` object has an important
-attribute, ``alphabet``, which is an object describing what the
-individual characters making up the sequence string “mean”, and how they
-should be interpreted. For example, is ``AGTACACTGGT`` a DNA sequence,
-or just a protein sequence that happens to be rich in Alanines,
-Glycines, Cysteines and Threonines?
+The most important difference between ``Seq`` objects and standard Python
+strings is they have different methods. Although the ``Seq`` object supports
+many of the same methods as a plain string, its ``translate()`` method differs
+by doing biological translation, and there are also additional biologically
+relevant methods like ``reverse_complement()``.
 
-3.1  Sequences and Alphabets
-----------------------------
-
-The alphabet object is perhaps the important thing that makes the
-``Seq`` object more than just a string. The currently available
-alphabets for Biopython are defined in the ``Bio.Alphabet`` module.
-We’ll use the IUPAC alphabets
-(`http://www.chem.qmw.ac.uk/iupac/ <http://www.chem.qmw.ac.uk/iupac/>`__)
-here to deal with some of our favorite objects: DNA, RNA and Proteins.
-
-``Bio.Alphabet.IUPAC`` provides basic definitions for proteins, DNA and
-RNA, but additionally provides the ability to extend and customize the
-basic definitions. For instance, for proteins, there is a basic
-IUPACProtein class, but there is an additional ExtendedIUPACProtein
-class providing for the additional elements “U” (or “Sec” for
-selenocysteine) and “O” (or “Pyl” for pyrrolysine), plus the ambiguous
-symbols “B” (or “Asx” for asparagine or aspartic acid), “Z” (or “Glx”
-for glutamine or glutamic acid), “J” (or “Xle” for leucine isoleucine)
-and “X” (or “Xxx” for an unknown amino acid). For DNA you’ve got choices
-of IUPACUnambiguousDNA, which provides for just the basic letters,
-IUPACAmbiguousDNA (which provides for ambiguity letters for every
-possible situation) and ExtendedIUPACDNA, which allows letters for
-modified bases. Similarly, RNA can be represented by IUPACAmbiguousRNA
-or IUPACUnambiguousRNA.
-
-The advantages of having an alphabet class are two fold. First, this
-gives an idea of the type of information the Seq object contains.
-Secondly, this provides a means of constraining the information, as a
-means of type checking.
-
-Now that we know what we are dealing with, let’s look at how to utilize
-this class to do interesting work. You can create an ambiguous sequence
-with the default generic alphabet like this:
-
-.. code:: python
-
-    >>> from Bio.Seq import Seq
-    >>> my_seq = Seq("AGTACACTGGT")
-    >>> my_seq
-    Seq('AGTACACTGGT', Alphabet())
-    >>> my_seq.alphabet
-    Alphabet()
-
-However, where possible you should specify the alphabet explicitly when
-creating your sequence objects - in this case an unambiguous DNA
-alphabet object:
-
-.. code:: python
-
-    >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq("AGTACACTGGT", IUPAC.unambiguous_dna)
-    >>> my_seq
-    Seq('AGTACACTGGT', IUPACUnambiguousDNA())
-    >>> my_seq.alphabet
-    IUPACUnambiguousDNA()
-
-Unless of course, this really is an amino acid sequence:
-
-.. code:: python
-
-    >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_prot = Seq("AGTACACTGGT", IUPAC.protein)
-    >>> my_prot
-    Seq('AGTACACTGGT', IUPACProtein())
-    >>> my_prot.alphabet
-    IUPACProtein()
-
-3.2  Sequences act like strings
+3.1  Sequences act like strings
 -------------------------------
 
 In many ways, we can deal with Seq objects as if they were normal Python
@@ -102,16 +27,15 @@ strings, for example getting the length, or iterating over the elements:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq("GATCG", IUPAC.unambiguous_dna)
+    >>> my_seq = Seq("GATCG")
     >>> for index, letter in enumerate(my_seq):
-    ...     print index, letter
+    ...     print("%i %s" % (index, letter))
     0 G
     1 A
     2 T
     3 C
     4 G
-    >>> print len(my_seq)
+    >>> print(len(my_seq))
     5
 
 You can access elements of the sequence in the same way as for strings
@@ -145,8 +69,7 @@ this makes no difference:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC', IUPAC.unambiguous_dna)
+    >>> my_seq = Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC')
     >>> len(my_seq)
     32
     >>> my_seq.count("G")
@@ -161,9 +84,8 @@ For example:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
     >>> from Bio.SeqUtils import GC
-    >>> my_seq = Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC', IUPAC.unambiguous_dna)
+    >>> my_seq = Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC')
     >>> GC(my_seq)
     46.875
 
@@ -174,10 +96,10 @@ means G or C.
 Also note that just like a normal Python string, the ``Seq`` object is
 in some ways “read-only”. If you need to edit your sequence, for example
 simulating a point mutation, look at the
-Section \ `3.12 <#sec:mutable-seq>`__ below which talks about the
+Section \ `3.11 <#sec:mutable-seq>`__ below which talks about the
 ``MutableSeq`` object.
 
-3.3  Slicing a sequence
+3.2  Slicing a sequence
 -----------------------
 
 A more complicated example, let’s get a slice of the sequence:
@@ -185,23 +107,14 @@ A more complicated example, let’s get a slice of the sequence:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq("GATCGATGGGCCTATATAGGATCGAAAATCGC", IUPAC.unambiguous_dna)
+    >>> my_seq = Seq("GATCGATGGGCCTATATAGGATCGAAAATCGC")
     >>> my_seq[4:12]
-    Seq('GATGGGCC', IUPACUnambiguousDNA())
+    Seq('GATGGGCC')
 
-Two things are interesting to note. First, this follows the normal
-conventions for Python strings. So the first element of the sequence is
-0 (which is normal for computer science, but not so normal for biology).
-When you do a slice the first item is included (i.e. 4 in this case) and
-the last is excluded (12 in this case), which is the way things work in
-Python, but of course not necessarily the way everyone in the world
-would expect. The main goal is to stay consistent with what Python does.
-
-The second thing to notice is that the slice is performed on the
-sequence data string, but the new object produced is another ``Seq``
-object which retains the alphabet information from the original ``Seq``
-object.
+Note that ‘Seq‘ objects follow the usual indexing conventions for
+Python strings, with the first element of the sequence numbered 0.
+When you do a slice the first item is included (i.e. 4 in this case)
+and the last is excluded (12 in this case).
 
 Also like a Python string, you can do slices with a start, stop and
 *stride* (the step size, which defaults to one). For example, we can get
@@ -210,11 +123,11 @@ the first, second and third codon positions of this DNA sequence:
 .. code:: python
 
     >>> my_seq[0::3]
-    Seq('GCTGTAGTAAG', IUPACUnambiguousDNA())
+    Seq('GCTGTAGTAAG')
     >>> my_seq[1::3]
-    Seq('AGGCATGCATC', IUPACUnambiguousDNA())
+    Seq('AGGCATGCATC')
     >>> my_seq[2::3]
-    Seq('TAGCTAAGAC', IUPACUnambiguousDNA())
+    Seq('TAGCTAAGAC')
 
 Another stride trick you might have seen with a Python string is the use
 of a -1 stride to reverse the string. You can do this with a ``Seq``
@@ -223,9 +136,9 @@ object too:
 .. code:: python
 
     >>> my_seq[::-1]
-    Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
+    Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG')
 
-3.4  Turning Seq objects into strings
+3.3  Turning Seq objects into strings
 -------------------------------------
 
 If you really do just need a plain string, for example to write to a
@@ -238,11 +151,11 @@ file, or insert into a database, then this is very easy to get:
 
 Since calling ``str()`` on a ``Seq`` object returns the full sequence as
 a string, you often don’t actually have to do this conversion
-explicitly. Python does this automatically with a print statement:
+explicitly. Python does this automatically in the print function:
 
 .. code:: python
 
-    >>> print my_seq
+    >>> print(my_seq)
     GATCGATGGGCCTATATAGGATCGAAAATCGC
 
 You can also use the ``Seq`` object directly with a ``%s`` placeholder
@@ -252,7 +165,7 @@ when using the Python string formatting or interpolation operator
 .. code:: python
 
     >>> fasta_format_string = ">Name\n%s\n" % my_seq
-    >>> print fasta_format_string
+    >>> print(fasta_format_string)
     >Name
     GATCGATGGGCCTATATAGGATCGAAAATCGC
     <BLANKLINE>
@@ -264,82 +177,60 @@ describes a neat way to get a FASTA formatted string from a
 writing FASTA format sequence files is covered in
 Chapter \ `5 <#chapter:Bio.SeqIO>`__.
 
-*NOTE:* If you are using Biopython 1.44 or older, using ``str(my_seq)``
-will give just a truncated representation. Instead use
-``my_seq.tostring()`` (which is still available in the current Biopython
-releases for backwards compatibility):
-
-.. code:: python
-
-    >>> my_seq.tostring()
-    'GATCGATGGGCCTATATAGGATCGAAAATCGC'
-
-3.5  Concatenating or adding sequences
+3.4  Concatenating or adding sequences
 --------------------------------------
 
-Naturally, you can in principle add any two Seq objects together - just
-like you can with Python strings to concatenate them. However, you can’t
-add sequences with incompatible alphabets, such as a protein sequence
-and a DNA sequence:
+As of Biopython 1.78, you can add any two Seq objects together.
 
 .. code:: python
 
-    >>> from Bio.Alphabet import IUPAC
     >>> from Bio.Seq import Seq
-    >>> protein_seq = Seq("EVRNAK", IUPAC.protein)
-    >>> dna_seq = Seq("ACGT", IUPAC.unambiguous_dna)
+    >>> protein_seq = Seq("EVRNAK")
+    >>> dna_seq = Seq("ACGT")
     >>> protein_seq + dna_seq
-    Traceback (most recent call last):
+    Seq('EVRNAKACGT')
+
+Deliberately mixing DNA and protein like this is likely a mistake though...
+
+You may often have many sequences to add together, which can be done with a for loop like this:
+
+.. code:: python
+
+    >>> from Bio.Seq import Seq
+    >>> list_of_seqs = [Seq("ACGT"), Seq("AACC"), Seq("GGTT")]
+    >>> concatenated = Seq("")
+    >>> for s in list_of_seqs:
+    ...      concatenated += s
     ...
-    TypeError: Incompatible alphabets IUPACProtein() and IUPACUnambiguousDNA()
+    >>> concatenated
+    Seq('ACGTAACCGGTT')
 
-If you *really* wanted to do this, you’d have to first give both
-sequences generic alphabets:
-
-.. code:: python
-
-    >>> from Bio.Alphabet import generic_alphabet
-    >>> protein_seq.alphabet = generic_alphabet
-    >>> dna_seq.alphabet = generic_alphabet
-    >>> protein_seq + dna_seq
-    Seq('EVRNAKACGT', Alphabet())
-
-Here is an example of adding a generic nucleotide sequence to an
-unambiguous IUPAC DNA sequence, resulting in an ambiguous nucleotide
-sequence:
+Like Python strings, Biopython Seq also has a .join method:
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import generic_nucleotide
-    >>> from Bio.Alphabet import IUPAC
-    >>> nuc_seq = Seq("GATCGATGC", generic_nucleotide)
-    >>> dna_seq = Seq("ACGT", IUPAC.unambiguous_dna)
-    >>> nuc_seq
-    Seq('GATCGATGC', NucleotideAlphabet())
-    >>> dna_seq
-    Seq('ACGT', IUPACUnambiguousDNA())
-    >>> nuc_seq + dna_seq
-    Seq('GATCGATGCACGT', NucleotideAlphabet())
+    >>> contigs = [Seq("ATG"), Seq("ATCCCG"), Seq("TTGCA")]
+    >>> spacer = Seq("N"*10)
+    >>> spacer.join(contigs)
+    Seq('ATGNNNNNNNNNNATCCCGNNNNNNNNNNTTGCA')
 
-3.6  Changing case
+3.5  Changing case
 ------------------
 
-Python strings have very useful ``upper`` and ``lower`` methods for
-changing the case. As of Biopython 1.53, the ``Seq`` object gained
-similar methods which are alphabet aware. For example,
+Python strings have very useful upper and lower methods for changing
+the case.For example,
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import generic_dna
-    >>> dna_seq = Seq("acgtACGT", generic_dna)
+    >>> dna_seq = Seq("acgtACGT")
     >>> dna_seq
-    Seq('acgtACGT', DNAAlphabet())
+    Seq('acgtACGT')
     >>> dna_seq.upper()
-    Seq('ACGTACGT', DNAAlphabet())
+    Seq('ACGTACGT')
     >>> dna_seq.lower()
-    Seq('acgtacgt', DNAAlphabet())
+    Seq('acgtacgt')
 
 These are useful for doing case insensitive matching:
 
@@ -350,20 +241,7 @@ These are useful for doing case insensitive matching:
     >>> "GTAC" in dna_seq.upper()
     True
 
-Note that strictly speaking the IUPAC alphabets are for upper case
-sequences only, thus:
-
-.. code:: python
-
-    >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> dna_seq = Seq("ACGT", IUPAC.unambiguous_dna)
-    >>> dna_seq
-    Seq('ACGT', IUPACUnambiguousDNA())
-    >>> dna_seq.lower()
-    Seq('acgt', DNAAlphabet())
-
-3.7  Nucleotide sequences and (reverse) complements
+3.6  Nucleotide sequences and (reverse) complements
 ---------------------------------------------------
 
 For nucleotide sequences, you can easily obtain the complement or
@@ -372,14 +250,13 @@ reverse complement of a ``Seq`` object using its built-in methods:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq("GATCGATGGGCCTATATAGGATCGAAAATCGC", IUPAC.unambiguous_dna)
+    >>> my_seq = Seq("GATCGATGGGCCTATATAGGATCGAAAATCGC")
     >>> my_seq
-    Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC', IUPACUnambiguousDNA())
+    Seq('GATCGATGGGCCTATATAGGATCGAAAATCGC')
     >>> my_seq.complement()
-    Seq('CTAGCTACCCGGATATATCCTAGCTTTTAGCG', IUPACUnambiguousDNA())
+    Seq('CTAGCTACCCGGATATATCCTAGCTTTTAGCG')
     >>> my_seq.reverse_complement()
-    Seq('GCGATTTTCGATCCTATATAGGCCCATCGATC', IUPACUnambiguousDNA())
+    Seq('GCGATTTTCGATCCTATATAGGCCCATCGATC')
 
 As mentioned earlier, an easy way to just reverse a ``Seq`` object (or a
 Python string) is slice it with -1 step:
@@ -387,27 +264,28 @@ Python string) is slice it with -1 step:
 .. code:: python
 
     >>> my_seq[::-1]
-    Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG', IUPACUnambiguousDNA())
+    Seq('CGCTAAAAGCTAGGATATATCCGGGTAGCTAG')
 
-In all of these operations, the alphabet property is maintained. This is
-very useful in case you accidentally end up trying to do something weird
-like take the (reverse)complement of a protein sequence:
+If you do accidentally end up trying to do something weird
+like taking the (reverse)complement of a protein sequence,
+the results are biologically meaningless:
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> protein_seq = Seq("EVRNAK", IUPAC.protein)
+    >>> protein_seq = Seq("EVRNAK")
     >>> protein_seq.complement()
-    Traceback (most recent call last):
-    ...
-    ValueError: Proteins do not have complements!
+    Seq('EBYNTM')
+
+Here the letter “E” is not a valid IUPAC ambiguity code for nucleotides,
+so was not complemented. However, “V” means “A”, “C” or “G” and
+has complement “B“, and so on.
 
 The example in Section \ `5.5.3 <#sec:SeqIO-reverse-complement>`__
 combines the ``Seq`` object’s reverse complement method with
 ``Bio.SeqIO`` for sequence input/output.
 
-3.8  Transcription
+3.7  Transcription
 ------------------
 
 Before talking about transcription, I want to try and clarify the strand
@@ -446,13 +324,12 @@ strands:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> coding_dna = Seq("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG", IUPAC.unambiguous_dna)
+    >>> coding_dna = Seq("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG")
     >>> coding_dna
-    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
+    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG')
     >>> template_dna = coding_dna.reverse_complement()
     >>> template_dna
-    Seq('CTATCGGGCACCCTTTCAGCGGCCCATTACAATGGCCAT', IUPACUnambiguousDNA())
+    Seq('CTATCGGGCACCCTTTCAGCGGCCCATTACAATGGCCAT')
 
 These should match the figure above - remember by convention nucleotide
 sequences are normally read from the 5’ to 3’ direction, while in the
@@ -464,10 +341,10 @@ using the ``Seq`` object’s built in ``transcribe`` method:
 .. code:: python
 
     >>> coding_dna
-    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
+    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG')
     >>> messenger_rna = coding_dna.transcribe()
     >>> messenger_rna
-    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
+    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG')
 
 As you can see, all this does is switch T → U, and adjust the alphabet.
 
@@ -477,28 +354,26 @@ template strand, then this becomes a two-step process:
 .. code:: python
 
     >>> template_dna.reverse_complement().transcribe()
-    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
+    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG')
 
-The ``Seq`` object also includes a back-transcription method for going
-from the mRNA to the coding strand of the DNA. Again, this is a simple U
-→ T substitution and associated change of alphabet:
+The Seq object also includes a back-transcription method for going from the
+mRNA to the coding strand of the DNA. Again, this is a simple U → T substitution:
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> messenger_rna = Seq("AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG", IUPAC.unambiguous_rna)
+    >>> messenger_rna = Seq("AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG")
     >>> messenger_rna
-    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
+    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG')
     >>> messenger_rna.back_transcribe()
-    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
+    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG')
 
 *Note:* The ``Seq`` object’s ``transcribe`` and ``back_transcribe``
 methods were added in Biopython 1.49. For older releases you would have
 to use the ``Bio.Seq`` module’s functions instead, see
-Section \ `3.14 <#sec:seq-module-functions>`__.
+Section \ `3.13 <#sec:seq-module-functions>`__.
 
-3.9  Translation
+3.8  Translation
 ----------------
 
 Sticking with the same example discussed in the transcription section
@@ -509,24 +384,22 @@ biological methods:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> messenger_rna = Seq("AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG", IUPAC.unambiguous_rna)
+    >>> messenger_rna = Seq("AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG")
     >>> messenger_rna
-    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG', IUPACUnambiguousRNA())
+    Seq('AUGGCCAUUGUAAUGGGCCGCUGAAAGGGUGCCCGAUAG')
     >>> messenger_rna.translate()
-    Seq('MAIVMGR*KGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGR*KGAR*')
 
 You can also translate directly from the coding strand DNA sequence:
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> coding_dna = Seq("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG", IUPAC.unambiguous_dna)
+    >>> coding_dna = Seq("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG")
     >>> coding_dna
-    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG', IUPACUnambiguousDNA())
+    Seq('ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG')
     >>> coding_dna.translate()
-    Seq('MAIVMGR*KGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGR*KGAR*')
 
 You should notice in the above protein sequences that in addition to the
 end stop character, there is an internal stop as well. This was a
@@ -544,7 +417,7 @@ function to use the relevant genetic code instead:
 .. code:: python
 
     >>> coding_dna.translate(table="Vertebrate Mitochondrial")
-    Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGRWKGAR*')
 
 You can also specify the table using the NCBI table number which is
 shorter, and often included in the feature annotation of GenBank files:
@@ -552,7 +425,7 @@ shorter, and often included in the feature annotation of GenBank files:
 .. code:: python
 
     >>> coding_dna.translate(table=2)
-    Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGRWKGAR*')
 
 Now, you may want to translate the nucleotides up to the first in frame
 stop codon, and then stop (as happens in nature):
@@ -560,13 +433,13 @@ stop codon, and then stop (as happens in nature):
 .. code:: python
 
     >>> coding_dna.translate()
-    Seq('MAIVMGR*KGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGR*KGAR*')
     >>> coding_dna.translate(to_stop=True)
-    Seq('MAIVMGR', IUPACProtein())
+    Seq('MAIVMGR')
     >>> coding_dna.translate(table=2)
-    Seq('MAIVMGRWKGAR*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MAIVMGRWKGAR*')
     >>> coding_dna.translate(table=2, to_stop=True)
-    Seq('MAIVMGRWKGAR', IUPACProtein())
+    Seq('MAIVMGRWKGAR')
 
 Notice that when you use the ``to_stop`` argument, the stop codon itself
 is not translated - and the stop symbol is not included at the end of
@@ -578,7 +451,7 @@ asterisk:
 .. code:: python
 
     >>> coding_dna.translate(table=2, stop_symbol="@")
-    Seq('MAIVMGRWKGAR@', HasStopCodon(IUPACProtein(), '@'))
+    Seq('MAIVMGRWKGAR@')
 
 Now, suppose you have a complete coding sequence CDS, which is to say a
 nucleotide sequence (e.g. mRNA – after any splicing) which is a whole
@@ -593,19 +466,16 @@ K12:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import generic_dna
-    >>> gene = Seq("GTGAAAAAGATGCAATCTATCGTACTCGCACTTTCCCTGGTTCTGGTCGCTCCCATGGCA" + \
-    ...            "GCACAGGCTGCGGAAATTACGTTAGTCCCGTCAGTAAAATTACAGATAGGCGATCGTGAT" + \
-    ...            "AATCGTGGCTATTACTGGGATGGAGGTCACTGGCGCGACCACGGCTGGTGGAAACAACAT" + \
-    ...            "TATGAATGGCGAGGCAATCGCTGGCACCTACACGGACCGCCGCCACCGCCGCGCCACCAT" + \
-    ...            "AAGAAAGCTCCTCATGATCATCACGGCGGTCATGGTCCAGGCAAACATCACCGCTAA",
-    ...            generic_dna)
+    >>> gene = Seq("GTGAAAAAGATGCAATCTATCGTACTCGCACTTTCCCTGGTTCTGGTCGCTCCCATGGCA"
+    ...            "GCACAGGCTGCGGAAATTACGTTAGTCCCGTCAGTAAAATTACAGATAGGCGATCGTGAT"
+    ...            "AATCGTGGCTATTACTGGGATGGAGGTCACTGGCGCGACCACGGCTGGTGGAAACAACAT"
+    ...            "TATGAATGGCGAGGCAATCGCTGGCACCTACACGGACCGCCGCCACCGCCGCGCCACCAT"
+    ...            "AAGAAAGCTCCTCATGATCATCACGGCGGTCATGGTCCAGGCAAACATCACCGCTAA")
     >>> gene.translate(table="Bacterial")
     Seq('VKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HR*',
-    HasStopCodon(ExtendedIUPACProtein(), '*')
+    ProteinAlpabet())
     >>> gene.translate(table="Bacterial", to_stop=True)
-    Seq('VKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR',
-    ExtendedIUPACProtein())
+    Seq('VKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR')
 
 In the bacterial genetic code ``GTG`` is a valid start codon, and while
 it does *normally* encode Valine, if used as a start codon it should be
@@ -615,8 +485,7 @@ sequence is a complete CDS:
 .. code:: python
 
     >>> gene.translate(table="Bacterial", cds=True)
-    Seq('MKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR',
-    ExtendedIUPACProtein())
+    Seq('MKKMQSIVLALSLVLVAPMAAQAAEITLVPSVKLQIGDRDNRGYYWDGGHWRDH...HHR')
 
 In addition to telling Biopython to translate an alternative start codon
 as methionine, using this option also makes sure your sequence really is
@@ -626,7 +495,7 @@ The example in Section \ `18.1.3 <#sec:SeqIO-translate>`__ combines the
 ``Seq`` object’s translate method with ``Bio.SeqIO`` for sequence
 input/output.
 
-3.10  Translation Tables
+3.9  Translation Tables
 ------------------------
 
 In the previous sections we talked about the ``Seq`` object translation
@@ -660,7 +529,7 @@ You can compare the actual tables visually by printing them:
 
 .. code:: python
 
-    >>> print standard_table
+    >>> print(standard_table)
     Table 1 Standard, SGC0
 
       |  T      |  C      |  A      |  G      |
@@ -690,7 +559,7 @@ and:
 
 .. code:: python
 
-    >>> print mito_table
+    >>> print(mito_table)
     Table 2 Vertebrate Mitochondrial, SGC1
 
       |  T      |  C      |  A      |  G      |
@@ -728,79 +597,34 @@ trying to do your own gene finding:
     >>> mito_table.forward_table["ACG"]
     'T'
 
-3.11  Comparing Seq objects
+3.10  Comparing Seq objects
 ---------------------------
 
-Sequence comparison is actually a very complicated topic, and there is
-no easy way to decide if two sequences are equal. The basic problem is
-the meaning of the letters in a sequence are context dependent - the
-letter “A” could be part of a DNA, RNA or protein sequence. Biopython
-uses alphabet objects as part of each ``Seq`` object to try and capture
-this information - so comparing two ``Seq`` objects means considering
-both the sequence strings *and* the alphabets.
+Sequence comparison is actually a very complicated topic, and there is no
+easy way to decide if two sequences are equal. The basic problem is the
+meaning of the letters in a sequence are context dependent - the letter
+“A” could be part of a DNA, RNA or protein sequence. Biopython can track
+the molecule type, so comparing two Seq objects could mean considering this too.
 
-For example, you might argue that the two DNA ``Seq`` objects
-``Seq("ACGT", IUPAC.unambiguous_dna)`` and
-``Seq("ACGT", IUPAC.ambiguous_dna)`` should be equal, even though they
-do have different alphabets. Depending on the context this could be
-important.
-
-This gets worse – suppose you think
-``Seq("ACGT", IUPAC.unambiguous_dna)`` and ``Seq("ACGT")`` (i.e. the
-default generic alphabet) should be equal. Then, logically,
-``Seq("ACGT", IUPAC.protein)`` and ``Seq("ACGT")`` should also be equal.
-Now, in logic if *A*\ =\ *B* and *B*\ =\ *C*, by transitivity we expect
-*A*\ =\ *C*. So for logical consistency we’d require
-``Seq("ACGT", IUPAC.unambiguous_dna)`` and
-``Seq("ACGT", IUPAC.protein)`` to be equal – which most people would
-agree is just not right. This transitivity problem would also have
-implications for using ``Seq`` objects as Python dictionary keys.
+Should a DNA fragment “ACG” and an RNA fragment “ACG” be equal? What
+about the peptide “ACG“? Or the Python string “ACG“? In everyday use,
+your sequences will generally all be the same type of (all DNA, all RNA, or
+all protein). Well, as of Biopython 1.65, sequence comparison only looks at
+the sequence and compares like the Python string.
 
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> seq1 = Seq("ACGT", IUPAC.unambiguous_dna)
-    >>> seq2 = Seq("ACGT", IUPAC.unambiguous_dna)
-
-So, what does Biopython do? Well, the equality test is the default for
-Python objects – it tests to see if they are the same object in memory.
-This is a very strict test:
-
-.. code:: python
-
-    >>> seq1 == seq2
-    False
-    >>> seq1 == seq1
+    >>> seq1 = Seq("ACGT")
+    >>> "ACGT" == seq1
+    True
+    >>> seq1 == "ACGT"
     True
 
-If you actually want to do this, you can be more explicit by using the
-Python ``id`` function,
+As an extension to this, using sequence objects as keys in a Python dictionary
+is equivalent to using the sequence as a plain string for the key. See also Section 3.3.
 
-.. code:: python
-
-    >>> id(seq1) == id(seq2)
-    False
-    >>> id(seq1) == id(seq1)
-    True
-
-Now, in every day use, your sequences will probably all have the same
-alphabet, or at least all be the same type of sequence (all DNA, all
-RNA, or all protein). What you probably want is to just compare the
-sequences as strings – so do this explicitly:
-
-.. code:: python
-
-    >>> str(seq1) == str(seq2)
-    True
-    >>> str(seq1) == str(seq1)
-    True
-
-As an extension to this, while you can use a Python dictionary with
-``Seq`` objects as keys, it is generally more useful to use the sequence
-a string for the key. See also Section \ `3.4 <#sec:seq-to-string>`__.
-
-3.12  MutableSeq objects
+3.11  MutableSeq objects
 ------------------------
 
 Just like the normal Python string, the ``Seq`` object is “read only”,
@@ -812,8 +636,7 @@ sequence data:
 .. code:: python
 
     >>> from Bio.Seq import Seq
-    >>> from Bio.Alphabet import IUPAC
-    >>> my_seq = Seq("GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA", IUPAC.unambiguous_dna)
+    >>> my_seq = Seq("GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA")
 
 Observe what happens if you try to edit the sequence:
 
@@ -839,24 +662,23 @@ string:
 .. code:: python
 
     >>> from Bio.Seq import MutableSeq
-    >>> from Bio.Alphabet import IUPAC
-    >>> mutable_seq = MutableSeq("GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA", IUPAC.unambiguous_dna)
+    >>> mutable_seq = MutableSeq("GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA")
 
 Either way will give you a sequence object which can be changed:
 
 .. code:: python
 
     >>> mutable_seq
-    MutableSeq('GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA', IUPACUnambiguousDNA())
+    MutableSeq('GCCATTGTAATGGGCCGCTGAAAGGGTGCCCGA')
     >>> mutable_seq[5] = "C"
     >>> mutable_seq
-    MutableSeq('GCCATCGTAATGGGCCGCTGAAAGGGTGCCCGA', IUPACUnambiguousDNA())
+    MutableSeq('GCCATCGTAATGGGCCGCTGAAAGGGTGCCCGA')
     >>> mutable_seq.remove("T")
     >>> mutable_seq
-    MutableSeq('GCCACGTAATGGGCCGCTGAAAGGGTGCCCGA', IUPACUnambiguousDNA())
+    MutableSeq('GCCACGTAATGGGCCGCTGAAAGGGTGCCCGA')
     >>> mutable_seq.reverse()
     >>> mutable_seq
-    MutableSeq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG', IUPACUnambiguousDNA())
+    MutableSeq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG')
 
 Do note that unlike the ``Seq`` object, the ``MutableSeq`` object’s
 methods like ``reverse_complement()`` and ``reverse()`` act in-situ!
@@ -873,12 +695,12 @@ to get back to a read-only ``Seq`` object should you need to:
 
     >>> new_seq = mutable_seq.toseq()
     >>> new_seq
-    Seq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG', IUPACUnambiguousDNA())
+    Seq('AGCCCGTGGGAAAGTCGCCGGGTAATGCACCG')
 
 You can also get a string from a ``MutableSeq`` object just like from a
-``Seq`` object (Section `3.4 <#sec:seq-to-string>`__).
+``Seq`` object (Section `3.3 <#sec:seq-to-string>`__).
 
-3.13  UnknownSeq objects
+3.12  UnknownSeq objects
 ------------------------
 
 The ``UnknownSeq`` object is a subclass of the basic ``Seq`` object and
@@ -893,23 +715,24 @@ single letter “N” and the desired length as an integer.
     >>> from Bio.Seq import UnknownSeq
     >>> unk = UnknownSeq(20)
     >>> unk
-    UnknownSeq(20, alphabet = Alphabet(), character = '?')
-    >>> print unk
+    UnknownSeq(20, character = '?')
+    >>> print(unk)
     ????????????????????
     >>> len(unk)
     20
 
-You can of course specify an alphabet, meaning for nucleotide sequences
-the letter defaults to “N” and for proteins “X”, rather than just “?”.
+For DNA or RNA sequences, unknown nucleotides are commonly denoted by
+the letter “N”, while for proteins “X” is commonly used for unknown
+amino acids. When creating an ‘UnknownSeq‘, you can specify the character
+to be used instead of “?” to represent unknown letters. For example
 
 .. code:: python
 
     >>> from Bio.Seq import UnknownSeq
-    >>> from Bio.Alphabet import IUPAC
-    >>> unk_dna = UnknownSeq(20, alphabet=IUPAC.ambiguous_dna)
+    >>> unk_dna = UnknownSeq(20, character="N")
     >>> unk_dna
-    UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
-    >>> print unk_dna
+    UnknownSeq(20, character='N')
+    >>> print(unk_dna)
     NNNNNNNNNNNNNNNNNNNN
 
 You can use all the usual ``Seq`` object methods too, note these give
@@ -919,17 +742,17 @@ expect:
 .. code:: python
 
     >>> unk_dna
-    UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
+    UnknownSeq(20, character='N')
     >>> unk_dna.complement()
-    UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
+    UnknownSeq(20, character='N')
     >>> unk_dna.reverse_complement()
-    UnknownSeq(20, alphabet = IUPACAmbiguousDNA(), character = 'N')
+    UnknownSeq(20, character='N')
     >>> unk_dna.transcribe()
-    UnknownSeq(20, alphabet = IUPACAmbiguousRNA(), character = 'N')
+    UnknownSeq(20, character='N')
     >>> unk_protein = unk_dna.translate()
     >>> unk_protein
-    UnknownSeq(6, alphabet = ProteinAlphabet(), character = 'X')
-    >>> print unk_protein
+    UnknownSeq(6, character='X')
+    >>> print(unk_protein)
     XXXXXX
     >>> len(unk_protein)
     6
@@ -944,7 +767,7 @@ contig information. Alternatively, the QUAL files used in sequencing
 work hold quality scores but they *never* contain a sequence – instead
 there is a partner FASTA file which *does* have the sequence.
 
-3.14  Working with directly strings
+3.13  Working with directly strings
 -----------------------------------
 
 To close this chapter, for those you who *really* don’t want to use the
