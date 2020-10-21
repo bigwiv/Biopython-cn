@@ -64,30 +64,20 @@ represents the Python prompt followed by what you would type in:
     >>> from Bio.Seq import Seq
     >>> my_seq = Seq("AGTACACTGGT")
     >>> my_seq
-    Seq('AGTACACTGGT', Alphabet())
-    >>> print my_seq
+    Seq('AGTACACTGGT')
+    >>> print(my_seq)
     AGTACACTGGT
-    >>> my_seq.alphabet
-    Alphabet()
 
-What we have here is a sequence object with a *generic* alphabet -
-reflecting the fact we have *not* specified if this is a DNA or protein
-sequence (okay, a protein with a lot of Alanines, Glycines, Cysteines
-and Threonines!). We’ll talk more about alphabets in
-Chapter \ `3 <#chapter:Bio.Seq>`__.
-
-In addition to having an alphabet, the ``Seq`` object differs from the
-Python string in the methods it supports. You can’t do this with a plain
-string:
+The ``Seq`` object differs from the Python string in the methods it supports. You can’t do this with a plain string:
 
 .. code:: python
 
     >>> my_seq
-    Seq('AGTACACTGGT', Alphabet())
+    Seq('AGTACACTGGT')
     >>> my_seq.complement()
-    Seq('TCATGTGACCA', Alphabet())
+    Seq('TCATGTGACCA')
     >>> my_seq.reverse_complement()
-    Seq('ACCAGTGTACT', Alphabet())
+    Seq('ACCAGTGTACT')
 
 The next most important class is the ``SeqRecord`` or Sequence Record.
 This holds a sequence (as a ``Seq`` object) with additional annotation
@@ -181,7 +171,7 @@ look at how to do a search like this from within Python.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you open the lady slipper orchids FASTA file
-`ls_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+`ls_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.fasta>`__
 in your favourite text editor, you’ll see that the file starts like
 this:
 
@@ -200,31 +190,28 @@ try this in Python:
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
-        print seq_record.id
-        print repr(seq_record.seq)
-        print len(seq_record)
+        print(seq_record.id)
+        print(repr(seq_record.seq))
+        print(len(seq_record))
 
 You should get something like this on your screen:
 
 .. code:: python
 
     gi|2765658|emb|Z78533.1|CIZ78533
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', SingleLetterAlphabet())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
     740
     ...
     gi|2765564|emb|Z78439.1|PBZ78439
-    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', SingleLetterAlphabet())
+    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
 
-Notice that the FASTA format does not specify the alphabet, so
-``Bio.SeqIO`` has defaulted to the rather generic
-``SingleLetterAlphabet()`` rather than something DNA specific.
 
 2.4.2  Simple GenBank parsing example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now let’s load the GenBank file
-`ls_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+`ls_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__
 instead - notice that the code to do this is almost identical to the
 snippet used above for the FASTA file - the only difference is we change
 the filename and the format string:
@@ -233,25 +220,23 @@ the filename and the format string:
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-        print seq_record.id
-        print repr(seq_record.seq)
-        print len(seq_record)
+        print(seq_record.id)
+        print(repr(seq_record.seq))
+        print(len(seq_record))
 
 This should give:
 
 .. code:: python
 
     Z78533.1
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
     740
     ...
     Z78439.1
-    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', IUPACAmbiguousDNA())
+    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
 
-This time ``Bio.SeqIO`` has been able to choose a sensible alphabet,
-IUPAC Ambiguous DNA. You’ll also notice that a shorter string has been
-used as the ``seq_record.id`` in this case.
+You’ll notice that a shorter string has been used as the seq_record.id in this case.
 
 2.4.3  I love parsing – please don’t stop talking about it!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
