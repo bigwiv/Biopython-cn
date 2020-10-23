@@ -137,7 +137,7 @@ annotation dictionary:
     >>> simple_seq_r.annotations["evidence"] = "None. I just made it up."
     >>> print(simple_seq_r.annotations)
     {'evidence': 'None. I just made it up.'}
-    >>> print simple_seq_r.annotations["evidence"]
+    >>> print(simple_seq_r.annotations["evidence"])
     None. I just made it up.
 
 Working with per-letter-annotations is similar, ``letter_annotations``
@@ -164,7 +164,7 @@ This example uses a fairly large FASTA file containing the whole
 sequence for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
 originally downloaded from the NCBI. This file is included with the
 Biopython unit tests under the GenBank folder, or online
-`NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__
+`NC_005816.fna <https://raw.githubusercontent.com/biopython/biopython/master/Tests/GenBank/NC_005816.fna>`__
 from our website.
 
 The file starts like this - and you can check there is only one record
@@ -1018,7 +1018,6 @@ have a circular genome:
     dict_keys(['molecule_type', 'topology', 'data_file_division', 'date', 'accessions',
     'sequence_version', 'gi', 'keywords', 'source', 'organism', 'taxonomy', 'references', 'comment'])
 
-
 You can shift the origin like this:
 
 .. code:: python
@@ -1045,7 +1044,6 @@ lost:
     []
     >>> shifted.annotations.keys()
     dict_keys([])
-
 
 This is because the ``SeqRecord`` slicing step is cautious in what
 annotation it preserves (erroneously propagating annotation can cause
