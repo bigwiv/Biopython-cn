@@ -64,10 +64,10 @@
     '<unknown id>'
     >>> simple_seq_r.id = "AC12345"
     >>> simple_seq_r.description = "Made up sequence I wish I could write a paper about"
-    >>> print simple_seq_r.description
+    >>> print(simple_seq_r.description)
     Made up sequence I wish I could write a paper about
     >>> simple_seq_r.seq
-    Seq('GATC', Alphabet())
+    Seq('GATC')
 
 标识符对输出 ``SeqRecord`` 内容到文件很重要，可随SeqRecord同时建立:
 
@@ -83,9 +83,9 @@
 .. code:: python
 
     >>> simple_seq_r.annotations["evidence"] = "None. I just made it up."
-    >>> print simple_seq_r.annotations
+    >>> print(simple_seq_r.annotations)
     {'evidence': 'None. I just made it up.'}
-    >>> print simple_seq_r.annotations["evidence"]
+    >>> print(simple_seq_r.annotations["evidence"])
     None. I just made it up.
 
 ``letter_annotations`` 也是字典，其值为与序列等长的内置Python字符串、列表或元组:
@@ -93,9 +93,9 @@
 .. code:: python
 
     >>> simple_seq_r.letter_annotations["phred_quality"] = [40,40,38,30]
-    >>> print simple_seq_r.letter_annotations
+    >>> print(simple_seq_r.letter_annotations)
     {'phred_quality': [40, 40, 38, 30]}
-    >>> print simple_seq_r.letter_annotations["phred_quality"]
+    >>> print(simple_seq_r.letter_annotations["phred_quality"])
     [40, 40, 38, 30]
 
 ``dbxrefs`` 和 ``features`` 分别是字符串和 ``SeqFeature`` 对象的Python列表，将在后续章节讨论。
@@ -103,7 +103,7 @@
 4.2.2  根据FASTA文件创建SeqRecord对象
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-本节以鼠疫耶尔森菌株（*Yersinia pestis biovar Microtus* str. 91001 ）的pPCP1质粒全长序列为例,说明从FASTA文件创建SeqRecord的过程。该序列原始文件来自NCBI，可在Biopython单元测试GenBank文件夹下找到，也可点击 `NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__ 下载。
+本节以鼠疫耶尔森菌株（*Yersinia pestis biovar Microtus* str. 91001 ）的pPCP1质粒全长序列为例,说明从FASTA文件创建SeqRecord的过程。该序列原始文件来自NCBI，可在Biopython单元测试GenBank文件夹下找到，也可点击 `NC_005816.fna <https://raw.githubusercontent.com/biopython/biopython/master/Tests/GenBank/NC_005816.fna>`__ 下载。
 
 序列以大于号开头，该文件只包含一条序列:
 
@@ -130,9 +130,7 @@
 .. code:: python
 
     >>> record.seq
-    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
-
-此处 ``Bio.SeqIO`` 默认为通用字母表（generic alphabet）, 而非判断是否DNA序列。如果FASTA文件中序列类型已知，也可通过 ``Bio.SeqIO`` 自行设定 (见第 :ref:`5 <chapter-Bio.SeqIO>` 章用法)。
+    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG')
 
 接下来介绍 identifiers 和 description:
 
@@ -171,7 +169,7 @@ Note: 读取FASTA 文件时其他注释属性为空:
 4.2.3  从 GenBank文件创建 SeqRecord
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 `NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+仍以疫耶尔森菌株pPCP1质粒全长序列（*Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1）为例，不同的是这次使用Genbank格式的文件，该文件同样包含在Biopython单元测试/GenBank文件夹下, 也可点击 `NC_005816.gb <https://raw.githubusercontent.com/biopython/biopython/master/Tests/GenBank/NC_005816.gb>`__
 下载。
 
 该文件只含一条记录 (只有一个 LOCUS 行):
@@ -190,20 +188,17 @@ Note: 读取FASTA 文件时其他注释属性为空:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
     >>> record
-    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
-    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
-    dbxrefs=['Project:10638'])
-
-你可能已经发现了一些不同之处，逐个环顾各个属性，序列字符串和上述类似，但此处 ``Bio.SeqIO`` 可自动识别序列类型 （详见第 :ref:`5 <chapter-Bio.SeqIO>` 章）:
-
-.. code:: python
+    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG'),
+    id='NC_005816.1', name='NC_005816',
+    description='Yersinia pestis biovar Microtus str.91001 plasmid pPCP1, complete sequence',
+    dbxrefs=['Project:58037'])
 
     >>> record.seq
-    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', IUPACAmbiguousDNA())
+    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG')
 
 ``name`` 源于 LOCUS行, ``id`` 附加了版本后缀。description源于DEFINITION 行:
 
@@ -228,7 +223,7 @@ GenBank 文件中per-letter annotations为空:
 .. code:: python
 
     >>> len(record.annotations)
-    11
+    13
     >>> record.annotations["source"]
     'Yersinia pestis biovar Microtus str. 91001'
 
@@ -237,14 +232,14 @@ GenBank 文件中per-letter annotations为空:
 .. code:: python
 
     >>> record.dbxrefs
-    ['Project:10638']
+    ['Project:58037']
 
 最后也许也可能是最有意思的， ``features`` 列表以 ``SeqFeature`` 对象的形式保存了features table中的所有entries（如genes和CDS等）。
 
 .. code:: python
 
     >>> len(record.features)
-    29
+    41
 
 接下来，我们将在 第 :ref:`4.3 <sec-seq_features>` 节介绍 ``SeqFeature`` 对象。
 
@@ -386,7 +381,7 @@ Notice：上述例子只是为了帮助你理解fuzzy locations。
 .. code:: python
 
     >>> exact_location = SeqFeature.FeatureLocation(5, 9)
-    >>> print exact_location
+    >>> print(exact_location)
     [5:9]
     >>> exact_location.start
     ExactPosition(5)
@@ -412,7 +407,7 @@ feature/location中。
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
     >>> for feature in record.features:
     ...     if my_snp in feature:
-    ...         print feature.type, feature.qualifiers.get('db_xref')
+    ...         print("%s %s" % (feature.type, feature.qualifiers.get("db_xref")))
     ...
     source ['taxon:229193']
     gene ['GeneID:2767712']
@@ -429,8 +424,8 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqFeature import SeqFeature, FeatureLocation
-    >>> example_parent = Seq("ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC")
-    >>> example_feature = SeqFeature(FeatureLocation(5, 18), type="gene", strand=-1)
+    >>> seq = Seq("ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC")
+    >>> feature = SeqFeature(FeatureLocation(5, 18), type="gene", strand=-1)
 
 你可以用切片从父序列截取5:18,然后取反向互补序列。如果是Biopython 1.59或以后版本，可使用如下方法:
 
@@ -444,26 +439,80 @@ Note： GenBank /EMBL 文件中的 gene 和CDS features（ ``join`` ）只包含
 
 .. code:: python
 
-    >>> feature_seq = example_feature.extract(example_parent)
-    >>> print feature_seq
+    >>> feature_seq = seq[feature.location.start:feature.location.end].reverse_complement()
+    >>> print(feature_seq)
     AGCCTTTGCCGTC
 
 ``SeqFeature`` 或 location对象的长度等同于所表示序列的长度。
 
 .. code:: python
 
-    >>> print example_feature.extract(example_parent)
+    >>> feature_seq = feature.extract(seq)
+    >>> print(feature_seq)
     AGCCTTTGCCGTC
-    >>> print len(example_feature.extract(example_parent))
+
+``SeqFeature``或者位置的长度与其描述的序列区域长度匹配
+
+.. code:: python
+
+    >>> print len(feature_seq)
     13
-    >>> print len(example_feature)
+    >>> print len(feature)
     13
-    >>> print len(example_feature.location)
+    >>> print len(feature.location)
     13
 
-简单 ``FeatureLocation`` 对象的长度等于终止osition减去起始position的差值；而 ``CompoundLocation`` 的长度则为各片段长度之和。
+简单 ``FeatureLocation`` 对象的长度等于终止position减去起始position的差值；而 ``CompoundLocation`` 的长度则为各片段长度之和。
 
-4.4  References
+4.4  比较
+------------
+
+SeqRecord对象可能非常复杂，但这是一个简单的示例：
+
+.. code:: python
+
+    >>> from Bio.Seq import Seq
+    >>> from Bio.SeqRecord import SeqRecord
+    >>> record1 = SeqRecord(Seq("ACGT"), id="test")
+    >>> record2 = SeqRecord(Seq("ACGT"), id="test")
+
+当您尝试比较这些“相同”记录时会发生什么？
+
+.. code:: python
+
+    >>> record1 == record2
+    ...
+
+也许令人惊讶的是，旧版本的Biopython将使用Python的SeqRecord的默认对象比较，这意味着record1 == record2仅在这些变量指向内存中的同一对象时才返回True。在此示例中，record1 == record2在这里将返回False！
+
+.. code:: python
+
+    >>> record1 == record2  # on old versions of Biopython!
+    False
+
+从Biopython 1.67开始，SeqRecord比较（例如record1 == record2）将引发一个显式错误，以避免人们对此感到困惑：
+
+.. code:: python
+
+    breaklines=true,breaksymbolleft=]{pycon}
+    >>> record1 == record2
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: SeqRecord comparison is deliberately not
+    implemented.Explicitly compare the attributes of interest.
+
+相反，您应该检查您感兴趣的属性，例如标识符和序列：
+
+.. code:: python
+
+    >>> record1.id == record2.id
+    True
+    >>> record1.seq == record2.seq
+    True
+
+注意，比较复杂的对象会很快变得复杂（另请参见第3.10节）。
+
+4.5  参考文献
 ---------------
 
 对一条序列的注释还包括参考文献（reference），Biopython通过
@@ -477,7 +526,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 .. _sec-SeqRecord-format:
 
-4.5  格式化方法
+4.6  格式化方法
 ----------------------
 
 ``SeqRecord`` 类中的 ``format()`` 能将字符串转换成被 ``Bio.SeqIO`` 支持的格式，如FASTA:
@@ -491,11 +540,11 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     record = SeqRecord(Seq("MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD" \
                           +"GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK" \
                           +"NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM" \
-                          +"SSAC", generic_protein),
+                          +"SSAC"),
                        id="gi|14150838|gb|AAK54648.1|AF376133_1",
                        description="chalcone synthase [Cucumis sativus]")
                        
-    print record.format("fasta")
+    print(record.format("fasta"))
 
 输出为:
 
@@ -506,12 +555,13 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK
     NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
     SSAC
+    <BLANKLINE>
 
 ``format`` 方法接收单个必选参数，小写字母字符串是 ``Bio.SeqIO`` 模块支持的输出格式 (见第 :ref:`5 <chapter-Bio.SeqIO>` 章)。然而，此 ``format()`` 方法并不适用于包含多条序列的文件格式 (如多序列比对格式)（详见第 :ref:`5.5.4 <sec-Bio.SeqIO-and-StringIO>` 节）。
 
 .. _sec-SeqRecord-slicing:
 
-4.6  SeqRecord切片
+4.7  SeqRecord切片
 ------------------------
 
 通过切片截取 ``SeqRecord`` 的部分序列可得到一条新的 ``SeqRecord`` 。此处需引起注意的是per-letter annotations也被取切片, 但新序列中的features保持不变 (locations相应调整)。
@@ -520,19 +570,14 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-
-.. code:: python
-
     >>> record
-    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
-    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
-    dbxrefs=['Project:10638'])
-
-.. code:: python
-
+    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG'),
+    id='NC_005816.1', name='NC_005816',
+    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence',
+    dbxrefs=['Project:58037'])
     >>> len(record)
     9609
     >>> len(record.features)
@@ -542,21 +587,19 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 .. code:: python
 
-    >>> print record.features[20]
+    breaklines=true,breakanywhere=true,breaksymbolleft=,breakanywheresymbolpre=]{pycon}
+    >>> print(record.features[20])
     type: gene
     location: [4342:4780](+)
-    qualifiers: 
+    qualifiers:
         Key: db_xref, Value: ['GeneID:2767712']
         Key: gene, Value: ['pim']
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
-
-.. code:: python
-
-    >>> print record.features[21]
+    >>> print(record.features[21])
     type: CDS
     location: [4342:4780](+)
-    qualifiers: 
+    qualifiers:
         Key: codon_start, Value: ['1']
         Key: db_xref, Value: ['GI:45478716', 'GeneID:2767712']
         Key: gene, Value: ['pim']
@@ -566,23 +609,19 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
         Key: protein_id, Value: ['NP_995571.1']
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
+    <BLANKLINE>
 
 从父记录中取切片（4300 到 4800），观测所得到的features数量:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> sub_record = record[4300:4800]
-
-.. code:: python
-
     >>> sub_record
-    SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
+    SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA'),
+    id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
-
-.. code:: python
-
     >>> len(sub_record)
     500
     >>> len(sub_record.features)
@@ -592,7 +631,8 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
 
 .. code:: python
 
-    >>> print sub_record.features[0]
+    breaklines=true,breakanywhere=true,breaksymbolleft=,breakanywheresymbolpre=]{pycon}
+    >>> print(sub_record.features[0])
     type: gene
     location: [42:480](+)
     qualifiers: 
@@ -600,13 +640,10 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
         Key: gene, Value: ['pim']
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
-
-.. code:: python
-
-    >>> print sub_record.features[20]
+    >>> print(sub_record.features[20])
     type: CDS
     location: [42:480](+)
-    qualifiers: 
+    qualifiers:
         Key: codon_start, Value: ['1']
         Key: db_xref, Value: ['GI:45478716', 'GeneID:2767712']
         Key: gene, Value: ['pim']
@@ -616,6 +653,7 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
         Key: protein_id, Value: ['NP_995571.1']
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
+    <BLANKLINE>
 
 注意：locations已被调整至对应生成的新父序列!
 
@@ -639,11 +677,12 @@ References属性储存了 ``期刊名`` 、 ``题名`` 、 ``作者`` 等信息�
     >>> sub_record.description
     'Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.'
 
-上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用第 :ref:`4.5 <sec-SeqRecord-format>` 节中所述 ``format`` 方法纠正：
+上述例子很好的展示了问题，由于子记录不包括完整的质粒序列，因此description是错的。我们可以将子记录看做是截短版的GenBank文件，可用第 :ref:`4.6 <sec-SeqRecord-format>` 节中所述 ``format`` 方法纠正：
 :
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> sub_record.description = "Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, partial."
     >>> print sub_record.format("genbank")
     ...
@@ -653,7 +692,7 @@ FASTQ例子参见第 :ref:`18.1.7 <sec-FASTQ-slicing-off-primer>` 节
 
 .. _sec-SeqRecord-addition:
 
-4.7  SeqRecord对象相加
+4.8  SeqRecord对象相加
 -----------------------------
 
 ``SeqRecord`` 对象可相加得到一个新的 ``SeqRecord`` 。注意：per-letter annotations也相加, features (locations 调整)；而其它annotation 保持不变(如id、name和description)。
@@ -662,15 +701,13 @@ FASTQ例子参见第 :ref:`18.1.7 <sec-FASTQ-slicing-off-primer>` 节
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.parse("example.fastq", "fastq").next()
     >>> len(record)
     25
     >>> print record.seq
     CCCTTCTTGTCTTCAGCGTTTCTCC
-
-.. code:: python
-
     >>> print record.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 26, 23, 23]
@@ -679,29 +716,28 @@ FASTQ例子参见第 :ref:`18.1.7 <sec-FASTQ-slicing-off-primer>` 节
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> left = record[:20]
-    >>> print left.seq
+    >>> print(left.seq)
     CCCTTCTTGTCTTCAGCGTT
-    >>> print left.letter_annotations["phred_quality"]
+    >>> print(left.letter_annotations["phred_quality"])
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26]
     >>> right = record[21:]
-    >>> print right.seq
+    >>> print(right.seq)
     CTCC
-    >>> print right.letter_annotations["phred_quality"]
+    >>> print(right.letter_annotations["phred_quality"])
     [26, 26, 23, 23]
 
 两部分相加:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> edited = left + right
     >>> len(edited)
     24
     >>> print edited.seq
     CCCTTCTTGTCTTCAGCGTTCTCC
-
-.. code:: python
-
     >>> print edited.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 23, 23]
@@ -716,48 +752,35 @@ FASTQ例子参见第 :ref:`18.1.7 <sec-FASTQ-slicing-off-primer>` 节
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-
-.. code:: python
-
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
     IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
-
-.. code:: python
-
     >>> len(record)
     9609
     >>> len(record.features)
     41
     >>> record.dbxrefs
     ['Project:58037']
-
-.. code:: python
-
     >>> record.annotations.keys()
-    ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
-    'accessions', 'data_file_division', 'date', 'organism', 'gi']
+    dict_keys(['molecule_type', 'topology', 'data_file_division', 'date', 'accessions',
+    'sequence_version', 'gi', 'keywords', 'source', 'organism', 'taxonomy', 'references', 'comment'])
 
 可改变起点:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> shifted = record[2000:] + record[:2000]
-
-.. code:: python
-
     >>> shifted
     SeqRecord(seq=Seq('GATACGCAGTCATATTTTTTACACAATTCTCTAATCCCGACAAGGTCGTAGGTC...GGA',
     IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
-
-.. code:: python
-
     >>> len(shifted)
     9609
 
@@ -770,25 +793,26 @@ Note: 上述方法并不完美（丢失了数据库交叉引用dbxrefs 和源fea
     >>> shifted.dbxrefs
     []
     >>> shifted.annotations.keys()
-    []
+    dict_keys([])
 
 这是因为 ``SeqRecord`` 切片对 annotation 保留非常谨慎 (错误保留 annotation 可能引起大问题)。如果你想保留数据库的交叉引用dbxrefs和其余annotations 字典必须明确说明，才能得以保留:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> shifted.dbxrefs = record.dbxrefs[:]
     >>> shifted.annotations = record.annotations.copy()
-    >>> shifted.dbxrefs
-    ['Project:10638']
-    >>> shifted.annotations.keys()
-    ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
-    'accessions', 'data_file_division', 'date', 'organism', 'gi']
+    >>> record.dbxrefs
+    ['Project:58037']
+    >>> record.annotations.keys()
+    dict_keys(['molecule_type', 'topology', 'data_file_division', 'date', 'accessions',
+    'sequence_version', 'gi', 'keywords', 'source', 'organism', 'taxonomy', 'references', 'comment'])
 
 Note: 此例中序列record的identifiers也应调整（因为NCBI的reference链接的是未经修改的 *原始* 序列）。
 
 .. _sec-SeqRecord-reverse-complement:
 
-4.8  反向互补SeqRecord对象
+4.9  反向互补SeqRecord对象
 --------------------------------------------
 
 为消除序列反向互补后annotation改变带来的困难，Biopython 1.57 ``SeqRecord`` 对象加入了 ``reverse_complement`` 方法。这也成为Biopython 1.57的新特性之一。
@@ -804,16 +828,18 @@ name、description、annotations和dbxrefs默认不变。
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-    >>> print record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)
+    >>> print("%s %i %i %i %i" % (record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)))
     NC_005816.1 9609 41 1 11
 
 反向互补该record并给ID赋予新值 - 注意：多数annotation丢失，而features仍在:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> rc = record.reverse_complement(id="TESTING")
-    >>> print rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)
+    >>> print("%s %i %i %i %i" % (rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)))
     TESTING 9609 41 0 0
 

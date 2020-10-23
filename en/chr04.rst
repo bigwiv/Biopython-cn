@@ -110,10 +110,10 @@ indicating they are unknown, and can be modified subsequently:
     '<unknown id>'
     >>> simple_seq_r.id = "AC12345"
     >>> simple_seq_r.description = "Made up sequence I wish I could write a paper about"
-    >>> print simple_seq_r.description
+    >>> print(simple_seq_r.description)
     Made up sequence I wish I could write a paper about
     >>> simple_seq_r.seq
-    Seq('GATC', Alphabet())
+    Seq('GATC')
 
 Including an identifier is very important if you want to output your
 ``SeqRecord`` to a file. You would normally include this when creating
@@ -135,9 +135,9 @@ annotation dictionary:
 .. code:: python
 
     >>> simple_seq_r.annotations["evidence"] = "None. I just made it up."
-    >>> print simple_seq_r.annotations
+    >>> print(simple_seq_r.annotations)
     {'evidence': 'None. I just made it up.'}
-    >>> print simple_seq_r.annotations["evidence"]
+    >>> print(simple_seq_r.annotations["evidence"])
     None. I just made it up.
 
 Working with per-letter-annotations is similar, ``letter_annotations``
@@ -148,9 +148,9 @@ sequence:
 .. code:: python
 
     >>> simple_seq_r.letter_annotations["phred_quality"] = [40,40,38,30]
-    >>> print simple_seq_r.letter_annotations
+    >>> print(simple_seq_r.letter_annotations)
     {'phred_quality': [40, 40, 38, 30]}
-    >>> print simple_seq_r.letter_annotations["phred_quality"]
+    >>> print(simple_seq_r.letter_annotations["phred_quality"])
     [40, 40, 38, 30]
 
 The ``dbxrefs`` and ``features`` attributes are just Python lists, and
@@ -164,7 +164,7 @@ This example uses a fairly large FASTA file containing the whole
 sequence for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
 originally downloaded from the NCBI. This file is included with the
 Biopython unit tests under the GenBank folder, or online
-`NC_005816.fna <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.fna>`__
+`NC_005816.fna <https://raw.githubusercontent.com/biopython/biopython/master/Tests/GenBank/NC_005816.fna>`__
 from our website.
 
 The file starts like this - and you can check there is only one record
@@ -199,12 +199,7 @@ individually – starting with the ``seq`` attribute which gives you a
 .. code:: python
 
     >>> record.seq
-    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', SingleLetterAlphabet())
-
-Here ``Bio.SeqIO`` has defaulted to a generic alphabet, rather than
-guessing that this is DNA. If you know in advance what kind of sequence
-your FASTA file contains, you can tell ``Bio.SeqIO`` which alphabet to
-use (see Chapter \ `5 <#chapter:Bio.SeqIO>`__).
+    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG')
 
 Next, the identifiers and description:
 
@@ -258,7 +253,7 @@ for *Yersinia pestis biovar Microtus* str. 91001 plasmid pPCP1,
 originally downloaded from the NCBI, but this time as a GenBank file.
 Again, this file is included with the Biopython unit tests under the
 GenBank folder, or online
-`NC_005816.gb <http://biopython.org/SRC/biopython/Tests/GenBank/NC_005816.gb>`__
+`NC_005816.gb <https://raw.githubusercontent.com/biopython/biopython/master/Tests/GenBank/NC_005816.gb>`__
 from our website.
 
 This file contains a single record (i.e. only one LOCUS line) and
@@ -280,24 +275,17 @@ Chapter \ `5 <#chapter:Bio.SeqIO>`__ for details):
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
     >>> record
-    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
-    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
-    dbxrefs=['Project:10638'])
-
-You should be able to spot some differences already! But taking the
-attributes individually, the sequence string is the same as before, but
-this time ``Bio.SeqIO`` has been able to automatically assign a more
-specific alphabet (see Chapter \ `5 <#chapter:Bio.SeqIO>`__ for
-details):
-
-.. code:: python
+    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG'),
+    id='NC_005816.1', name='NC_005816',
+    description='Yersinia pestis biovar Microtus str.91001 plasmid pPCP1, complete sequence',
+    dbxrefs=['Project:58037'])
 
     >>> record.seq
-    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG', IUPACAmbiguousDNA())
+    Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG')
 
 The ``name`` comes from the LOCUS line, while the ``id`` includes the
 version suffix. The description comes from the DEFINITION line:
@@ -324,7 +312,7 @@ dictionary, for example:
 .. code:: python
 
     >>> len(record.annotations)
-    11
+    13
     >>> record.annotations["source"]
     'Yersinia pestis biovar Microtus str. 91001'
 
@@ -333,7 +321,7 @@ The ``dbxrefs`` list gets populated from any PROJECT or DBLINK lines:
 .. code:: python
 
     >>> record.dbxrefs
-    ['Project:10638']
+    ['Project:58037']
 
 Finally, and perhaps most interestingly, all the entries in the features
 table (e.g. the genes or CDS features) get recorded as ``SeqFeature``
@@ -342,7 +330,7 @@ objects in the ``features`` list.
 .. code:: python
 
     >>> len(record.features)
-    29
+    41
 
 We’ll talk about ``SeqFeature`` objects next, in
 Section \ `4.3 <#sec:seq_features>`__.
@@ -574,7 +562,7 @@ constructors, and you’ll get back out ``ExactPosition`` objects:
 .. code:: python
 
     >>> exact_location = SeqFeature.FeatureLocation(5, 9)
-    >>> print exact_location
+    >>> print(exact_location)
     [5:9]
     >>> exact_location.start
     ExactPosition(5)
@@ -607,7 +595,7 @@ just check all the features one by one in a loop:
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
     >>> for feature in record.features:
     ...     if my_snp in feature:
-    ...         print feature.type, feature.qualifiers.get('db_xref')
+    ...         print("%s %s" % (feature.type, feature.qualifiers.get("db_xref")))
     ...
     source ['taxon:229193']
     gene ['GeneID:2767712']
@@ -630,8 +618,8 @@ in GenBank/EMBL notation using 1-based counting would be
 
     >>> from Bio.Seq import Seq
     >>> from Bio.SeqFeature import SeqFeature, FeatureLocation
-    >>> example_parent = Seq("ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC")
-    >>> example_feature = SeqFeature(FeatureLocation(5, 18), type="gene", strand=-1)
+    >>> seq = Seq("ACCGAGACGGCAAAGGCTAGCATAGGTATGAGACTTCCTTCCTGCCAGTGCTGAGGAACTGGGAGCCTAC")
+    >>> feature = SeqFeature(FeatureLocation(5, 18), type="gene", strand=-1)
 
 You could take the parent sequence, slice it to extract 5:18, and then
 take the reverse complement. If you are using Biopython 1.59 or later,
@@ -639,19 +627,20 @@ the feature location’s start and end are integer like so this works:
 
 .. code:: python
 
-    >>> feature_seq = example_parent[example_feature.location.start:example_feature.location.end].reverse_complement()
-    >>> print feature_seq
+    >>> feature_seq = seq[feature.location.start:feature.location.end].reverse_complement()
+    >>> print(feature_seq)
     AGCCTTTGCCGTC
 
 This is a simple example so this isn’t too bad – however once you have
 to deal with compound features (joins) this is rather messy. Instead,
 the ``SeqFeature`` object has an ``extract`` method to take care of all
-this:
+this(and since Biopython 1.78 can handle trans-splicing by supplying a
+dictionary of referenced sequences):
 
 .. code:: python
 
-    >>> feature_seq = example_feature.extract(example_parent)
-    >>> print feature_seq
+    >>> feature_seq = feature.extract(seq)
+    >>> print(feature_seq)
     AGCCTTTGCCGTC
 
 The length of a ``SeqFeature`` or location matches that of the region of
@@ -659,20 +648,71 @@ sequence it describes.
 
 .. code:: python
 
-    >>> print example_feature.extract(example_parent)
-    AGCCTTTGCCGTC
-    >>> print len(example_feature.extract(example_parent))
+    >>> print len(feature_seq)
     13
-    >>> print len(example_feature)
+    >>> print len(feature)
     13
-    >>> print len(example_feature.location)
+    >>> print len(feature.location)
     13
 
 For simple ``FeatureLocation`` objects the length is just the difference
 between the start and end positions. However, for a ``CompoundLocation``
 the length is the sum of the constituent regions.
 
-4.4  References
+4.4  Comparison
+---------------
+
+The SeqRecord objects can be very complex, but here’s a simple example:
+
+.. code:: python
+
+    >>> from Bio.Seq import Seq
+    >>> from Bio.SeqRecord import SeqRecord
+    >>> record1 = SeqRecord(Seq("ACGT"), id="test")
+    >>> record2 = SeqRecord(Seq("ACGT"), id="test")
+
+What happens when you try to compare these “identical” records?
+
+.. code:: python
+
+    >>> record1 == record2
+    ...
+
+Perhaps surprisingly older versions of Biopython would use Python’s
+default object comparison for the SeqRecord, meaning record1 == record2
+would only return True if these variables pointed at the same object in memory.
+In this example, record1 == record2 would have returned False here!
+
+.. code:: python
+
+    >>> record1 == record2  # on old versions of Biopython!
+    False
+
+As of Biopython 1.67, SeqRecord comparison like record1 == record2 will
+instead raise an explicit error to avoid people being caught out by this:
+
+.. code:: python
+
+    breaklines=true,breaksymbolleft=]{pycon}
+    >>> record1 == record2
+    Traceback (most recent call last):
+    ...
+    NotImplementedError: SeqRecord comparison is deliberately not
+    implemented.Explicitly compare the attributes of interest.
+
+Instead you should check the attributes you are interested in,
+for example the identifier and the sequence:
+
+.. code:: python
+
+    >>> record1.id == record2.id
+    True
+    >>> record1.seq == record2.seq
+    True
+
+Beware that comparing complex objects quickly gets complicated (see also Section 3.10).
+
+4.5  References
 ---------------
 
 Another common annotation related to a sequence is a reference to a
@@ -699,7 +739,7 @@ Any reference objects are stored as a list in the ``SeqRecord`` object’s
 is too it. References are meant to be easy to deal with, and hopefully
 general enough to cover lots of usage cases.
 
-4.5  The format method
+4.6  The format method
 ----------------------
 
 The ``format()`` method of the ``SeqRecord`` class gives a string
@@ -710,16 +750,15 @@ supported by ``Bio.SeqIO``, such as FASTA:
 
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
-    from Bio.Alphabet import generic_protein
 
     record = SeqRecord(Seq("MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD" \
                           +"GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK" \
                           +"NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM" \
-                          +"SSAC", generic_protein),
+                          +"SSAC"),
                        id="gi|14150838|gb|AAK54648.1|AF376133_1",
                        description="chalcone synthase [Cucumis sativus]")
                        
-    print record.format("fasta")
+    print(record.format("fasta"))
 
 which should give:
 
@@ -730,6 +769,7 @@ which should give:
     GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK
     NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM
     SSAC
+    <BLANKLINE>
 
 This ``format`` method takes a single mandatory argument, a lower case
 string which is supported by ``Bio.SeqIO`` as an output format (see
@@ -739,7 +779,7 @@ case for multiple sequence alignment formats), and thus won’t work via
 this ``format()`` method. See also
 Section \ `5.5.4 <#sec:Bio.SeqIO-and-StringIO>`__.
 
-4.6  Slicing a SeqRecord
+4.7  Slicing a SeqRecord
 ------------------------
 
 You can slice a ``SeqRecord``, to give you a new ``SeqRecord`` covering
@@ -751,19 +791,14 @@ For example, taking the same GenBank file used earlier:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-
-.. code:: python
-
     >>> record
-    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
-    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
-    dbxrefs=['Project:10638'])
-
-.. code:: python
-
+    SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG'),
+    id='NC_005816.1', name='NC_005816',
+    description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence',
+    dbxrefs=['Project:58037'])
     >>> len(record)
     9609
     >>> len(record.features)
@@ -778,7 +813,8 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
 
 .. code:: python
 
-    >>> print record.features[20]
+    breaklines=true,breakanywhere=true,breaksymbolleft=,breakanywheresymbolpre=]{pycon}
+    >>> print(record.features[20])
     type: gene
     location: [4342:4780](+)
     qualifiers: 
@@ -786,13 +822,10 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
         Key: gene, Value: ['pim']
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
-
-.. code:: python
-
-    >>> print record.features[21]
+    >>> print(record.features[21])
     type: CDS
     location: [4342:4780](+)
-    qualifiers: 
+    qualifiers:
         Key: codon_start, Value: ['1']
         Key: db_xref, Value: ['GI:45478716', 'GeneID:2767712']
         Key: gene, Value: ['pim']
@@ -802,24 +835,20 @@ zero-based counting they are entries 11 and 12 in the ``features`` list:
         Key: protein_id, Value: ['NP_995571.1']
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
+    <BLANKLINE>
 
 Let’s slice this parent record from 4300 to 4800 (enough to include the
 ``pim`` gene/CDS), and see how many features we get:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> sub_record = record[4300:4800]
-
-.. code:: python
-
     >>> sub_record
-    SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA',
-    IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
+    SeqRecord(seq=Seq('ATAAATAGATTATTCCAAATAATTTATTTATGTAAGAACAGGATGGGAGGGGGA...TTA'),
+    id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
-
-.. code:: python
-
     >>> len(sub_record)
     500
     >>> len(sub_record.features)
@@ -830,7 +859,8 @@ Our sub-record just has two features, the gene and CDS entries for
 
 .. code:: python
 
-    >>> print sub_record.features[0]
+    breaklines=true,breakanywhere=true,breaksymbolleft=,breakanywheresymbolpre=]{pycon}
+    >>> print(sub_record.features[0])
     type: gene
     location: [42:480](+)
     qualifiers: 
@@ -838,10 +868,7 @@ Our sub-record just has two features, the gene and CDS entries for
         Key: gene, Value: ['pim']
         Key: locus_tag, Value: ['YP_pPCP05']
     <BLANKLINE>
-
-.. code:: python
-
-    >>> print sub_record.features[20]
+    >>> print(sub_record.features[20])
     type: CDS
     location: [42:480](+)
     qualifiers: 
@@ -854,6 +881,7 @@ Our sub-record just has two features, the gene and CDS entries for
         Key: protein_id, Value: ['NP_995571.1']
         Key: transl_table, Value: ['11']
         Key: translation, Value: ['MGGGMISKLFCLALIFLSSSGLAEKNTYTAKDILQNLELNTFGNSLSH...']
+    <BLANKLINE>
 
 Notice that their locations have been adjusted to reflect the new parent
 sequence!
@@ -888,10 +916,11 @@ This illustrates the problem nicely though, our new sub-record is *not*
 the complete sequence of the plasmid, so the description is wrong! Let’s
 fix this and then view the sub-record as a reduced GenBank file using
 the ``format`` method described above in
-Section \ `4.5 <#sec:SeqRecord-format>`__:
+Section \ `4.6 <#sec:SeqRecord-format>`__:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> sub_record.description = "Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, partial."
     >>> print sub_record.format("genbank")
     ...
@@ -901,7 +930,7 @@ and \ `18.1.8 <#sec:FASTQ-slicing-off-adaptor>`__ for some FASTQ
 examples where the per-letter annotations (the read quality scores) are
 also sliced.
 
-4.7  Adding SeqRecord objects
+4.8  Adding SeqRecord objects
 -----------------------------
 
 You can add ``SeqRecord`` objects together, giving a new ``SeqRecord``.
@@ -916,15 +945,13 @@ a FASTQ file. Chapter \ `5 <#chapter:Bio.SeqIO>`__ will explain the
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.parse("example.fastq", "fastq").next()
     >>> len(record)
     25
     >>> print record.seq
     CCCTTCTTGTCTTCAGCGTTTCTCC
-
-.. code:: python
-
     >>> print record.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 26, 23, 23]
@@ -936,29 +963,28 @@ third ``T``:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> left = record[:20]
-    >>> print left.seq
+    >>> print(left.seq)
     CCCTTCTTGTCTTCAGCGTT
-    >>> print left.letter_annotations["phred_quality"]
+    >>> print(left.letter_annotations["phred_quality"])
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26]
     >>> right = record[21:]
-    >>> print right.seq
+    >>> print(right.seq)
     CTCC
-    >>> print right.letter_annotations["phred_quality"]
+    >>> print(right.letter_annotations["phred_quality"])
     [26, 26, 23, 23]
 
 Now add the two parts together:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> edited = left + right
     >>> len(edited)
     24
     >>> print edited.seq
     CCCTTCTTGTCTTCAGCGTTCTCC
-
-.. code:: python
-
     >>> print edited.letter_annotations["phred_quality"]
     [26, 26, 18, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 22, 26, 26, 26, 26,
     26, 26, 23, 23]
@@ -974,48 +1000,35 @@ have a circular genome:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-
-.. code:: python
-
     >>> record
     SeqRecord(seq=Seq('TGTAACGAACGGTGCAATAGTGATCCACACCCAACGCCTGAAATCAGATCCAGG...CTG',
     IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=['Project:10638'])
-
-.. code:: python
-
     >>> len(record)
     9609
     >>> len(record.features)
     41
     >>> record.dbxrefs
     ['Project:58037']
-
-.. code:: python
-
     >>> record.annotations.keys()
-    ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
-    'accessions', 'data_file_division', 'date', 'organism', 'gi']
+    dict_keys(['molecule_type', 'topology', 'data_file_division', 'date', 'accessions',
+    'sequence_version', 'gi', 'keywords', 'source', 'organism', 'taxonomy', 'references', 'comment'])
 
 You can shift the origin like this:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> shifted = record[2000:] + record[:2000]
-
-.. code:: python
-
     >>> shifted
     SeqRecord(seq=Seq('GATACGCAGTCATATTTTTTACACAATTCTCTAATCCCGACAAGGTCGTAGGTC...GGA',
     IUPACAmbiguousDNA()), id='NC_005816.1', name='NC_005816',
     description='Yersinia pestis biovar Microtus str. 91001 plasmid pPCP1, complete sequence.',
     dbxrefs=[])
-
-.. code:: python
-
     >>> len(shifted)
     9609
 
@@ -1030,7 +1043,7 @@ lost:
     >>> shifted.dbxrefs
     []
     >>> shifted.annotations.keys()
-    []
+    dict_keys([])
 
 This is because the ``SeqRecord`` slicing step is cautious in what
 annotation it preserves (erroneously propagating annotation can cause
@@ -1039,19 +1052,20 @@ the annotations dictionary, this must be done explicitly:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> shifted.dbxrefs = record.dbxrefs[:]
     >>> shifted.annotations = record.annotations.copy()
-    >>> shifted.dbxrefs
-    ['Project:10638']
-    >>> shifted.annotations.keys()
-    ['comment', 'sequence_version', 'source', 'taxonomy', 'keywords', 'references',
-    'accessions', 'data_file_division', 'date', 'organism', 'gi']
+    >>> record.dbxrefs
+    ['Project:58037']
+    >>> record.annotations.keys()
+    dict_keys(['molecule_type', 'topology', 'data_file_division', 'date', 'accessions',
+    'sequence_version', 'gi', 'keywords', 'source', 'organism', 'taxonomy', 'references', 'comment'])
 
 Also note that in an example like this, you should probably change the
 record identifiers since the NCBI references refer to the *original*
 unmodified sequence.
 
-4.8  Reverse-complementing SeqRecord objects
+4.9  Reverse-complementing SeqRecord objects
 --------------------------------------------
 
 One of the new features in Biopython 1.57 was the ``SeqRecord`` object’s
@@ -1082,9 +1096,10 @@ Consider this example record:
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> from Bio import SeqIO
     >>> record = SeqIO.read("NC_005816.gb", "genbank")
-    >>> print record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)
+    >>> print("%s %i %i %i %i" % (record.id, len(record), len(record.features), len(record.dbxrefs), len(record.annotations)))
     NC_005816.1 9609 41 1 11
 
 Here we take the reverse complement and specify a new identifier – but
@@ -1092,8 +1107,9 @@ notice how most of the annotation is dropped (but not the features):
 
 .. code:: python
 
+    breaklines=true,breaksymbolleft=]{pycon}
     >>> rc = record.reverse_complement(id="TESTING")
-    >>> print rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)
+    >>> print("%s %i %i %i %i" % (rc.id, len(rc), len(rc.features), len(rc.dbxrefs), len(rc.annotations)))
     TESTING 9609 41 0 0
 
 
