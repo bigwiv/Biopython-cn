@@ -11,7 +11,7 @@
     >>> help(SeqIO)
     ...
 
-学习本章的要领是学会使用 ``SeqRecord`` 对象（请见第 :ref:`4 <chapter-SeqRecord>` 章），该对象包含一个 ``Seq`` 对象（请见第 :ref:`3 <chapter-Bio.Seq>` 章）和注释信息（如序列ID和描述信息）。
+学习本章的要领是学会使用 ``SeqRecord`` 对象（请见第 :ref:`4 <chapter-SeqRecord>` 章），该对象包含一个 ``Seq`` 对象（请见第 :ref:`3 <chapter-Bio.Seq>` 章）和注释信息（如序列ID和描述信息）。请注意，在处理非常大的FASTA或FASTQ文件时，使用所有这些对象的开销可能会使脚本变得太慢。 在这种情况下，请考虑低级的``SimpleFastaParser``和``FastqGeneralIterator``解析器，它们仅为每个记录返回一个字符串元组（请参见第 :ref:`5.6<#sec：Seq_parsers>` 章）。
 
 5.1 解析/读取序列
 ---------------------------------
@@ -783,7 +783,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 .. code:: python
 
-    >>> print(gb_vrl["GQ333173.1"].description)
+    >>> print(gb_vrl["AB811634.1"].description)
     Equine encephalosis virus NS3 gene, complete cds, isolate: Kimron1.
 
 5.4.3.1 获取序列条目原始数据

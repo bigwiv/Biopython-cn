@@ -41,10 +41,6 @@ data as SeqRecord objects. This function expects two arguments:
    `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    for a full listing of supported formats.
 
-There is an optional argument ``alphabet`` to specify the alphabet to be
-used. This is useful for file formats like FASTA where otherwise
-``Bio.SeqIO`` will default to a generic alphabet.
-
 The ``Bio.SeqIO.parse()`` function returns an *iterator* which gives
 ``SeqRecord`` objects. Iterators are typically used in a for loop as
 shown below.
@@ -425,8 +421,8 @@ GenBank file using a generator expression:
     >>> print(sum(len(r) for r in SeqIO.parse("ls_orchid.gbk", "gb")))
     67518
 
-Here we use a file handle instead, using the ``with`` statement (Python
-2.5 or later) to close the handle automatically:
+Here we use a file handle instead, using the ``with`` statement to close
+the handle automatically:
 
 .. code:: python
 
@@ -1038,7 +1034,7 @@ object also lets you get at the raw text of each record:
 
 .. code:: python
 
-    >>> print(gb_vrl.get_raw("GQ333173.1"))
+    >>> print(gb_vrl.get_raw("AB811634.1"))
     LOCUS       GQ333173                 459 bp    DNA     linear   VRL 21-OCT-2009
     DEFINITION  HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial
                 cds.
