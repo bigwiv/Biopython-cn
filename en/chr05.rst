@@ -19,7 +19,11 @@ and the built in documentation (also
 The “catch” is that you have to work with ``SeqRecord`` objects (see
 Chapter \ `4 <#chapter:SeqRecord>`__), which contain a ``Seq`` object
 (see Chapter \ `3 <#chapter:Bio.Seq>`__) plus annotation like an
-identifier and description.
+identifier and description.Note that when dealing with very large FASTA
+or FASTQ files, the overhead of working with all these objects can make
+scripts too slow. In this case consider the low-level ``SimpleFastaParser``
+and ``FastqGeneralIterator`` parsers which return just a tuple of strings
+for each record (see Section ``5.6 <#sec:Seq_parsers>`__).
 
 5.1  Parsing or Reading Sequences
 ---------------------------------
@@ -36,10 +40,6 @@ data as SeqRecord objects. This function expects two arguments:
    – we don’t try and guess the file format for you! See
    `http://biopython.org/wiki/SeqIO <http://biopython.org/wiki/SeqIO>`__
    for a full listing of supported formats.
-
-There is an optional argument ``alphabet`` to specify the alphabet to be
-used. This is useful for file formats like FASTA where otherwise
-``Bio.SeqIO`` will default to a generic alphabet.
 
 The ``Bio.SeqIO.parse()`` function returns an *iterator* which gives
 ``SeqRecord`` objects. Iterators are typically used in a for loop as
@@ -61,25 +61,25 @@ In general ``Bio.SeqIO.parse()`` is used to read in sequence files as
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
-        print seq_record.id
-        print repr(seq_record.seq)
-        print len(seq_record)
+        print(seq_record.id)
+        print(repr(seq_record.seq))
+        print(len(seq_record))
 
 The above example is repeated from the introduction in
 Section \ `2.4 <#sec:sequence-parsing>`__, and will load the orchid DNA
 sequences in the FASTA format file
-`ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__.
+`ls\_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.fasta>`__.
 If instead you wanted to load a GenBank format file like
-`ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+`ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.fasta>`__
 then all you need to do is change the filename and the format string:
 
 .. code:: python
 
     from Bio import SeqIO
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-        print seq_record.id
-        print seq_record.seq
-        print len(seq_record)
+        print(seq_record.id)
+        print(seq_record.seq)
+        print(len(seq_record))
 
 Similarly, if you wanted to read in a file in another file format, then
 assuming ``Bio.SeqIO.parse()`` supports it you would just need to change
@@ -127,13 +127,13 @@ iterator to step through the entries, like this:
     from Bio import SeqIO
     record_iterator = SeqIO.parse("ls_orchid.fasta", "fasta")
 
-    first_record = record_iterator.next()
-    print first_record.id
-    print first_record.description
+    first_record = next(record_iterator)
+    print(first_record.id)
+    print(first_record.description)
 
-    second_record = record_iterator.next()
-    print second_record.id
-    print second_record.description
+    second_record = next(record_iterator)
+    print(second_record.id)
+    print(second_record.description)
 
 Note that if you try and use ``.next()`` and there are no more results,
 you’ll get the special ``StopIteration`` exception.
@@ -145,7 +145,7 @@ following code is very concise:
 .. code:: python
 
     from Bio import SeqIO
-    first_record  = SeqIO.parse("ls_orchid.gbk", "genbank").next()
+    first_record  = next(SeqIO.parse("ls_orchid.gbk", "genbank"))
 
 A word of warning here – using the ``.next()`` method like this will
 silently ignore any additional records in the file. If your files have
@@ -169,19 +169,19 @@ using the built-in Python function ``list()`` like so:
     from Bio import SeqIO
     records = list(SeqIO.parse("ls_orchid.gbk", "genbank"))
 
-    print "Found %i records" % len(records)
+    print("Found %i records" % len(records))
 
-    print "The last record"
+    print("The last record")
     last_record = records[-1] #using Python's list tricks
-    print last_record.id
-    print repr(last_record.seq)
-    print len(last_record)
+    print(last_record.id)
+    print(repr(last_record.seq))
+    print(len(last_record))
 
-    print "The first record"
+    print("The first record")
     first_record = records[0] #remember, Python counts from zero
-    print first_record.id
-    print repr(first_record.seq)
-    print len(first_record)
+    print(first_record.id)
+    print(repr(first_record.seq))
+    print(len(first_record))
 
 Giving:
 
@@ -190,11 +190,11 @@ Giving:
     Found 94 records
     The last record
     Z78439.1
-    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC', IUPACAmbiguousDNA())
+    Seq('CATTGTTGAGATCACATAATAATTGATCGAGTTAATCTGGAGGATCTGTTTACT...GCC')
     592
     The first record
     Z78533.1
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
     740
 
 You can of course still use a for loop with a list of ``SeqRecord``
@@ -210,14 +210,14 @@ The ``SeqRecord`` object and its annotation structures are described
 more fully in Chapter \ `4 <#chapter:SeqRecord>`__. As an example of how
 annotations are stored, we’ll look at the output from parsing the first
 record in the GenBank file
-`ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__.
+`ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__.
 
 .. code:: python
 
     from Bio import SeqIO
     record_iterator = SeqIO.parse("ls_orchid.gbk", "genbank")
-    first_record = record_iterator.next()
-    print first_record
+    first_record = next(record_iterator)
+    print(first_record)
 
 That should give something like this:
 
@@ -237,7 +237,7 @@ That should give something like this:
     /date=30-NOV-2006
     /organism=Cypripedium irapeanum
     /gi=2765658
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC', IUPACAmbiguousDNA())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGG...CGC')
 
 This gives a human readable summary of most of the annotation data for
 the ``SeqRecord``. For this example we’re going to use the
@@ -247,40 +247,40 @@ record above. You can also print them out directly:
 
 .. code:: python
 
-    print first_record.annotations
+    print(first_record.annotations)
 
 Like any Python dictionary, you can easily get a list of the keys:
 
 .. code:: python
 
-    print first_record.annotations.keys()
+    print(first_record.annotations.keys())
 
 or values:
 
 .. code:: python
 
-    print first_record.annotations.values()
+    print(first_record.annotations.values())
 
 In general, the annotation values are strings, or lists of strings. One
 special case is any references in the file get stored as reference
 objects.
 
 Suppose you wanted to extract a list of the species from the
-`ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+`ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__
 GenBank file. The information we want, *Cypripedium irapeanum*, is held
 in the annotations dictionary under ‘source’ and ‘organism’, which we
 can access like this:
 
 .. code:: python
 
-    >>> print first_record.annotations["source"]
+    >>> print(first_record.annotations["source"])
     Cypripedium irapeanum
 
 or:
 
 .. code:: python
 
-    >>> print first_record.annotations["organism"]
+    >>> print(first_record.annotations["organism"])
     Cypripedium irapeanum
 
 In general, ‘organism’ is used for the scientific name (in Latin, e.g.
@@ -297,7 +297,7 @@ each orchid sequence is from:
     all_species = []
     for seq_record in SeqIO.parse("ls_orchid.gbk", "genbank"):
         all_species.append(seq_record.annotations["organism"])
-    print all_species
+    print(all_species)
 
 Another way of writing this code is to use a list comprehension:
 
@@ -306,7 +306,7 @@ Another way of writing this code is to use a list comprehension:
     from Bio import SeqIO
     all_species = [seq_record.annotations["organism"] for seq_record in \
                    SeqIO.parse("ls_orchid.gbk", "genbank")]
-    print all_species
+    print(all_species)
 
 In either case, the result is:
 
@@ -322,7 +322,7 @@ FASTA file, rather than the GenBank file. The bad news is you will have
 to write some code to extract the data you want from the record’s
 description line - if the information is in the file in the first place!
 Our example FASTA format file
-`ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__
+`ls\_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.fasta>`__
 starts like this:
 
 .. code:: python
@@ -344,7 +344,7 @@ can do this:
     all_species = []
     for seq_record in SeqIO.parse("ls_orchid.fasta", "fasta"):
         all_species.append(seq_record.description.split()[1])
-    print all_species
+    print(all_species)
 
 This gives:
 
@@ -359,12 +359,48 @@ The concise alternative using list comprehensions would be:
     from Bio import SeqIO
     all_species == [seq_record.description.split()[1] for seq_record in \
                     SeqIO.parse("ls_orchid.fasta", "fasta")]
-    print all_species
+    print(all_species)
 
 In general, extracting information from the FASTA description line is
 not very nice. If you can get your sequences in a well annotated file
 format like GenBank or EMBL, then this sort of annotation information is
 much easier to deal with.
+
+5.1.5  Modifying data
+~~~~~~~~~~~~~~~~~~~~~~
+
+In the previous section, we demonstrated how to extract data from a ``SeqRecord``.
+Another common task is to alter this data. The attributes of a ``SeqRecord`` can
+be modified directly, for example:
+
+.. code:: python
+
+    >>> from Bio import SeqIO
+    >>> record_iterator = SeqIO.parse("ls_orchid.fasta", "fasta")
+    >>> first_record = next(record_iterator)
+    >>> first_record.id
+    'gi|2765658|emb|Z78533.1|CIZ78533'
+    >>> first_record.id = "new_id"
+    >>> first_record.id
+    'new_id'
+
+Note, if you want to change the way FASTA is output when written to a file (see
+Section `5.5 <#sec:writing-sequence-files>`__), then you should modify both the
+``id`` and ``description`` attributes. To ensure the correct behaviour, it is best to
+include the ``id`` plus a space at the start of the desired ``description``:
+
+.. code:: python
+
+    >>> from Bio import SeqIO
+    >>> record_iterator = SeqIO.parse("ls_orchid.fasta", "fasta")
+    >>> first_record = next(record_iterator)
+    >>> first_record.id = "new_id"
+    >>> first_record.description = first_record.id + " " + "desired new description"
+    >>> print(first_record.format("fasta")[:200])
+    >new_id desired new description
+    CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGATGAGACCGTGGAATAAA
+    CGATCGAGTGAATCCGGAGGACCGGTGTACTCAGCTCACCGGGGGCATTGCTCCCGTGGT
+    GACCCTGATTTGTTGTTGGGCCGCCTCGGGAGCGTCCATGGCGGGT
 
 5.2  Parsing sequences from compressed files
 --------------------------------------------
@@ -382,18 +418,17 @@ GenBank file using a generator expression:
 .. code:: python
 
     >>> from Bio import SeqIO
-    >>> print sum(len(r) for r in SeqIO.parse("ls_orchid.gbk", "gb"))
+    >>> print(sum(len(r) for r in SeqIO.parse("ls_orchid.gbk", "gb")))
     67518
 
-Here we use a file handle instead, using the ``with`` statement (Python
-2.5 or later) to close the handle automatically:
+Here we use a file handle instead, using the ``with`` statement to close
+the handle automatically:
 
 .. code:: python
 
-    >>> from __future__ import with_statement #Needed on Python 2.5
     >>> from Bio import SeqIO
     >>> with open("ls_orchid.gbk") as handle:
-    ...     print sum(len(r) for r in SeqIO.parse(handle, "gb"))
+    ...     print(sum(len(r) for r in SeqIO.parse(handle, "gb")))
     67518
 
 Or, the old fashioned way where you manually close the handle:
@@ -402,7 +437,7 @@ Or, the old fashioned way where you manually close the handle:
 
     >>> from Bio import SeqIO
     >>> handle = open("ls_orchid.gbk")
-    >>> print sum(len(r) for r in SeqIO.parse(handle, "gb"))
+    >>> print(sum(len(r) for r in SeqIO.parse(handle, "gb")))
     67518
     >>> handle.close()
 
@@ -414,27 +449,21 @@ compressed file for reading - which gives us a handle object:
 
     >>> import gzip
     >>> from Bio import SeqIO
-    >>> handle = gzip.open("ls_orchid.gbk.gz", "r")
-    >>> print sum(len(r) for r in SeqIO.parse(handle, "gb"))
+    >>> with gzip.open("ls_orchid.gbk.gz", "rt") as handle:
+    ...     print(sum(len(r) for r in SeqIO.parse(handle, "gb")))
+    ...
     67518
-    >>> handle.close()
 
-Similarly if we had a bzip2 compressed file (sadly the function name
-isn’t quite as consistent):
+Similarly if we had a bzip2 compressed file:
 
 .. code:: python
 
     >>> import bz2
     >>> from Bio import SeqIO
-    >>> handle = bz2.BZ2File("ls_orchid.gbk.bz2", "r")
-    >>> print sum(len(r) for r in SeqIO.parse(handle, "gb"))
+    >>> with bz2.open("ls_orchid.gbk.bz2", "rt") as handle:
+    ...     print(sum(len(r) for r in SeqIO.parse(handle, "gb")))
+    ...
     67518
-    >>> handle.close()
-
-If you are using Python 2.7 or later, the ``with``-version works for
-gzip and bz2 as well. Unfortunately this is broken on older versions of
-Python (`Issue 3860 <http://bugs.python.org/issue3860>`__) and you’d get
-an ``AttributeError`` about ``__exit__`` being missing.
 
 There is a gzip (GNU Zip) variant called BGZF (Blocked GNU Zip Format),
 which can be treated like an ordinary gzip file for reading, but has
@@ -470,11 +499,13 @@ one and only one record, use the ``Bio.SeqIO.read()`` function:
 
     from Bio import Entrez
     from Bio import SeqIO
+
     Entrez.email = "A.N.Other@example.com"
-    handle = Entrez.efetch(db="nucleotide", rettype="fasta", retmode="text", id="6273291")
-    seq_record = SeqIO.read(handle, "fasta")
-    handle.close()
-    print "%s with %i features" % (seq_record.id, len(seq_record.features))
+    with Entrez.efetch(
+        db="nucleotide", rettype="fasta", retmode="text", id="6273291"
+    ) as handle:
+        seq_record = SeqIO.read(handle, "fasta")
+    print("%s with %i features" % (seq_record.id, len(seq_record.features)))
 
 Expected output:
 
@@ -495,11 +526,13 @@ As a result, in Biopython 1.50 onwards, we support “gb” as an alias for
 
     from Bio import Entrez
     from Bio import SeqIO
+
     Entrez.email = "A.N.Other@example.com"
-    handle = Entrez.efetch(db="nucleotide", rettype="gb", retmode="text", id="6273291")
-    seq_record = SeqIO.read(handle, "gb") #using "gb" as an alias for "genbank"
-    handle.close()
-    print "%s with %i features" % (seq_record.id, len(seq_record.features))
+    with Entrez.efetch(
+        db="nucleotide", rettype="gb", retmode="text", id="6273291"
+    ) as handle:
+        seq_record = SeqIO.read(handle, "gb")  # using "gb" as an alias for "genbank"
+    print("%s with %i features" % (seq_record.id, len(seq_record.features)))
 
 The expected output of this example is:
 
@@ -516,15 +549,21 @@ records, so we must use the ``Bio.SeqIO.parse()`` function:
 
     from Bio import Entrez
     from Bio import SeqIO
+
     Entrez.email = "A.N.Other@example.com"
-    handle = Entrez.efetch(db="nucleotide", rettype="gb", retmode="text", \
-                           id="6273291,6273290,6273289")
-    for seq_record in SeqIO.parse(handle, "gb"):
-        print seq_record.id, seq_record.description[:50] + "..."
-        print "Sequence length %i," % len(seq_record),
-        print "%i features," % len(seq_record.features),
-        print "from: %s" % seq_record.annotations["source"]
-    handle.close()
+    with Entrez.efetch(
+        db="nucleotide", rettype="gb", retmode="text", id="6273291,6273290,6273289"
+    ) as handle:
+        for seq_record in SeqIO.parse(handle, "gb"):
+            print("%s %s..." % (seq_record.id, seq_record.description[:50]))
+            print(
+                "Sequence length %i, %i features, from: %s"
+                % (
+                    len(seq_record),
+                    len(seq_record.features),
+                    seq_record.annotations["source"],
+                )
+            )
 
 That should give the following output:
 
@@ -554,15 +593,15 @@ expect the handle to contain one and only one record, use the
 
     from Bio import ExPASy
     from Bio import SeqIO
-    handle = ExPASy.get_sprot_raw("O23729")
-    seq_record = SeqIO.read(handle, "swiss")
-    handle.close()
-    print seq_record.id
-    print seq_record.name
-    print seq_record.description
-    print repr(seq_record.seq)
-    print "Length %i" % len(seq_record)
-    print seq_record.annotations["keywords"]
+
+    with ExPASy.get_sprot_raw("O23729") as handle:
+        seq_record = SeqIO.read(handle, "swiss")
+    print(seq_record.id)
+    print(seq_record.name)
+    print(seq_record.description)
+    print(repr(seq_record.seq))
+    print("Length %i" % len(seq_record))
+    print(seq_record.annotations["keywords"])
 
 Assuming your network connection is OK, you should get back:
 
@@ -571,7 +610,7 @@ Assuming your network connection is OK, you should get back:
     O23729
     CHS3_BROFI
     RecName: Full=Chalcone synthase 3; EC=2.3.1.74; AltName: Full=Naringenin-chalcone synthase 3;
-    Seq('MAPAMEEIRQAQRAEGPAAVLAIGTSTPPNALYQADYPDYYFRITKSEHLTELK...GAE', ProteinAlphabet())
+    Seq('MAPAMEEIRQAQRAEGPAAVLAIGTSTPPNALYQADYPDYYFRITKSEHLTELK...GAE')
     Length 394
     ['Acyltransferase', 'Flavonoid biosynthesis', 'Transferase']
 
@@ -636,8 +675,10 @@ can look at all of the keys we have available:
 
 .. code:: python
 
-    >>> print orchid_dict.keys()
+    >>> list(orchid_dict.keys())
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
+
+Under Python 3 the dictionary methods like “.keys()“ and “.values()“ are iterators rather than lists.
 
 If you really want to, you can even look at all the records at once:
 
@@ -652,10 +693,10 @@ the object as normal:
 .. code:: python
 
     >>> seq_record = orchid_dict["Z78475.1"]
-    >>> print seq_record.description
+    >>> print(seq_record.description)
     P.supardii 5.8S rRNA gene and ITS1 and ITS2 DNA.
-    >>> print repr(seq_record.seq)
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT', IUPACAmbiguousDNA())
+    >>> seq_record.seq
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT')
 
 So, it is very easy to create an in memory “database” of our GenBank
 records. Next we’ll try this for the FASTA file instead.
@@ -674,8 +715,9 @@ Using the same code as above, but for the FASTA file instead:
 .. code:: python
 
     from Bio import SeqIO
+
     orchid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.fasta", "fasta"))
-    print orchid_dict.keys()
+    print(orchid_dict.keys())
 
 This time the keys are:
 
@@ -715,14 +757,15 @@ use in building the dictionary:
 .. code:: python
 
     from Bio import SeqIO
+
     orchid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.fasta", "fasta"), key_function=get_accession)
-    print orchid_dict.keys()
+    print(orchid_dict.keys())
 
 Finally, as desired, the new dictionary keys:
 
 .. code:: python
 
-    >>> print orchid_dict.keys()
+    >>> print(orchid_dict.keys())
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
 
 Not too complicated, I hope!
@@ -741,6 +784,7 @@ Once again, working with the orchids GenBank file:
 
     from Bio import SeqIO
     from Bio.SeqUtils.CheckSum import seguid
+
     for record in SeqIO.parse("ls_orchid.gbk", "genbank"):
         print record.id, seguid(record.seq)
 
@@ -767,9 +811,9 @@ given a ``Seq`` object (or a string). However, we can use Python’s
     >>> seguid_dict = SeqIO.to_dict(SeqIO.parse("ls_orchid.gbk", "genbank"),
     ...                             lambda rec : seguid(rec.seq))
     >>> record = seguid_dict["MN/s0q9zDoCVEEc+k/IFwCNF2pY"]
-    >>> print record.id
+    >>> print(record.id)
     Z78532.1
-    >>> print record.description
+    >>> print(record.description)
     C.californicum 5.8S rRNA gene and ITS1 and ITS2 DNA.
 
 That should have retrieved the record ``Z78532.1``, the second entry in
@@ -807,10 +851,11 @@ As an example, let’s use the same GenBank file as before:
 .. code:: python
 
     >>> seq_record = orchid_dict["Z78475.1"]
-    >>> print seq_record.description
+    >>> print(seq_record.description)
     P.supardii 5.8S rRNA gene and ITS1 and ITS2 DNA.
     >>> seq_record.seq
-    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT', IUPACAmbiguousDNA())
+    Seq('CGTAACAAGGTTTCCGTAGGTGAACCTGCGGAAGGATCATTGTTGAGATCACAT...GGT')
+    >>> orchid_dict.close()
 
 Note that ``Bio.SeqIO.index()`` won’t take a handle, but only a
 filename. There are good reasons for this, but it is a little technical.
@@ -861,7 +906,7 @@ use in building the dictionary:
 
     >>> from Bio import SeqIO
     >>> orchid_dict = SeqIO.index("ls_orchid.fasta", "fasta", key_function=get_acc)
-    >>> print orchid_dict.keys()
+    >>> print(orchid_dict.keys())
     ['Z78484.1', 'Z78464.1', 'Z78455.1', 'Z78442.1', 'Z78532.1', 'Z78453.1', ..., 'Z78471.1']
 
 Easy when you know how?
@@ -892,10 +937,13 @@ extract just a few records from it:
 
     >>> from Bio import SeqIO
     >>> uniprot = SeqIO.index("uniprot_sprot.dat", "swiss")
-    >>> handle = open("selected.dat", "w")
-    >>> for acc in ["P33487", "P19801", "P13689", "Q8JZQ5", "Q9TRC7"]:
-    ...     handle.write(uniprot.get_raw(acc))
-    >>> handle.close()
+    >>> with open("selected.dat", "wb") as out_handle:
+    ...     for acc in ["P33487", "P19801", "P13689", "Q8JZQ5", "Q9TRC7"]:
+    ...         out_handle.write(uniprot.get_raw(acc))
+    ...
+
+Note with Python 3 onwards, we have to open the file for writing in
+binary mode because the get_raw() method returns bytes strings.
 
 There is a longer example in Section \ `18.1.5 <#sec:SeqIO-sort>`__
 using the ``SeqIO.index()`` function to sort a large sequence file
@@ -921,28 +969,61 @@ The ``Bio.SeqIO.index()`` function takes three required arguments:
 As an example, consider the GenBank flat file releases from the NCBI FTP
 site,
 `ftp://ftp.ncbi.nih.gov/genbank/ <ftp://ftp.ncbi.nih.gov/genbank/>`__,
-which are gzip compressed GenBank files. As of GenBank release 182,
-there are 16 files making up the viral sequences, ``gbvrl1.seq``, …,
-``gbvrl16.seq``, containing in total almost one million records. You can
-index them like this:
+which are gzip compressed GenBank files. As of GenBank release 210, there
+are 38 files making up the viral sequences, gbvrl1.seq, …, gbvrl38.seq,
+taking about 8GB on disk once decompressed, and containing in total nearly
+two million records.
+
+If you were interested in the viruses, you could
+download all the virus files from the command line very easily with the
+rsync command, and then decompress them with gunzip:
 
 .. code:: python
 
+    # For illustration only, see reduced example below
+    $ rsync -avP "ftp.ncbi.nih.gov::genbank/gbvrl*.seq.gz" .
+    $ gunzip gbvrl*.seq.gz
+
+Unless you care about viruses, that’s a lot of data to download just for
+this example - so let’s download just the first four chunks (about 25MB
+each compressed), and decompress them (taking in all about 1GB of space):
+
+.. code:: python
+
+    # Reduced example, download only the first four chunks
+    $ curl -O ftp://ftp.ncbi.nih.gov/genbank/gbvrl1.seq.gz
+    $ curl -O ftp://ftp.ncbi.nih.gov/genbank/gbvrl2.seq.gz
+    $ curl -O ftp://ftp.ncbi.nih.gov/genbank/gbvrl3.seq.gz
+    $ curl -O ftp://ftp.ncbi.nih.gov/genbank/gbvrl4.seq.gz
+    $ gunzip gbvrl*.seq.gz
+
+Now, in Python, index these GenBank files as follows:
+
+.. code:: python
+
+    >>> import glob
     >>> from Bio import SeqIO
-    >>> files = ["gbvrl%i.seq" % (i+1) for i in range(16)]
+    >>> files = glob.glob("gbvrl*.seq")
+    >>> print("%i files to index" % len(files))
+    4
     >>> gb_vrl = SeqIO.index_db("gbvrl.idx", files, "genbank")
-    >>> print "%i sequences indexed" % len(gb_vrl)
-    958086 sequences indexed
+    >>> print("%i sequences indexed" % len(gb_vrl))
+    272960 sequences indexed
 
-That takes about two minutes to run on my machine. If you rerun it then
-the index file (here ``gbvrl.idx``) is reloaded in under a second. You
-can use the index as a read only Python dictionary - without having to
-worry about which file the sequence comes from, e.g.
+Indexing the full set of virus GenBank files took about ten
+minutes on my machine, just the first four files took about
+a minute or so.
+
+However, once done, repeating this will reload the index file
+gbvrl.idx in a fraction of a second.
+
+You can use the index as a read only Python dictionary - without
+having to worry about which file the sequence comes from, e.g.
 
 .. code:: python
 
-    >>> print gb_vrl["GQ333173.1"].description
-    HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial cds.
+    >>> print(gb_vrl["AB811634.1"].description)
+    Equine encephalosis virus NS3 gene, complete cds, isolate: Kimron1.
 
 5.4.3.1  Getting the raw data for a record
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -953,7 +1034,7 @@ object also lets you get at the raw text of each record:
 
 .. code:: python
 
-    >>> print gb_vrl.get_raw("GQ333173.1")
+    >>> print(gb_vrl.get_raw("AB811634.1"))
     LOCUS       GQ333173                 459 bp    DNA     linear   VRL 21-OCT-2009
     DEFINITION  HIV-1 isolate F12279A1 from Uganda gag protein (gag) gene, partial
                 cds.
@@ -989,6 +1070,7 @@ uncompressed GenBank file:
     >>> orchid_dict = SeqIO.index("ls_orchid.gbk", "genbank")
     >>> len(orchid_dict)
     94
+    >>> orchid_dict.close()
 
 You could compress this (while keeping the original file) at the command
 line using the following command – but don’t worry, the compressed file
@@ -1006,6 +1088,7 @@ You can use the compressed file in exactly the same way:
     >>> orchid_dict = SeqIO.index("ls_orchid.gbk.bgz", "genbank")
     >>> len(orchid_dict)
     94
+    >>> orchid_dict.close()
 
 or:
 
@@ -1015,6 +1098,7 @@ or:
     >>> orchid_dict = SeqIO.index_db("ls_orchid.gbk.bgz.idx", "ls_orchid.gbk.bgz", "genbank")
     >>> len(orchid_dict)
     94
+    >>> orchid_dict.close()
 
 The ``SeqIO`` indexing automatically detects the BGZF compression. Note
 that you can’t use the same index file for the uncompressed and
@@ -1084,17 +1168,16 @@ objects the hard way (by hand, rather than by loading them from a file):
 
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
-    from Bio.Alphabet import generic_protein
 
     rec1 = SeqRecord(Seq("MMYQQGCFAGGTVLRLAKDLAENNRGARVLVVCSEITAVTFRGPSETHLDSMVGQALFGD" \
                         +"GAGAVIVGSDPDLSVERPLYELVWTGATLLPDSEGAIDGHLREVGLTFHLLKDVPGLISK" \
                         +"NIEKSLKEAFTPLGISDWNSTFWIAHPGGPAILDQVEAKLGLKEEKMRATREVLSEYGNM" \
-                        +"SSAC", generic_protein),
+                        +"SSAC"),
                      id="gi|14150838|gb|AAK54648.1|AF376133_1",
                      description="chalcone synthase [Cucumis sativus]")
 
     rec2 = SeqRecord(Seq("YPDYYFRITNREHKAELKEKFQRMCDKSMIKKRYMYLTEEILKENPSMCEYMAPSLDARQ" \
-                        +"DMVVVEIPKLGKEAAVKAIKEWGQ", generic_protein),
+                        +"DMVVVEIPKLGKEAAVKAIKEWGQ"),
                      id="gi|13919613|gb|AAK33142.1|",
                      description="chalcone synthase [Fragaria vesca subsp. bracteata]")
 
@@ -1104,7 +1187,7 @@ objects the hard way (by hand, rather than by loading them from a file):
                         +"NKGARVLVVCSEITAVTFRGPNDTHLDSLVGQALFGDGAAAVIIGSDPIPEVERPLFELV" \
                         +"SAAQTLLPDSEGAIDGHLREVGLTFHLLKDVPGLISKNIEKSLVEAFQPLGISDWNSLFW" \
                         +"IAHPGGPAILDQVELKLGLKQEKLKATRKVLSNYGNMSSACVLFILDEMRKASAKEGLGT" \
-                        +"TGEGLEWGVLFGFGPGLTVETVVLHSVAT", generic_protein),
+                        +"TGEGLEWGVLFGFGPGLTVETVVLHSVAT"),
                      id="gi|13925890|gb|AAK49457.1|",
                      description="chalcone synthase [Nicotiana tabacum]")
                    
@@ -1196,15 +1279,16 @@ the ``Bio.SeqIO.write()`` function, but it will also accept a
 lets us do file conversion by combining these two functions.
 
 For this example we’ll read in the GenBank format file
-`ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__
+`ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__
 and write it out in FASTA format:
 
 .. code:: python
 
     from Bio import SeqIO
+
     records = SeqIO.parse("ls_orchid.gbk", "genbank")
     count = SeqIO.write(records, "my_example.fasta", "fasta")
-    print "Converted %i records" % count
+    print("Converted %i records" % count)
 
 Still, that is a little bit complicated. So, because file conversion is
 such a common task, there is a helper function letting you replace that
@@ -1213,8 +1297,9 @@ with just:
 .. code:: python
 
     from Bio import SeqIO
+
     count = SeqIO.convert("ls_orchid.gbk", "genbank", "my_example.fasta", "fasta")
-    print "Converted %i records" % count
+    print("Converted %i records" % count)
 
 The ``Bio.SeqIO.convert()`` function will take handles *or* filenames.
 Watch out though – if the output file already exists, it will overwrite
@@ -1252,19 +1337,19 @@ output file.
 To start with, we’ll use ``Bio.SeqIO.parse()`` to load some nucleotide
 sequences from a file, then print out their reverse complements using
 the ``Seq`` object’s built in ``.reverse_complement()`` method (see
-Section \ `3.7 <#sec:seq-reverse-complement>`__):
+Section \ `3.6 <#sec:seq-reverse-complement>`__):
 
 .. code:: python
 
     >>> from Bio import SeqIO
     >>> for record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-    ...     print record.id
-    ...     print record.seq.reverse_complement()
+    ...     print(record.id)
+    ...     print(record.seq.reverse_complement())
 
 Now, if we want to save these reverse complements to a file, we’ll need
 to make ``SeqRecord`` objects. We can use the ``SeqRecord`` object’s
 built in ``.reverse_complement()`` method (see
-Section \ `4.8 <#sec:SeqRecord-reverse-complement>`__) but we must
+Section \ `4.9 <#sec:SeqRecord-reverse-complement>`__) but we must
 decide how to name our new records.
 
 This is an excellent place to demonstrate the power of list
@@ -1329,11 +1414,12 @@ containing the records in FASTA format:
 
     from Bio import SeqIO
     from StringIO import StringIO
+
     records = SeqIO.parse("ls_orchid.gbk", "genbank")
     out_handle = StringIO()
     SeqIO.write(records, out_handle, "fasta")
     fasta_data = out_handle.getvalue()
-    print fasta_data
+    print(fasta_data)
 
 This isn’t entirely straightforward the first time you see it! On the
 bright side, for the special case where you would like a string
@@ -1347,11 +1433,11 @@ method to write to a file, for example something like this:
 .. code:: python
 
     from Bio import SeqIO
-    out_handle = open("ls_orchid_long.tab", "w")
-    for record in SeqIO.parse("ls_orchid.gbk", "genbank"):
-        if len(record) > 100:
-            out_handle.write(record.format("tab"))
-    out_handle.close()
+
+    with open("ls_orchid_long.tab", "w") as out_handle:
+        for record in SeqIO.parse("ls_orchid.gbk", "genbank"):
+            if len(record) > 100:
+                out_handle.write(record.format("tab"))
 
 While this style of code will work for a simple sequential file format
 like FASTA or the simple tab separated format used here, it will *not*
@@ -1361,10 +1447,73 @@ recommend using ``Bio.SeqIO.write()``, as in the following example:
 .. code:: python
 
     from Bio import SeqIO
+
     records = (rec for rec in SeqIO.parse("ls_orchid.gbk", "genbank") if len(rec) > 100)
     SeqIO.write(records, "ls_orchid.tab", "tab")
 
 Making a single call to ``SeqIO.write(...)`` is also much quicker than
 multiple calls to the ``SeqRecord.format(...)`` method.
 
+5.6  Low level FASTA and FASTQ parsers
+---------------------------------------
+
+Working with the low-level SimpleFastaParser or FastqGeneralIterator is often
+more practical than Bio.SeqIO.parse when dealing with large high-throughput
+FASTA or FASTQ sequencing files where speed matters. As noted in the introduction
+to this chapter, the file-format neutral Bio.SeqIO interface has the overhead of
+creating many objects even for simple formats like FASTA.
+
+When parsing FASTA files, internally Bio.SeqIO.parse() calls the low-level
+SimpleFastaParser with the file handle. You can use this directly - it iterates
+over the file handle returning each record as a tuple of two strings, the title
+line (everything after the > character) and the sequence (as a plain string):
+
+.. code:: python
+
+    >>> from Bio.SeqIO.FastaIO import SimpleFastaParser
+    >>> count = 0
+    >>> total_len = 0
+    >>> with open("ls_orchid.fasta") as in_handle:
+    ...     for title, seq in SimpleFastaParser(in_handle):
+    ...         count += 1
+    ...         total_len += len(seq)
+    ...
+    >>> print("%i records with total sequence length %i" % (count, total_len))
+    94 records with total sequence length 67518
+
+As long as you don’t care about line wrapping (and you probably don’t for short
+read high-througput data), then outputing FASTA format from these strings is also
+very fast:
+
+.. code:: python
+
+    ...
+    out_handle.write(">%s\n%s\n" % (title, seq))
+    ...
+
+Likewise, when parsing FASTQ files, internally Bio.SeqIO.parse() calls the low-level
+FastqGeneralIterator with the file handle. If you don’t need the quality scores
+turned into integers, or can work with them as ASCII strings this is ideal:
+
+.. code:: python
+
+    >>> from Bio.SeqIO.QualityIO import FastqGeneralIterator
+    >>> count = 0
+    >>> total_len = 0
+    >>> with open("example.fastq") as in_handle:
+    ...     for title, seq, qual in FastqGeneralIterator(in_handle):
+    ...         count += 1
+    ...         total_len += len(seq)
+    ...
+    >>> print("%i records with total sequence length %i" % (count, total_len))
+    3 records with total sequence length 75
+
+There are more examples of this in the Cookbook (Chapter 20), including how to output
+FASTQ efficiently from strings using this code snippet:
+
+.. code:: python
+
+    ...
+    out_handle.write("@%s\n%s\n+\n%s\n" % (title, seq, qual))
+    ...
 
