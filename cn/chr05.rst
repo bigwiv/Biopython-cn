@@ -38,7 +38,7 @@
         print(repr(seq_record.seq))
         print(len(seq_record))
 
-上面的示例来自第 :ref:`2.4 <sec-sequence-parsing>` 节，它将读取来自FASTA格式文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 的兰花DNA序列。如果你想读取GenBank格式文件，如 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，只需要更改文件名和格式字符串：
+上面的示例来自第 :ref:`2.4 <sec-sequence-parsing>` 节，它将读取来自FASTA格式文件 `ls\_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ 的兰花DNA序列。如果你想读取GenBank格式文件，如 `ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ ，只需要更改文件名和格式字符串：
 
 .. code:: python
 
@@ -137,7 +137,7 @@
 5.1.4 提取数据
 ~~~~~~~~~~~~~~~~~~~~~~
 
-``SeqRecord`` 对象及其注释信息在第 :ref:`4 <chapter-SeqRecord>` 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
+``SeqRecord`` 对象及其注释信息在第 :ref:`4 <chapter-SeqRecord>` 章中有更详细的介绍。为了解释注释信息是如何存储的，我们从GenBank文件 `ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ 中解析出第一个序列条目，并将其输出：
 
 .. code:: python
 
@@ -186,7 +186,7 @@
 
 通常，注释值是字符串或者字符串列表。一个特例是，文件中的所有参考文献（references）都以引用（reference）对象方式存储。
 
-例如你想从GenBank文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ 中提取出物种列表。我们需要的信息 *Cypripedium irapeanum* 被保存在这个注释字典的‘source’和‘organism’键中，我们可以用下面的方式获取：
+例如你想从GenBank文件 `ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ 中提取出物种列表。我们需要的信息 *Cypripedium irapeanum* 被保存在这个注释字典的‘source’和‘organism’键中，我们可以用下面的方式获取：
 
 .. code:: python
 
@@ -229,7 +229,7 @@
 
 因为GenBank文件注释是以标准方式注释，所以相当简单。
 
-现在，假设你需要从一个FASTA文件而不是GenBank文件提取出物种列表，那么你不得不多写一些代码，用以从序列条目的描述行提取需要的数据。使用的示例FASTA文件 `ls\_orchid.fasta <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.fasta>`__ 格式如下：
+现在，假设你需要从一个FASTA文件而不是GenBank文件提取出物种列表，那么你不得不多写一些代码，用以从序列条目的描述行提取需要的数据。使用的示例FASTA文件 `ls\_orchid.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ 格式如下：
 
 .. code:: python
 
@@ -397,6 +397,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
     from Bio import Entrez
     from Bio import SeqIO
+
     Entrez.email = "A.N.Other@example.com"
     with Entrez.efetch(
         db="nucleotide", rettype="gb", retmode="text", id="6273291"
@@ -418,6 +419,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
     from Bio import Entrez
     from Bio import SeqIO
+
     Entrez.email = "A.N.Other@example.com"
     with Entrez.efetch(
         db="nucleotide", rettype="gb", retmode="text", id="6273291,6273290,6273289"
@@ -457,6 +459,7 @@ NCBI也允许你获取其它格式文件，尤其是GenBank文件。直到2009�
 
     from Bio import ExPASy
     from Bio import SeqIO
+
     with ExPASy.get_sprot_raw("O23729") as handle:
         seq_record = SeqIO.read(handle, "swiss")
     print(seq_record.id)
@@ -744,7 +747,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 如果您对病毒感兴趣，则可以使用 ``rsync`` 命令非常轻松地从命令行下载所有病毒文件，然后使用 ``gunzip`` 解压缩它们：
 
-.. code:: shell
+.. code:: python
 
     # For illustration only, see reduced example below
     $ rsync -avP "ftp.ncbi.nih.gov::genbank/gbvrl*.seq.gz" .
@@ -752,7 +755,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 除非您关心病毒，否则仅此示例需要下载大量数据-因此，让我们仅下载前四个块（每个压缩块约25MB），然后解压缩（占用全部1GB的空间）：
 
-.. code:: shell
+.. code:: python
 
     # Reduced example, download only the first four chunks
     $ curl -O ftp://ftp.ncbi.nih.gov/genbank/gbvrl1.seq.gz
@@ -762,7 +765,6 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
     $ gunzip gbvrl*.seq.gz
 
 现在，在Python中，按如下所示索引这些GenBank文件：
-
 
 .. code:: python
 
@@ -967,7 +969,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
 在之前的例子中我们使用 ``SeqRecord`` 对象列表作为 ``Bio.SeqIO.write()`` 函数的输入，但是它也接受如来自于 ``Bio.SeqIO.parse()`` 的 ``SeqRecord`` 迭代器 - 这允许我们通过结合使用这两个函数实现文件转换。
 
-在这个例子中，我们将读取GenBank格式文件 `ls\_orchid.gbk <http://biopython.org/DIST/docs/tutorial/examples/ls_orchid.gbk>`__ ，然后输出为FASTA格式文件：
+在这个例子中，我们将读取GenBank格式文件 `ls\_orchid.gbk <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/ls_orchid.gbk>`__ ，然后输出为FASTA格式文件：
 
 .. code:: python
 
@@ -1064,6 +1066,7 @@ Biopython 1.57引入一个替代的函数， ``Bio.SeqIO.index_db()`` 。由于�
 
     from Bio import SeqIO
     from StringIO import StringIO
+
     records = SeqIO.parse("ls_orchid.gbk", "genbank")
     out_handle = StringIO()
     SeqIO.write(records, out_handle, "fasta")
