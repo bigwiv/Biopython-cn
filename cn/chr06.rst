@@ -26,8 +26,6 @@
 
 ``Bio.AlignIO`` 模块还接受一个可选参数 ``seq_count`` 。这一参数将在 :ref:`6.1.3 <sec-AlignIO-count-argument>` 中具体讨论。它可以处理不确定的多序列比对格式，或者包含有多个序列的排列。
 
-另一个可选参数 ``alphabet`` 允许用户指定序列比对文件的字符（alphabet），它可以用来说明序列比对的类型（DNA，RNA或蛋白质）。因为大多数序列比对格式并不区别序列的类型，因此指定这一参数可能会对后期的分析产生帮助。 ``Bio.AlignIO`` 默认将使用一般字符（generic alphabet），这将不区分各种序列比对类型。
-
 6.1.1 单一的序列比对
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -75,7 +73,7 @@
 .. code:: python
 
     >>> print alignment
-    SingleLetterAlphabet() alignment with 7 rows and 52 columns
+    Alignment with 7 rows and 52 columns
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRL...SKA COATB_BPI22/32-83
@@ -90,10 +88,11 @@
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    >>> print "Alignment length %i" % alignment.get_alignment_length()
+    >>> print("Alignment length %i" % alignment.get_alignment_length())
     Alignment length 52
     >>> for record in alignment:
-    ...     print "%s - %s" % (record.seq, record.id)
+    ...     print("%s - %s" % (record.seq, record.id))
+    ...
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83
@@ -110,7 +109,7 @@
 
     >>> for record in alignment:
     ...     if record.dbxrefs:
-    ...         print record.id, record.dbxrefs
+    ...         print("%s %s" % (record.id, record.dbxrefs))
     COATB_BPIKE/30-81 ['PDB; 1ifl ; 1-52;']
     COATB_BPM13/24-72 ['PDB; 2cpb ; 1-49;', 'PDB; 2cps ; 1-49;']
     Q9T0Q9_BPFD/1-49 ['PDB; 1nh4 A; 1-49;']
@@ -121,7 +120,7 @@
 .. code:: python
 
     >>> for record in alignment:
-    ...     print record
+    ...     print(record)
 
 Sanger网站
 `http://pfam.sanger.ac.uk/family?acc=PF05371 <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
@@ -150,7 +149,7 @@ Sanger网站
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.faa", "fasta")
-    print alignment
+    print(alignment)
 
 你可能已经发现，以上代码中唯一的变化只是指定格式的参数。所返回的alignment对象将会包含同样的序列和序列名字。但是仔细的读者会发现，每一个alignment的SeqRecord中并不包含数据的引用注释。这是因为FASTA格式本身并没有包含这一类信息。
 
@@ -162,7 +161,6 @@ Sanger网站
 
     >>> from Bio import AlignIO
     >>> help(AlignIO)
-    ...
 
 6.1.2  多个序列比对
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -217,28 +215,28 @@ Sanger网站
     from Bio import AlignIO
     alignments = AlignIO.parse("resampled.phy", "phylip")
     for alignment in alignments:
-        print alignment
-        print
+        print(alignment)
+        print()
 
 这将给出以下的输出（这时只显示缩略的一部分）：
 
 .. code:: python
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAACCA Alpha
     AAACCC Beta
     ACCCCA Gamma
     CCCAAC Delta
     CCCAAA Epsilon
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAACAA Alpha
     AAACCC Beta
     ACCCAA Gamma
     CCCACC Delta
     CCCAAA Epsilon
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAAAAC Alpha
     AAACCC Beta
     AACAAC Gamma
@@ -247,7 +245,7 @@ Sanger网站
 
     ...
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAAACC Alpha
     ACCCCC Beta
     AAAACC Gamma
@@ -332,10 +330,10 @@ Sanger网站
 .. code:: python
 
     for alignment in AlignIO.parse(handle, "fasta", seq_count=2):
-        print "Alignment length %i" % alignment.get_alignment_length()
+        print("Alignment length %i" % alignment.get_alignment_length())
         for record in alignment:
-            print "%s - %s" % (record.seq, record.id)
-        print
+            print("%s - %s" % (record.seq, record.id))
+        print()
 
 这将给出：
 
@@ -370,27 +368,26 @@ Sanger网站
 
 .. code:: python
 
-    from Bio.Alphabet import generic_dna
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
     from Bio.Align import MultipleSeqAlignment
 
     align1 = MultipleSeqAlignment([
-                 SeqRecord(Seq("ACTGCTAGCTAG", generic_dna), id="Alpha"),
-                 SeqRecord(Seq("ACT-CTAGCTAG", generic_dna), id="Beta"),
-                 SeqRecord(Seq("ACTGCTAGDTAG", generic_dna), id="Gamma"),
+                 SeqRecord(Seq("ACTGCTAGCTAG"), id="Alpha"),
+                 SeqRecord(Seq("ACT-CTAGCTAG"), id="Beta"),
+                 SeqRecord(Seq("ACTGCTAGDTAG"), id="Gamma"),
              ])
 
     align2 = MultipleSeqAlignment([
-                 SeqRecord(Seq("GTCAGC-AG", generic_dna), id="Delta"),
-                 SeqRecord(Seq("GACAGCTAG", generic_dna), id="Epsilon"),
-                 SeqRecord(Seq("GTCAGCTAG", generic_dna), id="Zeta"),
+                 SeqRecord(Seq("GTCAGC-AG"), id="Delta"),
+                 SeqRecord(Seq("GACAGCTAG"), id="Epsilon"),
+                 SeqRecord(Seq("GTCAGCTAG"), id="Zeta"),
              ])
 
     align3 = MultipleSeqAlignment([
-                 SeqRecord(Seq("ACTAGTACAGCTG", generic_dna), id="Eta"),
-                 SeqRecord(Seq("ACTAGTACAGCT-", generic_dna), id="Theta"),
-                 SeqRecord(Seq("-CTACTACAGGTG", generic_dna), id="Iota"),
+                 SeqRecord(Seq("ACTAGTACAGCTG"), id="Eta"),
+                 SeqRecord(Seq("ACTAGTACAGCT-"), id="Theta"),
+                 SeqRecord(Seq("-CTACTACAGGTG"), id="Iota"),
              ])
 
     my_alignments = [align1, align2, align3]
@@ -436,18 +433,20 @@ Sanger网站
 
 .. code:: python
 
-    from Bio import AlignIO
-    count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
-    print "Converted %i alignments" % count
+    >>> from Bio import AlignIO
+    >>> count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
+    >>> print("Converted %i alignments" % count)
+    Converted 1 alignments
 
 或者，使用 ``Bio.AlignIO.parse()`` 和 ``Bio.AlignIO.write()`` ：
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
-    count = AlignIO.write(alignments, "PF05371_seed.aln", "clustal")
-    print "Converted %i alignments" % count
+    >>> from Bio import AlignIO
+    >>> alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
+    >>> count = AlignIO.write(alignments, "PF05371_seed.aln", "clustal")
+    >>> print("Converted %i alignments" % count)
+    Converted 1 alignments
 
 ``Bio.AlignIO.write()`` 函数默认处理的情形是一个包括有多个序列比对的对象。在以上例子中，我们给予 ``Bio.AlignIO.write()`` 的参数是一个由 ``Bio.AlignIO.parse()`` 函数返回的一个迭代器。
 
@@ -514,15 +513,44 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    name_mapping = {}
-    for i, record in enumerate(alignment):
-        name_mapping[i] = record.id
-        record.id = "seq%i" % i
-    print name_mapping
+    >>> from Bio import AlignIO
+    >>> AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip-relaxed")
 
-    AlignIO.write([alignment], "PF05371_seed.phy", "phylip")
+这次的输出看起来像这样，使用更长的缩进以允许完整给出所有标识符：
+
+.. code:: python
+
+     7 52
+    COATB_BPIKE/30-81  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIKLFKKFVS
+    COATB_BPI22/32-83  DGTSTATSYA TEAMNSLKTQ ATDLIDQTWP VVTSVAVAGL AIRLFKKFSS
+    COATB_BPM13/24-72  AEGDDP---A KAAFNSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPZJ2/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFAS
+    Q9T0Q9_BPFD/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPIF1/22-73  FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
+
+                       KA
+                       RA
+                       KA
+                       KA
+                       KA
+                       KA
+                       RA
+
+如果必须使用原始的严格PHYLIP格式，则可能需要以某种方式压缩标识符-或分配自己的名称或编号系统。 下面的代码在保存输出之前操纵记录标识符：
+
+.. code:: python
+
+    >>> from Bio import AlignIO
+    >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
+    >>> name_mapping = {}
+    >>> for i, record in enumerate(alignment):
+            name_mapping[i] = record.id
+            record.id = "seq%i" % i
+    >>> print(name_mapping)
+    {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', 3: 'COATB_BPM13/24-72',
+     4: 'COATB_BPZJ2/1-49', 5: 'Q9T0Q9_BPFD/1-49', 6: 'COATB_BPIF1/22-73'}
+    >>>AlignIO.write([alignment], "PF05371_seed.phy", "phylip")
 
 以上代码将会建立一个字典对象实现自定义的ID和原始ID的映射：
 
@@ -562,26 +590,39 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    print alignment.format("clustal")
+    >>> from Bio import AlignIO
+    >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
+    >>> print(alignment.format("clustal"))
+    CLUSTAL X (1.81) multiple sequence alignment
 
-我们在 :ref:`4.5 <sec-SeqRecord-format>` 中讲到， ``Bio.SeqIO`` 也有一个对 ``SeqRecord`` 输出的方法。
+
+    COATB_BPIKE/30-81                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVS
+    COATB_BPI22/32-83                   DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSS
+    ...
+
+我们在 :ref:`4.6 <sec-SeqRecord-format>` 中讲到， ``Bio.SeqIO`` 也有一个对 ``SeqRecord`` 输出的方法。
 
 ``format()`` 方法是利用 ``StringIO`` 以及 ``Bio.AlignIO.write()`` 来实现以上输出的。如果你使用的是较老版本的Biopython，你可以使用以下代码来完成相同的工作：
 
 .. code:: python
 
-    from Bio import AlignIO
-    from StringIO import StringIO
+    >>> from Bio import AlignIO
+    >>> from StringIO import StringIO
+    >>> alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
+    >>> out_handle = StringIO()
+    >>> AlignIO.write(alignments, out_handle, "clustal")
+    1
+    >>> clustal_data = out_handle.getvalue()
+    >>> print(clustal_data)
+    CLUSTAL X (1.81) multiple sequence alignment
 
-    alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
 
-    out_handle = StringIO()
-    AlignIO.write(alignments, out_handle, "clustal")
-    clustal_data = out_handle.getvalue()
-
-    print clustal_data
+    COATB_BPIKE/30-81                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVS
+    COATB_BPI22/32-83                   DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSS
+    COATB_BPM13/24-72                   AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTS
+    ...
 
 6.3  序列比对的操纵
 -------------------
@@ -597,10 +638,11 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    >>> print "Number of rows: %i" % len(alignment)
+    >>> print("Number of rows: %i" % len(alignment))
     Number of rows: 7
     >>> for record in alignment:
-    ...     print "%s - %s" % (record.seq, record.id)
+    ...     print("%s - %s" % (record.seq, record.id))
+    ...
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83
@@ -613,8 +655,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    >>> print alignment
-    SingleLetterAlphabet() alignment with 7 rows and 52 columns
+    >>> print(alignment)
+    Alignment with 7 rows and 52 columns
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRL...SKA COATB_BPI22/32-83
@@ -622,8 +664,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73
-    >>> print alignment[3:7]
-    SingleLetterAlphabet() alignment with 4 rows and 52 columns
+    >>> print(alignment[3:7])
+    Alignment with 4 rows and 52 columns
     AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPM13/24-72
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49
@@ -633,29 +675,29 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    >>> print alignment[2,6]
+    >>> print(alignment[2,6])
     T
 
 使用两个整数来获得序列比对中的一个字符，这其实是以下操作的简化方式：
 
 .. code:: python
 
-    >>> print alignment[2].seq[6]
+    >>> print(alignment[2].seq[6])
     T
 
 你可以用下面的代码来获取整列：
 
 .. code:: python
 
-    >>> print alignment[:,6]
+    >>> print(alignment[:,6])
     TTT---T
 
 你也可以同时选择特定的行和列。例如，以下代码将打印出第3到6行的前6列：
 
 .. code:: python
 
-    >>> print alignment[3:6,:6]
-    SingleLetterAlphabet() alignment with 3 rows and 6 columns
+    >>> print(alignment[3:6,:6])
+    Alignment with 3 rows and 6 columns
     AEGDDP COATB_BPM13/24-72
     AEGDDP COATB_BPZJ2/1-49
     AEGDDP Q9T0Q9_BPFD/1-49
@@ -664,8 +706,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    >>> print alignment[:,:6]
-    SingleLetterAlphabet() alignment with 7 rows and 6 columns
+    >>> print(alignment[:,:6])
+    Alignment with 7 rows and 6 columns
     AEPNAA COATB_BPIKE/30-81
     AEPNAA Q9T0Q8_BPIKE/1-52
     DGTSTA COATB_BPI22/32-83
@@ -678,8 +720,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    >>> print alignment[:,6:9]
-    SingleLetterAlphabet() alignment with 7 rows and 3 columns
+    >>> print(alignment[:,6:9])
+    Alignment with 7 rows and 3 columns
     TNY COATB_BPIKE/30-81
     TNY Q9T0Q8_BPIKE/1-52
     TSY COATB_BPI22/32-83
@@ -692,8 +734,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 .. code:: python
 
-    >>> print alignment[:,9:]
-    SingleLetterAlphabet() alignment with 7 rows and 43 columns
+    >>> print(alignment[:,9:])
+    Alignment with 7 rows and 43 columns
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
     ATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
@@ -707,8 +749,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 .. code:: python
 
     >>> edited = alignment[:,:6] + alignment[:,9:]
-    >>> print edited
-    SingleLetterAlphabet() alignment with 7 rows and 49 columns
+    >>> print(edited)
+    Alignment with 7 rows and 49 columns
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
     DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
@@ -718,14 +760,14 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
 
 另一个经常使用的序列比对操作是将多个基因的序列比对拼接成一个大的序列比对（meta-alignment）。
-在进行这种操作时一定要注意序列的ID需要匹配（具体请见 :ref:`4.7 <sec-SeqRecord-addition>` 关于 ``SeqRecord``
+在进行这种操作时一定要注意序列的ID需要匹配（具体请见 :ref:`4.8 <sec-SeqRecord-addition>` 关于 ``SeqRecord``
 的说明)。为了达到这种目的，用 ``sort()`` 方法将序列ID按照字母顺序进行排列可能会有所帮助：
 
 .. code:: python
 
     >>> edited.sort()
-    >>> print edited
-    SingleLetterAlphabet() alignment with 7 rows and 49 columns
+    >>> print(edited)
+    Alignment with 7 rows and 49 columns
     DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
     FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
@@ -747,8 +789,8 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
     >>> align_array = np.array([list(rec) for rec in alignment], np.character)
-    >>> align_array.shape
-    (7, 52)
+    >>> print("Array shape %i by %i" % align_array.shape)
+    Array shape 7 by 52
 
 如果你需要频繁地使用列操作，你可以让 ``Numpy`` 将序列比对以列的形式进行储存（与Fortran一样），而不是 ``Numpy`` 默认形式（与C一样以行储存）：
 
@@ -758,9 +800,63 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 
 注意， ``Numpy`` 的数组和Biopython默认的序列比对对象是分别储存在内存中的，编辑其中的一个不会更新另一个的值。
 
+
+6.4 获取线路信息
+------------------------------------------
+
+6.4.1  替代
+~~~~~~~~~~~~~~~~~~~~~
+
+路线的``substitutions``属性报告路线中的字母相互替换的频率。通过对路线中的所有行对进行计数，计算两个字母彼此对齐的次数并在所有对中求和计算得出。例如，
+
+.. code:: python
+
+    >>> from Bio.Seq import Seq
+    >>> from Bio.SeqRecord import SeqRecord
+    >>> from Bio.Align import MultipleSeqAlignment
+    >>> alignment = MultipleSeqAlignment(
+    ...     [
+    ...         SeqRecord(Seq("ACTCCTA"), id='seq1'),
+    ...         SeqRecord(Seq("AAT-CTA"), id='seq2'),
+    ...         SeqRecord(Seq("CCTACT-"), id='seq3'),
+    ...         SeqRecord(Seq("TCTCCTC"), id='seq4'),
+    ...     ]
+    ... )
+    ...
+    >>> print(alignment)
+    Alignment with 4 rows and 7 columns
+    ACTCCTA seq1
+    AAT-CTA seq2
+    CCTACT- seq3
+    TCTCCTC seq4
+    >>> substitutions = alignment.substitutions
+    >>> print(substitutions)
+        A    C    T
+    A 2.0  4.5  1.0
+    C 4.5 10.0  0.5
+    T 1.0  0.5 12.0
+    <BLANKLINE>
+
+由于对的顺序是任意的，因此计数在对角线的上方和下方均分。例如，``A``到``C``的9个对齐在位置['A'，'C']处为4.5，在位置['C'，'A']处为4.5。如第20.4.2节所述，当根据这些计数计算替换矩阵时，这种安排有助于简化数学运算。
+
+请注意，``alignment.substitutions``包含仅在路线中出现的字母的条目。 您可以使用``select``方法添加缺少字母的条目，例如
+
+.. code:: python
+
+    >>> m = substitutions.select("ATCG")
+    >>> print(m)
+        A    T    C   G
+    A 2.0  1.0  4.5 0.0
+    T 1.0 12.0  0.5 0.0
+    C 4.5  0.5 10.0 0.0
+    G 0.0  0.0  0.0 0.0
+    <BLANKLINE>
+
+这也使您可以更改字母表中字母的顺序。
+
 .. _sec-alignment-tools:
 
-6.4  构建序列比对的工具
+6.5  构建序列比对的工具
 ---------------------------
 
 目前有非常多的算法来帮助你构建一个序列比对，包括两两间的比对和多序列比对。这些算法在计算上往往是非常慢的，你一定不会希望用Python来实现他们。然而，你可以使用Biopython来运行命令行程序。通常你需要：
@@ -776,16 +872,15 @@ PHYLIP格式最大的一个缺陷就是它严格地要求每一条序列的ID是
 .. code:: python
 
     >>> import Bio.Align.Applications
-    >>> dir(Bio.Align.Applications)
-    ...
+    >>> dir(Bio.Align.Applications) # doctest:+ELLIPSIS
     ['ClustalwCommandline', 'DialignCommandline', 'MafftCommandline', 'MuscleCommandline',
     'PrankCommandline', 'ProbconsCommandline', 'TCoffeeCommandline' ...]
 
-（以下划线开头的记录不是Biopython打包程序，这些变量在Python中有特殊的含义。） ``Bio.Emboss.Applications`` 中包含对 `EMBOSS  <http://emboss.sourceforge.net/>`__ 的打包程序（包括 ``needle`` 和 ``water`` ）。EMBOSS和PHYLIP的打包程序将在 `6.4.5 <#seq:emboss-needle-water>`__ 节中详细介绍。在本章中，我们并不打算将所有的序列比对程序都予以介绍，但是Biopython中各种序列比对程序都具有相同的使用方式。
+（以下划线开头的记录不是Biopython打包程序，这些变量在Python中有特殊的含义。） ``Bio.Emboss.Applications`` 中包含对 `EMBOSS  <http://emboss.sourceforge.net/>`__ 的打包程序（包括 ``needle`` 和 ``water`` ）。EMBOSS和PHYLIP的打包程序将在 `6.5.5 <#seq:emboss-needle-water>`__ 节中详细介绍。在本章中，我们并不打算将所有的序列比对程序都予以介绍，但是Biopython中各种序列比对程序都具有相同的使用方式。
 
 .. _sec-align_clustal:
 
-6.4.1  ClustalW
+6.5.1  ClustalW
 ~~~~~~~~~~~~~~~
 
 ClustalW是一个非常流行的进行多序列比对的命令行程序（其还有一个图形化的版本称之为ClustalX）。Biopython的 ``Bio.Align.Applications`` 模块包含这一多序列比对程序的打包程序。
@@ -796,9 +891,8 @@ ClustalW是一个非常流行的进行多序列比对的命令行程序（其还
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> help(ClustalwCommandline)
-    ...
 
-作为最简单的一个例子，你仅仅需要一个FASTA格式的序列文件作为输入，例如： `opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__ （你可以在线或者在Biopython/Doc/examples文件夹中找到该序列）。 `opuntia.fasta` 包含着7个prickly-pear的DNA序列（来自仙人掌科）。
+作为最简单的一个例子，你仅仅需要一个FASTA格式的序列文件作为输入，例如： `opuntia.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/opuntia.fasta>`__ （你可以在线或者在Biopython/Doc/examples文件夹中找到该序列）。 `opuntia.fasta` 包含着7个prickly-pear的DNA序列（来自仙人掌科）。
 
 ClustalW在默认情况下会产生一个包括所有输入序列的序列比对以及一个由输入序列名字构成的指导树（guide tree）。例如，用上述文件作为输入，ClustalW将会输出 ``opuntia.aln`` 和 ``opuntia.dnd`` 两个文件：
 
@@ -806,7 +900,7 @@ ClustalW在默认情况下会产生一个包括所有输入序列的序列比对
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> cline = ClustalwCommandline("clustalw2", infile="opuntia.fasta")
-    >>> print cline
+    >>> print(cline)
     clustalw2 -infile=opuntia.fasta
 
 注意这里我们给出的执行文件名是 ``clustalw2`` ，这是ClustalW的第二个版本（第一个版本的文件名为 ``clustalw`` ）。ClustalW的这两个版本具有相同的参数，并且在功能上也是一致的。
@@ -841,7 +935,7 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("opuntia.aln", "clustal")
-    >>> print align
+    >>> print(align)
     SingleLetterAlphabet() alignment with 7 rows and 906 columns
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191
@@ -871,10 +965,11 @@ Biopython在内部使用较新的 ``subprocess`` 模块来实现打包程序，�
      |    __ gi|6273285|gb|AF191659.1|AF191659
      |___|
          | gi|6273284|gb|AF191658.1|AF191658
+    <BLANKLINE>
 
 :ref:`13 <chapter-Phylo>`  章中详细介绍了如何使用Biopython对进化树数据进行处理。
 
-6.4.2  MUSCLE
+6.5.2  MUSCLE
 ~~~~~~~~~~~~~
 
 MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applications`` 中也有针对Muscle的打包程序。与ClustalW一样，我们也建议你先在命令行界面下使用MUSCLE以后再使用Biopython打包程序。你会发现，Biopython的打包程序非常严格地包括了所有命令行输入参数：
@@ -883,15 +978,14 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> help(MuscleCommandline)
-    ...
 
-作为最简单的例子，你只需要一个Fasta格式的数据文件作为输入。例如： `opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__ 然后你可以告诉MUSCLE来读取该FASTA文件，并将序列比对写出：
+作为最简单的例子，你只需要一个Fasta格式的数据文件作为输入。例如： `opuntia.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/opuntia.fasta>`__ 然后你可以告诉MUSCLE来读取该FASTA文件，并将序列比对写出：
 
 .. code:: python
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.txt")
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.txt
 
 注意，MUSCLE使用“-in”和“-out”来指定输入和输出文件，而在Biopython中，我们使用“input”和“out”作为关键字来指定输入输出。这是由于“in”是Python的一个关键词而被保留。
@@ -902,7 +996,7 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clw=True)
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.aln -clw
 
 或者，严格的ClustalW的输出文件（这将输出原始的ClustalW的文件标签）。例如：
@@ -911,7 +1005,7 @@ MUSCLE是另一个较新的序列比对工具，Biopython的 ``Bio.Align.Applica
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clwstrict=True)
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.aln -clwstrict
 
 你可以使用 ``Bio.AlignIO`` 的 ``format="clustal"`` 参数来读取这些序列比对输出。
@@ -920,7 +1014,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 你也可以设置MUSCLE其它的可选参数，例如最大数目的迭代数。具体信息请查阅Biopython的内部帮助文档。
 
-6.4.3  MUSCLE标准输出
+6.5.3  MUSCLE标准输出
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 使用以上的MUSCLE命令行将会把序列比对结果写出到一个文件中。然而MUSCLE也允许你将序列比对结果作为系统的标准输出。Biopython打包程序可以利用这一特性来避免创建一个临时文件。例如：
@@ -929,7 +1023,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
-    >>> print muscle_cline
+    >>> print(muscle_cline)
     muscle -in opuntia.fasta
 
 如果你使用打包程序运行上述命令，程序将返回一个字符串对象。为了读取它，我们可以使用 ``StringIO`` 模块。记住MUSCLE将默认以FASTA格式输出序列比对：
@@ -942,8 +1036,8 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     >>> from StringIO import StringIO
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(StringIO(stdout), "fasta")
-    >>> print align
-    SingleLetterAlphabet() alignment with 7 rows and 906 columns
+    >>> print(align)
+    Alignment with 7 rows and 906 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664
@@ -965,8 +1059,8 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     ...                          shell=(sys.platform!="win32"))
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "fasta")
-    >>> print align
-    SingleLetterAlphabet() alignment with 7 rows and 906 columns
+    >>> print(align)
+    Alignment with 7 rows and 906 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664
@@ -975,7 +1069,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658
 
-6.4.4  以标准输入和标准输出使用MUSCLE
+6.5.4  以标准输入和标准输出使用MUSCLE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 事实上，我们并不需要将序列放在一个文件里来使用MUSCLE。MUSCLE可以读取系统标准输入的内容。注意，这有一点高级和繁琐，若非必须，你可以不用关心这个技术。
@@ -993,7 +1087,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(clwstrict=True)
-    >>> print muscle_cline
+    >>> print(muscle_cline)
     muscle -clwstrict
 
 我们使用Python的内置模块 ``subprocess`` 来实现这一目的：
@@ -1006,6 +1100,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     ...                          stdin=subprocess.PIPE,
     ...                          stdout=subprocess.PIPE,
     ...                          stderr=subprocess.PIPE,
+    ...                          universal_newlines=True,
     ...                          shell=(sys.platform!="win32"))                     
 
 这一命令将启动MUSCLE，但是它将会等待FASTA格式的输入数据。我们可以通过标准输入句柄来提供给它：
@@ -1022,8 +1117,8 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "clustal")
-    >>> print align
-    SingleLetterAlphabet() alignment with 6 rows and 900 columns
+    >>> print(align)
+    Alignment with 6 rows and 900 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166
@@ -1052,8 +1147,8 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     >>> stdout, stderr = muscle_cline(stdin=data)
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(StringIO(stdout), "clustal")
-    >>> print align
-    SingleLetterAlphabet() alignment with 6 rows and 900 columns
+    >>> print(align)
+    Alignment with 6 rows and 900 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166
@@ -1063,7 +1158,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
 你可能觉得这种方式更便捷，但它需要更多的内存（这是由于我们是以字符串对象来储存输入的FASTA文件和输出的Clustal排列）。
 
-6.4.5  EMBOSS包的序列比对工具——needle和water
+6.5.5  EMBOSS包的序列比对工具——needle和water
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `EMBOSS <http://emboss.sourceforge.net/>`__ 包有两个序列比对程序—— ``water`` 和 ``needle`` 来实现Smith-Waterman做局部序列比对（local alignment）和Needleman-Wunsch算法来做全局排列（global alignment）。这两个程序具有相同的使用方式，因此我们仅以 ``needle`` 为例。
@@ -1086,6 +1181,8 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     VKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFG
     KEFTPPVQAAYQKVVAGVANALAHKYH
 
+您可以在Biopython源代码的Doc/examples/目录中找到这些示例文件的副本。
+
 让我们开始使用一个完整的 ``needle`` 命令行对象：
 
 .. code:: python
@@ -1093,7 +1190,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(asequence="alpha.faa", bsequence="beta.faa",
     ...                                  gapopen=10, gapextend=0.5, outfile="needle.txt")
-    >>> print needle_cline
+    >>> print(needle_cline)
     needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5
 
 你可能会有疑问，为什么不直接在终端里运行这一程序呢？你会发现，它将进行一个序列两两间的排列，并把结果记录在 ``needle.txt`` 中（以EMBOSS默认的序列比对格式）。
@@ -1115,7 +1212,6 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> help(NeedleCommandline)
-    ...
 
 提示：你也可以指定特定的参数设置。例如：
 
@@ -1128,9 +1224,9 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
     >>> needle_cline.gapopen=10
     >>> needle_cline.gapextend=0.5
     >>> needle_cline.outfile="needle.txt"
-    >>> print needle_cline
+    >>> print(needle_cline)
     needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5
-    >>> print needle_cline.outfile
+    >>> print(needle_cline.outfile)
     needle.txt
 
 现在我们获得了一个 ``needle`` 命令行，并希望在Python中运行它。我们在之前解释过，如果你希望完全地控制这一过程， ``subprocess`` 是最好的选择，但是如果你只是想尝试使用打包程序，以下命令足以达到目的：
@@ -1138,7 +1234,7 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 .. code:: python
 
     >>> stdout, stderr = needle_cline()
-    >>> print stdout + stderr
+    >>> print(stdout + stderr)
     Needleman-Wunsch global alignment of two sequences
 
 随后，我们需要载入 ``Bio.AlignIO`` 模块来读取needle输出（ ``emboss`` 格式）：
@@ -1147,14 +1243,12 @@ MUSCLE也可以处理GCG和MSF（使用 ``msf`` 参数）甚至HTML格式，但�
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("needle.txt", "emboss")
-    >>> print align
-    SingleLetterAlphabet() alignment with 2 rows and 149 columns
+    >>> print(align)
+    Alignment with 2 rows and 149 columns
     MV-LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTY...KYR HBA_HUMAN
     MVHLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRF...KYH HBB_HUMAN
 
 在这个例子中，我们让EMBOSS将结果保存到一个输出文件中，但是你也可以让其写入标准输出中（这往往是在不需要临时文件的情况下的选择，你可以使用 ``stdout=True`` 参数而不是 ``outfile`` 参数）。与MUSCLE的例子一样，你也可以从标准输入里读取序列（ ``asequence="stdin"`` 参数）。
 
 以上例子仅仅介绍了 ``needle`` 和 ``water`` 最简单的使用。一个有用的小技巧是，第二个序列文件可以包含有多个序列，EMBOSS工具将将每一个序列与第一个文件进行两两序列比对。
-
-注意，Biopython有它自己的两两比对模块 ``Bio.pairwise2`` （用C语言编写）。但是它无法与序列比对对象一起工作，因此我们不在本章讨论它。具体信息请查阅模块的docstring（内部帮助文档）。
 

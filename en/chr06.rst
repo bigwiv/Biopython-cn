@@ -637,6 +637,38 @@ This time the output looks like this:
                KA
                RA
 
+One of the big handicaps of the original PHYLIP alignment file format is that
+the sequence identifiers are strictly truncated at ten characters. In this example,
+as you can see the resulting names are still unique - but they are not very readable.
+As a result, a more relaxed variant of the original PHYLIP format is now quite widely used:
+
+.. code:: python
+
+    >>> from Bio import AlignIO
+    >>> AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip-relaxed")
+
+This time the output looks like this, using a longer indentation to allow all the identifiers
+to be given in full:
+
+.. code:: python
+
+     7 52
+    COATB_BPIKE/30-81  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIKLFKKFVS
+    COATB_BPI22/32-83  DGTSTATSYA TEAMNSLKTQ ATDLIDQTWP VVTSVAVAGL AIRLFKKFSS
+    COATB_BPM13/24-72  AEGDDP---A KAAFNSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPZJ2/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFAS
+    Q9T0Q9_BPFD/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPIF1/22-73  FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
+
+                       KA
+                       RA
+                       KA
+                       KA
+                       KA
+                       KA
+                       RA
+
 If you have to work with the original strict PHYLIP format, then you may
 need to compress the identifiers somehow – or assign your own names or
 numbering system. This following bit of code manipulates the record identifiers
@@ -832,7 +864,7 @@ Leaving the first index as ``:`` means take all the rows:
 
 .. code:: python
 
-    >>> print alignment[:,:6]
+    >>> print(alignment[:,:6])
     Alignment with 7 rows and 6 columns
     AEPNAA COATB_BPIKE/30-81
     AEPNAA Q9T0Q8_BPIKE/1-52
@@ -847,7 +879,7 @@ and 9 which are gaps in three of the seven sequences:
 
 .. code:: python
 
-    >>> print alignment[:,6:9]
+    >>> print(alignment[:,6:9])
     Alignment with 7 rows and 3 columns
     TNY COATB_BPIKE/30-81
     TNY Q9T0Q8_BPIKE/1-52
@@ -861,7 +893,7 @@ Again, you can slice to get everything after the ninth column:
 
 .. code:: python
 
-    >>> print alignment[:,9:]
+    >>> print(alignment[:,9:])
     Alignment with 7 rows and 43 columns
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
@@ -1377,7 +1409,7 @@ point MUSCLE should start to run, and we can ask for the output:
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "clustal")
-    >>> print align
+    >>> print(align)
     Alignment with 6 rows and 900 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166
