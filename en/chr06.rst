@@ -54,11 +54,6 @@ There is also an optional ``seq_count`` argument which is discussed in
 Section \ `6.1.3 <#sec:AlignIO-count-argument>`__ below for dealing with
 ambiguous file formats which may contain more than one alignment.
 
-A further optional ``alphabet`` argument allowing you to specify the
-expected alphabet. This can be useful as many alignment file formats do
-not explicitly label the sequences as RNA, DNA or protein – which means
-``Bio.AlignIO`` will default to using a generic alphabet.
-
 6.1.1  Single Alignments
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -110,8 +105,8 @@ This code will print out a summary of the alignment:
 
 .. code:: python
 
-    >>> print alignment
-    SingleLetterAlphabet() alignment with 7 rows and 52 columns
+    >>> print(alignment)
+    Alignment with 7 rows and 52 columns
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRL...SKA COATB_BPI22/32-83
@@ -128,10 +123,11 @@ iterating over the rows as ``SeqRecord`` objects:
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    >>> print "Alignment length %i" % alignment.get_alignment_length()
+    >>> print("Alignment length %i" % alignment.get_alignment_length())
     Alignment length 52
     >>> for record in alignment:
-    ...     print "%s - %s" % (record.seq, record.id)
+    ...     print("%s - %s" % (record.seq, record.id))
+    ...
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83
@@ -152,7 +148,7 @@ secondary structure? Try this:
 
     >>> for record in alignment:
     ...     if record.dbxrefs:
-    ...         print record.id, record.dbxrefs
+    ...         print("%s %s" % (record.id, record.dbxrefs))
     COATB_BPIKE/30-81 ['PDB; 1ifl ; 1-52;']
     COATB_BPM13/24-72 ['PDB; 2cpb ; 1-49;', 'PDB; 2cps ; 1-49;']
     Q9T0Q9_BPFD/1-49 ['PDB; 1nh4 A; 1-49;']
@@ -163,7 +159,8 @@ To have a look at all the sequence annotation, try this:
 .. code:: python
 
     >>> for record in alignment:
-    ...     print record
+    ...     print(record)
+    ...
 
 Sanger provide a nice web interface at
 `http://pfam.sanger.ac.uk/family?acc=PF05371 <http://pfam.sanger.ac.uk/family?acc=PF05371>`__
@@ -196,7 +193,7 @@ exactly the same code:
 
     from Bio import AlignIO
     alignment = AlignIO.read("PF05371_seed.faa", "fasta")
-    print alignment
+    print(alignment)
 
 All that has changed in this code is the filename and the format string.
 You’ll get the same output as before, the sequences and record
@@ -220,7 +217,6 @@ and in the built in documentation (also
 
     >>> from Bio import AlignIO
     >>> help(AlignIO)
-    ...
 
 6.1.2  Multiple Alignments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -281,28 +277,28 @@ If you wanted to read this in using ``Bio.AlignIO`` you could use:
     from Bio import AlignIO
     alignments = AlignIO.parse("resampled.phy", "phylip")
     for alignment in alignments:
-        print alignment
-        print
+        print(alignment)
+        print()
 
 This would give the following output, again abbreviated for display:
 
 .. code:: python
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAACCA Alpha
     AAACCC Beta
     ACCCCA Gamma
     CCCAAC Delta
     CCCAAA Epsilon
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAACAA Alpha
     AAACCC Beta
     ACCCAA Gamma
     CCCACC Delta
     CCCAAA Epsilon
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAAAAC Alpha
     AAACCC Beta
     AACAAC Gamma
@@ -311,7 +307,7 @@ This would give the following output, again abbreviated for display:
 
     ...
 
-    SingleLetterAlphabet() alignment with 5 rows and 6 columns
+    Alignment with 5 rows and 6 columns
     AAAACC Alpha
     ACCCCC Beta
     AAAACC Gamma
@@ -419,10 +415,10 @@ example as the input data:
 .. code:: python
 
     for alignment in AlignIO.parse(handle, "fasta", seq_count=2):
-        print "Alignment length %i" % alignment.get_alignment_length()
+        print("Alignment length %i" % alignment.get_alignment_length())
         for record in alignment:
-            print "%s - %s" % (record.seq, record.id)
-        print
+            print("%s - %s" % (record.seq, record.id))
+        print()
 
 giving:
 
@@ -479,27 +475,26 @@ construct the alignment from.
 
 .. code:: python
 
-    from Bio.Alphabet import generic_dna
     from Bio.Seq import Seq
     from Bio.SeqRecord import SeqRecord
     from Bio.Align import MultipleSeqAlignment
 
     align1 = MultipleSeqAlignment([
-                 SeqRecord(Seq("ACTGCTAGCTAG", generic_dna), id="Alpha"),
-                 SeqRecord(Seq("ACT-CTAGCTAG", generic_dna), id="Beta"),
-                 SeqRecord(Seq("ACTGCTAGDTAG", generic_dna), id="Gamma"),
+                 SeqRecord(Seq("ACTGCTAGCTAG"), id="Alpha"),
+                 SeqRecord(Seq("ACT-CTAGCTAG"), id="Beta"),
+                 SeqRecord(Seq("ACTGCTAGDTAG"), id="Gamma"),
              ])
 
     align2 = MultipleSeqAlignment([
-                 SeqRecord(Seq("GTCAGC-AG", generic_dna), id="Delta"),
-                 SeqRecord(Seq("GACAGCTAG", generic_dna), id="Epsilon"),
-                 SeqRecord(Seq("GTCAGCTAG", generic_dna), id="Zeta"),
+                 SeqRecord(Seq("GTCAGC-AG"), id="Delta"),
+                 SeqRecord(Seq("GACAGCTAG"), id="Epsilon"),
+                 SeqRecord(Seq("GTCAGCTAG"), id="Zeta"),
              ])
 
     align3 = MultipleSeqAlignment([
-                 SeqRecord(Seq("ACTAGTACAGCTG", generic_dna), id="Eta"),
-                 SeqRecord(Seq("ACTAGTACAGCT-", generic_dna), id="Theta"),
-                 SeqRecord(Seq("-CTACTACAGGTG", generic_dna), id="Iota"),
+                 SeqRecord(Seq("ACTAGTACAGCTG"), id="Eta"),
+                 SeqRecord(Seq("ACTAGTACAGCT-"), id="Theta"),
+                 SeqRecord(Seq("-CTACTACAGGTG"), id="Iota"),
              ])
 
     my_alignments = [align1, align2, align3]
@@ -509,8 +504,8 @@ PHYLIP format file:
 
 .. code:: python
 
-    from Bio import AlignIO
-    AlignIO.write(my_alignments, "my_example.phy", "phylip")
+    >>> from Bio import AlignIO
+    >>> AlignIO.write(my_alignments, "my_example.phy", "phylip")
 
 And if you open this file in your favourite text editor it should look
 like this:
@@ -560,18 +555,20 @@ and save it as a Clustal W format file:
 
 .. code:: python
 
-    from Bio import AlignIO
-    count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
-    print "Converted %i alignments" % count
+    >>> from Bio import AlignIO
+    >>> count = AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.aln", "clustal")
+    >>> print("Converted %i alignments" % count)
+    Converted 1 alignments
 
 Or, using ``Bio.AlignIO.parse()`` and ``Bio.AlignIO.write()``:
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
-    count = AlignIO.write(alignments, "PF05371_seed.aln", "clustal")
-    print "Converted %i alignments" % count
+    >>> from Bio import AlignIO
+    >>> alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
+    >>> count = AlignIO.write(alignments, "PF05371_seed.aln", "clustal")
+    >>> print("Converted %i alignments" % count)
+    Converted 1 alignments
 
 The ``Bio.AlignIO.write()`` function expects to be given multiple
 alignment objects. In the example above we gave it the alignment
@@ -640,25 +637,55 @@ This time the output looks like this:
                KA
                RA
 
-One of the big handicaps of the PHYLIP alignment file format is that the
-sequence identifiers are strictly truncated at ten characters. In this
-example, as you can see the resulting names are still unique - but they
-are not very readable. In this particular case, there is no clear way to
-compress the identifiers, but for the sake of argument you may want to
-assign your own names or numbering system. This following bit of code
-manipulates the record identifiers before saving the output:
+One of the big handicaps of the original PHYLIP alignment file format is that
+the sequence identifiers are strictly truncated at ten characters. In this example,
+as you can see the resulting names are still unique - but they are not very readable.
+As a result, a more relaxed variant of the original PHYLIP format is now quite widely used:
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    name_mapping = {}
-    for i, record in enumerate(alignment):
-        name_mapping[i] = record.id
-        record.id = "seq%i" % i
-    print name_mapping
+    >>> from Bio import AlignIO
+    >>> AlignIO.convert("PF05371_seed.sth", "stockholm", "PF05371_seed.phy", "phylip-relaxed")
 
-    AlignIO.write([alignment], "PF05371_seed.phy", "phylip")
+This time the output looks like this, using a longer indentation to allow all the identifiers
+to be given in full:
+
+.. code:: python
+
+     7 52
+    COATB_BPIKE/30-81  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52  AEPNAATNYA TEAMDSLKTQ AIDLISQTWP VVTTVVVAGL VIKLFKKFVS
+    COATB_BPI22/32-83  DGTSTATSYA TEAMNSLKTQ ATDLIDQTWP VVTSVAVAGL AIRLFKKFSS
+    COATB_BPM13/24-72  AEGDDP---A KAAFNSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPZJ2/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFAS
+    Q9T0Q9_BPFD/1-49   AEGDDP---A KAAFDSLQAS ATEYIGYAWA MVVVIVGATI GIKLFKKFTS
+    COATB_BPIF1/22-73  FAADDATSQA KAAFDSLTAQ ATEMSGYAWA LVVLVVGATV GIKLFKKFVS
+
+                       KA
+                       RA
+                       KA
+                       KA
+                       KA
+                       KA
+                       RA
+
+If you have to work with the original strict PHYLIP format, then you may
+need to compress the identifiers somehow – or assign your own names or
+numbering system. This following bit of code manipulates the record identifiers
+before saving the output:
+
+.. code:: python
+
+    >>> from Bio import AlignIO
+    >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
+    >>> name_mapping = {}
+    >>> for i, record in enumerate(alignment):
+            name_mapping[i] = record.id
+            record.id = "seq%i" % i
+    >>> print(name_mapping)
+    {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', 3: 'COATB_BPM13/24-72',
+     4: 'COATB_BPZJ2/1-49', 5: 'Q9T0Q9_BPFD/1-49', 6: 'COATB_BPIF1/22-73'}
+    >>>AlignIO.write([alignment], "PF05371_seed.phy", "phylip")
 
 This code used a Python dictionary to record a simple mapping from the
 new sequence system to the original identifier:
@@ -667,7 +694,7 @@ new sequence system to the original identifier:
 
     {0: 'COATB_BPIKE/30-81', 1: 'Q9T0Q8_BPIKE/1-52', 2: 'COATB_BPI22/32-83', ...}
 
-Here is the new PHYLIP format output:
+Here is the new (strict) PHYLIP format output:
 
 .. code:: python
 
@@ -705,11 +732,18 @@ which is supported by ``Bio.AlignIO`` as an output format. For example:
 
 .. code:: python
 
-    from Bio import AlignIO
-    alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    print alignment.format("clustal")
+    >>> from Bio import AlignIO
+    >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
+    >>> print(alignment.format("clustal"))
+    CLUSTAL X (1.81) multiple sequence alignment
 
-As described in Section \ `4.5 <#sec:SeqRecord-format>`__), the
+
+    COATB_BPIKE/30-81                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVS
+    COATB_BPI22/32-83                   DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSS
+    ...
+
+As described in Section \ `4.6 <#sec:SeqRecord-format>`__), the
 ``SeqRecord`` object has a similar method using output formats supported
 by ``Bio.SeqIO``.
 
@@ -720,16 +754,22 @@ Biopython:
 
 .. code:: python
 
-    from Bio import AlignIO
-    from StringIO import StringIO
+    >>> from Bio import AlignIO
+    >>> from StringIO import StringIO
+    >>> alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
+    >>> out_handle = StringIO()
+    >>> AlignIO.write(alignments, out_handle, "clustal")
+    1
+    >>> clustal_data = out_handle.getvalue()
+    >>> print(clustal_data)
+    CLUSTAL X (1.81) multiple sequence alignment
 
-    alignments = AlignIO.parse("PF05371_seed.sth", "stockholm")
 
-    out_handle = StringIO()
-    AlignIO.write(alignments, out_handle, "clustal")
-    clustal_data = out_handle.getvalue()
-
-    print clustal_data
+    COATB_BPIKE/30-81                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSS
+    Q9T0Q8_BPIKE/1-52                   AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVS
+    COATB_BPI22/32-83                   DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSS
+    COATB_BPM13/24-72                   AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKLFKKFTS
+    ...
 
 6.3  Manipulating Alignments
 ----------------------------
@@ -749,10 +789,10 @@ hopefully the actions of ``len()`` (the number of rows) and iteration
 
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
-    >>> print "Number of rows: %i" % len(alignment)
+    >>> print("Number of rows: %i" % len(alignment))
     Number of rows: 7
     >>> for record in alignment:
-    ...     print "%s - %s" % (record.seq, record.id)
+    ...     print("%s - %s" % (record.seq, record.id))
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA - COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA - Q9T0Q8_BPIKE/1-52
     DGTSTATSYATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA - COATB_BPI22/32-83
@@ -768,7 +808,7 @@ metaphor in mind, simple slicing of the alignment should also make sense
 
 .. code:: python
 
-    >>> print alignment
+    >>> print(alignment)
     SingleLetterAlphabet() alignment with 7 rows and 52 columns
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRL...SKA COATB_BPIKE/30-81
     AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKL...SRA Q9T0Q8_BPIKE/1-52
@@ -777,7 +817,7 @@ metaphor in mind, simple slicing of the alignment should also make sense
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA Q9T0Q9_BPFD/1-49
     FAADDATSQAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKL...SRA COATB_BPIF1/22-73
-    >>> print alignment[3:7]
+    >>> print(alignment[3:7])
     SingleLetterAlphabet() alignment with 4 rows and 52 columns
     AEGDDP---AKAAFNSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPM13/24-72
     AEGDDP---AKAAFDSLQASATEYIGYAWAMVVVIVGATIGIKL...SKA COATB_BPZJ2/1-49
@@ -790,7 +830,7 @@ double index.
 
 .. code:: python
 
-    >>> print alignment[2,6]
+    >>> print(alignment[2,6])
     T
 
 Using two integer indices pulls out a single letter, short hand for
@@ -798,14 +838,14 @@ this:
 
 .. code:: python
 
-    >>> print alignment[2].seq[6]
+    >>> print(alignment[2].seq[6])
     T
 
 You can pull out a single column as a string like this:
 
 .. code:: python
 
-    >>> print alignment[:,6]
+    >>> print(alignment[:,6])
     TTT---T
 
 You can also select a range of columns. For example, to pick out those
@@ -814,7 +854,7 @@ columns:
 
 .. code:: python
 
-    >>> print alignment[3:6,:6]
+    >>> print(alignment[3:6,:6])
     SingleLetterAlphabet() alignment with 3 rows and 6 columns
     AEGDDP COATB_BPM13/24-72
     AEGDDP COATB_BPZJ2/1-49
@@ -824,8 +864,8 @@ Leaving the first index as ``:`` means take all the rows:
 
 .. code:: python
 
-    >>> print alignment[:,:6]
-    SingleLetterAlphabet() alignment with 7 rows and 6 columns
+    >>> print(alignment[:,:6])
+    Alignment with 7 rows and 6 columns
     AEPNAA COATB_BPIKE/30-81
     AEPNAA Q9T0Q8_BPIKE/1-52
     DGTSTA COATB_BPI22/32-83
@@ -839,8 +879,8 @@ and 9 which are gaps in three of the seven sequences:
 
 .. code:: python
 
-    >>> print alignment[:,6:9]
-    SingleLetterAlphabet() alignment with 7 rows and 3 columns
+    >>> print(alignment[:,6:9])
+    Alignment with 7 rows and 3 columns
     TNY COATB_BPIKE/30-81
     TNY Q9T0Q8_BPIKE/1-52
     TSY COATB_BPI22/32-83
@@ -853,8 +893,8 @@ Again, you can slice to get everything after the ninth column:
 
 .. code:: python
 
-    >>> print alignment[:,9:]
-    SingleLetterAlphabet() alignment with 7 rows and 43 columns
+    >>> print(alignment[:,9:])
+    Alignment with 7 rows and 43 columns
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
     ATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
     ATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
@@ -869,8 +909,8 @@ by column. This lets you do this as a way to remove a block of columns:
 .. code:: python
 
     >>> edited = alignment[:,:6] + alignment[:,9:]
-    >>> print edited
-    SingleLetterAlphabet() alignment with 7 rows and 49 columns
+    >>> print(edited)
+    Alignment with 7 rows and 49 columns
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIKLFKKFVSRA Q9T0Q8_BPIKE/1-52
     DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
@@ -882,15 +922,15 @@ by column. This lets you do this as a way to remove a block of columns:
 Another common use of alignment addition would be to combine alignments
 for several different genes into a meta-alignment. Watch out though -
 the identifiers need to match up (see
-Section \ `4.7 <#sec:SeqRecord-addition>`__ for how adding ``SeqRecord``
+Section \ `4.8 <#sec:SeqRecord-addition>`__ for how adding ``SeqRecord``
 objects works). You may find it helpful to first sort the alignment rows
 alphabetically by id:
 
 .. code:: python
 
     >>> edited.sort()
-    >>> print edited
-    SingleLetterAlphabet() alignment with 7 rows and 49 columns
+    >>> print(edited)
+    Alignment with 7 rows and 49 columns
     DGTSTAATEAMNSLKTQATDLIDQTWPVVTSVAVAGLAIRLFKKFSSKA COATB_BPI22/32-83
     FAADDAAKAAFDSLTAQATEMSGYAWALVVLVVGATVGIKLFKKFVSRA COATB_BPIF1/22-73
     AEPNAAATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA COATB_BPIKE/30-81
@@ -915,8 +955,8 @@ NumPy:
     >>> from Bio import AlignIO
     >>> alignment = AlignIO.read("PF05371_seed.sth", "stockholm")
     >>> align_array = np.array([list(rec) for rec in alignment], np.character)
-    >>> align_array.shape
-    (7, 52)
+    >>> print("Array shape %i by %i" % align_array.shape)
+    Array shape 7 by 52
 
 If you will be working heavily with the columns, you can tell NumPy to
 store the array by column (as in Fortran) rather then its default of by
@@ -930,7 +970,69 @@ Note that this leaves the original Biopython alignment object and the
 NumPy array in memory as separate objects - editing one will not update
 the other!
 
-6.4  Alignment Tools
+6.4  Getting information on the alignment
+------------------------------------------
+
+6.4.1  Substitutions
+~~~~~~~~~~~~~~~~~~~~~
+
+The substitutions property of an alignment reports how often letters in
+the alignment are substituted for each other. This is calculated by taking
+all pairs of rows in the alignment, counting the number of times two letters
+are aligned to each other, and summing this over all pairs. For example,
+
+.. code:: python
+
+    >>> from Bio.Seq import Seq
+    >>> from Bio.SeqRecord import SeqRecord
+    >>> from Bio.Align import MultipleSeqAlignment
+    >>> alignment = MultipleSeqAlignment(
+    ...     [
+    ...         SeqRecord(Seq("ACTCCTA"), id='seq1'),
+    ...         SeqRecord(Seq("AAT-CTA"), id='seq2'),
+    ...         SeqRecord(Seq("CCTACT-"), id='seq3'),
+    ...         SeqRecord(Seq("TCTCCTC"), id='seq4'),
+    ...     ]
+    ... )
+    ...
+    >>> print(alignment)
+    Alignment with 4 rows and 7 columns
+    ACTCCTA seq1
+    AAT-CTA seq2
+    CCTACT- seq3
+    TCTCCTC seq4
+    >>> substitutions = alignment.substitutions
+    >>> print(substitutions)
+        A    C    T
+    A 2.0  4.5  1.0
+    C 4.5 10.0  0.5
+    T 1.0  0.5 12.0
+    <BLANKLINE>
+
+As the ordering of pairs is arbitrary, counts are divided equally above and below
+the diagonal. For example, the 9 alignments of A to C are stored as 4.5 at position
+['A', 'C'] and 4.5 at position ['C', 'A']. This arrangement helps to make the math
+easier when calculating a substitution matrix from these counts, as described in
+Section 20.4.2.
+
+Note that alignment.substitutions contains entries for the letters appearing in the
+alignment only. You can use the select method to add entries for missing letters,
+for example
+
+.. code:: python
+
+    >>> m = substitutions.select("ATCG")
+    >>> print(m)
+        A    T    C   G
+    A 2.0  1.0  4.5 0.0
+    T 1.0 12.0  0.5 0.0
+    C 4.5  0.5 10.0 0.0
+    G 0.0  0.0  0.0 0.0
+    <BLANKLINE>
+
+This also allows you to change the order of letters in the alphabet.
+
+6.5  Alignment Tools
 --------------------
 
 There are *lots* of algorithms out there for aligning sequences, both
@@ -959,7 +1061,7 @@ module:
 .. code:: python
 
     >>> import Bio.Align.Applications
-    >>> dir(Bio.Align.Applications)
+    >>> dir(Bio.Align.Applications) # doctest:+ELLIPSIS
     ...
     ['ClustalwCommandline', 'DialignCommandline', 'MafftCommandline', 'MuscleCommandline',
     'PrankCommandline', 'ProbconsCommandline', 'TCoffeeCommandline' ...]
@@ -968,13 +1070,13 @@ module:
 meaning in Python.) The module ``Bio.Emboss.Applications`` has wrappers
 for some of the `EMBOSS suite <http://emboss.sourceforge.net/>`__,
 including ``needle`` and ``water``, which are described below in
-Section \ `6.4.5 <#seq:emboss-needle-water>`__, and wrappers for the
+Section \ `6.5.5 <#seq:emboss-needle-water>`__, and wrappers for the
 EMBOSS packaged versions of the PHYLIP tools (which EMBOSS refer to as
 one of their EMBASSY packages - third party tools with an EMBOSS style
 interface). We won’t explore all these alignment tools here in the
 section, just a sample, but the same principles apply.
 
-6.4.1  ClustalW
+6.5.1  ClustalW
 ~~~~~~~~~~~~~~~
 
 ClustalW is a popular command line tool for multiple sequence alignment
@@ -995,7 +1097,7 @@ wrapper is very faithful to the actual command line API:
 
 For the most basic usage, all you need is to have a FASTA input file,
 such as
-`opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__
+`opuntia.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/opuntia.fasta>`__
 (available online or in the Doc/examples subdirectory of the Biopython
 source code). This is a small FASTA file containing seven prickly-pear
 DNA sequences (from the cactus family *Opuntia*).
@@ -1008,7 +1110,7 @@ names based on the input FASTA file, in this case ``opuntia.aln`` and
 
     >>> from Bio.Align.Applications import ClustalwCommandline
     >>> cline = ClustalwCommandline("clustalw2", infile="opuntia.fasta")
-    >>> print cline
+    >>> print(cline)
     clustalw2 -infile=opuntia.fasta
 
 Notice here we have given the executable name as ``clustalw2``,
@@ -1075,7 +1177,7 @@ in the alignment using ``Bio.AlignIO`` by now:
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("opuntia.aln", "clustal")
-    >>> print align
+    >>> print(align)
     SingleLetterAlphabet() alignment with 7 rows and 906 columns
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191
@@ -1107,11 +1209,11 @@ standard Newick tree file, and ``Bio.Phylo`` can parse these:
      |    __ gi|6273285|gb|AF191659.1|AF191659
      |___|
          | gi|6273284|gb|AF191658.1|AF191658
-
+    <BLANKLINE>
 Chapter `13 <#sec:Phylo>`__ covers Biopython’s support for phylogenetic
 trees in more depth.
 
-6.4.2  MUSCLE
+6.5.2  MUSCLE
 ~~~~~~~~~~~~~
 
 MUSCLE is a more recent multiple sequence alignment tool than ClustalW,
@@ -1128,7 +1230,7 @@ Biopython wrapper is very faithful to the actual command line API:
 
 For the most basic usage, all you need is to have a FASTA input file,
 such as
-`opuntia.fasta <http://biopython.org/DIST/docs/tutorial/examples/opuntia.fasta>`__
+`opuntia.fasta <https://raw.githubusercontent.com/biopython/biopython/master/Doc/examples/opuntia.fasta>`__
 (available online or in the Doc/examples subdirectory of the Biopython
 source code). You can then tell MUSCLE to read in this FASTA file, and
 write the alignment to an output file:
@@ -1137,7 +1239,7 @@ write the alignment to an output file:
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.txt")
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.txt
 
 Note that MUSCLE uses “-in” and “-out” but in Biopython we have to use
@@ -1153,7 +1255,7 @@ ClustalW-like output:
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clw=True)
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.aln -clw
 
 Or, strict ClustalW output where the original ClustalW header line is
@@ -1163,7 +1265,7 @@ used for maximum compatibility:
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> cline = MuscleCommandline(input="opuntia.fasta", out="opuntia.aln", clwstrict=True)
-    >>> print cline
+    >>> print(cline)
     muscle -in opuntia.fasta -out opuntia.aln -clwstrict
 
 The ``Bio.AlignIO`` module should be able to read these alignments using
@@ -1180,7 +1282,7 @@ You would then run MUSCLE command line string as described above for
 ClustalW, and parse the output using ``Bio.AlignIO`` to get an alignment
 object.
 
-6.4.3  MUSCLE using stdout
+6.5.3  MUSCLE using stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Using a MUSCLE command line as in the examples above will write the
@@ -1194,7 +1296,7 @@ output file! For example:
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(input="opuntia.fasta")
-    >>> print muscle_cline
+    >>> print(muscle_cline)
     muscle -in opuntia.fasta
 
 If we run this via the wrapper, we get back the output as a string. In
@@ -1209,8 +1311,8 @@ Remember that MUSCLE defaults to using FASTA as the output format:
     >>> from StringIO import StringIO
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(StringIO(stdout), "fasta")
-    >>> print align
-    SingleLetterAlphabet() alignment with 7 rows and 906 columns
+    >>> print(align)
+    Alignment with 7 rows and 906 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664
@@ -1232,11 +1334,12 @@ module we can work directly with handles instead:
     >>> child = subprocess.Popen(str(muscle_cline),
     ...                          stdout=subprocess.PIPE,
     ...                          stderr=subprocess.PIPE,
+    ...                          universal_newlines=True,
     ...                          shell=(sys.platform!="win32"))
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "fasta")
-    >>> print align
-    SingleLetterAlphabet() alignment with 7 rows and 906 columns
+    >>> print(align)
+    Alignment with 7 rows and 906 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF191663
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273291|gb|AF191665.1|AF191665
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF191664
@@ -1245,7 +1348,7 @@ module we can work directly with handles instead:
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273285|gb|AF191659.1|AF191659
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273284|gb|AF191658.1|AF191658
 
-6.4.4  MUSCLE using stdin and stdout
+6.5.4  MUSCLE using stdin and stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We don’t actually *need* to have our FASTA input sequences prepared in a
@@ -1271,7 +1374,7 @@ ClustalW format as for the output.
 
     >>> from Bio.Align.Applications import MuscleCommandline
     >>> muscle_cline = MuscleCommandline(clwstrict=True)
-    >>> print muscle_cline
+    >>> print(muscle_cline)
     muscle -clwstrict
 
 Now for the fiddly bits using the ``subprocess`` module, stdin and
@@ -1285,6 +1388,7 @@ stdout:
     ...                          stdin=subprocess.PIPE,
     ...                          stdout=subprocess.PIPE,
     ...                          stderr=subprocess.PIPE,
+    ...                          universal_newlines=True,
     ...                          shell=(sys.platform!="win32"))                     
 
 That should start MUSCLE, but it will be sitting waiting for its FASTA
@@ -1305,8 +1409,8 @@ point MUSCLE should start to run, and we can ask for the output:
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(child.stdout, "clustal")
-    >>> print align
-    SingleLetterAlphabet() alignment with 6 rows and 900 columns
+    >>> print(align)
+    Alignment with 6 rows and 900 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166
@@ -1350,8 +1454,8 @@ You can then run the tool and parse the alignment as follows:
     >>> stdout, stderr = muscle_cline(stdin=data)
     >>> from Bio import AlignIO
     >>> align = AlignIO.read(StringIO(stdout), "clustal")
-    >>> print align
-    SingleLetterAlphabet() alignment with 6 rows and 900 columns
+    >>> print(align)
+    Alignment with 6 rows and 900 columns
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273290|gb|AF191664.1|AF19166
     TATACATTAAAGGAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273289|gb|AF191663.1|AF19166
     TATACATTAAAGAAGGGGGATGCGGATAAATGGAAAGGCGAAAG...AGA gi|6273287|gb|AF191661.1|AF19166
@@ -1362,7 +1466,7 @@ You can then run the tool and parse the alignment as follows:
 You might find this easier, but it does require more memory (RAM) for
 the strings used for the input FASTA and output Clustal formatted data.
 
-6.4.5  EMBOSS needle and water
+6.5.5  EMBOSS needle and water
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The `EMBOSS <http://emboss.sourceforge.net/>`__ suite includes the
@@ -1390,6 +1494,9 @@ in a file ``alpha.fasta``, and secondly in a file ``beta.fasta``:
     VKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFG
     KEFTPPVQAAYQKVVAGVANALAHKYH
 
+You can find copies of these example files with the Biopython source code
+under the Doc/examples/ directory.
+
 Let’s start by creating a complete ``needle`` command line object in one
 go:
 
@@ -1398,7 +1505,7 @@ go:
     >>> from Bio.Emboss.Applications import NeedleCommandline
     >>> needle_cline = NeedleCommandline(asequence="alpha.faa", bsequence="beta.faa",
     ...                                  gapopen=10, gapextend=0.5, outfile="needle.txt")
-    >>> print needle_cline
+    >>> print(needle_cline)
     needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5
 
 Why not try running this by hand at the command prompt? You should see
@@ -1444,9 +1551,9 @@ this:
     >>> needle_cline.gapopen=10
     >>> needle_cline.gapextend=0.5
     >>> needle_cline.outfile="needle.txt"
-    >>> print needle_cline
+    >>> print(needle_cline)
     needle -outfile=needle.txt -asequence=alpha.faa -bsequence=beta.faa -gapopen=10 -gapextend=0.5
-    >>> print needle_cline.outfile
+    >>> print(needle_cline.outfile)
     needle.txt
 
 Next we want to use Python to run this command for us. As explained
@@ -1457,7 +1564,7 @@ suffices:
 .. code:: python
 
     >>> stdout, stderr = needle_cline()
-    >>> print stdout + stderr
+    >>> print(stdout + stderr)
     Needleman-Wunsch global alignment of two sequences
 
 Next we can load the output file with ``Bio.AlignIO`` as discussed
@@ -1467,8 +1574,8 @@ earlier in this chapter, as the ``emboss`` format:
 
     >>> from Bio import AlignIO
     >>> align = AlignIO.read("needle.txt", "emboss")
-    >>> print align
-    SingleLetterAlphabet() alignment with 2 rows and 149 columns
+    >>> print(align)
+    Alignment with 2 rows and 149 columns
     MV-LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTY...KYR HBA_HUMAN
     MVHLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRF...KYH HBB_HUMAN
 
@@ -1484,10 +1591,5 @@ and ``water``. One useful trick is that the second file can contain
 multiple sequences (say five), and then EMBOSS will do five pairwise
 alignments.
 
-Note - Biopython includes its own pairwise alignment code in the
-``Bio.pairwise2`` module (written in C for speed, but with a pure Python
-fallback available too). This doesn’t work with alignment objects, so we
-have not covered it within this chapter. See the module’s docstring
-(built in help) for details.
 
 
